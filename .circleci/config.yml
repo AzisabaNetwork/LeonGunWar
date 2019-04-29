@@ -11,7 +11,7 @@ commands:
     steps:
       - attach_workspace:
           at: ./
-  upload-artifacts-to-circleci:
+  upload-artifacts:
     steps:
       - store_artifacts:
           path: target/
@@ -21,9 +21,9 @@ executors:
   jdk-executor:
     docker:
       - image: circleci/openjdk:8
-  ubuntu-executor:
+  buildpack-deps-executor:
     docker:
-      - image: ubuntu:latest
+      - image: circleci/buildpack-deps:latest
 
 jobs:
   install:
@@ -34,12 +34,12 @@ jobs:
       - run: mvn --version
       - run: mvn -B clean install
       - save-workdir
-  deploy-to-circleci:
+  deploy:
     working_directory: ~/workdir/
-    executor: ubuntu-executor
+    executor: buildpack-deps-executor
     steps:
       - load-workdir
-      - upload-artifacts-to-circleci
+      - upload-artifacts
 
 workflows:
   version: 2
@@ -51,11 +51,10 @@ workflows:
               only:
                 - master
                 - develop
-      - deploy-to-circleci:
+      - deploy:
           requires:
             - install
           filters:
             branches:
               only:
                 - master
-                - develop
