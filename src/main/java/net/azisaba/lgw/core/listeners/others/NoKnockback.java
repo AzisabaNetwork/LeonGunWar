@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerVelocityEvent;
  * @author siloneco
  *
  */
-public class NoNockBack implements Listener {
+public class NoKnockback implements Listener {
 
 	/**
 	 * プレイヤーがノックバックしたときに呼び出されるイベント

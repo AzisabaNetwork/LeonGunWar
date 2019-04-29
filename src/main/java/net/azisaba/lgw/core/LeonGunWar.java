@@ -3,7 +3,7 @@ package net.azisaba.lgw.core;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.listeners.others.GroundArrowRemover;
-import net.azisaba.lgw.core.listeners.others.NoNockBack;
+import net.azisaba.lgw.core.listeners.others.NoKnockback;
 import net.azisaba.lgw.core.maps.MapContainer;
 
 public class LeonGunWar extends JavaPlugin {
@@ -15,7 +15,7 @@ public class LeonGunWar extends JavaPlugin {
 
 		// リスナーの登録
 		getServer().getPluginManager().registerEvents(new GroundArrowRemover(this), this);
-		getServer().getPluginManager().registerEvents(new NoNockBack(), this);
+		getServer().getPluginManager().registerEvents(new NoKnockback(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
 	}
