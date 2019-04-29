@@ -1,13 +1,13 @@
 version: 2.1
 
 commands:
-  save-workdir:
+  save-artifacts:
     steps:
       - persist_to_workspace:
           root: ./
           paths:
             - target/
-  load-workdir:
+  load-artifacts:
     steps:
       - attach_workspace:
           at: ./
@@ -66,12 +66,12 @@ jobs:
       - load-maven-cache
       - run: mvn -B clean install
       - save-maven-cache
-      - save-workdir
+      - save-artifacts
   deploy:
     working_directory: ~/workdir/
     executor: ubuntu-executor
     steps:
-      - load-workdir
+      - load-artifacts
       - run: mkdir -pv output/
       - run: mv -v target/*.jar output/
       - upload-artifacts
