@@ -31,15 +31,18 @@ public class MatchSettingsLoader {
 	 * @param plugin
 	 */
 	protected static void init(LeonGunWar plugin) {
-		MatchSettingsLoader.plugin = plugin;
 		dataFolder = new File(plugin.getDataFolder(), "Maps");
+		MatchSettingsLoader.plugin = plugin;
 	}
 
 	/**
 	 * 保存されているマップデータを読み込み、MapDataのリストを返します
 	 * @return 読み込まれたマップデータのリスト
+	 *
+	 * @exception IllegalStateException 初期化される前にメゾッドが呼び出された場合
 	 */
 	protected static List<GameMap> loadMapData() {
+		// pluginがnullの場合は初期化前としてIllegalStateException
 		if (plugin == null) {
 			throw new IllegalStateException("\"plugin\" field is not initialized yet.");
 		}
@@ -121,8 +124,15 @@ public class MatchSettingsLoader {
 	 * @param 上書きを許可するかどうか
 	 *
 	 * @return データを保存したかどうか
+	 *
+	 * @exception IllegalStateException 初期化される前にメゾッドが呼び出された場合
 	 */
 	public static boolean saveGameMap(GameMap map, String fileName, boolean allowOverwrite) {
+		// pluginがnullの場合は初期化前としてIllegalStateException
+		if (plugin == null) {
+			throw new IllegalStateException("\"plugin\" field is not initialized yet.");
+		}
+
 		// ファイル取得
 		File file = new File(dataFolder, fileName);
 
