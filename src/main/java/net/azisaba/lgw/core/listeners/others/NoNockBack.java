@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.listeners;
+package net.azisaba.lgw.core.listeners.others;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -2,8 +2,8 @@ package net.azisaba.lgw.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.azisaba.lgw.core.listeners.GroundArrowRemover;
-import net.azisaba.lgw.core.listeners.NoNockBack;
+import net.azisaba.lgw.core.listeners.others.GroundArrowRemover;
+import net.azisaba.lgw.core.listeners.others.NoNockBack;
 import net.azisaba.lgw.core.maps.MapContainer;
 
 public class LeonGunWar extends JavaPlugin {
