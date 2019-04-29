@@ -48,9 +48,9 @@ executors:
   jdk-executor:
     docker:
       - image: circleci/openjdk:8
-  ubuntu-executor:
+  buildpack-deps-executor:
     docker:
-      - image: ubuntu:latest
+      - image: circleci/buildpack-deps:latest
 
 jobs:
   install:
@@ -69,7 +69,7 @@ jobs:
       - save-artifacts
   deploy:
     working_directory: ~/workdir/
-    executor: ubuntu-executor
+    executor: buildpack-deps-executor
     steps:
       - load-artifacts
       - run: mkdir -pv output/
