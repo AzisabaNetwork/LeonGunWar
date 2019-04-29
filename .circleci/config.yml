@@ -11,6 +11,20 @@ commands:
     steps:
       - attach_workspace:
           at: ./
+  save-maven-cache:
+    steps:
+      - save_cache:
+          key: maven-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
+          paths:
+            - ~/.m2
+  load-maven-cache:
+    steps:
+      - restore_cache:
+          keys:
+            - maven-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
+            - maven-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - maven-v1-{{ .Branch }}
+            - maven-v1-
   upload-artifacts:
     steps:
       - store_artifacts:
@@ -21,22 +35,26 @@ executors:
   jdk-executor:
     docker:
       - image: circleci/openjdk:8
-  buildpack-deps-executor:
+  ubuntu-executor:
     docker:
-      - image: circleci/buildpack-deps:latest
+      - image: ubuntu:latest
 
 jobs:
   install:
     working_directory: ~/workdir/
     executor: jdk-executor
     steps:
-      - checkout
+      - run: git --version
+      - run: java -version
       - run: mvn --version
+      - checkout
+      - load-maven-cache
       - run: mvn -B clean install
+      - save-maven-cache
       - save-workdir
   deploy:
     working_directory: ~/workdir/
-    executor: buildpack-deps-executor
+    executor: ubuntu-executor
     steps:
       - load-workdir
       - run: mkdir -pv output/
