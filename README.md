@@ -15,6 +15,18 @@
 * 試合の管理
 * (その他 非公開機能)
 
+## コミットのPrefix
+|Prefix   |内容     |
+|---------|--------|
+|[Add]    |ファイル追加 / 機能追加|
+|[Delete] | ファイル削除 / 機能削除|
+|[Update] | 機能修正 (バグ修正を除く)|
+|[Fix]    |バグ修正|
+|[HotFix] |クリティカルなバグ修正|
+|[Clean]  |リファクタリング / コード整理|
+|[Change] | 仕様変更|
+|[Rename] | 名前変更|
+
 ## Licence
 
 [GNU General Public License v3.0](LICENSE)
