@@ -3,4 +3,3 @@ main: net.azisaba.lgw.core.LeonGunWar
 version: ${project.version}
 authors: ["siloneco", "YukiLeafX"]
 description: "A core plugin in Azisaba LeonGunWar"
-
