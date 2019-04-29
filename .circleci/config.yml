@@ -102,7 +102,6 @@ workflows:
             branches:
               only:
                 - master
-                - develop
       - deploy-github:
           requires:
             - build
