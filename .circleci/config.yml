@@ -16,7 +16,7 @@ commands:
       - save_cache:
           key: maven-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
           paths:
-            - ~/.m2
+            - ~/.m2/
   load-maven-cache:
     steps:
       - restore_cache:
