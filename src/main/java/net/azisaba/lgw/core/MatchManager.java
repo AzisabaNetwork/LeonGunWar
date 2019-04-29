@@ -41,6 +41,18 @@ public class MatchManager {
 	}
 
 	/**
+	 * マッチを開始するメゾッド
+	 *
+	 * @exception IllegalStateException すでにゲームがスタートしている場合
+	 */
+	public static void startMatch() {
+		// すでにマッチ中の場合はIllegalStateException
+		if (isMatching) {
+			throw new IllegalStateException("A match is already started.");
+		}
+	}
+
+	/**
 	 * チーム分けを行うクラスを変更します
 	 * @param distributor 変更するTeamDistributorを実装したクラスのコンストラクタ
 	 */
