@@ -67,7 +67,7 @@ jobs:
       - checkout
       - save-git-cache
       - load-m2-cache
-      - run: mvn -B install
+      - run: mvn -B clean install
       - save-m2-cache
       - run: mkdir -pv artifacts/
       - run: mv -v target/*.jar artifacts/
