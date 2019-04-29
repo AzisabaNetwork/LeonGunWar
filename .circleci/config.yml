@@ -14,7 +14,7 @@ commands:
   upload-artifacts:
     steps:
       - store_artifacts:
-          path: target/*.jar
+          path: output/
           destination: ./
 
 executors:
@@ -39,6 +39,8 @@ jobs:
     executor: buildpack-deps-executor
     steps:
       - load-workdir
+      - run: mkdir -pv output/
+      - run: mv -v target/*.jar output/
       - upload-artifacts
 
 workflows:
