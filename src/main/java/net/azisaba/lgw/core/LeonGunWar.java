@@ -20,5 +20,6 @@ public class LeonGunWar extends JavaPlugin {
 
 	private void initializeClasses() {
 		MapContainer.init(this);
+		MatchManager.init(this);
 	}
 }
