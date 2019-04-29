@@ -18,7 +18,7 @@ import net.azisaba.lgw.core.LeonGunWar;
  * @author siloneco
  *
  */
-public class GameSettingsLoader {
+public class MatchSettingsLoader {
 
 	private static LeonGunWar plugin = null;
 
@@ -31,7 +31,7 @@ public class GameSettingsLoader {
 	 * @param plugin
 	 */
 	protected static void init(LeonGunWar plugin) {
-		GameSettingsLoader.plugin = plugin;
+		MatchSettingsLoader.plugin = plugin;
 		dataFolder = new File(plugin.getDataFolder(), "Maps");
 	}
 
