@@ -14,7 +14,7 @@ commands:
   upload-artifacts:
     steps:
       - store_artifacts:
-          path: target/
+          path: target/*.jar
           destination: ./
 
 executors:
