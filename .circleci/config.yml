@@ -11,6 +11,19 @@ commands:
     steps:
       - attach_workspace:
           at: ./
+  save-git-cache:
+    steps:
+      - save_cache:
+          key: git-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .git/
+  load-git-cache:
+    steps:
+      - restore_cache:
+          keys:
+            - git-v1-{{ .Branch }}-{{ .Revision }}
+            - git-v1-{{ .Branch }}
+            - git-v1-
   save-maven-cache:
     steps:
       - save_cache:
@@ -47,7 +60,9 @@ jobs:
       - run: git --version
       - run: java -version
       - run: mvn --version
+      - load-git-cache
       - checkout
+      - save-git-cache
       - load-maven-cache
       - run: mvn -B clean install
       - save-maven-cache
