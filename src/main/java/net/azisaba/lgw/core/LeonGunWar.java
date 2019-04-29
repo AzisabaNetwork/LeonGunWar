@@ -2,6 +2,7 @@ package net.azisaba.lgw.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.lgw.core.listeners.GroundArrowRemover;
 import net.azisaba.lgw.core.maps.MapContainer;
 
 public class LeonGunWar extends JavaPlugin {
@@ -10,6 +11,10 @@ public class LeonGunWar extends JavaPlugin {
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
 		initializeClasses();
+
+		// リスナーの登録
+		getServer().getPluginManager().registerEvents(new GroundArrowRemover(this), this);
+
 		getServer().getLogger().info(getName() + " enabled.");
 	}
 
