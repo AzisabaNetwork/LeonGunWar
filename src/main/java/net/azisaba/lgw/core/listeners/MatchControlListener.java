@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -91,5 +92,13 @@ public class MatchControlListener implements Listener {
 
 			// TODO 戦績の表示
 		}
+	}
+
+	/**
+	 * 最後に finalizeMatch メゾッドを実行するためのリスナー
+	 */
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void matchFinalizer(MatchFinishedEvent e) {
+		MatchManager.finalizeMatch();
 	}
 }
