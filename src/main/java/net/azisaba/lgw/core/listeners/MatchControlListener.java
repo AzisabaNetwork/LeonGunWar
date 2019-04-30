@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
@@ -89,6 +91,16 @@ public class MatchControlListener implements Listener {
 		List<Player> allPlayers = new ArrayList<Player>(e.getRedTeamPlayers());
 		allPlayers.addAll(e.getBlueTeamPlayers());
 
+		// MVPのプレイヤーを取得
+		List<KDPlayerData> mvpPlayers = MatchManager.getKillDeathCounter().getMVPPlayer();
+		// MVPプレイヤーのメッセージ
+		List<String> mvpMessages = new ArrayList<String>(Arrays.asList(ChatColor.RED + "MVP:"));
+		for (KDPlayerData data : mvpPlayers) {
+			mvpMessages.add(
+					StringUtils.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
+							+ ChatColor.RED + ": " + data.getKills() + "k " + data.getDeaths() + "d");
+		}
+
 		for (Player p : allPlayers) {
 			// スポーンにTP
 			p.teleport(MatchManager.getLobbySpawnLocation());
@@ -96,7 +108,10 @@ public class MatchControlListener implements Listener {
 			// アーマー削除
 			p.getInventory().setChestplate(null);
 
-			// TODO 戦績の表示
+			// MVPのプレイヤーを表示
+			for (String msg : mvpMessages) {
+				p.sendMessage(msg);
+			}
 		}
 	}
 
