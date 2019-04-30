@@ -2,6 +2,10 @@ package net.azisaba.lgw.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.lgw.core.listeners.MatchControlListener;
+import net.azisaba.lgw.core.listeners.others.DisableItemDurability;
+import net.azisaba.lgw.core.listeners.others.GroundArrowRemover;
+import net.azisaba.lgw.core.listeners.others.NoKnockback;
 import net.azisaba.lgw.core.maps.MapContainer;
 
 public class LeonGunWar extends JavaPlugin {
@@ -10,6 +14,13 @@ public class LeonGunWar extends JavaPlugin {
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
 		initializeClasses();
+
+		// リスナーの登録
+		getServer().getPluginManager().registerEvents(new GroundArrowRemover(this), this);
+		getServer().getPluginManager().registerEvents(new NoKnockback(), this);
+		getServer().getPluginManager().registerEvents(new DisableItemDurability(), this);
+		getServer().getPluginManager().registerEvents(new MatchControlListener(this), this);
+
 		getServer().getLogger().info(getName() + " enabled.");
 	}
 
@@ -18,6 +29,9 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getLogger().info(getName() + " disabled.");
 	}
 
+	/**
+	 * 初期化を必要とするファイルを初期化します
+	 */
 	private void initializeClasses() {
 		MapContainer.init(this);
 		MatchManager.init(this);

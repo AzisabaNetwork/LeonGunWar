@@ -27,9 +27,9 @@ public class MapContainer {
 		}
 
 		// GameSettingsLoaderの初期化
-		MatchSettingsLoader.init(plugin);
+		MapLoader.init(plugin);
 		// 保存されているマップデータの収集
-		mapList = MatchSettingsLoader.loadMapData();
+		mapList = MapLoader.loadMapData();
 
 		plugin.getLogger().info(mapList.size() + "個のマップをロードしました。");
 

@@ -6,11 +6,16 @@ commands:
       - persist_to_workspace:
           root: ./
           paths:
-            - target/
+            - artifacts/
   load-artifacts:
     steps:
       - attach_workspace:
           at: ./
+  upload-artifacts:
+    steps:
+      - store_artifacts:
+          path: artifacts/
+          destination: ./
   save-git-cache:
     steps:
       - save_cache:
@@ -24,38 +29,36 @@ commands:
             - git-v1-{{ .Branch }}-{{ .Revision }}
             - git-v1-{{ .Branch }}
             - git-v1-
-  save-maven-cache:
+  save-m2-cache:
     steps:
       - save_cache:
-          key: maven-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
+          key: m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
           paths:
             - ~/.m2/
-  load-maven-cache:
+  load-m2-cache:
     steps:
       - restore_cache:
           keys:
-            - maven-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
-            - maven-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
-            - maven-v1-{{ .Branch }}
-            - maven-v1-
-  upload-artifacts:
-    steps:
-      - store_artifacts:
-          path: output/
-          destination: ./
+            - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
+            - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - m2-v1-{{ .Branch }}
+            - m2-v1-
 
 executors:
-  jdk-executor:
+  openjdk-executor:
     docker:
       - image: circleci/openjdk:8
   buildpack-deps-executor:
     docker:
       - image: circleci/buildpack-deps:latest
+  github-release-executor:
+    docker:
+      - image: cibuilds/github:latest
 
 jobs:
-  install:
+  build:
     working_directory: ~/workdir/
-    executor: jdk-executor
+    executor: openjdk-executor
     steps:
       - run: git --version
       - run: java -version
@@ -63,32 +66,45 @@ jobs:
       - load-git-cache
       - checkout
       - save-git-cache
-      - load-maven-cache
+      - load-m2-cache
       - run: mvn -B clean install
-      - save-maven-cache
+      - save-m2-cache
+      - run: mkdir -pv artifacts/
+      - run: mv -v target/*.jar artifacts/
       - save-artifacts
-  deploy:
+  deploy-circleci:
     working_directory: ~/workdir/
     executor: buildpack-deps-executor
     steps:
       - load-artifacts
-      - run: mkdir -pv output/
-      - run: mv -v target/*.jar output/
       - upload-artifacts
+  deploy-github:
+    working_directory: ~/workdir/
+    executor: github-release-executor
+    steps:
+      - load-artifacts
+      - run: ghr -u "$CIRCLE_PROJECT_USERNAME" -r "$CIRCLE_PROJECT_REPONAME" -c "$CIRCLE_SHA1" -n "$CIRCLE_PROJECT_REPONAME "\#"$CIRCLE_PREVIOUS_BUILD_NUM" -b "https://circleci.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PREVIOUS_BUILD_NUM" \#"$CIRCLE_PREVIOUS_BUILD_NUM" artifacts/
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - install:
+      - build:
           filters:
             branches:
               only:
                 - master
                 - develop
-      - deploy:
+      - deploy-circleci:
           requires:
-            - install
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-github:
+          requires:
+            - build
           filters:
             branches:
               only:

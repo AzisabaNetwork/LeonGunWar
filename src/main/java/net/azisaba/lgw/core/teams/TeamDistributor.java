@@ -6,20 +6,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
 /**
- * プレイヤーを2チームに分けるクラスのためのインターフェース
+ * プレイヤーをチームに振り分けるクラスのためのインターフェース
  * @author siloneco
  *
  */
 public interface TeamDistributor {
 
 	/**
-	 * プレイヤーを2チームに均等に振り分けます
+	 * プレイヤーをチームに均等に振り分けます
 	 * 基本は同じ人数になるように振り分けしますが、今後KDによって振り分けるときのためにインターフェースで実装します
 	 *
 	 * @param plist 振り分けたいプレイヤーのリスト
-	 * @param red 赤のスコアボードのチーム
-	 * @param blue 青のスコアボードのチーム
+	 * @param teams チームのリスト
 	 */
-	abstract public void distributePlayer(List<Player> plist, Team red, Team blue);
+	public void distributePlayers(List<Player> plist, List<Team> teams);
+
+	/**
+	 * 指定されたプレイヤーをどちらかのチームに振り分けます
+	 *
+	 * @param p 振り分けたいプレイヤー
+	 * @param teams チームのリスト
+	 */
+	public void distributePlayer(Player p, List<Team> teams);
 
 }
