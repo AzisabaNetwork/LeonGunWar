@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.ScoreboardDisplayer;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -36,6 +37,18 @@ public class MatchControlListener implements Listener {
 		meta.setDisplayName(ChatColor.GOLD + "勝者の証");
 		meta.setLore(Arrays.asList("勝者に与えられる証", "ダイヤと交換できる"));
 		winnerProof.setItemMeta(meta);
+	}
+
+	/**
+	 * プレイヤーのスコアボードを更新するためのリスナー
+	 */
+	@EventHandler
+	public void scoreboardUpdater(MatchTimeChangedEvent e) {
+		// 試合中のプレイヤーのスコアボードをアップデート
+		List<Player> players = MatchManager.getTeamPlayers(BattleTeam.BOTH);
+
+		// スコアボードをアップデート
+		ScoreboardDisplayer.updateScoreboard(players);
 	}
 
 	/**

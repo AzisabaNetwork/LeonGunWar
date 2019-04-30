@@ -89,6 +89,9 @@ public class MatchManager {
 		// メインではない新しいスコアボードを取得
 		scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
 
+		// ScoreboardDisplayerにScoreboardを設定
+		ScoreboardDisplayer.setScoreBoard(scoreboard);
+
 		// 各スコアボードチームの取得 / 作成 (赤、青、試合参加エントリー用)
 		initializeTeams();
 
@@ -351,6 +354,14 @@ public class MatchManager {
 		}
 
 		return currentMap;
+	}
+
+	/**
+	 * 現在試合を行っているかどうかをbooleanで返します
+	 * @return 現在試合を行っているかどうか
+	 */
+	public static boolean isMatching() {
+		return isMatching;
 	}
 
 	/**
