@@ -36,6 +36,9 @@ public class MatchControlListener implements Listener {
 		winnerProof.setItemMeta(meta);
 	}
 
+	/**
+	 * 試合が終わったときにMatchFinishedEventを呼び出すリスナー
+	 */
 	@EventHandler
 	public void matchFinishDetector(MatchTimeChangedEvent e) {
 		// 時間を取得して0じゃなかったらreturn
@@ -64,6 +67,9 @@ public class MatchControlListener implements Listener {
 		plugin.getServer().getPluginManager().callEvent(event);
 	}
 
+	/**
+	 * 試合が終わった時の処理を担当するリスナー
+	 */
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
 		// 勝ったチームのプレイヤーリストを取得
