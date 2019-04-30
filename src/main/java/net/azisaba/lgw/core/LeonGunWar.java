@@ -2,6 +2,7 @@ package net.azisaba.lgw.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.lgw.core.listeners.EntrySignListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDurability;
 import net.azisaba.lgw.core.listeners.others.GroundArrowRemover;
@@ -20,6 +21,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new NoKnockback(), this);
 		getServer().getPluginManager().registerEvents(new DisableItemDurability(), this);
 		getServer().getPluginManager().registerEvents(new MatchControlListener(this), this);
+		getServer().getPluginManager().registerEvents(new EntrySignListener(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
 	}
