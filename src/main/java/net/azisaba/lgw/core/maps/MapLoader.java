@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.utils.LocationLoader;
 
 /**
  *
@@ -91,13 +92,13 @@ public class MapLoader {
 				successLoad = false;
 			}
 
-			redSpawn = getLocation(yamlData, RED_SPAWN_KEY);
+			redSpawn = LocationLoader.getLocation(yamlData, RED_SPAWN_KEY);
 			if (redSpawn == null) {
 				plugin.getLogger().warning("\"" + RED_SPAWN_KEY + "\"が読み込めませんでした (FileName=" + file.getName() + ")");
 				successLoad = false;
 			}
 
-			blueSpawn = getLocation(yamlData, BLUE_SPAWN_KEY);
+			blueSpawn = LocationLoader.getLocation(yamlData, BLUE_SPAWN_KEY);
 			if (redSpawn == null) {
 				plugin.getLogger().warning("\"" + BLUE_SPAWN_KEY + "\"が読み込めませんでした (FileName=" + file.getName() + ")");
 				successLoad = false;
@@ -147,8 +148,8 @@ public class MapLoader {
 		// 各データを保存
 		dataYaml.set(MAP_NAME_KEY, map.getMapName());
 		dataYaml.set(WORLD_NAME_KEY, map.getWorld().getName());
-		setLocation(dataYaml, map.getRedSpawn(), RED_SPAWN_KEY);
-		setLocation(dataYaml, map.getBlueSpawn(), BLUE_SPAWN_KEY);
+		LocationLoader.setLocation(dataYaml, map.getRedSpawn(), RED_SPAWN_KEY);
+		LocationLoader.setLocation(dataYaml, map.getBlueSpawn(), BLUE_SPAWN_KEY);
 
 		// セーブ
 		try {
@@ -161,56 +162,6 @@ public class MapLoader {
 
 		// 成功したらtrueを返す
 		return true;
-	}
-
-	/**
-	 *
-	 * 座標を指定されたYamlConfigurationにセットします
-	 * マップデータの保存形式上ワールドは必要ないので保存しません
-	 *
-	 * @param conf Locationを設定するYamlConfiguration
-	 * @param loc 設定するLocation
-	 * @param key 設定するキー
-	 */
-	private static void setLocation(YamlConfiguration conf, Location loc, String key) {
-		conf.set(key + ".X", loc.getX());
-		conf.set(key + ".Y", loc.getY());
-		conf.set(key + ".Z", loc.getZ());
-		conf.set(key + ".Yaw", (double) loc.getYaw());
-		conf.set(key + ".Pitch", (double) loc.getYaw());
-	}
-
-	/**
-	 *
-	 * 上記の setLocation メゾッドで保存されたLocationをロードします
-	 * ワールドは適用されません
-	 *
-	 * @param conf
-	 * @param key
-	 * @return
-	 */
-	private static Location getLocation(YamlConfiguration conf, String key) {
-		Location loc = null;
-
-		// x, y, zの値が保存されているかの確認 (保存されていなければnullを返す)
-		if (!conf.isSet(key + ".X") || !conf.isSet(key + ".Y") || !conf.isSet(key + ".Z")) {
-			return null;
-		}
-
-		double x = conf.getDouble(key + ".X");
-		double y = conf.getDouble(key + ".Y");
-		double z = conf.getDouble(key + ".Z");
-
-		// 座標作成
-		loc = new Location(null, x, y, z);
-
-		// YawとPitchが指定されているなら設定する
-		if (conf.isSet(key + ".Yaw"))
-			loc.setYaw((float) conf.getDouble(key + ".Yaw"));
-		if (conf.isSet(key + ".Pitch"))
-			loc.setPitch((float) conf.getDouble(key + ".Pitch"));
-
-		return loc;
 	}
 
 	// プレイヤーに表示するマップ名のキー
