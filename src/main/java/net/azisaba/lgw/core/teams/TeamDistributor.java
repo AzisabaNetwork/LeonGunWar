@@ -22,4 +22,13 @@ public interface TeamDistributor {
 	 */
 	abstract public void distributePlayer(List<Player> plist, Team red, Team blue);
 
+	/**
+	 * 指定されたプレイヤーをどちらかのチームに振り分けます
+	 *
+	 * @param p 振り分けたいプレイヤー
+	 * @param red 赤のスコアボードのチーム
+	 * @param blue 青のスコアボードのチーム
+	 */
+	abstract public void distributePlayer(Player p, Team red, Team blue);
+
 }

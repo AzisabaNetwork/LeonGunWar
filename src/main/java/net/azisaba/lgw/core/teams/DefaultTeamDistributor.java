@@ -25,14 +25,25 @@ public class DefaultTeamDistributor implements TeamDistributor {
 		// 均等に分ける
 		plist.forEach(player -> {
 
-			// エントリーが少ないチームを取得 (同じ場合はred)
-			Team lowTeam = red;
-			if (blue.getEntries().size() < red.getEntries().size()) {
-				lowTeam = blue;
-			}
+			// distributePlayer(player, red, blue)にて振り分ける
+			distributePlayer(player, red, blue);
 
-			// プレイヤーを追加
-			lowTeam.addEntry(player.getName());
 		});
+	}
+
+	/**
+	 * 戦績に関係なく、ただ人数比を同じにする振り分けを行います
+	 */
+	@Override
+	public void distributePlayer(Player player, Team red, Team blue) {
+
+		// エントリーが少ないチームを取得 (同じ場合はred)
+		Team lowTeam = red;
+		if (blue.getEntries().size() < red.getEntries().size()) {
+			lowTeam = blue;
+		}
+
+		// プレイヤーを追加
+		lowTeam.addEntry(player.getName());
 	}
 }
