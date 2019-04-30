@@ -16,7 +16,7 @@ public class NoKnockback implements Listener {
 	 * @param e ノックバックしたイベント
 	 */
 	@EventHandler
-	public final void onVelocity(PlayerVelocityEvent e) {
+	public void onPlayerVelocity(PlayerVelocityEvent e) {
 		e.setCancelled(true);
 	}
 }

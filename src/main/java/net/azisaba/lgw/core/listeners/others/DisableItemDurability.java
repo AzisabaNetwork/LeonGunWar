@@ -19,7 +19,7 @@ public class DisableItemDurability implements Listener {
 	 * @param e プレイヤーのアイテムの耐久値が減少するイベント
 	 */
 	@EventHandler
-	public void onPlayerItemDamageEvent(PlayerItemDamageEvent e) {
+	public void onPlayerItemDamage(PlayerItemDamageEvent e) {
 		ItemStack item = e.getItem();
 
 		// アイテムがnullの場合return
