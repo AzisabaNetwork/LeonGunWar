@@ -44,7 +44,7 @@ public class MatchControlListener implements Listener {
 	 */
 	@EventHandler
 	public void scoreboardUpdater(MatchTimeChangedEvent e) {
-		// 試合中のプレイヤーのスコアボードをアップデート
+		// 試合中のプレイヤーを取得
 		List<Player> players = MatchManager.getTeamPlayers(BattleTeam.BOTH);
 
 		// スコアボードをアップデート
