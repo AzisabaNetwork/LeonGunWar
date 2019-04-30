@@ -7,6 +7,6 @@ package net.azisaba.lgw.core.teams;
  */
 public enum BattleTeam {
 
-	RED, BLUE
+	RED, BLUE, BOTH, UNKNOWN
 
 }
