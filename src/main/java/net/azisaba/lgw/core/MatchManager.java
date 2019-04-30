@@ -1,11 +1,15 @@
 package net.azisaba.lgw.core;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -20,6 +24,7 @@ import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.teams.DefaultTeamDistributor;
 import net.azisaba.lgw.core.teams.TeamDistributor;
+import net.azisaba.lgw.core.utils.LocationLoader;
 import net.md_5.bungee.api.ChatColor;
 
 /**
@@ -37,6 +42,9 @@ public class MatchManager {
 	// チーム分けを行うクラス
 	private static TeamDistributor teamDistributor;
 
+	// ロビーのスポーン地点
+	private static Location lobbySpawnPoint;
+
 	// ゲーム中かどうかの判定
 	private static boolean isMatching = false;
 	// 現在のマップ
@@ -45,6 +53,7 @@ public class MatchManager {
 	private static int timeLeft = 0;
 	// 試合を動かすタスク
 	private static BukkitTask matchTask;
+
 	// マッチで使用するスコアボード
 	private static Scoreboard scoreboard;
 	// 赤、青、試合参加エントリー用のスコアボードチーム
@@ -90,6 +99,9 @@ public class MatchManager {
 		blueChestPlate = new ItemStack(Material.LEATHER_CHESTPLATE);
 		meta.setColor(Color.BLUE);
 		blueChestPlate.setItemMeta(meta);
+
+		// ロビーのスポーン地点をロード
+		loadLobbySpawnLocation();
 
 		initialized = true;
 	}
@@ -386,6 +398,22 @@ public class MatchManager {
 	}
 
 	/**
+	 * ロビーのスポーン地点を取得します
+	 * 初期化前に呼び出された場合はIllegalStateExceptionを投げます
+	 *
+	 * @return ロビーのスポーン地点
+	 * @exception IllegalStateException 初期化前にメゾッドが呼び出された場合
+	 */
+	public static Location getLobbySpawnLocation() {
+		// 初期化前なら IllegalStateException
+		if (!initialized) {
+			throw new IllegalStateException("\"" + MatchManager.class.getName() + "\" is not initialized yet.");
+		}
+
+		return lobbySpawnPoint;
+	}
+
+	/**
 	 * 各チームの初期化を行います
 	 */
 	private static void initializeTeams() {
@@ -410,6 +438,37 @@ public class MatchManager {
 		entry = scoreboard.getTeam("Entry");
 		if (entry == null) {
 			entry = scoreboard.getTeam("Entry");
+		}
+	}
+
+	/**
+	 * ロビーのスポーン地点をロードします
+	 * 設定されていない場合はデフォルト値を設定します
+	 */
+	private static void loadLobbySpawnLocation() {
+		// ファイル
+		File lobbySpawnFile = new File(plugin.getDataFolder(), "spawn.yml");
+		YamlConfiguration spawnLoader = YamlConfiguration.loadConfiguration(lobbySpawnFile);
+
+		// 座標をロード
+		lobbySpawnPoint = LocationLoader.getLocation(spawnLoader, "lobby");
+
+		// ロードできなかった場合はworldのスポーン地点を取得
+		if (lobbySpawnPoint == null) {
+			lobbySpawnPoint = plugin.getServer().getWorld("world").getSpawnLocation();
+		}
+
+		// 設定されていない場合はデフォルト値を設定
+		if (spawnLoader.getConfigurationSection("lobby") == null) {
+			lobbySpawnPoint = new Location(plugin.getServer().getWorld("world"), 616.5, 10, 70.5, 0, 0);
+			// 設定
+			LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnPoint, "lobby");
+			// セーブ
+			try {
+				spawnLoader.save(lobbySpawnFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

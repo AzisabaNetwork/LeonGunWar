@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -15,6 +16,24 @@ public class LocationLoader {
 	 * @param key 設定するキー
 	 */
 	public static void setLocation(YamlConfiguration conf, Location loc, String key) {
+		conf.set(key + ".X", loc.getX());
+		conf.set(key + ".Y", loc.getY());
+		conf.set(key + ".Z", loc.getZ());
+		conf.set(key + ".Yaw", (double) loc.getYaw());
+		conf.set(key + ".Pitch", (double) loc.getYaw());
+	}
+
+	/**
+	 *
+	 * 座標を指定されたYamlConfigurationにセットします
+	 * マップデータの保存形式上ワールドは必要ないので保存しません
+	 *
+	 * @param conf Locationを設定するYamlConfiguration
+	 * @param loc 設定するLocation
+	 * @param key 設定するキー
+	 */
+	public static void setLocationWithWorld(YamlConfiguration conf, Location loc, String key) {
+		conf.set(key + ".World", loc.getWorld().getName());
 		conf.set(key + ".X", loc.getX());
 		conf.set(key + ".Y", loc.getY());
 		conf.set(key + ".Z", loc.getZ());
@@ -51,6 +70,10 @@ public class LocationLoader {
 			loc.setYaw((float) conf.getDouble(key + ".Yaw"));
 		if (conf.isSet(key + ".Pitch"))
 			loc.setPitch((float) conf.getDouble(key + ".Pitch"));
+
+		// Worldが指定されているなら設定する
+		if (conf.isSet(key + ".World"))
+			loc.setWorld(Bukkit.getWorld(conf.getString(key + ".World")));
 
 		return loc;
 	}
