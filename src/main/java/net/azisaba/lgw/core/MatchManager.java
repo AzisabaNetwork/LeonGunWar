@@ -53,6 +53,8 @@ public class MatchManager {
 	private static int timeLeft = 0;
 	// 試合を動かすタスク
 	private static BukkitTask matchTask;
+	// KDカウンター
+	private static KillDeathCounter kdCounter;
 
 	// マッチで使用するスコアボード
 	private static Scoreboard scoreboard;
@@ -78,6 +80,9 @@ public class MatchManager {
 		}
 
 		MatchManager.plugin = plugin;
+
+		// kdCounterを新規作成
+		kdCounter = new KillDeathCounter();
 
 		// デフォルトのTeamDistributorを指定
 		MatchManager.teamDistributor = new DefaultTeamDistributor();
@@ -187,6 +192,9 @@ public class MatchManager {
 
 		// 残り時間を0に
 		timeLeft = 0;
+
+		// KillDeathCounterを初期化
+		kdCounter = new KillDeathCounter();
 	}
 
 	/**
@@ -233,6 +241,21 @@ public class MatchManager {
 		}
 
 		return players;
+	}
+
+	/**
+	 * プレイヤーのKDを保存するクラスを取得します
+	 * キル数デス数の追加もここから行います
+	 * @return 現在のKillDeathCounter
+	 *
+	 * @exception IllegalStateException まだ初期化されていないときにメゾッドが呼ばれた場合
+	 */
+	public static KillDeathCounter getKillDeathCounter() {
+		if (!initialized) {
+			throw new IllegalStateException("\"" + MatchManager.class.getName() + "\" is not initialized yet.");
+		}
+
+		return kdCounter;
 	}
 
 	/**
