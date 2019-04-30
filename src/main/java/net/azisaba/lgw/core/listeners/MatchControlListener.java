@@ -18,7 +18,7 @@ public class MatchControlListener implements Listener {
 	}
 
 	@EventHandler
-	public void onMatchFinished(MatchTimeChangedEvent e) {
+	public void matchFinishDetector(MatchTimeChangedEvent e) {
 		// 時間を取得して0じゃなかったらreturn
 		if (e.getTimeLeft() > 0) {
 			return;
