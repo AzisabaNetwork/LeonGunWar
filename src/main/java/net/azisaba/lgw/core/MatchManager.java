@@ -8,9 +8,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.maps.GameMap;
 import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.teams.DefaultTeamDistributor;
@@ -36,6 +39,10 @@ public class MatchManager {
 	private static boolean isMatching = false;
 	// 現在のマップ
 	private static GameMap currentMap = null;
+	// 試合の残り時間
+	private static int matchTime = 0;
+	// 試合を動かすタスク
+	private static BukkitTask matchTask;
 	// マッチで使用するスコアボード
 	private static Scoreboard scoreboard;
 	// 赤、青、試合参加エントリー用のスコアボードチーム
@@ -135,13 +142,26 @@ public class MatchManager {
 			// テレポート
 			p.teleport(currentMap.getBlueSpawn());
 		}
+
+		// タスクスタート
+		runMatchTask();
 	}
 
 	/**
 	 * ゲーム終了時に行う処理を書きます
 	 */
 	public static void finalizeMatch() {
-		// TODO 赤チームと青チームのエントリー削除
+		// 赤チームのEntry削除
+		for (String redEntry : new ArrayList<String>(redTeam.getEntries())) {
+			redTeam.removeEntry(redEntry);
+		}
+		// 青チームのEntry削除
+		for (String blueEntry : new ArrayList<String>(blueTeam.getEntries())) {
+			blueTeam.removeEntry(blueEntry);
+		}
+
+		// 残り時間を0に
+		matchTime = 0;
 	}
 
 	/**
@@ -188,6 +208,36 @@ public class MatchManager {
 		}
 
 		return players;
+	}
+
+	/**
+	 * ゲームの残り時間を操作するタイマータスクを起動します
+	 * 基本はMatchTimeChangedEventを利用して、イベントからゲームを操作するため
+	 * このタスクでは基本他の動作を行いません
+	 */
+	private static void runMatchTask() {
+		// 試合中ならreturn
+		if (isMatching) {
+			return;
+		}
+
+		matchTask = new BukkitRunnable() {
+			@Override
+			public void run() {
+				// matchTimeを減らす
+				matchTime -= 1;
+
+				// イベントを呼び出す
+				MatchTimeChangedEvent event = new MatchTimeChangedEvent(matchTime);
+				plugin.getServer().getPluginManager().callEvent(event);
+
+				// 0になったらストップ
+				if (matchTime == 0) {
+					this.cancel();
+					return;
+				}
+			}
+		}.runTaskTimer(plugin, 20, 20);
 	}
 
 	/**
