@@ -24,7 +24,7 @@ public class MatchTimeChangedEvent extends Event {
 		this.matchTime = matchTime;
 	}
 
-	public int getMatchTime() {
+	public int getTimeLeft() {
 		return matchTime;
 	}
 

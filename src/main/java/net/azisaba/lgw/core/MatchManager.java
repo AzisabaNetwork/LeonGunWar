@@ -40,7 +40,7 @@ public class MatchManager {
 	// 現在のマップ
 	private static GameMap currentMap = null;
 	// 試合の残り時間
-	private static int matchTime = 0;
+	private static int timeLeft = 0;
 	// 試合を動かすタスク
 	private static BukkitTask matchTask;
 	// マッチで使用するスコアボード
@@ -160,8 +160,14 @@ public class MatchManager {
 			blueTeam.removeEntry(blueEntry);
 		}
 
+		// タスクの終了
+		if (matchTask != null) {
+			matchTask.cancel();
+			matchTask = null;
+		}
+
 		// 残り時間を0に
-		matchTime = 0;
+		timeLeft = 0;
 	}
 
 	/**
@@ -225,14 +231,14 @@ public class MatchManager {
 			@Override
 			public void run() {
 				// matchTimeを減らす
-				matchTime -= 1;
+				timeLeft -= 1;
 
 				// イベントを呼び出す
-				MatchTimeChangedEvent event = new MatchTimeChangedEvent(matchTime);
+				MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);
 				plugin.getServer().getPluginManager().callEvent(event);
 
 				// 0になったらストップ
-				if (matchTime == 0) {
+				if (timeLeft == 0) {
 					this.cancel();
 					return;
 				}
