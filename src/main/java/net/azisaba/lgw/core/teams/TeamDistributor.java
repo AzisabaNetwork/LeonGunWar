@@ -20,7 +20,7 @@ public interface TeamDistributor {
 	 * @param red 赤のスコアボードのチーム
 	 * @param blue 青のスコアボードのチーム
 	 */
-	abstract public void distributePlayer(List<Player> plist, Team red, Team blue);
+	abstract public void distributePlayers(List<Player> plist, Team red, Team blue);
 
 	/**
 	 * 指定されたプレイヤーをどちらかのチームに振り分けます

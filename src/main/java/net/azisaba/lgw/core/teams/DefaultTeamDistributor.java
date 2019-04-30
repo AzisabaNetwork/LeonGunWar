@@ -18,7 +18,7 @@ public class DefaultTeamDistributor implements TeamDistributor {
 	 * 戦績に関係なく、ただ人数比を同じにする振り分けを行います
 	 */
 	@Override
-	public void distributePlayer(List<Player> plist, Team red, Team blue) {
+	public void distributePlayers(List<Player> plist, Team red, Team blue) {
 		// plistをシャッフル
 		Collections.shuffle(plist);
 
