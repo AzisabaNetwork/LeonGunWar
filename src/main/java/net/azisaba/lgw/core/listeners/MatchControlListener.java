@@ -84,7 +84,7 @@ public class MatchControlListener implements Listener {
 
 		for (Player p : allPlayers) {
 			// スポーンにTP
-			// TODO スポーン地点をどこかから引っ張ってくる
+			p.teleport(MatchManager.getLobbySpawnLocation());
 
 			// アーマー削除
 			p.getInventory().setChestplate(null);
