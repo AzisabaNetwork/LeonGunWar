@@ -16,6 +16,16 @@ commands:
       - store_artifacts:
           path: artifacts/
           destination: ./
+  save-scripts:
+    steps:
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - .circleci/scripts/
+  load-scripts:
+    steps:
+      - attach_workspace:
+          at: ./
   save-git-cache:
     steps:
       - save_cache:
@@ -60,18 +70,14 @@ jobs:
     working_directory: ~/workdir/
     executor: openjdk-executor
     steps:
-      - run: git --version
-      - run: java -version
-      - run: mvn --version
       - load-git-cache
       - checkout
       - save-git-cache
       - load-m2-cache
-      - run: mvn -B clean install
+      - run: .circleci/scripts/build.sh
       - save-m2-cache
-      - run: mkdir -pv artifacts/
-      - run: mv -v target/*.jar artifacts/
       - save-artifacts
+      - save-scripts
   deploy-circleci:
     working_directory: ~/workdir/
     executor: buildpack-deps-executor
@@ -83,7 +89,8 @@ jobs:
     executor: github-release-executor
     steps:
       - load-artifacts
-      - run: ghr -u "$CIRCLE_PROJECT_USERNAME" -r "$CIRCLE_PROJECT_REPONAME" -c "$CIRCLE_SHA1" -n "$CIRCLE_PROJECT_REPONAME "\#"$CIRCLE_PREVIOUS_BUILD_NUM" -b "https://circleci.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PREVIOUS_BUILD_NUM" \#"$CIRCLE_PREVIOUS_BUILD_NUM" artifacts/
+      - load-scripts
+      - run: .circleci/scripts/deploy-github.sh
 
 workflows:
   version: 2
