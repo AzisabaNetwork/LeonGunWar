@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Color;
@@ -109,7 +110,7 @@ public class MatchManager {
 		// 参加プレイヤーを取得
 		List<Player> entryPlayers = getEntryPlayers();
 		// プレイヤーを振り分け
-		teamDistributor.distributePlayers(entryPlayers, redTeam, blueTeam);
+		teamDistributor.distributePlayers(entryPlayers, Arrays.asList(redTeam, blueTeam));
 
 		// 各プレイヤーにチームに沿った処理を行う
 		// エントリー削除したときにgetEntries()の中身が変わってエラーを起こさないように新しいリストを作成してfor文を使用する
