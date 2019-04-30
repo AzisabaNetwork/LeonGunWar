@@ -16,6 +16,7 @@ import org.bukkit.scoreboard.Team;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.maps.GameMap;
 import net.azisaba.lgw.core.maps.MapContainer;
+import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.teams.DefaultTeamDistributor;
 import net.azisaba.lgw.core.teams.TeamDistributor;
 import net.md_5.bungee.api.ChatColor;
@@ -49,6 +50,11 @@ public class MatchManager {
 	private static Team redTeam, blueTeam, entry;
 	// 赤、青チームのチェストプレート
 	private static ItemStack redChestPlate, blueChestPlate;
+
+	// 現在の赤チームのポイント (キル数)
+	private static int redPoint = 0;
+	// 現在の青チームのポイント (キル数)
+	private static int bluePoint = 0;
 
 	/**
 	 * 初期化メゾッド
@@ -244,6 +250,130 @@ public class MatchManager {
 				}
 			}
 		}.runTaskTimer(plugin, 20, 20);
+	}
+
+	/**
+	 * 指定されたチームのプレイヤーリストを取得します
+	 * @param team プレイヤーリストを取得したいチーム
+	 * @return チームのプレイヤーリスト (BOTHの場合は試合に参加しているすべてのプレイヤー)
+	 *
+	 * @exception IllegalArgumentException teamがnullの場合
+	 */
+	public static List<Player> getTeamPlayers(BattleTeam team) {
+		// teamがnullならIllegalArgumentException
+		if (team == null) {
+			throw new IllegalArgumentException("\"team\" mustn't be null.");
+		}
+		// teamがUNKNOWNなら空のリストを返す
+		if (team == BattleTeam.UNKNOWN) {
+			return new ArrayList<Player>();
+		}
+
+		// リスト作成
+		List<Player> players = new ArrayList<>();
+		// 名前のリストを作成
+		List<String> entryList = null;
+
+		// 赤チームの場合
+		if (team == BattleTeam.RED) {
+			entryList = new ArrayList<String>(redTeam.getEntries());
+		} else if (team == BattleTeam.BLUE) {
+			entryList = new ArrayList<String>(blueTeam.getEntries());
+		} else if (team == BattleTeam.BOTH) {
+			entryList = new ArrayList<String>(redTeam.getEntries());
+			entryList.addAll(new ArrayList<String>(blueTeam.getEntries()));
+		}
+
+		// Entryしている名前からプレイヤー検索
+		for (String entryName : entryList) {
+			// プレイヤーを取得
+			Player player = plugin.getServer().getPlayerExact(entryName);
+
+			// プレイヤーがいない場合はcontinue
+			if (player == null) {
+				continue;
+			}
+
+			// リストに追加
+			players.add(player);
+		}
+
+		// 取得したプレイヤーリストを返す
+		return players;
+	}
+
+	/**
+	 * 現在のマップを取得します
+	 * 試合が行われていない場合はnullを返します
+	 *
+	 * @return 試合中のマップ
+	 */
+	public static GameMap getCurrentGameMap() {
+		// 試合中でなかったらnullを返す
+		if (!isMatching) {
+			return null;
+		}
+
+		return currentMap;
+	}
+
+	/**
+	 * 指定したチームの現在のポイント数を取得します
+	 * 試合が行われていない場合は-1を返します
+	 *
+	 * @param team ポイントを取得したいチーム
+	 * @return 指定したチームの現在のポイント
+	 *
+	 * @exception IllegalArgumentException teamがnullの場合
+	 */
+	public static int getCurrentTeamPoint(BattleTeam team) {
+		// teamがnullならIllegalArgumentException
+		if (team == null) {
+			throw new IllegalArgumentException("\"team\" mustn't be null.");
+		}
+
+		// 試合中でなかったら-1を返す
+		if (!isMatching) {
+			return -1;
+		}
+
+		// 赤チームの場合
+		if (team == BattleTeam.RED) {
+			return redPoint;
+		}
+
+		// 青チームの場合
+		if (team == BattleTeam.BLUE) {
+			return bluePoint;
+		}
+
+		// その他
+		return -1;
+	}
+
+	/**
+	 * 指定したチームに1ポイントを追加します。
+	 *
+	 * @param team ポイントを追加したいチーム
+	 * @exception IllegalArgumentException チームがRED, BLUE以外の場合
+	 */
+	public static void addTeamPoint(BattleTeam team) {
+		// REDでもBLUEでもなければIllegalArgumentException
+		if (team != BattleTeam.RED && team != BattleTeam.BLUE) {
+			throw new IllegalArgumentException("\"team\" must be RED or BLUE.");
+		}
+
+		// REDの場合赤に1ポイント追加
+		if (team == BattleTeam.RED) {
+			redPoint++;
+			return;
+		}
+
+		// BLUEの場合青に1ポイント追加
+		if (team == BattleTeam.BLUE) {
+			bluePoint++;
+			return;
+		}
 	}
 
 	/**
