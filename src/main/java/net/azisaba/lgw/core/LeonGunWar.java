@@ -27,6 +27,9 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getLogger().info(getName() + " disabled.");
 	}
 
+	/**
+	 * 初期化を必要とするファイルを初期化します
+	 */
 	private void initializeClasses() {
 		MapContainer.init(this);
 		MatchManager.init(this);
