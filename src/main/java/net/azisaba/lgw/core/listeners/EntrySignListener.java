@@ -59,5 +59,56 @@ public class EntrySignListener implements Listener {
 		boolean success = MatchManager.entryPlayer(p);
 
 		// メッセージを表示
+		if (success) { // エントリーした場合
+			p.sendMessage(ChatColor.GREEN + "エントリーに参加しました！");
+		} else { // すでにエントリーしている場合
+			p.sendMessage(ChatColor.RED + "すでにエントリーしています！");
+		}
+	}
+
+	/**
+	 * エントリー解除看板をクリックしたことを検知し、プレイヤーをエントリー解除するリスナー
+	 */
+	@EventHandler
+	public void onClickSignEvent2(PlayerInteractEvent e) {
+		// ブロックをクリックしていなければreturn
+		if (e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
+			return;
+		}
+
+		// プレイヤー / ブロック取得
+		Player p = e.getPlayer();
+		Block clickedBlock = e.getClickedBlock();
+
+		// ブロックが看板でなければreturn
+		if (clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN) {
+			return;
+		}
+
+		// Signにキャスト
+		Sign sign = (Sign) clickedBlock.getState();
+
+		// 1行目が [entry] でなければreturn
+		if (!sign.getLine(0).equals("[leave]")) {
+			return;
+		}
+
+		// イベントをキャンセル
+		e.setCancelled(true);
+
+		// 4行目が[INACTIVE]ならキャンセル
+		if (ChatColor.stripColor(sign.getLine(3)).equals("[INACTIVE]")) {
+			return;
+		}
+
+		// エントリー
+		boolean success = MatchManager.entryPlayer(p);
+
+		// メッセージを表示
+		if (success) { // エントリーした場合
+			p.sendMessage(ChatColor.GREEN + "エントリーを解除しました！");
+		} else { // すでにエントリーしている場合
+			p.sendMessage(ChatColor.RED + "まだエントリーしていません！");
+		}
 	}
 }
