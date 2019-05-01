@@ -111,4 +111,54 @@ public class EntrySignListener implements Listener {
 			p.sendMessage(ChatColor.RED + "まだエントリーしていません！");
 		}
 	}
+
+	@EventHandler
+	public void changeSignState(PlayerInteractEvent e) {
+		// ブロックをシフト + 右クリックしていなければreturn
+		if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking()) {
+			return;
+		}
+
+		// プレイヤー / ブロック取得
+		Player p = e.getPlayer();
+		Block clickedBlock = e.getClickedBlock();
+
+		// ブロックが看板でなければreturn
+		if (clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN) {
+			return;
+		}
+
+		// Signにキャスト
+		Sign sign = (Sign) clickedBlock.getState();
+
+		// 1行目が [entry] または [leave] でなければreturn
+		if (!sign.getLine(0).equals("[leave]") && !sign.getLine(0).equals("[entry]")) {
+			return;
+		}
+
+		// 権限がなければreturn
+		if (!p.hasPermission("leongunwar.entrysign.changestate")) {
+			return;
+		}
+
+		// イベントをキャンセル
+		e.setCancelled(true);
+
+		// 元メッセージ
+		String line4 = ChatColor.stripColor(sign.getLine(3));
+		// 編集先メッセージ
+		String edit = "";
+
+		// 4行目の編集
+		if (line4.equalsIgnoreCase("[INACTIVE]")) { // [INACTIVE] の場合
+			edit = ChatColor.GREEN + "[ACTIVE]";
+		} else { // それ以外の場合は [INACITVE]に変更
+			edit = ChatColor.RED + "[INACTIVE]";
+		}
+
+		// 変更
+		sign.setLine(3, edit);
+		// 必要か分からないのでとりあえず設定
+		clickedBlock.getState().setData(sign.getData());
+	}
 }
