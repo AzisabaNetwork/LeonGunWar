@@ -468,19 +468,32 @@ public class MatchManager {
 		// 赤チーム取得(なかったら作成)
 		redTeam = scoreboard.getTeam("Red");
 		if (redTeam == null) {
+			// チーム作成
 			redTeam = scoreboard.registerNewTeam("Red");
+			// チームの色を指定
+			redTeam.setColor(org.bukkit.ChatColor.DARK_RED);
+			// フレンドリーファイアーを無効化
+			redTeam.setAllowFriendlyFire(false);
 		}
 
 		// 青チーム取得(なかったら作成)
 		blueTeam = scoreboard.getTeam("Blue");
 		if (blueTeam == null) {
+			// チーム作成
 			blueTeam = scoreboard.getTeam("Blue");
+			// チームの色を指定
+			blueTeam.setColor(org.bukkit.ChatColor.DARK_BLUE);
+			// フレンドリーファイアーを無効化
+			blueTeam.setAllowFriendlyFire(false);
 		}
 
 		// エントリーチーム取得 (なかったら作成)
 		entry = scoreboard.getTeam("Entry");
 		if (entry == null) {
+			// チーム作成
 			entry = scoreboard.getTeam("Entry");
+			// チームの色を指定
+			entry.setColor(org.bukkit.ChatColor.GREEN);
 		}
 	}
 
