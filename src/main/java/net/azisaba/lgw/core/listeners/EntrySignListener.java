@@ -56,7 +56,7 @@ public class EntrySignListener implements Listener {
 		}
 
 		// エントリー
-		boolean success = MatchManager.entryPlayer(p);
+		boolean success = MatchManager.addEntryPlayer(p);
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
@@ -102,7 +102,7 @@ public class EntrySignListener implements Listener {
 		}
 
 		// エントリー
-		boolean success = MatchManager.entryPlayer(p);
+		boolean success = MatchManager.addEntryPlayer(p);
 
 		// メッセージを表示
 		if (success) { // エントリーした場合

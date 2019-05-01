@@ -206,7 +206,7 @@ public class MatchManager {
 	 *
 	 * @exception IllegalStateException 試合が行われているときにエントリーしようとした場合
 	 */
-	public static boolean entryPlayer(Player p) {
+	public static boolean addEntryPlayer(Player p) {
 		// ゲーム中の場合はIllegalStateException
 		if (isMatching) {
 			throw new IllegalStateException("You can't entry while match is started.");
@@ -228,7 +228,7 @@ public class MatchManager {
 	 *
 	 * @exception IllegalStateException 試合が行われているときにエントリーしようとした場合
 	 */
-	public static boolean leavePlayer(Player p) {
+	public static boolean removeEntryPlayer(Player p) {
 		// ゲーム中の場合はIllegalStateException
 		if (isMatching) {
 			throw new IllegalStateException("You can't entry while match is started.");
