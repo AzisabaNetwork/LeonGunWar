@@ -38,7 +38,7 @@ public class DefaultTeamDistributor implements TeamDistributor {
 	@Override
 	public void distributePlayer(Player player, List<Team> teams) {
 
-		// エントリーが少ないチームを取得 (同じ場合はランダム)
+		// エントリーが少ないチームを取得 (同じ場合は最初の要素)
 		Team lowTeam = teams.stream()
 				.sorted(Comparator.comparing(team -> team.getEntries().size()))
 				.sorted(Collections.reverseOrder())
