@@ -19,6 +19,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
+import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.maps.GameMap;
 import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -212,6 +213,10 @@ public class MatchManager {
 
 		// エントリー追加
 		entry.addEntry(p.getName());
+		// イベント呼び出し
+		PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
+		plugin.getServer().getPluginManager().callEvent(event);
+
 		return true;
 	}
 
