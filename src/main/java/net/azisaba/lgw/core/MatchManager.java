@@ -20,6 +20,7 @@ import org.bukkit.scoreboard.Team;
 
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
+import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.maps.GameMap;
 import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -232,6 +233,10 @@ public class MatchManager {
 
 		// エントリー解除
 		entry.removeEntry(p.getName());
+		// イベント呼び出し
+		PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
+		plugin.getServer().getPluginManager().callEvent(event);
+
 		return true;
 	}
 
