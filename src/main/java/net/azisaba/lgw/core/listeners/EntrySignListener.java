@@ -24,7 +24,7 @@ public class EntrySignListener implements Listener {
 	 * エントリー看板をクリックしたことを検知し、プレイヤーを追加するリスナー
 	 */
 	@EventHandler
-	public void onClickSignEvent(PlayerInteractEvent e) {
+	public void onClickJoinEntrySign(PlayerInteractEvent e) {
 		// ブロックをクリックしていなければreturn
 		if (e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
 			return;
@@ -70,7 +70,7 @@ public class EntrySignListener implements Listener {
 	 * エントリー解除看板をクリックしたことを検知し、プレイヤーをエントリー解除するリスナー
 	 */
 	@EventHandler
-	public void onClickSignEvent2(PlayerInteractEvent e) {
+	public void onClickLeaveEntrySign(PlayerInteractEvent e) {
 		// ブロックをクリックしていなければreturn
 		if (e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
 			return;
