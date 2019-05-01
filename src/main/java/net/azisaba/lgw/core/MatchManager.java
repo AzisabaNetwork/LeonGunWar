@@ -244,7 +244,7 @@ public class MatchManager {
 	 * 試合に参加するプレイヤーのリストを取得します
 	 * @return entryスコアボードチームに参加しているプレイヤー
 	 */
-	private static List<Player> getEntryPlayers() {
+	public static List<Player> getEntryPlayers() {
 		// リスト作成
 		List<Player> players = new ArrayList<>();
 
