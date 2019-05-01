@@ -17,9 +17,7 @@ public class PlayerEntryMatchEvent extends Event {
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 
 	/**
-	 * @param redTeamPlayers 赤チームのプレイヤーリスト
-	 * @param blueTeamPlayers 青チームのプレイヤーリスト
-	 * @param map 試合を行うGameMap
+	 * @param entryPlayer エントリーしたプレイヤー
 	 */
 	public PlayerEntryMatchEvent(Player entryPlayer) {
 		this.entryPlayer = entryPlayer;

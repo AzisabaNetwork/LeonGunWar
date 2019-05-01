@@ -4,7 +4,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * マッチが開始されたときに呼び出されるイベント
+ * 試合の残り秒数が変化したときに呼び出されるイベント
  * @author siloneco
  *
  */
@@ -16,9 +16,7 @@ public class MatchTimeChangedEvent extends Event {
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 
 	/**
-	 * @param redTeamPlayers 赤チームのプレイヤーリスト
-	 * @param blueTeamPlayers 青チームのプレイヤーリスト
-	 * @param map 試合を行うGameMap
+	 * @param matchTime 試合の残り時間
 	 */
 	public MatchTimeChangedEvent(int matchTime) {
 		this.matchTime = matchTime;
