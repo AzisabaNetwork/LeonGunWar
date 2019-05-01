@@ -223,6 +223,28 @@ public class MatchManager {
 	}
 
 	/**
+	 * プレイヤーをマッチ参加用のエントリーから退出させます
+	 * @param p 参加させたいプレイヤー
+	 *
+	 * @exception IllegalStateException 試合が行われているときにエントリーしようとした場合
+	 */
+	public static boolean leavePlayer(Player p) {
+		// ゲーム中の場合はIllegalStateException
+		if (isMatching) {
+			throw new IllegalStateException("You can't entry while match is started.");
+		}
+
+		// 参加していない場合はreturn false
+		if (!entry.hasEntry(p.getName())) {
+			return false;
+		}
+
+		// エントリー解除
+		entry.removeEntry(p.getName());
+		return true;
+	}
+
+	/**
 	 * 試合に参加するプレイヤーのリストを取得します
 	 * @return entryスコアボードチームに参加しているプレイヤー
 	 */
