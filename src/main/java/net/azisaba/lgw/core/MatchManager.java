@@ -151,7 +151,7 @@ public class MatchManager {
 			// 防具を装備
 			p.getInventory().setChestplate(redChestPlate);
 			// テレポート
-			p.teleport(currentMap.getRedSpawn());
+			p.teleport(currentMap.getSpawnPoint(BattleTeam.RED));
 		}
 
 		// 青チームの処理
@@ -169,7 +169,7 @@ public class MatchManager {
 			// 防具を装備
 			p.getInventory().setChestplate(blueChestPlate);
 			// テレポート
-			p.teleport(currentMap.getBlueSpawn());
+			p.teleport(currentMap.getSpawnPoint(BattleTeam.BLUE));
 		}
 
 		// タスクスタート

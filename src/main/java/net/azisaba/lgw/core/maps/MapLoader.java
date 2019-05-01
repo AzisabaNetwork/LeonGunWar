@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.maps;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.LocationLoader;
 
 /**
@@ -64,7 +66,7 @@ public class MapLoader {
 			// フィールド作成
 			String mapName = null;
 			World world = null;
-			Location redSpawn = null, blueSpawn = null;
+			HashMap<BattleTeam, Location> spawnMap = new HashMap<>();
 
 			// 全データを読み込めたか
 			boolean successLoad = true;
@@ -92,16 +94,31 @@ public class MapLoader {
 				successLoad = false;
 			}
 
-			redSpawn = LocationLoader.getLocation(yamlData, RED_SPAWN_KEY);
-			if (redSpawn == null) {
-				plugin.getLogger().warning("\"" + RED_SPAWN_KEY + "\"が読み込めませんでした (FileName=" + file.getName() + ")");
-				successLoad = false;
-			}
+			// スポーン地点のキーを全て読み込む
+			// 何も指定されていない場合はスキップ
+			if (yamlData.getConfigurationSection(SPAWN_SECTION_KEY) != null) {
 
-			blueSpawn = LocationLoader.getLocation(yamlData, BLUE_SPAWN_KEY);
-			if (redSpawn == null) {
-				plugin.getLogger().warning("\"" + BLUE_SPAWN_KEY + "\"が読み込めませんでした (FileName=" + file.getName() + ")");
-				successLoad = false;
+				for (String key : yamlData.getConfigurationSection(SPAWN_SECTION_KEY).getKeys(false)) {
+
+					BattleTeam team;
+					// キーがBattleTeamに含まれていない場合はcontinue
+					try {
+						team = BattleTeam.valueOf(key.toUpperCase());
+					} catch (Exception e) {
+						continue;
+					}
+
+					// 座標をパース
+					Location loc = LocationLoader.getLocation(yamlData, SPAWN_SECTION_KEY + "." + key);
+
+					// nullチェック
+					if (loc == null) {
+						continue;
+					}
+
+					// 追加
+					spawnMap.put(team, loc);
+				}
 			}
 
 			// 正常に読み込めていない値がある場合はcontinue
@@ -109,7 +126,7 @@ public class MapLoader {
 				continue;
 
 			// GameMap作成
-			GameMap data = new GameMap(mapName, world, redSpawn, blueSpawn);
+			GameMap data = new GameMap(mapName, world, spawnMap);
 			// リストに追加
 			gameMapList.add(data);
 		}
@@ -148,8 +165,16 @@ public class MapLoader {
 		// 各データを保存
 		dataYaml.set(MAP_NAME_KEY, map.getMapName());
 		dataYaml.set(WORLD_NAME_KEY, map.getWorld().getName());
-		LocationLoader.setLocation(dataYaml, map.getRedSpawn(), RED_SPAWN_KEY);
-		LocationLoader.setLocation(dataYaml, map.getBlueSpawn(), BLUE_SPAWN_KEY);
+
+		for (BattleTeam team : BattleTeam.values()) {
+			// 座標を取得してnullならcontinue
+			if (map.getSpawnPoint(team) == null) {
+				continue;
+			}
+
+			// 座標保存
+			LocationLoader.setLocation(dataYaml, map.getSpawnPoint(team), SPAWN_SECTION_KEY + "." + team.name());
+		}
 
 		// セーブ
 		try {
@@ -168,8 +193,6 @@ public class MapLoader {
 	private static final String MAP_NAME_KEY = "MapName";
 	// ワールド名のキー
 	private static final String WORLD_NAME_KEY = "World";
-	// 赤スポーンのキー
-	private static final String RED_SPAWN_KEY = "SpawnPoint.Red";
-	// 青スポーンのキー
-	private static final String BLUE_SPAWN_KEY = "SpawnPoint.Blue";
+	// スポーン地点のキー
+	private static final String SPAWN_SECTION_KEY = "SpawnPoint";
 }
