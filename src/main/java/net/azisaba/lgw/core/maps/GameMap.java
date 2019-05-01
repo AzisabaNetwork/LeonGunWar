@@ -1,7 +1,11 @@
 package net.azisaba.lgw.core.maps;
 
+import java.util.HashMap;
+
 import org.bukkit.Location;
 import org.bukkit.World;
+
+import net.azisaba.lgw.core.teams.BattleTeam;
 
 /**
  *
@@ -13,19 +17,23 @@ public class GameMap {
 
 	// プレイヤーに表示するマップ名
 	private String mapName;
-	// 赤と青のスポーン地点
-	private Location redSpawn, blueSpawn;
+	// 各チームのスポーン地点
+	private HashMap<BattleTeam, Location> spawnMap;
 	// マップのワールド
 	private World world;
 
-	public GameMap(String mapName, World world, Location redSpawn, Location blueSpawn) {
+	public GameMap(String mapName, World world, HashMap<BattleTeam, Location> spawnMap) {
 		this.mapName = mapName;
 		this.world = world;
-		this.redSpawn = redSpawn.clone();
-		this.blueSpawn = blueSpawn.clone();
 
-		this.redSpawn.setWorld(this.world);
-		this.blueSpawn.setWorld(this.world);
+		// ワールドを指定
+		for (BattleTeam team : spawnMap.keySet()) {
+			Location loc = spawnMap.get(team).clone();
+			loc.setWorld(world);
+			spawnMap.put(team, loc);
+		}
+
+		this.spawnMap = spawnMap;
 	}
 
 	public String getMapName() {
@@ -36,20 +44,13 @@ public class GameMap {
 		this.mapName = mapName;
 	}
 
-	public Location getRedSpawn() {
-		return redSpawn;
-	}
+	public Location getSpawnPoint(BattleTeam team) {
+		// 指定されていない場合はreturn null
+		if (!spawnMap.containsKey(team)) {
+			return null;
+		}
 
-	public void setRedSpawn(Location redSpawn) {
-		this.redSpawn = redSpawn;
-	}
-
-	public Location getBlueSpawn() {
-		return blueSpawn;
-	}
-
-	public void setBlueSpawn(Location blueSpawn) {
-		this.blueSpawn = blueSpawn;
+		return spawnMap.get(team);
 	}
 
 	public World getWorld() {

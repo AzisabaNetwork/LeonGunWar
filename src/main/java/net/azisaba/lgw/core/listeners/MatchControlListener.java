@@ -40,18 +40,6 @@ public class MatchControlListener implements Listener {
 	}
 
 	/**
-	 * プレイヤーのスコアボードを更新するためのリスナー
-	 */
-	@EventHandler
-	public void scoreboardUpdater(MatchTimeChangedEvent e) {
-		// 試合中のプレイヤーを取得
-		List<Player> players = MatchManager.getTeamPlayers(BattleTeam.BOTH);
-
-		// スコアボードをアップデート
-		ScoreboardDisplayer.updateScoreboard(players);
-	}
-
-	/**
 	 * 試合が終わったときにMatchFinishedEventを呼び出すリスナー
 	 */
 	@EventHandler
@@ -134,5 +122,17 @@ public class MatchControlListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void matchFinalizer(MatchFinishedEvent e) {
 		MatchManager.finalizeMatch();
+	}
+
+	/**
+	 * プレイヤーのスコアボードを更新するためのリスナー
+	 */
+	@EventHandler
+	public void scoreboardUpdater(MatchTimeChangedEvent e) {
+		// 試合中のプレイヤーを取得
+		List<Player> players = MatchManager.getTeamPlayers(BattleTeam.BOTH);
+
+		// スコアボードをアップデート
+		ScoreboardDisplayer.updateScoreboard(players);
 	}
 }

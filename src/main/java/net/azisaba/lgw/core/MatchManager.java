@@ -19,6 +19,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
+import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
+import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.maps.GameMap;
 import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -149,7 +151,7 @@ public class MatchManager {
 			// 防具を装備
 			p.getInventory().setChestplate(redChestPlate);
 			// テレポート
-			p.teleport(currentMap.getRedSpawn());
+			p.teleport(currentMap.getSpawnPoint(BattleTeam.RED));
 		}
 
 		// 青チームの処理
@@ -167,7 +169,7 @@ public class MatchManager {
 			// 防具を装備
 			p.getInventory().setChestplate(blueChestPlate);
 			// テレポート
-			p.teleport(currentMap.getBlueSpawn());
+			p.teleport(currentMap.getSpawnPoint(BattleTeam.BLUE));
 		}
 
 		// タスクスタート
@@ -203,15 +205,8 @@ public class MatchManager {
 	/**
 	 * プレイヤーをマッチ参加用のエントリーに参加させます
 	 * @param p 参加させたいプレイヤー
-	 *
-	 * @exception IllegalStateException 試合が行われているときにエントリーしようとした場合
 	 */
-	public static boolean entryPlayer(Player p) {
-		// ゲーム中の場合はIllegalStateException
-		if (isMatching) {
-			throw new IllegalStateException("You can't entry while match is started.");
-		}
-
+	public static boolean addEntryPlayer(Player p) {
 		// すでに参加している場合はreturn false
 		if (entry.hasEntry(p.getName())) {
 			return false;
@@ -219,6 +214,29 @@ public class MatchManager {
 
 		// エントリー追加
 		entry.addEntry(p.getName());
+		// イベント呼び出し
+		PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
+		plugin.getServer().getPluginManager().callEvent(event);
+
+		return true;
+	}
+
+	/**
+	 * プレイヤーをマッチ参加用のエントリーから退出させます
+	 * @param p 参加させたいプレイヤー
+	 */
+	public static boolean removeEntryPlayer(Player p) {
+		// 参加していない場合はreturn false
+		if (!entry.hasEntry(p.getName())) {
+			return false;
+		}
+
+		// エントリー解除
+		entry.removeEntry(p.getName());
+		// イベント呼び出し
+		PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
+		plugin.getServer().getPluginManager().callEvent(event);
+
 		return true;
 	}
 
@@ -226,7 +244,7 @@ public class MatchManager {
 	 * 試合に参加するプレイヤーのリストを取得します
 	 * @return entryスコアボードチームに参加しているプレイヤー
 	 */
-	private static List<Player> getEntryPlayers() {
+	public static List<Player> getEntryPlayers() {
 		// リスト作成
 		List<Player> players = new ArrayList<>();
 
@@ -460,19 +478,32 @@ public class MatchManager {
 		// 赤チーム取得(なかったら作成)
 		redTeam = scoreboard.getTeam("Red");
 		if (redTeam == null) {
+			// チーム作成
 			redTeam = scoreboard.registerNewTeam("Red");
+			// チームの色を指定
+			redTeam.setColor(org.bukkit.ChatColor.DARK_RED);
+			// フレンドリーファイアーを無効化
+			redTeam.setAllowFriendlyFire(false);
 		}
 
 		// 青チーム取得(なかったら作成)
 		blueTeam = scoreboard.getTeam("Blue");
 		if (blueTeam == null) {
+			// チーム作成
 			blueTeam = scoreboard.getTeam("Blue");
+			// チームの色を指定
+			blueTeam.setColor(org.bukkit.ChatColor.DARK_BLUE);
+			// フレンドリーファイアーを無効化
+			blueTeam.setAllowFriendlyFire(false);
 		}
 
 		// エントリーチーム取得 (なかったら作成)
 		entry = scoreboard.getTeam("Entry");
 		if (entry == null) {
+			// チーム作成
 			entry = scoreboard.getTeam("Entry");
+			// チームの色を指定
+			entry.setColor(org.bukkit.ChatColor.GREEN);
 		}
 	}
 

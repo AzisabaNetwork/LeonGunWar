@@ -4,3 +4,6 @@ version: ${project.version}
 authors: ["siloneco", "YukiLeafX"]
 description: ${project.description}
 website: ${project.url}
+permissions:
+  leongunwar.entrysign.changestate:
+    default: op
