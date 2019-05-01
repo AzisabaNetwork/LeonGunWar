@@ -20,7 +20,7 @@ public class LocationLoader {
 		conf.set(key + ".Y", loc.getY());
 		conf.set(key + ".Z", loc.getZ());
 		conf.set(key + ".Yaw", (double) loc.getYaw());
-		conf.set(key + ".Pitch", (double) loc.getYaw());
+		conf.set(key + ".Pitch", (double) loc.getPitch());
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class LocationLoader {
 		conf.set(key + ".Y", loc.getY());
 		conf.set(key + ".Z", loc.getZ());
 		conf.set(key + ".Yaw", (double) loc.getYaw());
-		conf.set(key + ".Pitch", (double) loc.getYaw());
+		conf.set(key + ".Pitch", (double) loc.getPitch());
 	}
 
 	/**
