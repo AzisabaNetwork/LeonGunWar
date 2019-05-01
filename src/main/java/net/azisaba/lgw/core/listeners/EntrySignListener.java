@@ -15,6 +15,10 @@ import net.md_5.bungee.api.ChatColor;
 /**
  *
  * Entryチームに参加する看板に関するリスナークラス
+ * ColorTeamingEntryのときは左クリックの時だけでクリエイティブの場合いちいちサバイバルに変更しなければならなくめんどくさかったため左右どちらも対応
+ * ACTIVEとINACTIVEを切り替えるときはスニークをしながら右クリックで可能
+ * 破壊するときはスニークしながら左クリックで可能
+ *
  * @author siloneco
  *
  */
