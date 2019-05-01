@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -46,9 +48,7 @@ public class MapLoader {
 	 */
 	protected static List<GameMap> loadMapData() {
 		// pluginがnullの場合は初期化前としてIllegalStateException
-		if (plugin == null) {
-			throw new IllegalStateException("\"plugin\" field is not initialized yet.");
-		}
+		Preconditions.checkState(plugin != null, "\"plugin\" field is not initialized yet.");
 
 		// GameMapリスト
 		List<GameMap> gameMapList = new ArrayList<>();
@@ -147,9 +147,7 @@ public class MapLoader {
 	 */
 	public static boolean saveGameMap(GameMap map, String fileName, boolean allowOverwrite) {
 		// pluginがnullの場合は初期化前としてIllegalStateException
-		if (plugin == null) {
-			throw new IllegalStateException("\"plugin\" field is not initialized yet.");
-		}
+		Preconditions.checkState(plugin != null, "\"plugin\" field is not initialized yet.");
 
 		// ファイル取得
 		File file = new File(dataFolder, fileName);

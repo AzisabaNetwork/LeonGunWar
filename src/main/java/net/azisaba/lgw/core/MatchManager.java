@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -116,9 +118,7 @@ public class MatchManager {
 	 */
 	public static void startMatch() {
 		// すでにマッチ中の場合はIllegalStateException
-		if (isMatching) {
-			throw new IllegalStateException("A match is already started.");
-		}
+		Preconditions.checkState(!isMatching, "A match is already started.");
 
 		// マップを抽選
 		currentMap = MapContainer.getRandomMap();
@@ -266,9 +266,7 @@ public class MatchManager {
 	 * @exception IllegalStateException まだ初期化されていないときにメゾッドが呼ばれた場合
 	 */
 	public static KillDeathCounter getKillDeathCounter() {
-		if (!initialized) {
-			throw new IllegalStateException("\"" + MatchManager.class.getName() + "\" is not initialized yet.");
-		}
+		Preconditions.checkState(initialized, "\"" + MatchManager.class.getName() + "\" is not initialized yet.");
 
 		return kdCounter;
 	}
@@ -312,9 +310,7 @@ public class MatchManager {
 	 */
 	public static List<Player> getTeamPlayers(BattleTeam team) {
 		// teamがnullならIllegalArgumentException
-		if (team == null) {
-			throw new IllegalArgumentException("\"team\" mustn't be null.");
-		}
+		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
 		// teamがUNKNOWNなら空のリストを返す
 		if (team == BattleTeam.UNKNOWN) {
 			return new ArrayList<Player>();
@@ -387,9 +383,7 @@ public class MatchManager {
 	 */
 	public static int getCurrentTeamPoint(BattleTeam team) {
 		// teamがnullならIllegalArgumentException
-		if (team == null) {
-			throw new IllegalArgumentException("\"team\" mustn't be null.");
-		}
+		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
 
 		// 試合中でなかったら-1を返す
 		if (!isMatching) {
@@ -418,9 +412,7 @@ public class MatchManager {
 	 */
 	public static void addTeamPoint(BattleTeam team) {
 		// REDでもBLUEでもなければIllegalArgumentException
-		if (team != BattleTeam.RED && team != BattleTeam.BLUE) {
-			throw new IllegalArgumentException("\"team\" must be RED or BLUE.");
-		}
+		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
 
 		// REDの場合赤に1ポイント追加
 		if (team == BattleTeam.RED) {
@@ -452,9 +444,7 @@ public class MatchManager {
 	 */
 	public static Location getLobbySpawnLocation() {
 		// 初期化前なら IllegalStateException
-		if (!initialized) {
-			throw new IllegalStateException("\"" + MatchManager.class.getName() + "\" is not initialized yet.");
-		}
+		Preconditions.checkState(initialized, "\"" + MatchManager.class.getName() + "\" is not initialized yet.");
 
 		return lobbySpawnPoint;
 	}

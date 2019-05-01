@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.base.Preconditions;
+
 import net.azisaba.lgw.core.LeonGunWar;
 
 public class MapContainer {
@@ -44,9 +46,7 @@ public class MapContainer {
 	 * @exception IllegalStateException MapContainerが初期化される前に呼び出された場合
 	 */
 	public static List<GameMap> getAllGameMap() {
-		if (!initialized) {
-			throw new IllegalStateException("\"" + MapContainer.class.getName() + "\" is not initialized yet.");
-		}
+		Preconditions.checkState(initialized, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
 		return mapList;
 	}
@@ -58,9 +58,7 @@ public class MapContainer {
 	 * @exception IllegalStateException MapContainerが初期化される前に呼び出された場合
 	 */
 	public static GameMap getRandomMap() {
-		if (!initialized) {
-			throw new IllegalStateException("\"" + MapContainer.class.getName() + "\" is not initialized yet.");
-		}
+		Preconditions.checkState(initialized, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
 		// 登録されているマップが0この場合nullをreturn
 		if (mapList.size() <= 0) {

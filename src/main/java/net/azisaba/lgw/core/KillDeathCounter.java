@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.entity.Player;
 
 /**
@@ -36,9 +38,7 @@ public class KillDeathCounter {
 	 */
 	public void addKill(Player player) {
 		// playerがnullの場合 IllegalArgumentException
-		if (player == null) {
-			throw new IllegalArgumentException("\"player\" mustn't be null.");
-		}
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
 
 		// プレイヤー情報を保存
 		updatePlayerName(player);
@@ -62,9 +62,7 @@ public class KillDeathCounter {
 	 */
 	public int getKills(Player player) {
 		// playerがnullの場合 IllegalArgumentException
-		if (player == null) {
-			throw new IllegalArgumentException("\"player\" mustn't be null.");
-		}
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
 
 		// プレイヤー情報を保存
 		updatePlayerName(player);
@@ -81,9 +79,7 @@ public class KillDeathCounter {
 	 */
 	public void addDeath(Player player) {
 		// playerがnullの場合 IllegalArgumentException
-		if (player == null) {
-			throw new IllegalArgumentException("\"player\" mustn't be null.");
-		}
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
 
 		// プレイヤー情報を保存
 		updatePlayerName(player);
@@ -107,9 +103,7 @@ public class KillDeathCounter {
 	 */
 	public int getDeaths(Player player) {
 		// playerがnullの場合 IllegalArgumentException
-		if (player == null) {
-			throw new IllegalArgumentException("\"player\" mustn't be null.");
-		}
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
 
 		// プレイヤー情報を保存
 		updatePlayerName(player);
