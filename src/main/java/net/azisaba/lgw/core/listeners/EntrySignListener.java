@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -10,7 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.azisaba.lgw.core.MatchManager;
-import net.md_5.bungee.api.ChatColor;
 
 /**
  *

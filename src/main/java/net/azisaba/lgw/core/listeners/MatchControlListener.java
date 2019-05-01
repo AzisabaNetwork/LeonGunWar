@@ -5,13 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Material;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
 import net.azisaba.lgw.core.LeonGunWar;
@@ -20,23 +18,14 @@ import net.azisaba.lgw.core.ScoreboardDisplayer;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
-import net.md_5.bungee.api.ChatColor;
+import net.azisaba.lgw.core.utils.CustomItem;
 
 public class MatchControlListener implements Listener {
-
-	private ItemStack winnerProof;
 
 	private LeonGunWar plugin;
 
 	public MatchControlListener(LeonGunWar plugin) {
 		this.plugin = plugin;
-
-		// 勝者の証を生成
-		winnerProof = new ItemStack(Material.END_CRYSTAL);
-		ItemMeta meta = winnerProof.getItemMeta();
-		meta.setDisplayName(ChatColor.GOLD + "勝者の証");
-		meta.setLore(Arrays.asList("勝者に与えられる証", "ダイヤと交換できる"));
-		winnerProof.setItemMeta(meta);
 	}
 
 	/**
@@ -85,7 +74,7 @@ public class MatchControlListener implements Listener {
 
 		for (Player p : winnerPlayers) {
 			// 勝者の証を付与
-			p.getInventory().addItem(winnerProof);
+			p.getInventory().addItem(CustomItem.getWonItem());
 		}
 
 		// 試合に参加した全プレイヤーを取得

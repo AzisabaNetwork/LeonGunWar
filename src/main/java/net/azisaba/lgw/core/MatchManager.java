@@ -6,13 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
@@ -26,8 +25,8 @@ import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.teams.DefaultTeamDistributor;
 import net.azisaba.lgw.core.teams.TeamDistributor;
+import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.LocationLoader;
-import net.md_5.bungee.api.ChatColor;
 
 /**
  *
@@ -99,16 +98,10 @@ public class MatchManager {
 
 		// 各チームのチェストプレートを設定
 		// 赤チーム
-		redChestPlate = new ItemStack(Material.LEATHER_CHESTPLATE);
-		LeatherArmorMeta meta = (LeatherArmorMeta) redChestPlate.getItemMeta();
-		meta.setColor(Color.RED);
-		meta.setUnbreakable(true);
-		redChestPlate.setItemMeta(meta);
+		redChestPlate = CustomItem.getColorChestPlate(Color.RED);
 
 		// 青チーム
-		blueChestPlate = new ItemStack(Material.LEATHER_CHESTPLATE);
-		meta.setColor(Color.BLUE);
-		blueChestPlate.setItemMeta(meta);
+		blueChestPlate = CustomItem.getColorChestPlate(Color.BLUE);
 
 		// ロビーのスポーン地点をロード
 		loadLobbySpawnLocation();
