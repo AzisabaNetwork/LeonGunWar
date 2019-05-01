@@ -88,7 +88,7 @@ public class EntrySignListener implements Listener {
 		// Signにキャスト
 		Sign sign = (Sign) clickedBlock.getState();
 
-		// 1行目が [entry] でなければreturn
+		// 1行目が [leave] でなければreturn
 		if (!sign.getLine(0).equals("[leave]")) {
 			return;
 		}
