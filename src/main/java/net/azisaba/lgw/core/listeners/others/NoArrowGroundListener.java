@@ -12,11 +12,11 @@ import net.azisaba.lgw.core.LeonGunWar;
  * @author siloneco
  *
  */
-public class GroundArrowRemover implements Listener {
+public class NoArrowGroundListener implements Listener {
 
 	private final LeonGunWar plugin;
 
-	public GroundArrowRemover(LeonGunWar plugin) {
+	public NoArrowGroundListener(LeonGunWar plugin) {
 		this.plugin = plugin;
 	}
 

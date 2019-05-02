@@ -6,9 +6,9 @@ import net.azisaba.lgw.core.listeners.EntrySignListener;
 import net.azisaba.lgw.core.listeners.KillDeathListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
-import net.azisaba.lgw.core.listeners.others.DisableItemDurability;
-import net.azisaba.lgw.core.listeners.others.GroundArrowRemover;
-import net.azisaba.lgw.core.listeners.others.NoKnockback;
+import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
+import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
+import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.maps.MapContainer;
 
 public class LeonGunWar extends JavaPlugin {
@@ -25,9 +25,9 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new KillDeathListener(), this);
 
 		// リスナーの登録 (others)
-		getServer().getPluginManager().registerEvents(new GroundArrowRemover(this), this);
-		getServer().getPluginManager().registerEvents(new NoKnockback(), this);
-		getServer().getPluginManager().registerEvents(new DisableItemDurability(), this);
+		getServer().getPluginManager().registerEvents(new NoArrowGroundListener(this), this);
+		getServer().getPluginManager().registerEvents(new NoKnockbackListener(), this);
+		getServer().getPluginManager().registerEvents(new DisableItemDamageListener(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
 	}

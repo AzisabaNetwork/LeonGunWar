@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
  * @author siloneco
  *
  */
-public class DisableItemDurability implements Listener {
+public class DisableItemDamageListener implements Listener {
 
 	/**
 	 * アイテムの耐久値が減るのを無効化するリスナーです
