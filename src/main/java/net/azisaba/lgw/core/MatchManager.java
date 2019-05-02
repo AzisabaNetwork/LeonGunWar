@@ -103,10 +103,10 @@ public class MatchManager {
 
 		// 各チームのチェストプレートを設定
 		// 赤チーム
-		redChestplate = CustomItem.getColorChestplate(BattleTeam.RED);
+		redChestplate = CustomItem.getTeamChestplate(BattleTeam.RED);
 
 		// 青チーム
-		blueChestplate = CustomItem.getColorChestplate(BattleTeam.BLUE);
+		blueChestplate = CustomItem.getTeamChestplate(BattleTeam.BLUE);
 
 		// ロビーのスポーン地点をロード
 		loadLobbySpawnLocation();

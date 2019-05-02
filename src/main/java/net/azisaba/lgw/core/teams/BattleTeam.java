@@ -9,7 +9,8 @@ import org.bukkit.Color;
  */
 public enum BattleTeam {
 
-	RED(Color.fromRGB(0x930000)), BLUE(Color.fromRGB(0x0000A0));
+	RED(Color.fromRGB(0x930000)),
+	BLUE(Color.fromRGB(0x0000A0));
 
 	private final Color teamColor;
 
