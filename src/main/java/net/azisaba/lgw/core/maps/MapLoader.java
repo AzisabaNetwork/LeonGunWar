@@ -31,7 +31,7 @@ public class MapLoader {
 	private static File dataFolder;
 
 	/**
-	 * 初期化メゾッド
+	 * 初期化メソッド
 	 * Pluginのロード時に呼び出す
 	 * @param plugin
 	 */
@@ -44,7 +44,7 @@ public class MapLoader {
 	 * 保存されているマップデータを読み込み、MapDataのリストを返します
 	 * @return 読み込まれたマップデータのリスト
 	 *
-	 * @exception IllegalStateException 初期化される前にメゾッドが呼び出された場合
+	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
 	protected static List<GameMap> loadMapData() {
 		// pluginがnullの場合は初期化前としてIllegalStateException
@@ -143,7 +143,7 @@ public class MapLoader {
 	 *
 	 * @return データを保存したかどうか
 	 *
-	 * @exception IllegalStateException 初期化される前にメゾッドが呼び出された場合
+	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
 	public static boolean saveGameMap(GameMap map, String fileName, boolean allowOverwrite) {
 		// pluginがnullの場合は初期化前としてIllegalStateException

@@ -12,7 +12,7 @@ public class MatchStartCountdown {
 	private static BukkitTask task = null;
 
 	/**
-	 * プラグインを取得するための初期化メゾッド
+	 * プラグインを取得するための初期化メソッド
 	 * プラグインの起動時に呼び出されることを前提として作成されています
 	 * @param plugin
 	 */

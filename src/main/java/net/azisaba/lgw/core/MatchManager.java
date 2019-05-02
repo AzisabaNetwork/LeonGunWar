@@ -64,7 +64,7 @@ public class MatchManager {
 	// 赤、青、試合参加エントリー用のスコアボードチーム
 	private static Team redTeam, blueTeam, entry;
 	// 赤、青チームのチェストプレート
-	private static ItemStack redChestPlate, blueChestPlate;
+	private static ItemStack redChestplate, blueChestplate;
 
 	// 現在の赤チームのポイント (キル数)
 	private static int redPoint = 0;
@@ -72,7 +72,7 @@ public class MatchManager {
 	private static int bluePoint = 0;
 
 	/**
-	 * 初期化メゾッド
+	 * 初期化メソッド
 	 * Pluginが有効化されたときのみ呼び出されることを前提としています
 	 * @param plugin LeonGunWar plugin
 	 */
@@ -100,10 +100,10 @@ public class MatchManager {
 
 		// 各チームのチェストプレートを設定
 		// 赤チーム
-		redChestPlate = CustomItem.getColorChestPlate(Color.RED);
+		redChestplate = CustomItem.getColorChestplate(Color.RED);
 
 		// 青チーム
-		blueChestPlate = CustomItem.getColorChestPlate(Color.BLUE);
+		blueChestplate = CustomItem.getColorChestplate(Color.BLUE);
 
 		// ロビーのスポーン地点をロード
 		loadLobbySpawnLocation();
@@ -112,7 +112,7 @@ public class MatchManager {
 	}
 
 	/**
-	 * マッチを開始するメゾッド
+	 * マッチを開始するメソッド
 	 *
 	 * @exception IllegalStateException すでにゲームがスタートしている場合
 	 */
@@ -142,7 +142,7 @@ public class MatchManager {
 			// メッセージを表示する
 			p.sendMessage("あなたは" + ChatColor.DARK_RED + "赤チーム" + ChatColor.RESET + "になりました!");
 			// 防具を装備
-			p.getInventory().setChestplate(redChestPlate);
+			p.getInventory().setChestplate(redChestplate);
 			// テレポート
 			p.teleport(currentMap.getSpawnPoint(BattleTeam.RED));
 		}
@@ -160,7 +160,7 @@ public class MatchManager {
 			// メッセージを表示する
 			p.sendMessage("あなたは" + ChatColor.BLUE + "青チーム" + ChatColor.RESET + "になりました!");
 			// 防具を装備
-			p.getInventory().setChestplate(blueChestPlate);
+			p.getInventory().setChestplate(blueChestplate);
 			// テレポート
 			p.teleport(currentMap.getSpawnPoint(BattleTeam.BLUE));
 		}
@@ -263,7 +263,7 @@ public class MatchManager {
 	 * キル数デス数の追加もここから行います
 	 * @return 現在のKillDeathCounter
 	 *
-	 * @exception IllegalStateException まだ初期化されていないときにメゾッドが呼ばれた場合
+	 * @exception IllegalStateException まだ初期化されていないときにメソッドが呼ばれた場合
 	 */
 	public static KillDeathCounter getKillDeathCounter() {
 		Preconditions.checkState(initialized, "\"" + MatchManager.class.getName() + "\" is not initialized yet.");
@@ -440,7 +440,7 @@ public class MatchManager {
 	 * 初期化前に呼び出された場合はIllegalStateExceptionを投げます
 	 *
 	 * @return ロビーのスポーン地点
-	 * @exception IllegalStateException 初期化前にメゾッドが呼び出された場合
+	 * @exception IllegalStateException 初期化前にメソッドが呼び出された場合
 	 */
 	public static Location getLobbySpawnLocation() {
 		// 初期化前なら IllegalStateException

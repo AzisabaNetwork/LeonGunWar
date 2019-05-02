@@ -25,7 +25,7 @@ public class GroundArrowRemover implements Listener {
 	 * @param e
 	 */
 	@EventHandler
-	public void arrow(ProjectileHitEvent e) {
+	public void onProjectileHit(ProjectileHitEvent e) {
 		// 当たった飛び道具が矢でなければreturn
 		if (!(e.getEntity() instanceof Arrow)) {
 			return;

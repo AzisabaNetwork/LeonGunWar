@@ -107,7 +107,7 @@ public class MatchControlListener implements Listener {
 	}
 
 	/**
-	 * 最後に finalizeMatch メゾッドを実行するためのリスナー
+	 * 最後に finalizeMatch メソッドを実行するためのリスナー
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void matchFinalizer(MatchFinishedEvent e) {

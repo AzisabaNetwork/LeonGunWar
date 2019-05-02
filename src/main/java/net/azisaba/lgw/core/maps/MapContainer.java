@@ -19,11 +19,11 @@ public class MapContainer {
 
 	/**
 	 * ファイルに保存してあるマップデータをロードします
-	 * このメゾッドはPluginのロード時にのみ呼び出されることを想定しています
+	 * このメソッドはPluginのロード時にのみ呼び出されることを想定しています
 	 * @param plugin
 	 */
 	public static void init(LeonGunWar plugin) {
-		// すでにメゾッドが呼び出されている場合はreturn
+		// すでにメソッドが呼び出されている場合はreturn
 		if (initialized) {
 			return;
 		}

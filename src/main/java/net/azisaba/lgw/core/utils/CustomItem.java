@@ -27,7 +27,7 @@ public class CustomItem {
 	}
 
 	// 色付きチェストプレート！！
-	public static ItemStack getColorChestPlate(Color color) {
+	public static ItemStack getColorChestplate(Color color) {
 		ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
 		meta.setColor(color);

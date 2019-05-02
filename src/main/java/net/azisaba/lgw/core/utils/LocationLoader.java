@@ -43,7 +43,7 @@ public class LocationLoader {
 
 	/**
 	 *
-	 * 上記の setLocation メゾッドで保存されたLocationをロードします
+	 * 上記の setLocation メソッドで保存されたLocationをロードします
 	 * ワールドは適用されません
 	 *
 	 * @param conf
