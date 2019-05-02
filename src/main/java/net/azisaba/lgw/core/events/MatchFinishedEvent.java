@@ -1,6 +1,8 @@
 package net.azisaba.lgw.core.events;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -18,7 +20,7 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 public class MatchFinishedEvent extends Event {
 
 	// 各チームのプレイヤー
-	private List<Player> redTeamPlayers, blueTeamPlayers;
+	private Map<BattleTeam, List<Player>> teamPlayers;
 	// マッチを行ったマップ
 	private GameMap map;
 	// 勝利したチーム
@@ -29,22 +31,20 @@ public class MatchFinishedEvent extends Event {
 	/**
 	 * @param map マッチを行ったマップ
 	 * @param winner 勝利したチーム
-	 * @param redTeamPlayer 赤チームのプレイヤー
-	 * @param blueTeamPlayer 青チームのプレイヤー
+	 * @param teamPlayers チームのプレイヤー
 	 */
-	public MatchFinishedEvent(GameMap map, BattleTeam winner, List<Player> redTeamPlayer, List<Player> blueTeamPlayer) {
+	public MatchFinishedEvent(GameMap map, BattleTeam winner, Map<BattleTeam, List<Player>> teamPlayers) {
 		this.map = map;
 		this.winner = winner;
-		this.redTeamPlayers = redTeamPlayer;
-		this.blueTeamPlayers = blueTeamPlayer;
+		this.teamPlayers = teamPlayers;
 	}
 
-	public List<Player> getRedTeamPlayers() {
-		return redTeamPlayers;
+	public List<Player> getAllTeamPlayers() {
+		return teamPlayers.values().stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 
-	public List<Player> getBlueTeamPlayers() {
-		return blueTeamPlayers;
+	public List<Player> getTeamPlayers(BattleTeam team) {
+		return teamPlayers.get(team);
 	}
 
 	public GameMap getMap() {

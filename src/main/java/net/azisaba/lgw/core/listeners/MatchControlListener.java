@@ -51,12 +51,12 @@ public class MatchControlListener implements Listener {
 		} else if (bluePoint > redPoint) { // 青が多い場合
 			team = BattleTeam.BLUE;
 		} else { // 同じ場合
-			team = BattleTeam.BOTH;
+			team = null;
 		}
 
 		// イベントを呼び出す
 		MatchFinishedEvent event = new MatchFinishedEvent(MatchManager.getCurrentGameMap(), team,
-				MatchManager.getTeamPlayers(BattleTeam.RED), MatchManager.getTeamPlayers(BattleTeam.BLUE));
+				MatchManager.getTeamPlayers());
 		plugin.getServer().getPluginManager().callEvent(event);
 	}
 
@@ -68,9 +68,9 @@ public class MatchControlListener implements Listener {
 		// 勝ったチームのプレイヤーリストを取得
 		List<Player> winnerPlayers = new ArrayList<>();
 		if (e.getWinner() == BattleTeam.RED) {
-			winnerPlayers = e.getRedTeamPlayers();
+			winnerPlayers = e.getTeamPlayers(BattleTeam.RED);
 		} else if (e.getWinner() == BattleTeam.BLUE) {
-			winnerPlayers = e.getBlueTeamPlayers();
+			winnerPlayers = e.getTeamPlayers(BattleTeam.BLUE);
 		}
 
 		for (Player p : winnerPlayers) {
@@ -79,8 +79,7 @@ public class MatchControlListener implements Listener {
 		}
 
 		// 試合に参加した全プレイヤーを取得
-		List<Player> allPlayers = new ArrayList<Player>(e.getRedTeamPlayers());
-		allPlayers.addAll(e.getBlueTeamPlayers());
+		List<Player> allPlayers = e.getAllTeamPlayers();
 
 		// MVPのプレイヤーを取得
 		List<KDPlayerData> mvpPlayers = MatchManager.getKillDeathCounter().getMVPPlayer();
@@ -120,7 +119,7 @@ public class MatchControlListener implements Listener {
 	@EventHandler
 	public void scoreboardUpdater(MatchTimeChangedEvent e) {
 		// 試合中のプレイヤーを取得
-		List<Player> players = MatchManager.getTeamPlayers(BattleTeam.BOTH);
+		List<Player> players = MatchManager.getAllTeamPlayers();
 
 		// スコアボードをアップデート
 		ScoreboardDisplayer.updateScoreboard(players);

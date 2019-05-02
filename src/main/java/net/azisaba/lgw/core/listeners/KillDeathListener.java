@@ -38,11 +38,6 @@ public class KillDeathListener implements Listener {
 
 		// 各チームのプレイヤーリストを取得し、殺したプレイヤーが含まれていればbreak
 		for (BattleTeam team : BattleTeam.values()) {
-			// BOTHの場合はcontinue
-			if (team == BattleTeam.BOTH) {
-				continue;
-			}
-
 			// プレイヤーリストを取得
 			List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
 
@@ -76,11 +71,6 @@ public class KillDeathListener implements Listener {
 
 		// 各チームのプレイヤーリストを取得し、死んだプレイヤーが含まれていればbreak
 		for (BattleTeam team : BattleTeam.values()) {
-			// BOTHの場合はcontinue
-			if (team == BattleTeam.BOTH) {
-				continue;
-			}
-
 			// プレイヤーリストを取得
 			List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
 
@@ -112,11 +102,6 @@ public class KillDeathListener implements Listener {
 
 		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
 		for (BattleTeam team : BattleTeam.values()) {
-			// BOTHの場合はcontinue
-			if (team == BattleTeam.BOTH) {
-				continue;
-			}
-
 			// プレイヤーリストを取得
 			List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
 

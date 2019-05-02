@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.common.base.Preconditions;
 
@@ -301,20 +305,24 @@ public class MatchManager {
 		}.runTaskTimer(plugin, 20, 20);
 	}
 
+	public static Map<BattleTeam, List<Player>> getTeamPlayers() {
+		return Stream.of(BattleTeam.values()).collect(Collectors.toMap(Function.identity(), MatchManager::getTeamPlayers));
+	}
+
+	public static List<Player> getAllTeamPlayers() {
+		return getTeamPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList());
+	}
+
 	/**
 	 * 指定されたチームのプレイヤーリストを取得します
 	 * @param team プレイヤーリストを取得したいチーム
-	 * @return チームのプレイヤーリスト (BOTHの場合は試合に参加しているすべてのプレイヤー)
+	 * @return チームのプレイヤーリスト
 	 *
 	 * @exception IllegalArgumentException teamがnullの場合
 	 */
 	public static List<Player> getTeamPlayers(BattleTeam team) {
 		// teamがnullならIllegalArgumentException
 		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
-		// teamがUNKNOWNなら空のリストを返す
-		if (team == BattleTeam.UNKNOWN) {
-			return new ArrayList<Player>();
-		}
 
 		// リスト作成
 		List<Player> players = new ArrayList<>();
@@ -326,9 +334,6 @@ public class MatchManager {
 			entryList = new ArrayList<String>(redTeam.getEntries());
 		} else if (team == BattleTeam.BLUE) {
 			entryList = new ArrayList<String>(blueTeam.getEntries());
-		} else if (team == BattleTeam.BOTH) {
-			entryList = new ArrayList<String>(redTeam.getEntries());
-			entryList.addAll(new ArrayList<String>(blueTeam.getEntries()));
 		}
 
 		// Entryしている名前からプレイヤー検索
