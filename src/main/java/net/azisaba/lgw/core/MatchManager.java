@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 import com.google.common.base.Preconditions;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -104,10 +103,10 @@ public class MatchManager {
 
 		// 各チームのチェストプレートを設定
 		// 赤チーム
-		redChestplate = CustomItem.getColorChestplate(Color.RED);
+		redChestplate = CustomItem.getColorChestplate(BattleTeam.RED);
 
 		// 青チーム
-		blueChestplate = CustomItem.getColorChestplate(Color.BLUE);
+		blueChestplate = CustomItem.getColorChestplate(BattleTeam.BLUE);
 
 		// ロビーのスポーン地点をロード
 		loadLobbySpawnLocation();

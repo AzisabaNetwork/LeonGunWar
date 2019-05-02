@@ -3,11 +3,13 @@ package net.azisaba.lgw.core.utils;
 import java.util.Arrays;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import net.azisaba.lgw.core.teams.BattleTeam;
 
 // 動的にフレッシュなアイテムを提供するクラス
 public class CustomItem {
@@ -27,12 +29,13 @@ public class CustomItem {
 	}
 
 	// 色付きチェストプレート！！
-	public static ItemStack getColorChestplate(Color color) {
+	public static ItemStack getColorChestplate(BattleTeam team) {
 		ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setColor(color);
+		meta.setColor(team.getTeamColor());
 		meta.setUnbreakable(true);
 		item.setItemMeta(meta);
+		item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 		return item;
 	}
 }
