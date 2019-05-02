@@ -32,6 +32,7 @@ public class CustomItem {
 	public static ItemStack getTeamChestplate(BattleTeam team) {
 		ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+		meta.setDisplayName(team.getTeamName());
 		meta.setColor(team.getTeamColor());
 		meta.setUnbreakable(true);
 		item.setItemMeta(meta);

@@ -143,7 +143,7 @@ public class MatchManager {
 			}
 
 			// メッセージを表示する
-			p.sendMessage("あなたは" + ChatColor.DARK_RED + "赤チーム" + ChatColor.RESET + "になりました!");
+			p.sendMessage("あなたは" + BattleTeam.RED.getTeamName() + ChatColor.RESET + "になりました!");
 			// 防具を装備
 			p.getInventory().setChestplate(redChestplate);
 			// テレポート
@@ -161,7 +161,7 @@ public class MatchManager {
 			}
 
 			// メッセージを表示する
-			p.sendMessage("あなたは" + ChatColor.BLUE + "青チーム" + ChatColor.RESET + "になりました!");
+			p.sendMessage("あなたは" + BattleTeam.BLUE.getTeamName() + ChatColor.RESET + "になりました!");
 			// 防具を装備
 			p.getInventory().setChestplate(blueChestplate);
 			// テレポート
