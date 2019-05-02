@@ -19,13 +19,15 @@ public class LeonGunWar extends JavaPlugin {
 		initializeClasses();
 
 		// リスナーの登録
-		getServer().getPluginManager().registerEvents(new GroundArrowRemover(this), this);
-		getServer().getPluginManager().registerEvents(new NoKnockback(), this);
-		getServer().getPluginManager().registerEvents(new DisableItemDurability(), this);
 		getServer().getPluginManager().registerEvents(new MatchControlListener(this), this);
 		getServer().getPluginManager().registerEvents(new EntrySignListener(), this);
 		getServer().getPluginManager().registerEvents(new MatchStartDetectListener(), this);
 		getServer().getPluginManager().registerEvents(new KillDeathListener(), this);
+
+		// リスナーの登録 (others)
+		getServer().getPluginManager().registerEvents(new GroundArrowRemover(this), this);
+		getServer().getPluginManager().registerEvents(new NoKnockback(), this);
+		getServer().getPluginManager().registerEvents(new DisableItemDurability(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
 	}
