@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -87,7 +88,7 @@ public class MatchControlListener implements Listener {
 		List<String> mvpMessages = new ArrayList<String>(Arrays.asList(ChatColor.RED + "MVP:"));
 		for (KDPlayerData data : mvpPlayers) {
 			mvpMessages.add(
-					StringUtils.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
+					Strings.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
 							+ ChatColor.RED + ": " + data.getKills() + "k " + data.getDeaths() + "d");
 		}
 
