@@ -7,6 +7,7 @@ import net.azisaba.lgw.core.listeners.KillDeathListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
+import net.azisaba.lgw.core.listeners.others.DisableOpenAnvilListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.maps.MapContainer;
@@ -28,6 +29,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new NoArrowGroundListener(this), this);
 		getServer().getPluginManager().registerEvents(new NoKnockbackListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableItemDamageListener(), this);
+		getServer().getPluginManager().registerEvents(new DisableOpenAnvilListener(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
 	}
