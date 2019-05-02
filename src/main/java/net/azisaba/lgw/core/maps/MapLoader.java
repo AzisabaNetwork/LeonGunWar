@@ -53,6 +53,9 @@ public class MapLoader {
 		// GameMapリスト
 		List<GameMap> gameMapList = new ArrayList<>();
 
+		// 親ディレクトリを作成
+		dataFolder.mkdirs();
+
 		// file = マップデータ
 		for (File file : dataFolder.listFiles()) {
 			// ymlでもyamlでもなければcontinue
