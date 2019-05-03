@@ -377,6 +377,16 @@ public class MatchManager {
 		return currentMap;
 	}
 
+	public static Team getScoreboardTeam(BattleTeam team) {
+		if (team == BattleTeam.RED) {
+			return redTeam;
+		} else if (team == BattleTeam.BLUE) {
+			return blueTeam;
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * 現在試合を行っているかどうかをbooleanで返します
 	 * @return 現在試合を行っているかどうか

@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.scoreboard.Team;
 
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -104,13 +105,16 @@ public class KillDeathListener implements Listener {
 		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
 		for (BattleTeam team : BattleTeam.values()) {
 			// プレイヤーリストを取得
-			List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
+			// List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
 
-			// [Debug] リストのサイズ表示
-			Bukkit.getLogger().info(team.getTeamName() + ": " + teamPlayers.size());
+			// スコアボードのTeamを取得
+			Team scoreboardTeam = MatchManager.getScoreboardTeam(team);
+
+			// [Debug] リストの内容表示
+			Bukkit.getLogger().info(team.name() + ": " + scoreboardTeam.getEntries().toString());
 
 			// 殺したプレイヤーが含まれていればplayerTeamに代入してbreak
-			if (teamPlayers.contains(p)) {
+			if (scoreboardTeam.getEntries().contains(p.getName())) {
 				playerTeam = team;
 				Bukkit.getLogger().info(p.getName() + " is " + team.getTeamName());
 				break;
