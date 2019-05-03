@@ -40,8 +40,7 @@ public class DefaultTeamDistributor implements TeamDistributor {
 
 		// エントリーが少ないチームを取得 (同じ場合は最初の要素)
 		Team lowTeam = teams.stream()
-				.sorted(Comparator.comparing(team -> team.getEntries().size()))
-				.sorted(Collections.reverseOrder())
+				.sorted(Comparator.comparing((Team team) -> team.getEntries().size()).reversed())
 				.findFirst()
 				.orElse(null);
 
