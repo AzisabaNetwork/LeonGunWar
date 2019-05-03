@@ -24,12 +24,7 @@ public class DefaultTeamDistributor implements TeamDistributor {
 		Collections.shuffle(plist);
 
 		// 均等に分ける
-		plist.forEach(player -> {
-
-			// distributePlayer(player, teams)にて振り分ける
-			distributePlayer(player, teams);
-
-		});
+		plist.forEach(player -> distributePlayer(player, teams));
 	}
 
 	/**
@@ -38,15 +33,10 @@ public class DefaultTeamDistributor implements TeamDistributor {
 	@Override
 	public void distributePlayer(Player player, List<Team> teams) {
 
-		// エントリーが少ないチームを取得 (同じ場合は最初の要素)
-		Team lowTeam = teams.stream()
-				.sorted(Comparator.comparing(Team::getSize, Comparator.reverseOrder()))
+		// エントリーが少ないチームにプレイヤーを追加 (同じ場合は最初の要素)
+		teams.stream()
+				.sorted(Comparator.comparing(Team::getSize).reversed())
 				.findFirst()
-				.orElse(null);
-
-		// プレイヤーを追加
-		if (lowTeam != null) {
-			lowTeam.addEntry(player.getName());
-		}
+				.ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
 	}
 }
