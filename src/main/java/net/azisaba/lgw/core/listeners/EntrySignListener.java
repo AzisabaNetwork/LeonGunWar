@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -39,7 +40,7 @@ public class EntrySignListener implements Listener {
 		Block clickedBlock = e.getClickedBlock();
 
 		// スニーク + 左クリックならreturn
-		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking()) {
+		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking() && p.getGameMode() == GameMode.CREATIVE) {
 			return;
 		}
 
@@ -90,7 +91,7 @@ public class EntrySignListener implements Listener {
 		Block clickedBlock = e.getClickedBlock();
 
 		// スニーク + 左クリックならreturn
-		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking()) {
+		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking() && p.getGameMode() == GameMode.CREATIVE) {
 			return;
 		}
 
