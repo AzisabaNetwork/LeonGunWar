@@ -37,6 +37,7 @@ public class CustomItem {
 		meta.setUnbreakable(true);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
+		item.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
 		return item;
 	}
 }
