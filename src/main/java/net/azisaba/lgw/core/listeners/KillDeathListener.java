@@ -114,11 +114,12 @@ public class KillDeathListener implements Listener {
 			}
 		}
 
-		// チームがnullまたはそのプレイヤーのチームのスポーン地点がnullの場合はスポーン地点にTP
+		// スポーン地点
 		Location spawnPoint = null;
-		if (playerTeam != null) {
+
+		// チームがnullまたはそのプレイヤーのチームのスポーン地点がnullの場合はスポーン地点にTP
+		if (playerTeam == null) {
 			spawnPoint = MatchManager.getCurrentGameMap().getSpawnPoint(playerTeam);
-			Bukkit.getLogger().info(p.getName() + " is no team.");
 		}
 
 		// spawnPointがnullの場合lobbyのスポーン地点を指定
