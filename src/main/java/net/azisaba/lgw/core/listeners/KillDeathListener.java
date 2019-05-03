@@ -104,8 +104,6 @@ public class KillDeathListener implements Listener {
 
 		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
 		for (BattleTeam team : BattleTeam.values()) {
-			// プレイヤーリストを取得
-			// List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
 
 			// スコアボードのTeamを取得
 			Team scoreboardTeam = MatchManager.getScoreboardTeam(team);
@@ -116,7 +114,6 @@ public class KillDeathListener implements Listener {
 			// 殺したプレイヤーが含まれていればplayerTeamに代入してbreak
 			if (scoreboardTeam.getEntries().contains(p.getName())) {
 				playerTeam = team;
-				Bukkit.getLogger().info(p.getName() + " is " + team.getTeamName());
 				break;
 			}
 		}
@@ -127,17 +124,13 @@ public class KillDeathListener implements Listener {
 		// チームがnullではないならそのチームのスポーン地点にTPする
 		if (playerTeam != null) {
 			spawnPoint = MatchManager.getCurrentGameMap().getSpawnPoint(playerTeam);
-			Bukkit.getLogger().info(p.getName() + ": set spawnpoint to team base");
 		}
 
 		// それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
 		if (spawnPoint == null) {
 			spawnPoint = MatchManager.getLobbySpawnLocation();
-			Bukkit.getLogger().info(p.getName() + ": set spawnpoint to lobby");
 		}
 
 		e.setRespawnLocation(spawnPoint);
-		Bukkit.getLogger().info(p.getName() + ": spawn point -> " + spawnPoint.getBlockX() + ", "
-				+ spawnPoint.getBlockY() + ", " + spawnPoint.getBlockZ());
 	}
 }
