@@ -4,6 +4,12 @@ version: ${project.version}
 authors: ["siloneco", "YukiLeafX"]
 description: ${project.description}
 website: ${project.url}
+commands:
+  lgw:
+    description: Nothing
+    permission: leongunwar.command.leongunwar
 permissions:
   leongunwar.entrysign.changestate:
+    default: op
+  leongunwar.command.leongunwar:
     default: op
