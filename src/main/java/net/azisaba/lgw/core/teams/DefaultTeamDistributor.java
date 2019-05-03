@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.teams;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -40,7 +41,7 @@ public class DefaultTeamDistributor implements TeamDistributor {
 
 		// エントリーが少ないチームを取得 (同じ場合は最初の要素)
 		Team lowTeam = teams.stream()
-				.sorted(Comparator.comparing((Team team) -> team.getEntries().size()).reversed())
+				.sorted(Comparator.comparingInt((ToIntFunction<Team>) team -> team.getEntries().size()).reversed())
 				.findFirst()
 				.orElse(null);
 
