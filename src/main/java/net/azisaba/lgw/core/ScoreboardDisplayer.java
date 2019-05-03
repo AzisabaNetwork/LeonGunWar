@@ -27,7 +27,7 @@ public class ScoreboardDisplayer {
 	 * スコアボードに表示したい文章をListで指定する (上から)
 	 * @return The lines that you want to display in your scoreboard. (from above)
 	 */
-	private static List<String> boardLines(Player player) {
+	private static List<String> boardLines() {
 		// 試合中の場合
 		if (MatchManager.isMatching()) {
 
@@ -37,9 +37,6 @@ public class ScoreboardDisplayer {
 			 *
 			 * 赤チーム: ? point
 			 * 青チーム: ? point
-			 *
-			 * キル数: ?
-			 * デス数: ?
 			 *
 			 * 現在のマップ: {マップ名}
 			 *
@@ -53,10 +50,6 @@ public class ScoreboardDisplayer {
 			int redPoint = MatchManager.getCurrentTeamPoint(BattleTeam.RED);
 			int bluePoint = MatchManager.getCurrentTeamPoint(BattleTeam.BLUE);
 
-			// キル/デスを取得
-			int kills = MatchManager.getKillDeathCounter().getKills(player);
-			int deaths = MatchManager.getKillDeathCounter().getDeaths(player);
-
 			// 残り時間
 			int timeLeft = MatchManager.getTimeLeft();
 
@@ -69,15 +62,12 @@ public class ScoreboardDisplayer {
 			String line5 = BattleTeam.BLUE.getTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
 					+ " point";
 			String line6 = "";
-			String line7 = ChatColor.GRAY + "キル数" + ChatColor.GREEN + ": " + ChatColor.YELLOW + kills;
-			String line8 = ChatColor.GRAY + "デス数" + ChatColor.GREEN + ": " + ChatColor.YELLOW + deaths;
-			String line9 = "";
-			String line10 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
-			String line11 = "";
-			String line12 = ChatColor.GOLD + "play azisaba.net";
+			String line7 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
+			String line8 = "";
+			String line9 = ChatColor.GOLD + "play azisaba.net";
 
 			// リストにして返す
-			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12);
+			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9);
 		}
 
 		// 試合をしていない場合
@@ -112,49 +102,48 @@ public class ScoreboardDisplayer {
 		// 現在指定されているEntryを全て解除
 		clearEntries();
 
+		// Objectiveを取得
+		Objective obj = board.getObjective("side");
+
+		// Objectiveが存在しなかった場合は作成
+		if (obj == null) {
+			obj = board.registerNewObjective("side", "dummy");
+		}
+
+		// Slotを設定
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		obj.setDisplayName(scoreBoardTitle());
+
+		// 行を取得
+		List<String> lines = boardLines();
+
+		// nullが返ってきた場合は非表示にしてreturn
+		if (lines == null) {
+			board.clearSlot(DisplaySlot.SIDEBAR);
+			return;
+		}
+
+		// reverseして0から設定していく
+		Collections.reverse(lines);
+
+		int currentValue = 0;
+		for (String msg : lines) {
+
+			// 行が0の場合は空白にする
+			if (msg == null)
+				msg = "";
+
+			// すでに値が設定されている場合は最後に空白を足していく
+			while (obj.getScore(msg).isScoreSet()) {
+				msg = msg + " ";
+			}
+
+			// 値を設定
+			obj.getScore(msg).setScore(currentValue);
+			currentValue++;
+		}
+
 		for (Player p : Bukkit.getOnlinePlayers()) {
-
-			// Objectiveを取得
-			Objective obj = board.getObjective(p.getName());
-
-			// Objectiveが存在しなかった場合は作成
-			if (obj == null) {
-				obj = board.registerNewObjective(p.getName(), "dummy");
-			}
-
-			// Slotを設定
-			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-			obj.setDisplayName(scoreBoardTitle());
-
-			// 行を取得
-			List<String> lines = boardLines(p);
-
-			// nullが返ってきた場合は非表示にしてreturn
-			if (lines == null) {
-				board.clearSlot(DisplaySlot.SIDEBAR);
-				continue;
-			}
-
-			// reverseして0から設定していく
-			Collections.reverse(lines);
-
-			int currentValue = 0;
-			for (String msg : lines) {
-
-				// 行が0の場合は空白にする
-				if (msg == null)
-					msg = "";
-
-				// すでに値が設定されている場合は最後に空白を足していく
-				while (obj.getScore(msg).isScoreSet()) {
-					msg = msg + " ";
-				}
-
-				// 値を設定
-				obj.getScore(msg).setScore(currentValue);
-				currentValue++;
-			}
-
 			// スコアボードを設定する
 			p.setScoreboard(board);
 		}
