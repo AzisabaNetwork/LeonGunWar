@@ -489,7 +489,7 @@ public class MatchManager {
 			// フレンドリーファイアーを無効化
 			redTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
-			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OWN_TEAM);
+			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
 		}
 
 		// 青チーム取得(なかったら作成)
@@ -502,7 +502,7 @@ public class MatchManager {
 			// フレンドリーファイアーを無効化
 			blueTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
-			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OWN_TEAM);
+			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
 		}
 
 		// エントリーチーム取得 (なかったら作成)
