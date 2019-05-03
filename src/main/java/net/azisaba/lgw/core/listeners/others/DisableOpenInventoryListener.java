@@ -12,17 +12,22 @@ public class DisableOpenInventoryListener implements Listener {
 
 	@EventHandler
 	public void onInventoryOpen(InventoryOpenEvent e) {
+		Player p = (Player) e.getPlayer();
+
 		if (e.getInventory().getType() == InventoryType.ANVIL) {
 			// 金床だった場合はキャンセル
 			e.setCancelled(true);
+
+			// 音を鳴らす
+			p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 		}
 
 		if (e.getInventory().getType() == InventoryType.FURNACE) {
 			// かまどならキャンセル
 			e.setCancelled(true);
-		}
 
-		// 音を鳴らす
-		((Player) e.getPlayer()).playSound(e.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			// 音を鳴らす
+			p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+		}
 	}
 }
