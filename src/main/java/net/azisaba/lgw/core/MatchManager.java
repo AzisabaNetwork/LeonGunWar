@@ -10,8 +10,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.google.common.base.Preconditions;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,6 +19,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+
+import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
@@ -123,6 +123,9 @@ public class MatchManager {
 		// すでにマッチ中の場合はIllegalStateException
 		Preconditions.checkState(!isMatching, "A match is already started.");
 
+		// timeLeftを600に変更
+		timeLeft = 600;
+
 		// マップを抽選
 		currentMap = MapContainer.getRandomMap();
 		// 参加プレイヤーを取得
@@ -170,6 +173,9 @@ public class MatchManager {
 
 		// タスクスタート
 		runMatchTask();
+
+		// isMatchingをtrueに変更
+		isMatching = true;
 	}
 
 	/**
@@ -305,7 +311,8 @@ public class MatchManager {
 	}
 
 	public static Map<BattleTeam, List<Player>> getTeamPlayers() {
-		return Stream.of(BattleTeam.values()).collect(Collectors.toMap(Function.identity(), MatchManager::getTeamPlayers));
+		return Stream.of(BattleTeam.values())
+				.collect(Collectors.toMap(Function.identity(), MatchManager::getTeamPlayers));
 	}
 
 	public static List<Player> getAllTeamPlayers() {
