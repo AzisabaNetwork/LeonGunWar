@@ -38,6 +38,11 @@ public class EntrySignListener implements Listener {
 		Player p = e.getPlayer();
 		Block clickedBlock = e.getClickedBlock();
 
+		// スニーク + 左クリックならreturn
+		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking()) {
+			return;
+		}
+
 		// ブロックが看板でなければreturn
 		if (clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN) {
 			return;
@@ -83,6 +88,11 @@ public class EntrySignListener implements Listener {
 		// プレイヤー / ブロック取得
 		Player p = e.getPlayer();
 		Block clickedBlock = e.getClickedBlock();
+
+		// スニーク + 左クリックならreturn
+		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking()) {
+			return;
+		}
 
 		// ブロックが看板でなければreturn
 		if (clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN) {
