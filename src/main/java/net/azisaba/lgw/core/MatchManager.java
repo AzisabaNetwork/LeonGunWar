@@ -19,6 +19,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.Team.Option;
+import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.google.common.base.Preconditions;
 
@@ -486,6 +488,8 @@ public class MatchManager {
 			redTeam.setColor(ChatColor.DARK_RED);
 			// フレンドリーファイアーを無効化
 			redTeam.setAllowFriendlyFire(false);
+			// 他チームからネームタグが見えるのを無効化
+			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OWN_TEAM);
 		}
 
 		// 青チーム取得(なかったら作成)
@@ -497,6 +501,8 @@ public class MatchManager {
 			blueTeam.setColor(ChatColor.DARK_BLUE);
 			// フレンドリーファイアーを無効化
 			blueTeam.setAllowFriendlyFire(false);
+			// 他チームからネームタグが見えるのを無効化
+			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OWN_TEAM);
 		}
 
 		// エントリーチーム取得 (なかったら作成)
