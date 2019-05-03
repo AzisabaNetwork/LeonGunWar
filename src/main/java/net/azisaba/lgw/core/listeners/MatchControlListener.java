@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -146,19 +145,19 @@ public class MatchControlListener implements Listener {
 
 			// 両方を足して0の場合は白く表示
 			if (kills + deaths == 0) {
-
+				msg = "0 kill " + Strings.repeat("┃", 50) + " 0 death";
 			} else { // それ以外の場合はメーター作成
 				// キルのパーセンテージ
 				double killsPercentage = ((double) kills / (double) (kills + deaths)) * 100d;
 				// デスのパーセンテージ
 				double deathsPercentage = ((double) deaths / (double) (kills + deaths)) * 100d;
 
-				msg += ChatColor.LIGHT_PURPLE + StringUtils.repeat("┃", (int) killsPercentage);
-				msg += ChatColor.DARK_PURPLE + StringUtils.repeat("┃", (int) deathsPercentage);
+				msg += ChatColor.LIGHT_PURPLE + Strings.repeat("┃", (int) killsPercentage / 2);
+				msg += ChatColor.DARK_PURPLE + Strings.repeat("┃", (int) deathsPercentage / 2);
 
 				// キル数とデス数を数字で表示
 				msg = ChatColor.YELLOW + "" + kills + " kill(s) " + msg;
-				msg += " " + ChatColor.YELLOW + "" + deaths + "death(s)";
+				msg += " " + ChatColor.YELLOW + "" + deaths + " death(s)";
 			}
 
 			// アクションバーに表示
