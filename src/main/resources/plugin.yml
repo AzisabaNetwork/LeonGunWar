@@ -5,9 +5,10 @@ authors: ["siloneco", "YukiLeafX"]
 description: ${project.description}
 website: ${project.url}
 commands:
-  lgw:
+  leongunwar:
     description: Nothing
     permission: leongunwar.command.leongunwar
+    aliases: ["lgw"]
 permissions:
   leongunwar.entrysign.changestate:
     default: op

@@ -23,10 +23,10 @@ public class LeonGunWar extends JavaPlugin {
 		initializeClasses();
 
 		// コマンドの登録
-		getServer().getPluginCommand("lgw").setExecutor(new LgwCommand());
+		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
 
 		// コマンドの権限がない時のメッセージの指定
-		getServer().getPluginCommand("lgw").setPermissionMessage(ChatColor.RED + "権限がありません！");
+		getServer().getPluginCommand("leongunwar").setPermissionMessage(ChatColor.RED + "権限がありません！");
 
 		// リスナーの登録
 		getServer().getPluginManager().registerEvents(new MatchControlListener(this), this);
