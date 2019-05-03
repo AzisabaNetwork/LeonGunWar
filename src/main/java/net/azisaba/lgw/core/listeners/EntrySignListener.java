@@ -118,7 +118,7 @@ public class EntrySignListener implements Listener {
 		}
 
 		// エントリー
-		boolean success = MatchManager.addEntryPlayer(p);
+		boolean success = MatchManager.removeEntryPlayer(p);
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
