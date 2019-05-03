@@ -6,14 +6,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.AnvilInventory;
 
-// 金床を開けれないようにするリスナー
+// 金床とかまどを開けれないようにするリスナー
 public class DisableOpenInventoryListener implements Listener {
 
 	@EventHandler
 	public void onInventoryOpen(InventoryOpenEvent e) {
-		if (e.getInventory() instanceof AnvilInventory) {
+		if (e.getInventory().getType() == InventoryType.ANVIL) {
 			// 金床だった場合はキャンセル
 			e.setCancelled(true);
 		}
@@ -21,7 +20,9 @@ public class DisableOpenInventoryListener implements Listener {
 		if (e.getInventory().getType() == InventoryType.FURNACE) {
 			// かまどならキャンセル
 			e.setCancelled(true);
-			((Player) e.getPlayer()).playSound(e.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 		}
+
+		// 音を鳴らす
+		((Player) e.getPlayer()).playSound(e.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 	}
 }
