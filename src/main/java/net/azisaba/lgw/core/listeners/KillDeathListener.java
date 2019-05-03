@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -108,6 +109,7 @@ public class KillDeathListener implements Listener {
 			// 殺したプレイヤーが含まれていればplayerTeamに代入してbreak
 			if (teamPlayers.contains(p)) {
 				playerTeam = team;
+				Bukkit.getLogger().info(p.getName() + " is " + team.getTeamName());
 				break;
 			}
 		}
@@ -116,6 +118,7 @@ public class KillDeathListener implements Listener {
 		Location spawnPoint = null;
 		if (playerTeam != null) {
 			spawnPoint = MatchManager.getCurrentGameMap().getSpawnPoint(playerTeam);
+			Bukkit.getLogger().info(p.getName() + " is no team.");
 		}
 
 		// spawnPointがnullの場合lobbyのスポーン地点を指定
@@ -124,5 +127,6 @@ public class KillDeathListener implements Listener {
 		}
 
 		e.setRespawnLocation(spawnPoint);
+		Bukkit.getLogger().info(p.getName() + ": spawn point -> " + spawnPoint.toString());
 	}
 }
