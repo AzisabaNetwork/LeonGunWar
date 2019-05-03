@@ -133,4 +133,12 @@ public class KillDeathListener implements Listener {
 
 		e.setRespawnLocation(spawnPoint);
 	}
+
+	/**
+	 * アイテムを失わないようにするListener
+	 */
+	@EventHandler
+	public void keepInventory(PlayerDeathEvent e) {
+		e.setKeepInventory(true);
+	}
 }
