@@ -20,7 +20,7 @@ public class KillDeathListener implements Listener {
 	 * プレイヤーを殺したことを検知するリスナー
 	 * 死亡したプレイヤーの処理は他のリスナーで行います
 	 */
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onKill(PlayerDeathEvent e) {
 		// 試合中でなければreturn
 		if (!MatchManager.isMatching()) {
@@ -64,7 +64,7 @@ public class KillDeathListener implements Listener {
 	/**
 	 * 試合中のプレイヤーが死亡した場合、死亡カウントを増加させ、即時リスポーンさせます
 	 */
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onDeath(PlayerDeathEvent e) {
 		Player deathPlayer = e.getEntity();
 
@@ -137,7 +137,7 @@ public class KillDeathListener implements Listener {
 	/**
 	 * アイテムを失わないようにするListener
 	 */
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void keepInventory(PlayerDeathEvent e) {
 		e.setKeepInventory(true);
 	}
