@@ -36,7 +36,7 @@ public class DefaultTeamDistributor implements TeamDistributor {
 		// 一時的にデバッグコード
 		teams.stream()
 				.sorted(Comparator.comparing(Team::getSize).reversed())
-				.map(Team::getDisplayName)
+				.map(Team::getSize)
 				.forEach(System.out::println);
 
 		// エントリーが少ないチームにプレイヤーを追加 (同じ場合は最初の要素)
