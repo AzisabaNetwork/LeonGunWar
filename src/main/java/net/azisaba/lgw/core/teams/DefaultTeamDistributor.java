@@ -34,8 +34,8 @@ public class DefaultTeamDistributor implements TeamDistributor {
 	public void distributePlayer(Player player, List<Team> teams) {
 		// エントリーが少ないチームにプレイヤーを追加 (同じ場合は最初の要素)
 		teams.stream()
-				.sorted(Comparator.comparing(Team::getSize).reversed())
-				.findAny()
+				.sorted(Comparator.comparing(Team::getSize))
+				.findFirst()
 				.ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
 	}
 }
