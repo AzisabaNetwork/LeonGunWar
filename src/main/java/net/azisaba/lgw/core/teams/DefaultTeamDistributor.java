@@ -32,17 +32,10 @@ public class DefaultTeamDistributor implements TeamDistributor {
 	 */
 	@Override
 	public void distributePlayer(Player player, List<Team> teams) {
-
-		// 一時的にデバッグコード
-		teams.stream()
-				.sorted(Comparator.comparing(Team::getSize).reversed())
-				.map(Team::getSize)
-				.forEach(System.out::println);
-
 		// エントリーが少ないチームにプレイヤーを追加 (同じ場合は最初の要素)
 		teams.stream()
 				.sorted(Comparator.comparing(Team::getSize).reversed())
-				.findFirst()
+				.findAny()
 				.ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
 	}
 }
