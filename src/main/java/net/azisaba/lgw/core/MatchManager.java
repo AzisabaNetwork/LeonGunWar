@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -360,6 +361,30 @@ public class MatchManager {
 
 		// 取得したプレイヤーリストを返す
 		return players;
+	}
+
+	/**
+	 * プレイヤーが所属しているチームを取得します
+	 * @param p チームを取得したいプレイヤー
+	 * @return プレイヤーが参加しているチーム
+	 */
+	public static BattleTeam getBattleTeam(Player p) {
+		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
+		for (BattleTeam team : BattleTeam.values()) {
+
+			// スコアボードのTeamを取得
+			Team scoreboardTeam = MatchManager.getScoreboardTeam(team);
+
+			// [Debug] リストの内容表示
+			Bukkit.getLogger().info(team.name() + ": " + scoreboardTeam.getEntries().toString());
+
+			// 殺したプレイヤーが含まれていればplayerTeamに代入してbreak
+			if (scoreboardTeam.getEntries().contains(p.getName())) {
+				return team;
+			}
+		}
+
+		return null;
 	}
 
 	/**

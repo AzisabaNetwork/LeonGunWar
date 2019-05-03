@@ -2,17 +2,18 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.inventory.ItemStack;
 
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
+import net.md_5.bungee.api.ChatColor;
 
 public class KillDeathListener implements Listener {
 
@@ -100,24 +101,7 @@ public class KillDeathListener implements Listener {
 		Player p = e.getPlayer();
 
 		// チームを取得
-		BattleTeam playerTeam = null;
-
-		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
-		for (BattleTeam team : BattleTeam.values()) {
-
-			// スコアボードのTeamを取得
-			Team scoreboardTeam = MatchManager.getScoreboardTeam(team);
-
-			// [Debug] リストの内容表示
-			Bukkit.getLogger().info(team.name() + ": " + scoreboardTeam.getEntries().toString());
-
-			// 殺したプレイヤーが含まれていればplayerTeamに代入してbreak
-			if (scoreboardTeam.getEntries().contains(p.getName())) {
-				playerTeam = team;
-				break;
-			}
-		}
-
+		BattleTeam playerTeam = MatchManager.getBattleTeam(p);
 		// スポーン地点
 		Location spawnPoint = null;
 
@@ -140,5 +124,63 @@ public class KillDeathListener implements Listener {
 	@EventHandler(ignoreCancelled = false)
 	public void keepInventory(PlayerDeathEvent e) {
 		e.setKeepInventory(true);
+	}
+
+	/**
+	 * キルログを変更するListener
+	 */
+	@EventHandler(ignoreCancelled = false)
+	public void deathMessageChanger(PlayerDeathEvent e) {
+		Player p = e.getEntity();
+
+		// 殺したEntityが居ない場合自滅とする
+		if (p.getKiller() == null) {
+			e.setDeathMessage(ChatColor.GRAY + p.getName() + "は自滅した！");
+			return;
+		}
+
+		Player killer = (Player) e.getEntity().getKiller();
+
+		// 殺したアイテム
+		ItemStack item = killer.getInventory().getItemInMainHand();
+
+		// アイテム名を取得
+		String itemName = "";
+		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
+			itemName = "素手";
+		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
+			itemName = item.getItemMeta().getDisplayName();
+		} else { // それ以外
+			itemName = item.getType().name();
+		}
+
+		// killerのチーム
+		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
+		// pのチーム (死んだプレイヤーのチーム)
+		BattleTeam deathTeam = MatchManager.getBattleTeam(p);
+
+		StringBuilder builder = new StringBuilder();
+
+		// killerTeamがnullではない場合は色を取得 (nullなら何もしない)
+		if (killerTeam != null) {
+			builder.append(killerTeam.getChatColor() + "");
+		}
+
+		// プレイヤー名とキルしたアイテムを表示
+		builder.append(killer.getName() + " " + ChatColor.GRAY + "━━━[" + ChatColor.RESET + itemName + ChatColor.GRAY
+				+ "]━━━> ");
+
+		// deathTeamがnullではない場合は色を取得
+		if (deathTeam != null) {
+			builder.append(deathTeam.getChatColor() + "");
+		} else { // その他の場合は白
+			builder.append(ChatColor.RESET + "");
+		}
+
+		// プレイヤー名表示
+		builder.append(p.getName());
+
+		// メッセージ変更
+		e.setDeathMessage(builder.toString());
 	}
 }
