@@ -384,6 +384,14 @@ public class MatchManager {
 	}
 
 	/**
+	 * 試合の残り秒数を返します
+	 * @return 試合の残り秒数
+	 */
+	public static int getTimeLeft() {
+		return timeLeft;
+	}
+
+	/**
 	 * 指定したチームの現在のポイント数を取得します
 	 * 試合が行われていない場合は-1を返します
 	 *

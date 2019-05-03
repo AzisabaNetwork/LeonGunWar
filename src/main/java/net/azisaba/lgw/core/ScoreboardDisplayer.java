@@ -33,13 +33,15 @@ public class ScoreboardDisplayer {
 
 			/**
 			 *
-			 * 現在のマップ: {マップ名}
+			 * 残り時間: ?秒
 			 *
 			 * 赤チーム: ? point
 			 * 青チーム: ? point
 			 *
 			 * キル数: ?
 			 * デス数: ?
+			 *
+			 * 現在のマップ: {マップ名}
 			 *
 			 * azisaba.net
 			 */
@@ -55,21 +57,27 @@ public class ScoreboardDisplayer {
 			int kills = MatchManager.getKillDeathCounter().getKills(player);
 			int deaths = MatchManager.getKillDeathCounter().getDeaths(player);
 
+			// 残り時間
+			int timeLeft = MatchManager.getTimeLeft();
+
 			// 文字を作成
 			String line1 = "";
-			String line2 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
+			String line2 = ChatColor.AQUA + "残り時間" + ChatColor.GREEN + ": " + ChatColor.RED + timeLeft + "秒";
 			String line3 = "";
 			String line4 = BattleTeam.RED.getTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + redPoint
 					+ " point";
-			String line5 = BattleTeam.BLUE.getTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint + " point";
+			String line5 = BattleTeam.BLUE.getTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
+					+ " point";
 			String line6 = "";
 			String line7 = ChatColor.GRAY + "キル数" + ChatColor.GREEN + ": " + ChatColor.YELLOW + kills;
 			String line8 = ChatColor.GRAY + "デス数" + ChatColor.GREEN + ": " + ChatColor.YELLOW + deaths;
 			String line9 = "";
-			String line10 = ChatColor.GOLD + "azisaba.net";
+			String line10 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
+			String line11 = "";
+			String line12 = ChatColor.GOLD + "azisaba.net";
 
 			// リストにして返す
-			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9, line10);
+			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12);
 		}
 
 		// 試合をしていない場合
