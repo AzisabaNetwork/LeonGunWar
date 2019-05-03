@@ -57,9 +57,9 @@ public class ScoreboardDisplayer {
 			String line1 = "";
 			String line2 = ChatColor.AQUA + "残り時間" + ChatColor.GREEN + ": " + ChatColor.RED + timeLeft + "秒";
 			String line3 = "";
-			String line4 = BattleTeam.RED.getTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + redPoint
+			String line4 = BattleTeam.RED.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + redPoint
 					+ " point";
-			String line5 = BattleTeam.BLUE.getTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
+			String line5 = BattleTeam.BLUE.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
 					+ " point";
 			String line6 = "";
 			String line7 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
