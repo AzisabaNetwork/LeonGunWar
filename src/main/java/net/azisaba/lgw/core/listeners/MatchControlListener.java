@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.base.Strings;
-
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import com.google.common.base.Strings;
+
+import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
@@ -123,5 +125,44 @@ public class MatchControlListener implements Listener {
 
 		// スコアボードをアップデート
 		ScoreboardDisplayer.updateScoreboard(players);
+	}
+
+	/**
+	 * プレイヤーのアクションバーを更新するリスナー
+	 */
+	@EventHandler
+	public void actionbarUpdater(MatchTimeChangedEvent e) {
+		// 試合中のプレイヤーを取得
+		List<Player> players = MatchManager.getAllTeamPlayers();
+
+		// アクションバーをアップデート
+		for (Player p : players) {
+			// キル数取得
+			int kills = MatchManager.getKillDeathCounter().getKills(p);
+			// デス数取得
+			int deaths = MatchManager.getKillDeathCounter().getDeaths(p);
+
+			String msg = "";
+
+			// 両方を足して0の場合は白く表示
+			if (kills + deaths == 0) {
+
+			} else { // それ以外の場合はメーター作成
+				// キルのパーセンテージ
+				double killsPercentage = ((double) kills / (double) (kills + deaths)) * 100d;
+				// デスのパーセンテージ
+				double deathsPercentage = ((double) deaths / (double) (kills + deaths)) * 100d;
+
+				msg += ChatColor.LIGHT_PURPLE + StringUtils.repeat("┃", (int) killsPercentage);
+				msg += ChatColor.DARK_PURPLE + StringUtils.repeat("┃", (int) deathsPercentage);
+
+				// キル数とデス数を数字で表示
+				msg = ChatColor.YELLOW + "" + kills + " kill(s) " + msg;
+				msg += " " + ChatColor.YELLOW + "" + deaths + "death(s)";
+			}
+
+			// アクションバーに表示
+			JSONMessage.create(msg).actionbar(p);
+		}
 	}
 }
