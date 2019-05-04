@@ -3,9 +3,12 @@ package net.azisaba.lgw.core.listeners;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -184,5 +187,26 @@ public class DamageListener implements Listener {
 
 		// メッセージ変更
 		e.setDeathMessage(builder.toString());
+	}
+
+	@EventHandler
+	public void onFireworkdsDamage(EntityDamageByEntityEvent e) {
+		// Entitiyによる爆発ではない場合はreturn
+		if (e.getCause() != DamageCause.ENTITY_EXPLOSION) {
+			return;
+		}
+
+		// ダメージを受けたEntityがPlayerでなければreturn
+		if (!(e.getEntity() instanceof Player)) {
+			return;
+		}
+
+		// ダメージを与えたEntityが花火でなければreturn
+		if (!(e.getDamager() instanceof Firework)) {
+			return;
+		}
+
+		// キャンセル
+		e.setCancelled(true);
 	}
 }
