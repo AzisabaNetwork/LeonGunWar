@@ -1,13 +1,6 @@
 
-# Created by https://www.gitignore.io/api/java,code,maven,eclipse
-# Edit at https://www.gitignore.io/?templates=java,code,maven,eclipse
-
-### Code ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# Created by https://www.gitignore.io/api/java,maven,eclipse
+# Edit at https://www.gitignore.io/?templates=java,maven,eclipse
 
 ### Eclipse ###
 .metadata
@@ -115,4 +108,4 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-# End of https://www.gitignore.io/api/java,code,maven,eclipse
+# End of https://www.gitignore.io/api/java,maven,eclipse
