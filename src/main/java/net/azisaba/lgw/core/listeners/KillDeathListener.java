@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
-import net.md_5.bungee.api.ChatColor;
 
 public class KillDeathListener implements Listener {
 
@@ -135,7 +135,19 @@ public class KillDeathListener implements Listener {
 
 		// 殺したEntityが居ない場合自滅とする
 		if (p.getKiller() == null) {
-			e.setDeathMessage(ChatColor.GRAY + p.getName() + "は自滅した！");
+
+			// チーム取得
+			BattleTeam deathTeam = MatchManager.getBattleTeam(p);
+
+			ChatColor nameColor = null;
+			// チームがない場合グレー
+			if (deathTeam == null) {
+				nameColor = ChatColor.GRAY;
+			} else {
+				nameColor = deathTeam.getChatColor();
+			}
+
+			e.setDeathMessage(nameColor + p.getName() + ChatColor.GRAY + "は自滅した！");
 			return;
 		}
 
