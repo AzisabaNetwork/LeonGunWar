@@ -32,7 +32,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new MatchControlListener(this), this);
 		getServer().getPluginManager().registerEvents(new EntrySignListener(), this);
 		getServer().getPluginManager().registerEvents(new MatchStartDetectListener(), this);
-		getServer().getPluginManager().registerEvents(new KillDeathListener(), this);
+		getServer().getPluginManager().registerEvents(new KillDeathListener(this), this);
 
 		// リスナーの登録 (others)
 		getServer().getPluginManager().registerEvents(new NoArrowGroundListener(this), this);

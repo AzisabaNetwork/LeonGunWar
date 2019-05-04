@@ -11,11 +11,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class KillDeathListener implements Listener {
+
+	private LeonGunWar plugin;
+
+	public KillDeathListener(LeonGunWar plugin) {
+		this.plugin = plugin;
+	}
 
 	/**
 	 * プレイヤーを殺したことを検知するリスナー
@@ -116,6 +124,14 @@ public class KillDeathListener implements Listener {
 		}
 
 		e.setRespawnLocation(spawnPoint);
+
+		// 消火
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				p.setFireTicks(0);
+			}
+		}.runTaskLater(plugin, 1);
 	}
 
 	/**
