@@ -78,19 +78,7 @@ public class KillDeathListener implements Listener {
 		Player deathPlayer = e.getEntity();
 
 		// チームを取得
-		BattleTeam deathPlayerTeam = null;
-
-		// 各チームのプレイヤーリストを取得し、死んだプレイヤーが含まれていればbreak
-		for (BattleTeam team : BattleTeam.values()) {
-			// プレイヤーリストを取得
-			List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
-
-			// 殺したプレイヤーが含まれていればdeathPlayerTeamに代入してbreak
-			if (teamPlayers.contains(deathPlayer)) {
-				deathPlayerTeam = team;
-				break;
-			}
-		}
+		BattleTeam deathPlayerTeam = MatchManager.getBattleTeam(deathPlayer);
 
 		// deathPlayerTeamがnullの場合return
 		if (deathPlayerTeam == null) {
