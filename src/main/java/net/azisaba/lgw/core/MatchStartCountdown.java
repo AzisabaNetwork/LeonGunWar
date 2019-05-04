@@ -50,7 +50,7 @@ public class MatchStartCountdown {
 	private static BukkitRunnable getRunnable() {
 		return new BukkitRunnable() {
 
-//			private int timeLeft = 21;
+			//			private int timeLeft = 21;
 			private int timeLeft = 5; // デバッグ
 
 			@Override

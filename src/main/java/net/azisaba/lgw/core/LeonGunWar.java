@@ -1,10 +1,11 @@
 package net.azisaba.lgw.core;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
-import net.azisaba.lgw.core.listeners.EntrySignListener;
 import net.azisaba.lgw.core.listeners.DamageListener;
+import net.azisaba.lgw.core.listeners.EntrySignListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
@@ -13,7 +14,6 @@ import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.maps.MapContainer;
-import net.md_5.bungee.api.ChatColor;
 
 public class LeonGunWar extends JavaPlugin {
 
