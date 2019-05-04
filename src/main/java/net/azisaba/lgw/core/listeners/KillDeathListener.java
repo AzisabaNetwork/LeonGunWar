@@ -1,7 +1,5 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -45,19 +43,7 @@ public class KillDeathListener implements Listener {
 		}
 
 		// チームを取得
-		BattleTeam killerTeam = null;
-
-		// 各チームのプレイヤーリストを取得し、殺したプレイヤーが含まれていればbreak
-		for (BattleTeam team : BattleTeam.values()) {
-			// プレイヤーリストを取得
-			List<Player> teamPlayers = MatchManager.getTeamPlayers(team);
-
-			// 殺したプレイヤーが含まれていればkillerTeamに代入してbreak
-			if (teamPlayers.contains(killer)) {
-				killerTeam = team;
-				break;
-			}
-		}
+		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
 
 		// killerTeamがnullの場合return
 		if (killerTeam == null) {
