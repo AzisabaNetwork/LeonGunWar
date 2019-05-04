@@ -10,7 +10,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -374,9 +373,6 @@ public class MatchManager {
 
 			// スコアボードのTeamを取得
 			Team scoreboardTeam = MatchManager.getScoreboardTeam(team);
-
-			// [Debug] リストの内容表示
-			Bukkit.getLogger().info(team.name() + ": " + scoreboardTeam.getEntries().toString());
 
 			// 殺したプレイヤーが含まれていればplayerTeamに代入してbreak
 			if (scoreboardTeam.getEntries().contains(p.getName())) {
