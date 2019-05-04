@@ -15,11 +15,11 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
-public class KillDeathListener implements Listener {
+public class DamageListener implements Listener {
 
 	private LeonGunWar plugin;
 
-	public KillDeathListener(LeonGunWar plugin) {
+	public DamageListener(LeonGunWar plugin) {
 		this.plugin = plugin;
 	}
 
