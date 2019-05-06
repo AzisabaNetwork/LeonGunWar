@@ -113,7 +113,7 @@ public class KillDeathCounter {
 	public List<KDPlayerData> getMVPPlayer() {
 
 		int mvpKills = killCountMap.values().stream()
-				.max(Comparator.reverseOrder())
+				.max(Comparator.naturalOrder())
 				.get();
 
 		return killCountMap.entrySet().stream()
