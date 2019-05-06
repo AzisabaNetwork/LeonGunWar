@@ -112,14 +112,6 @@ public class DamageListener implements Listener {
 	}
 
 	/**
-	 * アイテムを失わないようにするListener
-	 */
-	@EventHandler(ignoreCancelled = false)
-	public void keepInventory(PlayerDeathEvent e) {
-		e.setKeepInventory(true);
-	}
-
-	/**
 	 * キルログを変更するListener
 	 */
 	@EventHandler(ignoreCancelled = false)
@@ -190,7 +182,7 @@ public class DamageListener implements Listener {
 	}
 
 	@EventHandler
-	public void onFireworkdsDamage(EntityDamageByEntityEvent e) {
+	public void onFireworksDamage(EntityDamageByEntityEvent e) {
 		// Entitiyによる爆発ではない場合はreturn
 		if (e.getCause() != DamageCause.ENTITY_EXPLOSION) {
 			return;
