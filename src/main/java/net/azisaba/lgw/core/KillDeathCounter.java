@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +20,8 @@ import com.google.common.base.Preconditions;
 public class KillDeathCounter {
 
 	// キル数とデス数をカウントするHashMap
-	private HashMap<UUID, Integer> killCountMap, deathCountMap;
-	private HashMap<UUID, String> playerNameContainer;
-
-	public KillDeathCounter() {
-		killCountMap = new HashMap<>();
-		deathCountMap = new HashMap<>();
-		playerNameContainer = new HashMap<>();
-	}
+	private final HashMap<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>();
+	private final HashMap<UUID, String> playerNameContainer = new HashMap<>();
 
 	/**
 	 * プレイヤーのキル数を1追加します
@@ -119,47 +112,25 @@ public class KillDeathCounter {
 	 */
 	public List<KDPlayerData> getMVPPlayer() {
 
-		// キル数を降順でソートする
-		List<Entry<UUID, Integer>> sorted = killCountMap.entrySet().stream()
-				.sorted(Comparator.comparing(Entry<UUID, Integer>::getValue).reversed())
+		int mvpKills = killCountMap.values().stream()
+				.max(Comparator.reverseOrder())
+				.get();
+
+		return killCountMap.entrySet().stream()
+				.filter(entry -> entry.getValue() == mvpKills)
+				.map(Entry::getKey)
+				.map(mvp -> {
+					// プレイヤー名取得 (なければnull)
+					String playerName = playerNameContainer.getOrDefault(mvp, null);
+					// キル数取得 (なければ0)
+					int kills = killCountMap.getOrDefault(mvp, 0);
+					// デス数取得 (なければ0)
+					int deaths = deathCountMap.getOrDefault(mvp, 0);
+
+					// KDPlayerData作成
+					return new KDPlayerData(mvp, playerName, kills, deaths);
+				})
 				.collect(Collectors.toList());
-
-		// UUIDのリストを作成
-		List<UUID> mvpUUIDList = new ArrayList<>();
-
-		int mvpKills = -1;
-		for (Entry<UUID, Integer> entry : sorted) {
-			// mvpKillsが0以下なら(代入されていないならば)代入する
-			if (mvpKills < 0) {
-				mvpKills = entry.getValue();
-			}
-
-			// mvpKillsとvalueが同じ(または多い)場合はmvpとして追加する
-			if (mvpKills <= entry.getValue()) {
-				mvpUUIDList.add(entry.getKey());
-			}
-		}
-
-		// 以下、KDPlayerDataを作成する
-		// リスト作成
-		List<KDPlayerData> dataList = new ArrayList<>();
-
-		for (UUID mvp : mvpUUIDList) {
-			// プレイヤー名取得 (なければnull)
-			String playerName = playerNameContainer.getOrDefault(mvp, null);
-			// キル数取得 (なければ0)
-			int kills = killCountMap.getOrDefault(mvp, 0);
-			// デス数取得 (なければ0)
-			int deaths = deathCountMap.getOrDefault(mvp, 0);
-
-			// KDPlayerData作成
-			KDPlayerData data = new KDPlayerData(mvp, playerName, kills, deaths);
-			// リストに追加
-			dataList.add(data);
-		}
-
-		// リストを返す
-		return dataList;
 	}
 
 	/**
