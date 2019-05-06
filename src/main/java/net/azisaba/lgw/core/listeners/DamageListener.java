@@ -144,7 +144,7 @@ public class DamageListener implements Listener {
 			return;
 		}
 
-		Player killer = (Player) e.getEntity().getKiller();
+		Player killer = e.getEntity().getKiller();
 
 		// 殺したアイテム
 		ItemStack item = killer.getInventory().getItemInMainHand();

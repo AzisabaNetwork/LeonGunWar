@@ -1,12 +1,12 @@
 package net.azisaba.lgw.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
@@ -120,12 +120,9 @@ public class KillDeathCounter {
 	public List<KDPlayerData> getMVPPlayer() {
 
 		// キル数を降順でソートする
-		List<Entry<UUID, Integer>> sorted = new ArrayList<Entry<UUID, Integer>>(killCountMap.entrySet());
-		Collections.sort(sorted, new Comparator<Entry<UUID, Integer>>() {
-			public int compare(Entry<UUID, Integer> obj1, Entry<UUID, Integer> obj2) {
-				return obj2.getValue().compareTo(obj1.getValue());
-			}
-		});
+		List<Entry<UUID, Integer>> sorted = killCountMap.entrySet().stream()
+				.sorted(Comparator.comparing(Entry<UUID, Integer>::getValue).reversed())
+				.collect(Collectors.toList());
 
 		// UUIDのリストを作成
 		List<UUID> mvpUUIDList = new ArrayList<>();

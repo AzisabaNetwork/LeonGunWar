@@ -138,7 +138,7 @@ public class MatchManager {
 		// 各プレイヤーにチームに沿った処理を行う
 		// エントリー削除したときにgetEntries()の中身が変わってエラーを起こさないように新しいリストを作成してfor文を使用する
 		// 赤チームの処理
-		for (String redEntry : new ArrayList<String>(redTeam.getEntries())) {
+		for (String redEntry : new ArrayList<>(redTeam.getEntries())) {
 			Player p = plugin.getServer().getPlayerExact(redEntry);
 
 			// プレイヤーが見つからない場合はエントリーから削除してcontinue
@@ -156,7 +156,7 @@ public class MatchManager {
 		}
 
 		// 青チームの処理
-		for (String blueEntry : new ArrayList<String>(blueTeam.getEntries())) {
+		for (String blueEntry : new ArrayList<>(blueTeam.getEntries())) {
 			Player p = plugin.getServer().getPlayerExact(blueEntry);
 
 			// プレイヤーが見つからない場合はエントリーから削除してcontinue
@@ -185,11 +185,11 @@ public class MatchManager {
 	 */
 	public static void finalizeMatch() {
 		// 赤チームのEntry削除
-		for (String redEntry : new ArrayList<String>(redTeam.getEntries())) {
+		for (String redEntry : new ArrayList<>(redTeam.getEntries())) {
 			redTeam.removeEntry(redEntry);
 		}
 		// 青チームのEntry削除
-		for (String blueEntry : new ArrayList<String>(blueTeam.getEntries())) {
+		for (String blueEntry : new ArrayList<>(blueTeam.getEntries())) {
 			blueTeam.removeEntry(blueEntry);
 		}
 
@@ -253,7 +253,7 @@ public class MatchManager {
 		List<Player> players = new ArrayList<>();
 
 		// 名前からプレイヤー検索
-		for (String entryName : new ArrayList<String>(entry.getEntries())) {
+		for (String entryName : new ArrayList<>(entry.getEntries())) {
 			Player target = plugin.getServer().getPlayerExact(entryName);
 
 			// プレイヤーが見つからない場合はエントリー解除してcontinue
@@ -339,9 +339,9 @@ public class MatchManager {
 
 		// 赤チームの場合
 		if (team == BattleTeam.RED) {
-			entryList = new ArrayList<String>(redTeam.getEntries());
+			entryList = new ArrayList<>(redTeam.getEntries());
 		} else if (team == BattleTeam.BLUE) {
-			entryList = new ArrayList<String>(blueTeam.getEntries());
+			entryList = new ArrayList<>(blueTeam.getEntries());
 		}
 
 		// Entryしている名前からプレイヤー検索
