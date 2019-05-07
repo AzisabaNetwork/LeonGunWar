@@ -7,6 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -120,7 +121,7 @@ public class DamageListener implements Listener {
 	/**
 	 * キルログを変更するListener
 	 */
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
 	public void deathMessageChanger(PlayerDeathEvent e) {
 		Player p = e.getEntity();
 
