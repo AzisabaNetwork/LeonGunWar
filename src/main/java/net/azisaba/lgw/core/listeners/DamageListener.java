@@ -157,7 +157,7 @@ public class DamageListener implements Listener {
 		// アイテム名を取得
 		String itemName = "";
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
-			itemName = "素手";
+			itemName = ChatColor.GOLD + "素手";
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
 			// CrackShot Pluginを取得
 			CSDirector crackshot = (CSDirector) plugin.getServer().getPluginManager().getPlugin("CrackShot");
@@ -167,7 +167,7 @@ public class DamageListener implements Listener {
 			// DisplayNameを取得
 			itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 		} else { // それ以外
-			itemName = item.getType().name();
+			itemName = ChatColor.GOLD + item.getType().name();
 		}
 
 		// killerのチーム
