@@ -126,7 +126,8 @@ public class MatchManager {
 		Preconditions.checkState(!isMatching, "A match is already started.");
 
 		// timeLeftを600に変更
-		timeLeft = 600;
+//		timeLeft = 600;
+		timeLeft = 60; // Debug
 
 		// マップを抽選
 		currentMap = MapContainer.getRandomMap();
