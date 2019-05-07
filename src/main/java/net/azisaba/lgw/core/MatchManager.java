@@ -205,6 +205,9 @@ public class MatchManager {
 
 		// KillDeathCounterを初期化
 		kdCounter = new KillDeathCounter();
+
+		// ゲーム終了
+		isMatching = false;
 	}
 
 	/**
