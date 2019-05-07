@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.shampaggon.crackshot.CSUtility;
+
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -24,8 +26,11 @@ public class DamageListener implements Listener {
 
 	private LeonGunWar plugin;
 
+	private CSUtility crackShot;
+
 	public DamageListener(LeonGunWar plugin) {
 		this.plugin = plugin;
+		this.crackShot = new CSUtility();
 	}
 
 	/**
@@ -153,12 +158,10 @@ public class DamageListener implements Listener {
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
 			itemName = "素手";
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
-			itemName = item.getItemMeta().getDisplayName();
+			itemName = crackShot.getWeaponTitle(item);
 		} else { // それ以外
 			itemName = item.getType().name();
 		}
-
-		itemName = itemName.trim();
 
 		// killerのチーム
 		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
