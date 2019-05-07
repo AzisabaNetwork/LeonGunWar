@@ -86,10 +86,16 @@ public class MatchControlListener implements Listener {
 		List<KDPlayerData> mvpPlayers = MatchManager.getKillDeathCounter().getMVPPlayer();
 		// MVPプレイヤーのメッセージ
 		List<String> mvpMessages = new ArrayList<>(Arrays.asList(ChatColor.RED + "MVP:"));
-		for (KDPlayerData data : mvpPlayers) {
-			mvpMessages.add(
-					Strings.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
-							+ ChatColor.RED + ": " + data.getKills() + "キル " + data.getDeaths() + "デス");
+
+		// MVPが居ない場合は「なし」と表示
+		if (mvpMessages.isEmpty()) {
+			mvpMessages.add(Strings.repeat(" ", 2) + ChatColor.RED + "- なし");
+		} else { // MVPが居る場合は表示
+			for (KDPlayerData data : mvpPlayers) {
+				mvpMessages.add(
+						Strings.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
+								+ ChatColor.RED + ": " + data.getKills() + "キル " + data.getDeaths() + "デス");
+			}
 		}
 
 		for (Player p : allPlayers) {
