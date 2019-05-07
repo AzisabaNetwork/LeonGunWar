@@ -88,7 +88,7 @@ public class MatchControlListener implements Listener {
 		List<String> mvpMessages = new ArrayList<>(Arrays.asList(ChatColor.RED + "MVP:"));
 
 		// MVPが居ない場合は「なし」と表示
-		if (mvpMessages.isEmpty()) {
+		if (mvpPlayers.isEmpty()) {
 			mvpMessages.add(Strings.repeat(" ", 2) + ChatColor.RED + "- なし");
 		} else { // MVPが居る場合は表示
 			for (KDPlayerData data : mvpPlayers) {
