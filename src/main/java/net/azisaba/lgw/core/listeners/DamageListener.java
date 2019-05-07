@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -57,6 +58,11 @@ public class DamageListener implements Listener {
 		MatchManager.addTeamPoint(killerTeam);
 		// 個人キルを追加
 		MatchManager.getKillDeathCounter().addKill(killer);
+
+		// タイトルを表示
+		killer.sendTitle("", ChatColor.RED + "+1 kill", 0, 20, 10);
+		// 音を鳴らす
+		killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
 	}
 
 	/**
