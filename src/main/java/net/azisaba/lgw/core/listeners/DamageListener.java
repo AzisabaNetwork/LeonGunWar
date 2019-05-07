@@ -158,6 +158,8 @@ public class DamageListener implements Listener {
 			itemName = item.getType().name();
 		}
 
+		itemName = itemName.trim();
+
 		// killerのチーム
 		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
 		// pのチーム (死んだプレイヤーのチーム)
