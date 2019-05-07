@@ -114,7 +114,7 @@ public class KillDeathCounter {
 
 		int mvpKills = killCountMap.values().stream()
 				.max(Comparator.naturalOrder())
-				.get();
+				.orElse(-1);
 
 		return killCountMap.entrySet().stream()
 				.filter(entry -> entry.getValue() == mvpKills)
