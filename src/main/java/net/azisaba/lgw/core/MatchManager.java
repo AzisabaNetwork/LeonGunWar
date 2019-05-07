@@ -95,7 +95,7 @@ public class MatchManager {
 		// デフォルトのTeamDistributorを指定
 		MatchManager.teamDistributor = new DefaultTeamDistributor();
 		// メインではない新しいスコアボードを取得
-		scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
+		scoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
 		// ScoreboardDisplayerにScoreboardを設定
 		ScoreboardDisplayer.setScoreBoard(scoreboard);
