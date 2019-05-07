@@ -80,5 +80,12 @@
 			<artifactId>jsonmessage</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.shampaggon</groupId>
+			<artifactId>CrackShot</artifactId>
+			<version>0.98.7</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/CrackShot.jar</systemPath>
+		</dependency>
 	</dependencies>
 </project>
