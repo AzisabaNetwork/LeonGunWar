@@ -4,7 +4,7 @@ version: ${project.version}
 authors: ["siloneco", "YukiLeafX"]
 description: ${project.description}
 website: ${project.url}
-softdepend: ["Multiverse-Core"]
+softdepend: ["Multiverse-Core", "CrackShot"]
 commands:
   leongunwar:
     description: Nothing
