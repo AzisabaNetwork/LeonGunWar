@@ -89,7 +89,7 @@ public class MatchControlListener implements Listener {
 		for (KDPlayerData data : mvpPlayers) {
 			mvpMessages.add(
 					Strings.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
-							+ ChatColor.RED + ": " + data.getKills() + "k " + data.getDeaths() + "d");
+							+ ChatColor.RED + ": " + data.getKills() + "キル " + data.getDeaths() + "デス");
 		}
 
 		for (Player p : allPlayers) {
