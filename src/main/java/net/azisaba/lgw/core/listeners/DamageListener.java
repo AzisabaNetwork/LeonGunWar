@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 
 import net.azisaba.lgw.core.LeonGunWar;
@@ -158,7 +159,13 @@ public class DamageListener implements Listener {
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
 			itemName = "素手";
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
-			itemName = crackShot.getWeaponTitle(item);
+			// CrackShot Pluginを取得
+			CSDirector crackshot = (CSDirector) plugin.getServer().getPluginManager().getPlugin("CrackShot");
+
+			// 銃ID取得
+			String nodes = crackShot.getWeaponTitle(item);
+			// DisplayNameを取得
+			itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 		} else { // それ以外
 			itemName = item.getType().name();
 		}
