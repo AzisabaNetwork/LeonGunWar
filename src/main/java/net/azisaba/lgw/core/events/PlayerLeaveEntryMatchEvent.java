@@ -12,7 +12,7 @@ import org.bukkit.event.HandlerList;
 public class PlayerLeaveEntryMatchEvent extends Event {
 
 	// エントリー解除したプレイヤー
-	private Player leavePlayer;
+	private final Player leavePlayer;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 

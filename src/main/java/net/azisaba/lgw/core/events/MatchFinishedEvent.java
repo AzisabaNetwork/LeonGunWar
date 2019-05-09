@@ -20,11 +20,11 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 public class MatchFinishedEvent extends Event {
 
 	// 各チームのプレイヤー
-	private Map<BattleTeam, List<Player>> teamPlayers;
+	private final Map<BattleTeam, List<Player>> teamPlayers;
 	// マッチを行ったマップ
-	private GameMap map;
+	private final GameMap map;
 	// 勝利したチーム
-	private BattleTeam winner;
+	private final BattleTeam winner;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 

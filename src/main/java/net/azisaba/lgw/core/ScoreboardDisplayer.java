@@ -130,8 +130,9 @@ public class ScoreboardDisplayer {
 		for (String msg : lines) {
 
 			// 行が0の場合は空白にする
-			if (msg == null)
+			if (msg == null) {
 				msg = "";
+			}
 
 			// すでに値が設定されている場合は最後に空白を足していく
 			while (obj.getScore(msg).isScoreSet()) {
@@ -143,19 +144,14 @@ public class ScoreboardDisplayer {
 			currentValue++;
 		}
 
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			// スコアボードを設定する
-			p.setScoreboard(board);
-		}
+		// スコアボードを設定する
+		Bukkit.getOnlinePlayers().forEach(p -> p.setScoreboard(board));
 	}
 
 	/**
 	 * 現在設定されているEntryを全てリセットする
 	 */
 	private static void clearEntries() {
-		if (board.getEntries() != null)
-			for (String str : board.getEntries()) {
-				board.resetScores(str);
-			}
+		board.getEntries().forEach(board::resetScores);
 	}
 }

@@ -18,7 +18,7 @@ public class GameMap {
 	// プレイヤーに表示するマップ名
 	private String mapName;
 	// 各チームのスポーン地点
-	private HashMap<BattleTeam, Location> spawnMap;
+	private final HashMap<BattleTeam, Location> spawnMap;
 	// マップのワールド
 	private World world;
 
@@ -46,11 +46,7 @@ public class GameMap {
 
 	public Location getSpawnPoint(BattleTeam team) {
 		// 指定されていない場合はreturn null
-		if (!spawnMap.containsKey(team)) {
-			return null;
-		}
-
-		return spawnMap.get(team);
+		return spawnMap.getOrDefault(team, null);
 	}
 
 	public World getWorld() {

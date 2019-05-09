@@ -126,7 +126,7 @@ public class MatchManager {
 		Preconditions.checkState(!isMatching, "A match is already started.");
 
 		// timeLeftを600に変更
-//		timeLeft = 600;
+		//		timeLeft = 600;
 		timeLeft = 60; // Debug
 
 		// マップを抽選
@@ -309,7 +309,7 @@ public class MatchManager {
 
 				// 0になったらストップ
 				if (timeLeft == 0) {
-					this.cancel();
+					cancel();
 					return;
 				}
 			}
@@ -575,8 +575,8 @@ public class MatchManager {
 			// セーブ
 			try {
 				spawnLoader.save(lobbySpawnFile);
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
 		}
 	}

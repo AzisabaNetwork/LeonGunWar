@@ -24,7 +24,7 @@ import net.azisaba.lgw.core.utils.CustomItem;
 
 public class MatchControlListener implements Listener {
 
-	private LeonGunWar plugin;
+	private final LeonGunWar plugin;
 
 	public MatchControlListener(LeonGunWar plugin) {
 		this.plugin = plugin;
@@ -154,9 +154,9 @@ public class MatchControlListener implements Listener {
 				msg = "0 kill " + Strings.repeat("┃", 50) + " 0 death";
 			} else { // それ以外の場合はメーター作成
 				// キルのパーセンテージ
-				double killsPercentage = ((double) kills / (double) (kills + deaths)) * 100d;
+				double killsPercentage = (double) kills / (double) (kills + deaths) * 100d;
 				// デスのパーセンテージ
-				double deathsPercentage = ((double) deaths / (double) (kills + deaths)) * 100d;
+				double deathsPercentage = (double) deaths / (double) (kills + deaths) * 100d;
 
 				msg += ChatColor.LIGHT_PURPLE + Strings.repeat("┃", (int) killsPercentage / 2);
 				msg += ChatColor.DARK_PURPLE + Strings.repeat("┃", (int) deathsPercentage / 2);

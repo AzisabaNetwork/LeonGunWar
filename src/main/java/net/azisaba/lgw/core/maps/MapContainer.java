@@ -2,7 +2,7 @@ package net.azisaba.lgw.core.maps;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.google.common.base.Preconditions;
 
@@ -10,12 +10,9 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 public class MapContainer {
 
-	private static List<GameMap> mapList = new ArrayList<>();
+	private static final List<GameMap> MAP_LIST = new ArrayList<>();
 
 	private static boolean initialized = false;
-
-	// ランダムなマップを呼び出すときに何度もコンストラクタを呼び出すためRandomを設置
-	private static Random random = null;
 
 	/**
 	 * ファイルに保存してあるマップデータをロードします
@@ -31,9 +28,9 @@ public class MapContainer {
 		// GameSettingsLoaderの初期化
 		MapLoader.init(plugin);
 		// 保存されているマップデータの収集
-		mapList = MapLoader.loadMapData();
+		MAP_LIST.addAll(MapLoader.loadMapData());
 
-		plugin.getLogger().info(mapList.size() + "個のマップをロードしました。");
+		plugin.getLogger().info(MAP_LIST.size() + "個のマップをロードしました。");
 
 		// 初期ロード完了
 		initialized = true;
@@ -48,7 +45,7 @@ public class MapContainer {
 	public static List<GameMap> getAllGameMap() {
 		Preconditions.checkState(initialized, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
-		return mapList;
+		return MAP_LIST;
 	}
 
 	/**
@@ -61,18 +58,14 @@ public class MapContainer {
 		Preconditions.checkState(initialized, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
 		// 登録されているマップが0この場合nullをreturn
-		if (mapList.size() <= 0) {
+		if (MAP_LIST.size() <= 0) {
 			return null;
 		}
 
-		// randomがnullの場合作成
-		if (random == null)
-			random = new Random();
-
 		// 0からmapListのサイズ -1 までの値でランダムな数字を生成
-		int randomNumber = random.nextInt(mapList.size());
+		int randomNumber = ThreadLocalRandom.current().nextInt(MAP_LIST.size());
 
 		// リストから取得してreturn
-		return mapList.get(randomNumber);
+		return MAP_LIST.get(randomNumber);
 	}
 }

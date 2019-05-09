@@ -25,13 +25,12 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class DamageListener implements Listener {
 
-	private LeonGunWar plugin;
+	private final LeonGunWar plugin;
 
-	private CSUtility crackShot;
+	private final CSUtility crackShot = new CSUtility();
 
 	public DamageListener(LeonGunWar plugin) {
 		this.plugin = plugin;
-		this.crackShot = new CSUtility();
 	}
 
 	/**

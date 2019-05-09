@@ -75,9 +75,9 @@ public class MapLoader {
 			boolean successLoad = true;
 
 			// 各値を読みこむ (設定されていなければ警告)
-			if (yamlData.isSet(MAP_NAME_KEY))
+			if (yamlData.isSet(MAP_NAME_KEY)) {
 				mapName = yamlData.getString(MAP_NAME_KEY);
-			else {
+			} else {
 				plugin.getLogger().warning("\"" + MAP_NAME_KEY + "\"の値が設定されていません。 (FileName=" + file.getName() + ")");
 				successLoad = false;
 			}
@@ -107,7 +107,7 @@ public class MapLoader {
 					// キーがBattleTeamに含まれていない場合はcontinue
 					try {
 						team = BattleTeam.valueOf(key.toUpperCase());
-					} catch (Exception e) {
+					} catch (Exception ex) {
 						continue;
 					}
 
@@ -125,8 +125,9 @@ public class MapLoader {
 			}
 
 			// 正常に読み込めていない値がある場合はcontinue
-			if (!successLoad)
+			if (!successLoad) {
 				continue;
+			}
 
 			// GameMap作成
 			GameMap data = new GameMap(mapName, world, spawnMap);
@@ -180,9 +181,9 @@ public class MapLoader {
 		// セーブ
 		try {
 			dataYaml.save(file);
-		} catch (IOException e) {
+		} catch (IOException ex) {
 			// 失敗したらエラーを出してfalseを返す
-			e.printStackTrace();
+			ex.printStackTrace();
 			return false;
 		}
 
