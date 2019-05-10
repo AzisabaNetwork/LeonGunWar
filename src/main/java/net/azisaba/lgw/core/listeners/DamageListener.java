@@ -26,6 +26,7 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class DamageListener implements Listener {
@@ -278,5 +279,13 @@ public class DamageListener implements Listener {
 
 		// キャンセル
 		e.setCancelled(true);
+	}
+
+	/**
+	 * 試合が終わった時に lastDamaged を初期化します
+	 */
+	@EventHandler
+	public void onMatchFinished(MatchFinishedEvent e) {
+		lastDamaged.clear();
 	}
 }
