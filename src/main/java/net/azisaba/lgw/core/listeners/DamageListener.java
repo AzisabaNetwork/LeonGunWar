@@ -35,7 +35,7 @@ public class DamageListener implements Listener {
 
 	// 最初のHashMapはダメージを受けた側のプレイヤーであり、そのValueとなるHashMapにはどのプレイヤーが何秒にそのプレイヤーを攻撃したか
 	// アシストの判定に使用される
-	private HashMap<Player, HashMap<Player, Long>> lastDamaged = new HashMap<>();
+	private final HashMap<Player, HashMap<Player, Long>> lastDamaged = new HashMap<>();
 
 	/**
 	 * プレイヤーを殺したことを検知するリスナー
@@ -96,7 +96,7 @@ public class DamageListener implements Listener {
 		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
 		List<Entry<Player, Long>> entries = lastDamaged.getOrDefault(deathPlayer, new HashMap<Player, Long>())
 				.entrySet().stream()
-				.filter(entry -> (entry.getValue() + (10 * 1000)) > System.currentTimeMillis())
+				.filter(entry -> entry.getValue() + 10 * 1000 > System.currentTimeMillis())
 				.collect(Collectors.toList());
 
 		// 殺したプレイヤーを取得
