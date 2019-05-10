@@ -202,6 +202,9 @@ public class MatchManager {
 		// KillDeathCounterを初期化
 		kdCounter = new KillDeathCounter();
 
+		// サイドバーを削除
+		ScoreboardDisplayer.clearSideBar();
+
 		// ゲーム終了
 		isMatching = false;
 	}

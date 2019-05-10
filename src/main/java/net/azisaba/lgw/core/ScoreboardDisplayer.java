@@ -154,4 +154,11 @@ public class ScoreboardDisplayer {
 	private static void clearEntries() {
 		board.getEntries().forEach(board::resetScores);
 	}
+
+	public static void clearSideBar() {
+		// boardがnullでなければSIDEBARを削除
+		if (board != null) {
+			board.clearSlot(DisplaySlot.SIDEBAR);
+		}
+	}
 }
