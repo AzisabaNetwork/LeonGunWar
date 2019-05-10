@@ -98,9 +98,18 @@ public class DamageListener implements Listener {
 				.filter(entry -> (entry.getValue() + (10 * 1000)) > System.currentTimeMillis())
 				.collect(Collectors.toList());
 
+		// 殺したプレイヤーを取得
+		Player killer = deathPlayer.getKiller();
+
 		// アシスト追加
 		for (Entry<Player, Long> assistEntry : entries) {
 			Player assist = assistEntry.getKey();
+
+			// プレイヤーがkillしたプレイヤーならcontinue
+			if (assist == killer) {
+				continue;
+			}
+
 			MatchManager.getKillDeathCounter().addAssist(assist);
 
 			// タイトルを表示
