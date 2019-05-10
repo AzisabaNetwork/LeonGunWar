@@ -172,7 +172,7 @@ public class DamageListener implements Listener {
 			spawnPoint = MatchManager.getLobbySpawnLocation();
 		}
 
-		e.setRespawnLocation(spawnPoint);
+		p.teleport(spawnPoint);
 
 		// 1tick後に消火
 		LeonGunWar.getPlugin().getServer().getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
