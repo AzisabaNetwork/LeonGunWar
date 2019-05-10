@@ -11,8 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.google.common.base.Preconditions;
-
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.LocationLoader;
@@ -25,20 +23,8 @@ import net.azisaba.lgw.core.utils.LocationLoader;
  */
 public class MapLoader {
 
-	private static LeonGunWar plugin = null;
-
 	// Mapデータを格納するフォルダ
-	private static File dataFolder;
-
-	/**
-	 * 初期化メソッド
-	 * Pluginのロード時に呼び出す
-	 * @param plugin
-	 */
-	protected static void init(LeonGunWar plugin) {
-		dataFolder = new File(plugin.getDataFolder(), "Maps");
-		MapLoader.plugin = plugin;
-	}
+	private static File dataFolder = null;
 
 	/**
 	 * 保存されているマップデータを読み込み、MapDataのリストを返します
@@ -47,8 +33,8 @@ public class MapLoader {
 	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
 	protected static List<GameMap> loadMapData() {
-		// pluginがnullの場合は初期化前としてIllegalStateException
-		Preconditions.checkState(plugin != null, "\"plugin\" field is not initialized yet.");
+		// dataFolderがnullの場合はフォルダを指定
+		checkDataFolder();
 
 		// GameMapリスト
 		List<GameMap> gameMapList = new ArrayList<>();
@@ -75,10 +61,11 @@ public class MapLoader {
 			boolean successLoad = true;
 
 			// 各値を読みこむ (設定されていなければ警告)
-			if (yamlData.isSet(MAP_NAME_KEY))
+			if (yamlData.isSet(MAP_NAME_KEY)) {
 				mapName = yamlData.getString(MAP_NAME_KEY);
-			else {
-				plugin.getLogger().warning("\"" + MAP_NAME_KEY + "\"の値が設定されていません。 (FileName=" + file.getName() + ")");
+			} else {
+				LeonGunWar.getPlugin().getLogger()
+						.warning("\"" + MAP_NAME_KEY + "\"の値が設定されていません。 (FileName=" + file.getName() + ")");
 				successLoad = false;
 			}
 
@@ -88,12 +75,13 @@ public class MapLoader {
 
 				// worldが存在しない場合
 				if (world == null) {
-					plugin.getLogger()
+					LeonGunWar.getPlugin().getLogger()
 							.warning("\"" + worldName + "\"という名前のワールドは存在しません。 (FileName=" + file.getName() + ")");
 					successLoad = false;
 				}
 			} else {
-				plugin.getLogger().warning("\"" + WORLD_NAME_KEY + "\"の値が設定されていません。 (FileName=" + file.getName() + ")");
+				LeonGunWar.getPlugin().getLogger()
+						.warning("\"" + WORLD_NAME_KEY + "\"の値が設定されていません。 (FileName=" + file.getName() + ")");
 				successLoad = false;
 			}
 
@@ -107,7 +95,7 @@ public class MapLoader {
 					// キーがBattleTeamに含まれていない場合はcontinue
 					try {
 						team = BattleTeam.valueOf(key.toUpperCase());
-					} catch (Exception e) {
+					} catch (Exception ex) {
 						continue;
 					}
 
@@ -125,8 +113,9 @@ public class MapLoader {
 			}
 
 			// 正常に読み込めていない値がある場合はcontinue
-			if (!successLoad)
+			if (!successLoad) {
 				continue;
+			}
 
 			// GameMap作成
 			GameMap data = new GameMap(mapName, world, spawnMap);
@@ -149,8 +138,8 @@ public class MapLoader {
 	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
 	public static boolean saveGameMap(GameMap map, String fileName, boolean allowOverwrite) {
-		// pluginがnullの場合は初期化前としてIllegalStateException
-		Preconditions.checkState(plugin != null, "\"plugin\" field is not initialized yet.");
+		// dataFolderがnullの場合はフォルダを指定
+		checkDataFolder();
 
 		// ファイル取得
 		File file = new File(dataFolder, fileName);
@@ -180,14 +169,24 @@ public class MapLoader {
 		// セーブ
 		try {
 			dataYaml.save(file);
-		} catch (IOException e) {
+		} catch (IOException ex) {
 			// 失敗したらエラーを出してfalseを返す
-			e.printStackTrace();
+			ex.printStackTrace();
 			return false;
 		}
 
 		// 成功したらtrueを返す
 		return true;
+	}
+
+	/**
+	 * dataFolder フィールドがnullの場合はファイルを指定します
+	 * それ以外の場合は無視します
+	 */
+	private static void checkDataFolder() {
+		if (dataFolder == null) {
+			dataFolder = new File(LeonGunWar.getPlugin().getDataFolder(), "Maps");
+		}
 	}
 
 	// プレイヤーに表示するマップ名のキー

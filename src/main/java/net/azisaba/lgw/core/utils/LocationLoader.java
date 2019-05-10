@@ -6,6 +6,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class LocationLoader {
 
+	protected LocationLoader() {
+	}
+
 	/**
 	 *
 	 * 座標を指定されたYamlConfigurationにセットします
@@ -66,14 +69,17 @@ public class LocationLoader {
 		loc = new Location(null, x, y, z);
 
 		// YawとPitchが指定されているなら設定する
-		if (conf.isSet(key + ".Yaw"))
+		if (conf.isSet(key + ".Yaw")) {
 			loc.setYaw((float) conf.getDouble(key + ".Yaw"));
-		if (conf.isSet(key + ".Pitch"))
+		}
+		if (conf.isSet(key + ".Pitch")) {
 			loc.setPitch((float) conf.getDouble(key + ".Pitch"));
+		}
 
 		// Worldが指定されているなら設定する
-		if (conf.isSet(key + ".World"))
+		if (conf.isSet(key + ".World")) {
 			loc.setWorld(Bukkit.getWorld(conf.getString(key + ".World")));
+		}
 
 		return loc;
 	}

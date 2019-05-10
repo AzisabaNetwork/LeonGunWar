@@ -19,7 +19,7 @@ public interface TeamDistributor {
 	 * @param plist 振り分けたいプレイヤーのリスト
 	 * @param teams チームのリスト
 	 */
-	public void distributePlayers(List<Player> plist, List<Team> teams);
+	void distributePlayers(List<Player> plist, List<Team> teams);
 
 	/**
 	 * 指定されたプレイヤーをどちらかのチームに振り分けます
@@ -27,6 +27,6 @@ public interface TeamDistributor {
 	 * @param p 振り分けたいプレイヤー
 	 * @param teams チームのリスト
 	 */
-	public void distributePlayer(Player p, List<Team> teams);
+	void distributePlayer(Player p, List<Team> teams);
 
 }

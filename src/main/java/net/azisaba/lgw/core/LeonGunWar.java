@@ -18,8 +18,15 @@ import net.azisaba.lgw.core.maps.MapContainer;
 
 public class LeonGunWar extends JavaPlugin {
 
+	// plugin
+	private static LeonGunWar plugin;
+
 	@Override
 	public void onEnable() {
+
+		// pluginを指定
+		plugin = this;
+
 		// 初期化が必要なファイルを初期化する
 		initializeClasses();
 
@@ -55,8 +62,15 @@ public class LeonGunWar extends JavaPlugin {
 	 * 初期化を必要とするファイルを初期化します
 	 */
 	private void initializeClasses() {
-		MapContainer.init(this);
-		MatchManager.init(this);
-		MatchStartCountdown.init(this);
+		MapContainer.loadMaps();
+		MatchManager.initialize();
+	}
+
+	/**
+	 * LeonGunWar pluginのインスタンスを返します
+	 * @return LeonGunWarのインスタンス
+	 */
+	public static LeonGunWar getPlugin() {
+		return plugin;
 	}
 }

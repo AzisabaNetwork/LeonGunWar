@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.MatchStartCountdown;
 
 public class LgwCommand implements CommandExecutor {
 
@@ -26,6 +27,9 @@ public class LgwCommand implements CommandExecutor {
 			Bukkit.getOnlinePlayers().forEach(p -> {
 				MatchManager.addEntryPlayer(p);
 			});
+
+			// カウントダウン終了
+			MatchStartCountdown.stopCountdown();
 
 			// 試合開始
 			MatchManager.startMatch();

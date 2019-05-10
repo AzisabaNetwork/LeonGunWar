@@ -5,7 +5,7 @@
 
 	<groupId>net.azisaba</groupId>
 	<artifactId>LeonGunWar</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 
 	<name>${project.artifactId}</name>
 	<description>A core plugin in Azisaba LeonGunWar</description>
@@ -79,6 +79,13 @@
 			<groupId>me.rayzr522</groupId>
 			<artifactId>jsonmessage</artifactId>
 			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.shampaggon</groupId>
+			<artifactId>CrackShot</artifactId>
+			<version>0.98.7</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/CrackShot.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>

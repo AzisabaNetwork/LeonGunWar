@@ -3,9 +3,11 @@ package net.azisaba.lgw.core.listeners;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -14,13 +16,18 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.CSUtility;
+
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class DamageListener implements Listener {
 
-	private LeonGunWar plugin;
+	private final LeonGunWar plugin;
+
+	private final CSUtility crackShot = new CSUtility();
 
 	public DamageListener(LeonGunWar plugin) {
 		this.plugin = plugin;
@@ -57,6 +64,11 @@ public class DamageListener implements Listener {
 		MatchManager.addTeamPoint(killerTeam);
 		// 個人キルを追加
 		MatchManager.getKillDeathCounter().addKill(killer);
+
+		// タイトルを表示
+		killer.sendTitle("", ChatColor.RED + "+1 kill", 0, 20, 10);
+		// 音を鳴らす
+		killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
 	}
 
 	/**
@@ -114,7 +126,7 @@ public class DamageListener implements Listener {
 	/**
 	 * キルログを変更するListener
 	 */
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
 	public void deathMessageChanger(PlayerDeathEvent e) {
 		Player p = e.getEntity();
 
@@ -144,11 +156,17 @@ public class DamageListener implements Listener {
 		// アイテム名を取得
 		String itemName = "";
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
-			itemName = "素手";
+			itemName = ChatColor.GOLD + "素手";
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
-			itemName = item.getItemMeta().getDisplayName();
+			// CrackShot Pluginを取得
+			CSDirector crackshot = (CSDirector) plugin.getServer().getPluginManager().getPlugin("CrackShot");
+
+			// 銃ID取得
+			String nodes = crackShot.getWeaponTitle(item);
+			// DisplayNameを取得
+			itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 		} else { // それ以外
-			itemName = item.getType().name();
+			itemName = ChatColor.GOLD + item.getType().name();
 		}
 
 		// killerのチーム

@@ -107,14 +107,14 @@ public class KillDeathCounter {
 
 	/**
 	 * もっとも試合に貢献したプレイヤーをリストで取得します (2人以上いることがあるため)
-	 * 存在しない場合はnullを返します
+	 * 存在しない場合は空のリストを返します
 	 * @return MVPのKDPlayerData
 	 */
 	public List<KDPlayerData> getMVPPlayer() {
 
 		int mvpKills = killCountMap.values().stream()
 				.max(Comparator.naturalOrder())
-				.get();
+				.orElse(-1);
 
 		return killCountMap.entrySet().stream()
 				.filter(entry -> entry.getValue() == mvpKills)
@@ -150,10 +150,10 @@ public class KillDeathCounter {
 	 */
 	public class KDPlayerData {
 
-		private String playerName;
-		private UUID uuid;
-		private int kills;
-		private int deaths;
+		private final String playerName;
+		private final UUID uuid;
+		private final int kills;
+		private final int deaths;
 
 		private KDPlayerData(UUID uuid, String playerName, int kills, int deaths) {
 			this.playerName = playerName;

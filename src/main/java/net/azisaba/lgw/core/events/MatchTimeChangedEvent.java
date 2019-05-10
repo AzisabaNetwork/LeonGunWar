@@ -11,7 +11,7 @@ import org.bukkit.event.HandlerList;
 public class MatchTimeChangedEvent extends Event {
 
 	// 現在の残り秒数
-	private int matchTime;
+	private final int matchTime;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 

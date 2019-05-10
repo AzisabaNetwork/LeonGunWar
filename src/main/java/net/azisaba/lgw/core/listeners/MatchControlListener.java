@@ -24,7 +24,7 @@ import net.azisaba.lgw.core.utils.CustomItem;
 
 public class MatchControlListener implements Listener {
 
-	private LeonGunWar plugin;
+	private final LeonGunWar plugin;
 
 	public MatchControlListener(LeonGunWar plugin) {
 		this.plugin = plugin;
@@ -86,10 +86,16 @@ public class MatchControlListener implements Listener {
 		List<KDPlayerData> mvpPlayers = MatchManager.getKillDeathCounter().getMVPPlayer();
 		// MVPプレイヤーのメッセージ
 		List<String> mvpMessages = new ArrayList<>(Arrays.asList(ChatColor.RED + "MVP:"));
-		for (KDPlayerData data : mvpPlayers) {
-			mvpMessages.add(
-					Strings.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
-							+ ChatColor.RED + ": " + data.getKills() + "k " + data.getDeaths() + "d");
+
+		// MVPが居ない場合は「なし」と表示
+		if (mvpPlayers.isEmpty()) {
+			mvpMessages.add(Strings.repeat(" ", 2) + ChatColor.RED + "- なし");
+		} else { // MVPが居る場合は表示
+			for (KDPlayerData data : mvpPlayers) {
+				mvpMessages.add(
+						Strings.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
+								+ ChatColor.RED + ": " + data.getKills() + "キル " + data.getDeaths() + "デス");
+			}
 		}
 
 		for (Player p : allPlayers) {
@@ -148,9 +154,9 @@ public class MatchControlListener implements Listener {
 				msg = "0 kill " + Strings.repeat("┃", 50) + " 0 death";
 			} else { // それ以外の場合はメーター作成
 				// キルのパーセンテージ
-				double killsPercentage = ((double) kills / (double) (kills + deaths)) * 100d;
+				double killsPercentage = (double) kills / (double) (kills + deaths) * 100d;
 				// デスのパーセンテージ
-				double deathsPercentage = ((double) deaths / (double) (kills + deaths)) * 100d;
+				double deathsPercentage = (double) deaths / (double) (kills + deaths) * 100d;
 
 				msg += ChatColor.LIGHT_PURPLE + Strings.repeat("┃", (int) killsPercentage / 2);
 				msg += ChatColor.DARK_PURPLE + Strings.repeat("┃", (int) deathsPercentage / 2);

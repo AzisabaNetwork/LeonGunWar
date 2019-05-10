@@ -19,9 +19,9 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 public class MatchStartedEvent extends Event {
 
 	// 各チームのプレイヤーリスト
-	private Map<BattleTeam, List<Player>> teamPlayers;
+	private final Map<BattleTeam, List<Player>> teamPlayers;
 	// 試合を行うマップ
-	private GameMap map;
+	private final GameMap map;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 

@@ -12,7 +12,7 @@ import org.bukkit.event.HandlerList;
 public class PlayerEntryMatchEvent extends Event {
 
 	// エントリーしたプレイヤー
-	private Player entryPlayer;
+	private final Player entryPlayer;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 

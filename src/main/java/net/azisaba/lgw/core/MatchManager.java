@@ -43,8 +43,6 @@ import net.azisaba.lgw.core.utils.LocationLoader;
  */
 public class MatchManager {
 
-	// plugin
-	private static LeonGunWar plugin;
 	private static boolean initialized = false;
 
 	// チーム分けを行うクラス
@@ -81,13 +79,11 @@ public class MatchManager {
 	 * Pluginが有効化されたときのみ呼び出されることを前提としています
 	 * @param plugin LeonGunWar plugin
 	 */
-	protected static void init(LeonGunWar plugin) {
+	protected static void initialize() {
 		// すでに初期化されている場合はreturn
 		if (initialized) {
 			return;
 		}
-
-		MatchManager.plugin = plugin;
 
 		// kdCounterを新規作成
 		kdCounter = new KillDeathCounter();
@@ -95,7 +91,7 @@ public class MatchManager {
 		// デフォルトのTeamDistributorを指定
 		MatchManager.teamDistributor = new DefaultTeamDistributor();
 		// メインではない新しいスコアボードを取得
-		scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
+		scoreboard = LeonGunWar.getPlugin().getServer().getScoreboardManager().getMainScoreboard();
 
 		// ScoreboardDisplayerにScoreboardを設定
 		ScoreboardDisplayer.setScoreBoard(scoreboard);
@@ -126,7 +122,8 @@ public class MatchManager {
 		Preconditions.checkState(!isMatching, "A match is already started.");
 
 		// timeLeftを600に変更
-		timeLeft = 600;
+		//		timeLeft = 600;
+		timeLeft = 60; // Debug
 
 		// マップを抽選
 		currentMap = MapContainer.getRandomMap();
@@ -139,7 +136,7 @@ public class MatchManager {
 		// エントリー削除したときにgetEntries()の中身が変わってエラーを起こさないように新しいリストを作成してfor文を使用する
 		// 赤チームの処理
 		for (String redEntry : new ArrayList<>(redTeam.getEntries())) {
-			Player p = plugin.getServer().getPlayerExact(redEntry);
+			Player p = LeonGunWar.getPlugin().getServer().getPlayerExact(redEntry);
 
 			// プレイヤーが見つからない場合はエントリーから削除してcontinue
 			if (p == null) {
@@ -157,7 +154,7 @@ public class MatchManager {
 
 		// 青チームの処理
 		for (String blueEntry : new ArrayList<>(blueTeam.getEntries())) {
-			Player p = plugin.getServer().getPlayerExact(blueEntry);
+			Player p = LeonGunWar.getPlugin().getServer().getPlayerExact(blueEntry);
 
 			// プレイヤーが見つからない場合はエントリーから削除してcontinue
 			if (p == null) {
@@ -204,6 +201,9 @@ public class MatchManager {
 
 		// KillDeathCounterを初期化
 		kdCounter = new KillDeathCounter();
+
+		// ゲーム終了
+		isMatching = false;
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class MatchManager {
 		entry.addEntry(p.getName());
 		// イベント呼び出し
 		PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
-		plugin.getServer().getPluginManager().callEvent(event);
+		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
 
 		return true;
 	}
@@ -239,7 +239,7 @@ public class MatchManager {
 		entry.removeEntry(p.getName());
 		// イベント呼び出し
 		PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
-		plugin.getServer().getPluginManager().callEvent(event);
+		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
 
 		return true;
 	}
@@ -254,7 +254,7 @@ public class MatchManager {
 
 		// 名前からプレイヤー検索
 		for (String entryName : new ArrayList<>(entry.getEntries())) {
-			Player target = plugin.getServer().getPlayerExact(entryName);
+			Player target = LeonGunWar.getPlugin().getServer().getPlayerExact(entryName);
 
 			// プレイヤーが見つからない場合はエントリー解除してcontinue
 			if (target == null) {
@@ -301,15 +301,15 @@ public class MatchManager {
 
 				// イベントを呼び出す
 				MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);
-				plugin.getServer().getPluginManager().callEvent(event);
+				LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
 
 				// 0になったらストップ
 				if (timeLeft == 0) {
-					this.cancel();
+					cancel();
 					return;
 				}
 			}
-		}.runTaskTimer(plugin, 20, 20);
+		}.runTaskTimer(LeonGunWar.getPlugin(), 20, 20);
 	}
 
 	public static Map<BattleTeam, List<Player>> getTeamPlayers() {
@@ -347,7 +347,7 @@ public class MatchManager {
 		// Entryしている名前からプレイヤー検索
 		for (String entryName : entryList) {
 			// プレイヤーを取得
-			Player player = plugin.getServer().getPlayerExact(entryName);
+			Player player = LeonGunWar.getPlugin().getServer().getPlayerExact(entryName);
 
 			// プレイヤーがいない場合はcontinue
 			if (player == null) {
@@ -552,7 +552,7 @@ public class MatchManager {
 	 */
 	private static void loadLobbySpawnLocation() {
 		// ファイル
-		File lobbySpawnFile = new File(plugin.getDataFolder(), "spawn.yml");
+		File lobbySpawnFile = new File(LeonGunWar.getPlugin().getDataFolder(), "spawn.yml");
 		YamlConfiguration spawnLoader = YamlConfiguration.loadConfiguration(lobbySpawnFile);
 
 		// 座標をロード
@@ -560,19 +560,19 @@ public class MatchManager {
 
 		// ロードできなかった場合はworldのスポーン地点を取得
 		if (lobbySpawnPoint == null) {
-			lobbySpawnPoint = plugin.getServer().getWorld("world").getSpawnLocation();
+			lobbySpawnPoint = LeonGunWar.getPlugin().getServer().getWorld("world").getSpawnLocation();
 		}
 
 		// 設定されていない場合はデフォルト値を設定
 		if (spawnLoader.getConfigurationSection("lobby") == null) {
-			lobbySpawnPoint = new Location(plugin.getServer().getWorld("world"), 616.5, 10, 70.5, 0, 0);
+			lobbySpawnPoint = new Location(LeonGunWar.getPlugin().getServer().getWorld("world"), 616.5, 10, 70.5, 0, 0);
 			// 設定
 			LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnPoint, "lobby");
 			// セーブ
 			try {
 				spawnLoader.save(lobbySpawnFile);
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
 		}
 	}
