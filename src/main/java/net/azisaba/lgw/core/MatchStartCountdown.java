@@ -19,8 +19,7 @@ public class MatchStartCountdown implements Runnable {
 		}
 
 		// Runnable取得してスタート
-		task = LeonGunWar.getPlugin().getServer().getScheduler().runTaskTimer(LeonGunWar.getPlugin(),
-				new MatchStartCountdown(), 0, 20);
+		task = Bukkit.getScheduler().runTaskTimer(LeonGunWar.getPlugin(), new MatchStartCountdown(), 0, 20);
 	}
 
 	/**
@@ -67,7 +66,7 @@ public class MatchStartCountdown implements Runnable {
 
 		// titleがtrueの場合表示
 		if (title) {
-			for (Player p : LeonGunWar.getPlugin().getServer().getOnlinePlayers()) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
 				p.sendTitle(timeLeft + "", "", 0, 40, 10);
 			}
 		}

@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
@@ -23,7 +23,7 @@ public class AutoRespawnListener implements Listener {
 
 		// リスポーンイベントをfire
 		PlayerRespawnEvent event = new PlayerRespawnEvent(deathPlayer, getRespawnLocation(deathPlayer), true);
-		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
+		Bukkit.getPluginManager().callEvent(event);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

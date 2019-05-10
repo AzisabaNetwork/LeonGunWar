@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -90,7 +91,7 @@ public class MatchManager {
 		// デフォルトのTeamDistributorを指定
 		MatchManager.teamDistributor = new DefaultTeamDistributor();
 		// メインではない新しいスコアボードを取得
-		scoreboard = LeonGunWar.getPlugin().getServer().getScoreboardManager().getMainScoreboard();
+		scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 
 		// ScoreboardDisplayerにScoreboardを設定
 		ScoreboardDisplayer.setScoreBoard(scoreboard);
@@ -135,7 +136,7 @@ public class MatchManager {
 		// エントリー削除したときにgetEntries()の中身が変わってエラーを起こさないように新しいリストを作成してfor文を使用する
 		// 赤チームの処理
 		for (String redEntry : new ArrayList<>(redTeam.getEntries())) {
-			Player p = LeonGunWar.getPlugin().getServer().getPlayerExact(redEntry);
+			Player p = Bukkit.getPlayerExact(redEntry);
 
 			// プレイヤーが見つからない場合はエントリーから削除してcontinue
 			if (p == null) {
@@ -153,7 +154,7 @@ public class MatchManager {
 
 		// 青チームの処理
 		for (String blueEntry : new ArrayList<>(blueTeam.getEntries())) {
-			Player p = LeonGunWar.getPlugin().getServer().getPlayerExact(blueEntry);
+			Player p = Bukkit.getPlayerExact(blueEntry);
 
 			// プレイヤーが見つからない場合はエントリーから削除してcontinue
 			if (p == null) {
@@ -225,7 +226,7 @@ public class MatchManager {
 		entry.addEntry(p.getName());
 		// イベント呼び出し
 		PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
-		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
+		Bukkit.getPluginManager().callEvent(event);
 
 		return true;
 	}
@@ -244,7 +245,7 @@ public class MatchManager {
 		entry.removeEntry(p.getName());
 		// イベント呼び出し
 		PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
-		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
+		Bukkit.getPluginManager().callEvent(event);
 
 		return true;
 	}
@@ -259,7 +260,7 @@ public class MatchManager {
 
 		// 名前からプレイヤー検索
 		for (String entryName : new ArrayList<>(entry.getEntries())) {
-			Player target = LeonGunWar.getPlugin().getServer().getPlayerExact(entryName);
+			Player target = Bukkit.getPlayerExact(entryName);
 
 			// プレイヤーが見つからない場合はエントリー解除してcontinue
 			if (target == null) {
@@ -306,7 +307,7 @@ public class MatchManager {
 
 				// イベントを呼び出す
 				MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);
-				LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
+				Bukkit.getPluginManager().callEvent(event);
 
 				// 0になったらストップ
 				if (timeLeft == 0) {
@@ -352,7 +353,7 @@ public class MatchManager {
 		// Entryしている名前からプレイヤー検索
 		for (String entryName : entryList) {
 			// プレイヤーを取得
-			Player player = LeonGunWar.getPlugin().getServer().getPlayerExact(entryName);
+			Player player = Bukkit.getPlayerExact(entryName);
 
 			// プレイヤーがいない場合はcontinue
 			if (player == null) {
@@ -552,12 +553,12 @@ public class MatchManager {
 
 		// ロードできなかった場合はworldのスポーン地点を取得
 		if (lobbySpawnPoint == null) {
-			lobbySpawnPoint = LeonGunWar.getPlugin().getServer().getWorld("world").getSpawnLocation();
+			lobbySpawnPoint = Bukkit.getWorld("world").getSpawnLocation();
 		}
 
 		// 設定されていない場合はデフォルト値を設定
 		if (spawnLoader.getConfigurationSection("lobby") == null) {
-			lobbySpawnPoint = new Location(LeonGunWar.getPlugin().getServer().getWorld("world"), 616.5, 10, 70.5, 0, 0);
+			lobbySpawnPoint = new Location(Bukkit.getWorld("world"), 616.5, 10, 70.5, 0, 0);
 			// 設定
 			LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnPoint, "lobby");
 			// セーブ

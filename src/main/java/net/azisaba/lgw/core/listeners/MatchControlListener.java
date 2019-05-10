@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +17,6 @@ import com.google.common.base.Strings;
 
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
-import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.ScoreboardDisplayer;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
@@ -44,7 +44,7 @@ public class MatchControlListener implements Listener {
 		// イベントを呼び出す
 		MatchFinishedEvent event = new MatchFinishedEvent(MatchManager.getCurrentGameMap(), winner,
 				MatchManager.getTeamPlayers());
-		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
+		Bukkit.getPluginManager().callEvent(event);
 	}
 
 	/**

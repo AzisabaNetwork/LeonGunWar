@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,7 +29,7 @@ public class NoArrowGroundListener implements Listener {
 		Arrow arrow = (Arrow) e.getEntity();
 
 		// 1tick後にその矢がブロックに当たっているか確認
-		LeonGunWar.getPlugin().getServer().getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
+		Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
 			// ブロックに刺さっているか確認
 			if (arrow != null && arrow.isOnGround()) {
 				// 矢を削除

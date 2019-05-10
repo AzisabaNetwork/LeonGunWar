@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -22,7 +23,6 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
-import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -187,8 +187,7 @@ public class DamageListener implements Listener {
 			itemName = ChatColor.GOLD + "素手";
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
 			// CrackShot Pluginを取得
-			CSDirector crackshot = (CSDirector) LeonGunWar.getPlugin().getServer().getPluginManager()
-					.getPlugin("CrackShot");
+			CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
 			// 銃ID取得
 			String nodes = crackShot.getWeaponTitle(item);

@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +13,7 @@ public class EnableKeepInventoryListener implements Listener {
 	public EnableKeepInventoryListener() {
 		// load: STARTUP
 		// にしないためにプラグイン有効化時に全ワールドのKeepInventoryを有効化
-		LeonGunWar.getPlugin().getServer().getWorlds().forEach(this::setEnableKeepInventory);
+		Bukkit.getWorlds().forEach(this::setEnableKeepInventory);
 	}
 
 	public void setEnableKeepInventory(World world) {
