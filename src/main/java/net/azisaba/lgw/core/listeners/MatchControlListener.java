@@ -2,7 +2,9 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,23 +36,13 @@ public class MatchControlListener implements Listener {
 			return;
 		}
 
-		// チーム作成
-		BattleTeam team;
-
-		// 各チームのポイントを取得
-		int redPoint = MatchManager.getCurrentTeamPoint(BattleTeam.RED);
-		int bluePoint = MatchManager.getCurrentTeamPoint(BattleTeam.BLUE);
-
-		if (redPoint > bluePoint) { // 赤が多い場合
-			team = BattleTeam.RED;
-		} else if (bluePoint > redPoint) { // 青が多い場合
-			team = BattleTeam.BLUE;
-		} else { // 同じ場合
-			team = null;
-		}
+		// 各チームのポイントを取得して比較し、一番ポイントが多いチームを取得
+		BattleTeam winner = Stream.of(BattleTeam.values())
+				.max(Comparator.comparing(MatchManager::getCurrentTeamPoint))
+				.orElse(null);
 
 		// イベントを呼び出す
-		MatchFinishedEvent event = new MatchFinishedEvent(MatchManager.getCurrentGameMap(), team,
+		MatchFinishedEvent event = new MatchFinishedEvent(MatchManager.getCurrentGameMap(), winner,
 				MatchManager.getTeamPlayers());
 		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
 	}
