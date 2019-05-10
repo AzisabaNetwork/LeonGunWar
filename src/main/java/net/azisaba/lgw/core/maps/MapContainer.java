@@ -19,18 +19,16 @@ public class MapContainer {
 	 * このメソッドはPluginのロード時にのみ呼び出されることを想定しています
 	 * @param plugin
 	 */
-	public static void init(LeonGunWar plugin) {
+	public static void loadMaps() {
 		// すでにメソッドが呼び出されている場合はreturn
 		if (loaded) {
 			return;
 		}
 
-		// GameSettingsLoaderの初期化
-		MapLoader.init(plugin);
 		// 保存されているマップデータの収集
 		MAP_LIST.addAll(MapLoader.loadMapData());
 
-		plugin.getLogger().info(MAP_LIST.size() + "個のマップをロードしました。");
+		LeonGunWar.getPlugin().getLogger().info(MAP_LIST.size() + "個のマップをロードしました。");
 
 		// ロード完了
 		loaded = true;

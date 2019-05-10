@@ -62,9 +62,8 @@ public class LeonGunWar extends JavaPlugin {
 	 * 初期化を必要とするファイルを初期化します
 	 */
 	private void initializeClasses() {
-		MapContainer.init(this);
-		MatchManager.init(this);
-		MatchStartCountdown.init(this);
+		MapContainer.loadMaps();
+		MatchManager.initialize();
 	}
 
 	/**

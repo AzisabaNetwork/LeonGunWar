@@ -7,17 +7,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class MatchStartCountdown implements Runnable {
 
-	private static LeonGunWar plugin;
 	private static BukkitTask task = null;
-
-	/**
-	 * プラグインを取得するための初期化メソッド
-	 * プラグインの起動時に呼び出されることを前提として作成されています
-	 * @param plugin
-	 */
-	protected static void init(LeonGunWar plugin) {
-		MatchStartCountdown.plugin = plugin;
-	}
 
 	/**
 	 * カウントダウンが行われていない場合、カウントダウンをスタートします
@@ -29,7 +19,8 @@ public class MatchStartCountdown implements Runnable {
 		}
 
 		// Runnable取得してスタート
-		task = plugin.getServer().getScheduler().runTaskTimer(plugin, new MatchStartCountdown(), 0, 20);
+		task = LeonGunWar.getPlugin().getServer().getScheduler().runTaskTimer(LeonGunWar.getPlugin(),
+				new MatchStartCountdown(), 0, 20);
 	}
 
 	/**
@@ -76,7 +67,7 @@ public class MatchStartCountdown implements Runnable {
 
 		// titleがtrueの場合表示
 		if (title) {
-			for (Player p : plugin.getServer().getOnlinePlayers()) {
+			for (Player p : LeonGunWar.getPlugin().getServer().getOnlinePlayers()) {
 				p.sendTitle(timeLeft + "", "", 0, 40, 10);
 			}
 		}
