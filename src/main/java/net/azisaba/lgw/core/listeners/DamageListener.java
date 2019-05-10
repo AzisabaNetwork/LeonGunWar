@@ -14,7 +14,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
@@ -108,13 +107,10 @@ public class DamageListener implements Listener {
 
 		e.setRespawnLocation(spawnPoint);
 
-		// 消火
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				p.setFireTicks(0);
-			}
-		}.runTaskLater(LeonGunWar.getPlugin(), 1);
+		// 1tick後に消火
+		LeonGunWar.getPlugin().getServer().getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
+			p.setFireTicks(0);
+		}, 1);
 	}
 
 	/**
