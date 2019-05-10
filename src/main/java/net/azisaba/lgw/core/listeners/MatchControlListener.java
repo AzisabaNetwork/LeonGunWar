@@ -67,12 +67,7 @@ public class MatchControlListener implements Listener {
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
 		// 勝ったチームのプレイヤーリストを取得
-		List<Player> winnerPlayers = new ArrayList<>();
-		if (e.getWinner() == BattleTeam.RED) {
-			winnerPlayers = e.getTeamPlayers(BattleTeam.RED);
-		} else if (e.getWinner() == BattleTeam.BLUE) {
-			winnerPlayers = e.getTeamPlayers(BattleTeam.BLUE);
-		}
+		List<Player> winnerPlayers = e.getTeamPlayers(e.getWinner());
 
 		for (Player p : winnerPlayers) {
 			// 勝者の証を付与
