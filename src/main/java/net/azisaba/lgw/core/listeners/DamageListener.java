@@ -92,8 +92,7 @@ public class DamageListener implements Listener {
 		MatchManager.getKillDeathCounter().addDeath(deathPlayer);
 
 		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
-		List<Entry<Player, Long>> entries = lastDamaged.getOrDefault(deathPlayer, new HashMap<Player, Long>())
-				.entrySet().stream()
+		List<Entry<Player, Long>> entries = lastDamaged.getOrDefault(deathPlayer, new HashMap<>()).entrySet().stream()
 				.filter(entry -> entry.getValue() + 10 * 1000 > System.currentTimeMillis())
 				.collect(Collectors.toList());
 
@@ -145,7 +144,7 @@ public class DamageListener implements Listener {
 		}
 
 		// ミリ秒を指定
-		HashMap<Player, Long> damagedMap = lastDamaged.getOrDefault(victim, new HashMap<Player, Long>());
+		HashMap<Player, Long> damagedMap = lastDamaged.getOrDefault(victim, new HashMap<>());
 		damagedMap.put(attacker, System.currentTimeMillis());
 
 		lastDamaged.put(victim, damagedMap);
