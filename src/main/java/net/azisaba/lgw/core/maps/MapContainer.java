@@ -12,7 +12,7 @@ public class MapContainer {
 
 	private static final List<GameMap> MAP_LIST = new ArrayList<>();
 
-	private static boolean initialized = false;
+	private static boolean loaded = false;
 
 	/**
 	 * ファイルに保存してあるマップデータをロードします
@@ -21,7 +21,7 @@ public class MapContainer {
 	 */
 	public static void init(LeonGunWar plugin) {
 		// すでにメソッドが呼び出されている場合はreturn
-		if (initialized) {
+		if (loaded) {
 			return;
 		}
 
@@ -32,8 +32,8 @@ public class MapContainer {
 
 		plugin.getLogger().info(MAP_LIST.size() + "個のマップをロードしました。");
 
-		// 初期ロード完了
-		initialized = true;
+		// ロード完了
+		loaded = true;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class MapContainer {
 	 * @exception IllegalStateException MapContainerが初期化される前に呼び出された場合
 	 */
 	public static List<GameMap> getAllGameMap() {
-		Preconditions.checkState(initialized, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
+		Preconditions.checkState(loaded, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
 		return MAP_LIST;
 	}
@@ -55,7 +55,7 @@ public class MapContainer {
 	 * @exception IllegalStateException MapContainerが初期化される前に呼び出された場合
 	 */
 	public static GameMap getRandomMap() {
-		Preconditions.checkState(initialized, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
+		Preconditions.checkState(loaded, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
 		// 登録されているマップが0この場合nullをreturn
 		if (MAP_LIST.size() <= 0) {
