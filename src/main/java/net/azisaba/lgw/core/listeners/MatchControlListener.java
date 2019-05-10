@@ -69,16 +69,21 @@ public class MatchControlListener implements Listener {
 		// MVPのプレイヤーを取得
 		List<KDPlayerData> mvpPlayers = MatchManager.getKillDeathCounter().getMVPPlayer();
 		// MVPプレイヤーのメッセージ
-		List<String> mvpMessages = new ArrayList<>(Arrays.asList(ChatColor.RED + "MVP:"));
+		List<String> resultMessages = new ArrayList<>(
+				Arrays.asList(ChatColor.LIGHT_PURPLE + "=== Team Point Information ==="));
 
-		// MVPが居ない場合は「なし」と表示
-		if (mvpPlayers.isEmpty()) {
-			mvpMessages.add(Strings.repeat(" ", 2) + ChatColor.RED + "- なし");
-		} else { // MVPが居る場合は表示
+		// 各チームのポイントを表示
+		for (BattleTeam team : BattleTeam.values()) {
+			int point = MatchManager.getCurrentTeamPoint(team);
+			resultMessages.add(team.getDisplayTeamName() + ChatColor.RED + " " + point + "points");
+		}
+
+		// MVPを表示 (ない場合は何も表示しない)
+		if (!mvpPlayers.isEmpty()) {
 			for (KDPlayerData data : mvpPlayers) {
-				mvpMessages.add(
-						Strings.repeat(" ", 2) + ChatColor.RED + "- " + ChatColor.AQUA + data.getPlayerName()
-								+ ChatColor.RED + ": " + data.getKills() + "キル " + data.getDeaths() + "デス");
+				resultMessages
+						.add(data.getPlayerName() + " " + data.getKills() + "kills, " + data.getDeaths() + "deaths, "
+								+ data.getAssists() + "assists");
 			}
 		}
 
@@ -89,10 +94,19 @@ public class MatchControlListener implements Listener {
 			// アーマー削除
 			p.getInventory().setChestplate(null);
 
-			// MVPのプレイヤーを表示
-			for (String msg : mvpMessages) {
+			// 結果を表示
+			for (String msg : resultMessages) {
 				p.sendMessage(msg);
 			}
+
+			// 各記録を取得
+			int kills = MatchManager.getKillDeathCounter().getKills(p);
+			int deaths = MatchManager.getKillDeathCounter().getDeaths(p);
+			int assists = MatchManager.getKillDeathCounter().getAssists(p);
+
+			// プレイヤーの戦績を表示
+			p.sendMessage(ChatColor.GRAY + "[Your Score] " + p.getName() + " " + kills + "kills, " + deaths + "deaths, "
+					+ assists + "assists");
 		}
 	}
 

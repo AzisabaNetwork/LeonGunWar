@@ -168,9 +168,11 @@ public class KillDeathCounter {
 					int kills = killCountMap.getOrDefault(mvp, 0);
 					// デス数取得 (なければ0)
 					int deaths = deathCountMap.getOrDefault(mvp, 0);
+					// アシスト数取得 (なければ0)
+					int assists = assistCountMap.getOrDefault(mvp, 0);
 
 					// KDPlayerData作成
-					return new KDPlayerData(mvp, playerName, kills, deaths);
+					return new KDPlayerData(mvp, playerName, kills, deaths, assists);
 				})
 				.collect(Collectors.toList());
 	}
@@ -196,12 +198,14 @@ public class KillDeathCounter {
 		private final UUID uuid;
 		private final int kills;
 		private final int deaths;
+		private final int assists;
 
-		private KDPlayerData(UUID uuid, String playerName, int kills, int deaths) {
+		private KDPlayerData(UUID uuid, String playerName, int kills, int deaths, int assists) {
 			this.playerName = playerName;
 			this.uuid = uuid;
 			this.kills = kills;
 			this.deaths = deaths;
+			this.assists = assists;
 		}
 
 		public String getPlayerName() {
@@ -218,6 +222,10 @@ public class KillDeathCounter {
 
 		public int getDeaths() {
 			return deaths;
+		}
+
+		public int getAssists() {
+			return assists;
 		}
 	}
 }
