@@ -20,7 +20,7 @@ public class ScoreboardDisplayer {
 	 * @return スコアボードのタイトル
 	 */
 	private static String scoreBoardTitle() {
-		return ChatColor.GOLD + "LeonGunWar";
+		return ChatColor.GOLD + "LeonGunWar ver." + LeonGunWar.getPlugin().getDescription().getVersion();
 	}
 
 	/**
