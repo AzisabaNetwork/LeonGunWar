@@ -82,7 +82,7 @@ public class MatchControlListener implements Listener {
 		if (!mvpPlayers.isEmpty()) {
 			for (KDPlayerData data : mvpPlayers) {
 				resultMessages
-						.add(ChatColor.RED + "[MVP]" + data.getPlayerName() + " " + data.getKills() + "kills, "
+						.add(ChatColor.RED + "[MVP] " + data.getPlayerName() + " " + data.getKills() + "kills, "
 								+ data.getDeaths() + "deaths, " + data.getAssists() + "assists");
 			}
 		}
