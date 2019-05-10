@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -69,10 +70,8 @@ public class MatchManager {
 	// 赤、青チームのチェストプレート
 	private static ItemStack redChestplate, blueChestplate;
 
-	// 現在の赤チームのポイント (キル数)
-	private static int redPoint = 0;
-	// 現在の青チームのポイント (キル数)
-	private static int bluePoint = 0;
+	// ポイントを集計するHashMap
+	private static HashMap<BattleTeam, Integer> pointMap = new HashMap<>();
 
 	/**
 	 * 初期化メソッド
@@ -198,6 +197,9 @@ public class MatchManager {
 
 		// 残り時間を0に
 		timeLeft = 0;
+
+		// チームのポイントを0に
+		pointMap.clear();
 
 		// KillDeathCounterを初期化
 		kdCounter = new KillDeathCounter();
@@ -445,18 +447,8 @@ public class MatchManager {
 			return -1;
 		}
 
-		// 赤チームの場合
-		if (team == BattleTeam.RED) {
-			return redPoint;
-		}
-
-		// 青チームの場合
-		if (team == BattleTeam.BLUE) {
-			return bluePoint;
-		}
-
-		// その他
-		return -1;
+		// ポイント取得、無ければ0
+		return pointMap.getOrDefault(team, 0);
 	}
 
 	/**
@@ -469,17 +461,14 @@ public class MatchManager {
 		// REDでもBLUEでもなければIllegalArgumentException
 		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
 
-		// REDの場合赤に1ポイント追加
-		if (team == BattleTeam.RED) {
-			redPoint++;
-			return;
-		}
+		// 現在のポイント取得、無ければ0
+		int currentPoint = pointMap.getOrDefault(team, 0);
 
-		// BLUEの場合青に1ポイント追加
-		if (team == BattleTeam.BLUE) {
-			bluePoint++;
-			return;
-		}
+		// ポイント追加
+		currentPoint++;
+
+		// 設定
+		pointMap.put(team, currentPoint);
 	}
 
 	/**
