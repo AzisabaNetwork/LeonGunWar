@@ -17,6 +17,8 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class InvincibleListener implements Listener {
 
+	private final String prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + "PvP" + ChatColor.GRAY + "]";
+
 	private final double invincibleSeconds = 5.0d;
 
 	private HashMap<Player, Long> respawnTime = new HashMap<>();
@@ -47,7 +49,8 @@ public class InvincibleListener implements Listener {
 					nameColor = team.getChatColor();
 				}
 
-				((Player) e.getDamager()).sendMessage(nameColor + victim.getName() + ChatColor.GRAY + "は保護されています！");
+				((Player) e.getDamager())
+						.sendMessage(prefix + nameColor + victim.getName() + ChatColor.GRAY + "は保護されています！");
 			}
 		}
 	}
@@ -83,14 +86,13 @@ public class InvincibleListener implements Listener {
 
 				// 0以下ならキャンセルしてreturn
 				if (remainInvincibleSeconds <= 0) {
-					p.sendMessage(ChatColor.GRAY + "無敵時間終了！");
+					p.sendMessage(prefix + ChatColor.GRAY + "無敵時間終了");
 					cancel();
 					return;
 				}
 
 				// 残り秒数を表示
-				p.sendMessage(ChatColor.GRAY + "無敵時間解除まで残り" + ChatColor.RED + remainInvincibleSeconds + "秒"
-						+ ChatColor.GRAY + "！");
+				p.sendMessage(prefix + ChatColor.GRAY + "無敵時間残り " + ChatColor.RED + remainInvincibleSeconds + "秒");
 			}
 		};
 	}
