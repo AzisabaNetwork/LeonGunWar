@@ -24,12 +24,6 @@ import net.azisaba.lgw.core.utils.CustomItem;
 
 public class MatchControlListener implements Listener {
 
-	private final LeonGunWar plugin;
-
-	public MatchControlListener(LeonGunWar plugin) {
-		this.plugin = plugin;
-	}
-
 	/**
 	 * 試合が終わったときにMatchFinishedEventを呼び出すリスナー
 	 */
@@ -58,7 +52,7 @@ public class MatchControlListener implements Listener {
 		// イベントを呼び出す
 		MatchFinishedEvent event = new MatchFinishedEvent(MatchManager.getCurrentGameMap(), team,
 				MatchManager.getTeamPlayers());
-		plugin.getServer().getPluginManager().callEvent(event);
+		LeonGunWar.getPlugin().getServer().getPluginManager().callEvent(event);
 	}
 
 	/**

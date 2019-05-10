@@ -37,18 +37,18 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginCommand("leongunwar").setPermissionMessage(ChatColor.RED + "権限がありません！");
 
 		// リスナーの登録
-		getServer().getPluginManager().registerEvents(new MatchControlListener(this), this);
+		getServer().getPluginManager().registerEvents(new MatchControlListener(), this);
 		getServer().getPluginManager().registerEvents(new EntrySignListener(), this);
 		getServer().getPluginManager().registerEvents(new MatchStartDetectListener(), this);
-		getServer().getPluginManager().registerEvents(new DamageListener(this), this);
+		getServer().getPluginManager().registerEvents(new DamageListener(), this);
 
 		// リスナーの登録 (others)
-		getServer().getPluginManager().registerEvents(new NoArrowGroundListener(this), this);
+		getServer().getPluginManager().registerEvents(new NoArrowGroundListener(), this);
 		getServer().getPluginManager().registerEvents(new NoKnockbackListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableItemDamageListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableOpenInventoryListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableOffhandListener(), this);
-		getServer().getPluginManager().registerEvents(new EnableKeepInventoryListener(this), this);
+		getServer().getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
 	}

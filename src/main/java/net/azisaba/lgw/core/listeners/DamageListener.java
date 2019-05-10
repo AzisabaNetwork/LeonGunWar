@@ -25,13 +25,7 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class DamageListener implements Listener {
 
-	private final LeonGunWar plugin;
-
 	private final CSUtility crackShot = new CSUtility();
-
-	public DamageListener(LeonGunWar plugin) {
-		this.plugin = plugin;
-	}
 
 	/**
 	 * プレイヤーを殺したことを検知するリスナー
@@ -120,7 +114,7 @@ public class DamageListener implements Listener {
 			public void run() {
 				p.setFireTicks(0);
 			}
-		}.runTaskLater(plugin, 1);
+		}.runTaskLater(LeonGunWar.getPlugin(), 1);
 	}
 
 	/**
@@ -159,7 +153,8 @@ public class DamageListener implements Listener {
 			itemName = ChatColor.GOLD + "素手";
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
 			// CrackShot Pluginを取得
-			CSDirector crackshot = (CSDirector) plugin.getServer().getPluginManager().getPlugin("CrackShot");
+			CSDirector crackshot = (CSDirector) LeonGunWar.getPlugin().getServer().getPluginManager()
+					.getPlugin("CrackShot");
 
 			// 銃ID取得
 			String nodes = crackShot.getWeaponTitle(item);

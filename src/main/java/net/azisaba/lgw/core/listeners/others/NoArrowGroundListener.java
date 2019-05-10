@@ -14,12 +14,6 @@ import net.azisaba.lgw.core.LeonGunWar;
  */
 public class NoArrowGroundListener implements Listener {
 
-	private final LeonGunWar plugin;
-
-	public NoArrowGroundListener(LeonGunWar plugin) {
-		this.plugin = plugin;
-	}
-
 	/**
 	 * 矢がブロックに当たったことを検知し削除します
 	 * @param e
@@ -34,7 +28,7 @@ public class NoArrowGroundListener implements Listener {
 		Arrow arrow = (Arrow) e.getEntity();
 
 		// 1tick後にその矢がブロックに当たっているか確認
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+		LeonGunWar.getPlugin().getServer().getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
 			// ブロックに刺さっているか確認
 			if (arrow != null && arrow.isOnGround()) {
 				// 矢を削除

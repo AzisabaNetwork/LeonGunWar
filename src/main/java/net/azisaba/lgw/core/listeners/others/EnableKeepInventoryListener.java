@@ -9,14 +9,10 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 public class EnableKeepInventoryListener implements Listener {
 
-	private final LeonGunWar plugin;
-
-	public EnableKeepInventoryListener(LeonGunWar plugin) {
-		this.plugin = plugin;
-
+	public EnableKeepInventoryListener() {
 		// load: STARTUP
 		// にしないためにプラグイン有効化時に全ワールドのKeepInventoryを有効化
-		plugin.getServer().getWorlds().forEach(this::setEnableKeepInventory);
+		LeonGunWar.getPlugin().getServer().getWorlds().forEach(this::setEnableKeepInventory);
 	}
 
 	public void setEnableKeepInventory(World world) {
@@ -30,7 +26,7 @@ public class EnableKeepInventoryListener implements Listener {
 		world.setGameRuleValue("keepInventory", "true");
 
 		// コンソールに有効化したよと表示
-		plugin.getLogger().info(world.getName() + " ワールドの keepInventory を true に設定したよ(´・ω・`)");
+		LeonGunWar.getPlugin().getLogger().info(world.getName() + " ワールドの keepInventory を true に設定したよ(´・ω・`)");
 
 	}
 
