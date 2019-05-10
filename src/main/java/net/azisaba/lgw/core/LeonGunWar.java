@@ -8,6 +8,7 @@ import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.EntrySignListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
+import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
@@ -51,6 +52,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new DisableOffhandListener(), this);
 		getServer().getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
 		getServer().getPluginManager().registerEvents(new InvincibleListener(), this);
+		getServer().getPluginManager().registerEvents(new AutoRespawnListener(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
 	}

@@ -119,9 +119,6 @@ public class DamageListener implements Listener {
 			assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 		}
 
-		// 即時リスポーン (座標指定は別リスナーで)
-		deathPlayer.spigot().respawn();
-
 		// lastDamagedを初期化
 		if (lastDamaged.containsKey(deathPlayer)) {
 			lastDamaged.remove(deathPlayer);
