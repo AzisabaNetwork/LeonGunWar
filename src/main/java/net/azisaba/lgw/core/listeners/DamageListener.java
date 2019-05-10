@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
@@ -17,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.shampaggon.crackshot.CSDirector;
@@ -151,33 +149,6 @@ public class DamageListener implements Listener {
 		damagedMap.put(attacker, System.currentTimeMillis());
 
 		lastDamaged.put(victim, damagedMap);
-	}
-
-	@EventHandler
-	public void onRespawn(PlayerRespawnEvent e) {
-		Player p = e.getPlayer();
-
-		// チームを取得
-		BattleTeam playerTeam = MatchManager.getBattleTeam(p);
-		// スポーン地点
-		Location spawnPoint = null;
-
-		// チームがnullではないならそのチームのスポーン地点にTPする
-		if (playerTeam != null) {
-			spawnPoint = MatchManager.getCurrentGameMap().getSpawnPoint(playerTeam);
-		}
-
-		// それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
-		if (spawnPoint == null) {
-			spawnPoint = MatchManager.getLobbySpawnLocation();
-		}
-
-		p.teleport(spawnPoint);
-
-		// 1tick後に消火
-		LeonGunWar.getPlugin().getServer().getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
-			p.setFireTicks(0);
-		}, 1);
 	}
 
 	/**
