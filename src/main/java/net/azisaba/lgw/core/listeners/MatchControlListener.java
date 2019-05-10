@@ -60,12 +60,15 @@ public class MatchControlListener implements Listener {
 	 */
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
-		// 勝ったチームのプレイヤーリストを取得
-		List<Player> winnerPlayers = e.getTeamPlayers(e.getWinner());
+		// 勝ったチームがあれば勝者の証を付与
+		if (e.getWinner() != null) {
+			// チームメンバーを取得
+			List<Player> winnerPlayers = e.getTeamPlayers(e.getWinner());
 
-		for (Player p : winnerPlayers) {
-			// 勝者の証を付与
-			p.getInventory().addItem(CustomItem.getWonItem());
+			for (Player p : winnerPlayers) {
+				// 勝者の証を付与
+				p.getInventory().addItem(CustomItem.getWonItem());
+			}
 		}
 
 		// 試合に参加した全プレイヤーを取得
@@ -158,7 +161,7 @@ public class MatchControlListener implements Listener {
 			}
 
 			// アシスト数を表示
-			msg += " " + ChatColor.GRAY + "" + assists + " assist(s)";
+			msg += " " + ChatColor.DARK_GRAY + "" + assists + " assist(s)";
 
 			// アクションバーに表示
 			JSONMessage.create(msg).actionbar(p);
