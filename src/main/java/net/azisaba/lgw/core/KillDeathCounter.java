@@ -20,7 +20,8 @@ import com.google.common.base.Preconditions;
 public class KillDeathCounter {
 
 	// キル数とデス数をカウントするHashMap
-	private final HashMap<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>();
+	private final HashMap<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(),
+			assistCountMap = new HashMap<>();
 	private final HashMap<UUID, String> playerNameContainer = new HashMap<>();
 
 	/**
@@ -103,6 +104,47 @@ public class KillDeathCounter {
 
 		// プレイヤーのデス数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
 		return deathCountMap.getOrDefault(player.getUniqueId(), 0);
+	}
+
+	/**
+	 * プレイヤーのアシスト数を1追加します
+	 * @param player アシスト数を追加したいプレイヤー
+	 *
+	 * @exception IllegalArgumentException playerがnullの場合
+	 */
+	public void addAssist(Player player) {
+		// playerがnullの場合 IllegalArgumentException
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
+
+		// プレイヤー情報を保存
+		updatePlayerName(player);
+
+		// すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
+		int assist = assistCountMap.getOrDefault(player.getUniqueId(), 0);
+
+		// アシスト追加
+		assist++;
+
+		// HashMapにセット
+		assistCountMap.put(player.getUniqueId(), assist);
+	}
+
+	/**
+	 * プレイヤーのアシスト数を取得します
+	 * @param player アシスト数を取得したいプレイヤー
+	 * @return プレイヤーのアシスト数
+	 *
+	 * @exception IllegalArgumentException playerがnullの場合
+	 */
+	public int getAssists(Player player) {
+		// playerがnullの場合 IllegalArgumentException
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
+
+		// プレイヤー情報を保存
+		updatePlayerName(player);
+
+		// プレイヤーのアシスト数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
+		return assistCountMap.getOrDefault(player.getUniqueId(), 0);
 	}
 
 	/**

@@ -1,5 +1,10 @@
 package net.azisaba.lgw.core.listeners;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
@@ -25,6 +31,10 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 public class DamageListener implements Listener {
 
 	private final CSUtility crackShot = new CSUtility();
+
+	// 最初のHashMapはダメージを受けた側のプレイヤーであり、そのValueとなるHashMapにはどのプレイヤーが何秒にそのプレイヤーを攻撃したか
+	// アシストの判定に使用される
+	private HashMap<Player, HashMap<Player, Long>> lastDamaged = new HashMap<>();
 
 	/**
 	 * プレイヤーを殺したことを検知するリスナー
@@ -82,8 +92,58 @@ public class DamageListener implements Listener {
 		// 死亡数を追加
 		MatchManager.getKillDeathCounter().addDeath(deathPlayer);
 
+		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
+		List<Entry<Player, Long>> entries = lastDamaged.getOrDefault(deathPlayer, new HashMap<Player, Long>())
+				.entrySet().stream()
+				.filter(entry -> (entry.getValue() + (10 * 1000)) > System.currentTimeMillis())
+				.collect(Collectors.toList());
+
+		// アシスト追加
+		for (Entry<Player, Long> assistEntry : entries) {
+			Player assist = assistEntry.getKey();
+			MatchManager.getKillDeathCounter().addAssist(assist);
+
+			// タイトルを表示
+			assist.sendTitle("", ChatColor.GRAY + "+1 Assist", 0, 20, 10);
+			// 音を鳴らす
+			assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+		}
+
 		// 即時リスポーン (座標指定は別リスナーで)
 		deathPlayer.spigot().respawn();
+
+		// lastDamagedを初期化
+		if (lastDamaged.containsKey(deathPlayer)) {
+			lastDamaged.remove(deathPlayer);
+		}
+	}
+
+	/**
+	 * プレイヤーが他のプレイヤーに攻撃したときにミリ秒を記録します
+	 * この秒数はアシスト判定に使用されます
+	 * @param e
+	 */
+	@EventHandler
+	public void onAttackPlayer(WeaponDamageEntityEvent e) {
+		Player attacker = e.getPlayer();
+
+		// ダメージを受けたEntityがPlayerでなければreturn
+		if (!(e.getVictim() instanceof Player)) {
+			return;
+		}
+
+		Player victim = (Player) e.getVictim();
+
+		// 同じプレイヤーならreturn
+		if (attacker == victim) {
+			return;
+		}
+
+		// ミリ秒を指定
+		HashMap<Player, Long> damagedMap = lastDamaged.getOrDefault(victim, new HashMap<Player, Long>());
+		damagedMap.put(attacker, System.currentTimeMillis());
+
+		lastDamaged.put(victim, damagedMap);
 	}
 
 	@EventHandler
