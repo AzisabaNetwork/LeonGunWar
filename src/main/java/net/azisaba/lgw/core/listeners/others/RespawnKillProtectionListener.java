@@ -15,14 +15,12 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
-public class InvincibleListener implements Listener {
-
-	private final String prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + "PvP" + ChatColor.GRAY + "]";
+public class RespawnKillProtectionListener implements Listener {
 
 	private final double invincibleSeconds = 5.0d;
 
-	private HashMap<Player, Long> respawnTime = new HashMap<>();
-	private HashMap<Player, BukkitTask> taskMap = new HashMap<>();
+	private final HashMap<Player, Long> respawnTime = new HashMap<>();
+	private final HashMap<Player, BukkitTask> taskMap = new HashMap<>();
 
 	@EventHandler
 	public void onDamageByEntity(EntityDamageByEntityEvent e) {
@@ -34,7 +32,7 @@ public class InvincibleListener implements Listener {
 		Player victim = (Player) e.getEntity();
 
 		// リスポーンから5秒以内ならキャンセル
-		if (respawnTime.getOrDefault(victim, 0L) + (1000 * invincibleSeconds) > System.currentTimeMillis()) {
+		if (respawnTime.getOrDefault(victim, 0L) + 1000 * invincibleSeconds > System.currentTimeMillis()) {
 			e.setCancelled(true);
 
 			// 攻撃したプレイヤーにメッセージを表示
@@ -50,7 +48,8 @@ public class InvincibleListener implements Listener {
 				}
 
 				((Player) e.getDamager())
-						.sendMessage(prefix + nameColor + victim.getName() + ChatColor.GRAY + "は保護されています！");
+						.sendMessage(LeonGunWar.GAME_PREFIX + " " + nameColor + victim.getName() + ChatColor.GRAY
+								+ "は保護されています！");
 			}
 		}
 	}
@@ -86,13 +85,15 @@ public class InvincibleListener implements Listener {
 
 				// 0以下ならキャンセルしてreturn
 				if (remainInvincibleSeconds <= 0) {
-					p.sendMessage(prefix + ChatColor.GRAY + "無敵時間終了");
+					p.sendMessage(LeonGunWar.GAME_PREFIX + " " + ChatColor.GRAY + "無敵時間終了");
 					cancel();
 					return;
 				}
 
 				// 残り秒数を表示
-				p.sendMessage(prefix + ChatColor.GRAY + "無敵時間残り " + ChatColor.RED + remainInvincibleSeconds + "秒");
+				p.sendMessage(
+						LeonGunWar.GAME_PREFIX + " " + ChatColor.GRAY + "無敵時間残り " + ChatColor.RED
+								+ remainInvincibleSeconds + "秒");
 			}
 		};
 	}

@@ -13,22 +13,20 @@ import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
-import net.azisaba.lgw.core.listeners.others.InvincibleListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
+import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.maps.MapContainer;
 
 public class LeonGunWar extends JavaPlugin {
+
+	public static final String GAME_PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "PvP" + ChatColor.GRAY + "]";
 
 	// plugin
 	private static LeonGunWar plugin;
 
 	@Override
 	public void onEnable() {
-
-		// pluginを指定
-		plugin = this;
-
 		// 初期化が必要なファイルを初期化する
 		initializeClasses();
 
@@ -51,7 +49,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new DisableOpenInventoryListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableOffhandListener(), this);
 		getServer().getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
-		getServer().getPluginManager().registerEvents(new InvincibleListener(), this);
+		getServer().getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
 		getServer().getPluginManager().registerEvents(new AutoRespawnListener(), this);
 
 		getServer().getLogger().info(getName() + " enabled.");
@@ -75,6 +73,6 @@ public class LeonGunWar extends JavaPlugin {
 	 * @return LeonGunWarのインスタンス
 	 */
 	public static LeonGunWar getPlugin() {
-		return plugin;
+		return plugin != null ? plugin : (plugin = JavaPlugin.getPlugin(LeonGunWar.class));
 	}
 }
