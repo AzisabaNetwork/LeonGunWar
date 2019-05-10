@@ -36,5 +36,4 @@ public class NoArrowGroundListener implements Listener {
 			}
 		}, 1);
 	}
-
 }
