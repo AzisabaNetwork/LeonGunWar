@@ -65,10 +65,8 @@ public class InvincibleListener implements Listener {
 			task.cancel();
 		}
 
-		// 次のタスクまでの時間を計算し起動する
-		int floor = (int) Math.floor(invincibleSeconds);
-		double runAfter = invincibleSeconds - floor;
-		task = getRunnable(p).runTaskLater(LeonGunWar.getPlugin(), (long) runAfter * 20);
+		// タスク開始
+		task = getRunnable(p).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
 
 		// タスク更新
 		taskMap.put(p, task);
@@ -79,27 +77,20 @@ public class InvincibleListener implements Listener {
 			@Override
 			public void run() {
 
-				// 残り何秒か取得
-				int noInvincibleSeconds = (int) (invincibleSeconds
+				// 残り時間 (秒) 取得
+				int remainInvincibleSeconds = (int) (invincibleSeconds
 						- (System.currentTimeMillis() - respawnTime.get(p)) / 1000);
 
-				// 残り秒数を表示。もし0なら終了と表示
-				if (noInvincibleSeconds > 0) {
-					p.sendMessage(
-							ChatColor.GRAY + "無敵時間解除まであと" + ChatColor.RED + noInvincibleSeconds + "秒" + ChatColor.GRAY
-									+ "！");
-				} else {
+				// 0以下ならキャンセルしてreturn
+				if (remainInvincibleSeconds <= 0) {
 					p.sendMessage(ChatColor.GRAY + "無敵時間終了！");
+					cancel();
 					return;
 				}
 
-				// 次のタスクまでの時間を計算し起動する
-				double next = (respawnTime.get(p) + (invincibleSeconds - ((noInvincibleSeconds - 1) * 1000))
-						- System.currentTimeMillis()) / 1000;
-				BukkitTask task = getRunnable(p).runTaskLater(LeonGunWar.getPlugin(), (long) next * 20);
-
-				// タスク更新
-				taskMap.put(p, task);
+				// 残り秒数を表示
+				p.sendMessage(ChatColor.GRAY + "無敵時間解除まで残り" + ChatColor.RED + remainInvincibleSeconds + "秒"
+						+ ChatColor.GRAY + "！");
 			}
 		};
 	}
