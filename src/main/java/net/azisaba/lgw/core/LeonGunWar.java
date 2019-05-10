@@ -23,11 +23,12 @@ public class LeonGunWar extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		// 初期化が必要なファイルを初期化する
-		initializeClasses();
 
 		// pluginを指定
 		plugin = this;
+
+		// 初期化が必要なファイルを初期化する
+		initializeClasses();
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
