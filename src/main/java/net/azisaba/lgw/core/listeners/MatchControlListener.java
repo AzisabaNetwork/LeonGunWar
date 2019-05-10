@@ -135,6 +135,8 @@ public class MatchControlListener implements Listener {
 			int kills = MatchManager.getKillDeathCounter().getKills(p);
 			// デス数取得
 			int deaths = MatchManager.getKillDeathCounter().getDeaths(p);
+			// アシスト数取得
+			int assists = MatchManager.getKillDeathCounter().getAssists(p);
 
 			String msg = "";
 
@@ -154,6 +156,9 @@ public class MatchControlListener implements Listener {
 				msg = ChatColor.YELLOW + "" + kills + " kill(s) " + msg;
 				msg += " " + ChatColor.YELLOW + "" + deaths + " death(s)";
 			}
+
+			// アシスト数を表示
+			msg += " " + ChatColor.GRAY + "" + assists + " assist(s)";
 
 			// アクションバーに表示
 			JSONMessage.create(msg).actionbar(p);
