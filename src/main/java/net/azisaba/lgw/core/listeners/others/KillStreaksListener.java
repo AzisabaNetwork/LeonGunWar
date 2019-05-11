@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
-import net.md_5.bungee.api.ChatColor;
 
 public class KillStreaksListener implements Listener {
 
@@ -31,56 +29,46 @@ public class KillStreaksListener implements Listener {
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:emerald 2", p.getName()))));
 		rewards.put(3, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), "", 3),
+				p -> Chat.f("{0}&r{1} &7が {2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 3),
 				null));
 		rewards.put(5, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), "", 5),
+				p -> Chat.f("{0}&r{1} &7が {2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 5),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} STOROBO2", p.getName()))));
 		rewards.put(10, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
-						ChatColor.DARK_GREEN, 10),
+				p -> Chat.f("{0}&r{1} &7が &2{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 10),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} UAV", p.getName()))));
 		rewards.put(15, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
-						ChatColor.DARK_GREEN, 15),
+				p -> Chat.f("{0}&r{1} &7が &2{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 15),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} DEATHMACHINE", p.getName()))));
 		rewards.put(20, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
-						ChatColor.YELLOW,
-						20),
+				p -> Chat.f("{0}&r{1} &7が &e{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 20),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} STOROBO", p.getName()))));
 		rewards.put(25, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
-						ChatColor.YELLOW,
-						25),
-				p -> new ArrayList<String>()));
+				p -> Chat.f("{0}&r{1} &7が &e{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 25),
+				p -> null));
 		rewards.put(30, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
-						30),
-				p -> new ArrayList<String>()));
+				p -> Chat.f("{0}&r{1} &7が &b{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 30),
+				p -> null));
 		rewards.put(35, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
-						35),
-				p -> new ArrayList<String>()));
+				p -> Chat.f("{0}&r{1} &7が &b{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 35),
+				p -> null));
 		rewards.put(40, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
-						40),
-				p -> new ArrayList<String>()));
+				p -> Chat.f("{0}&r{1} &7が &c{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 40),
+				p -> null));
 		rewards.put(45, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
-						45),
-				p -> new ArrayList<String>()));
+				p -> Chat.f("{0}&r{1} &7が &c{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), 45),
+				p -> null));
 		rewards.put(50, new Reward(
-				p -> Chat.f("{0}&7なんてこったい！ {1}&7 が {2}{3}人 &7連続キル！ カンスト！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
-						ChatColor.GOLD, 50),
+				p -> Chat.f("{0}&7なんてこったい！ &r{1}&7 が &c{2}人 &7連続キル！ カンスト！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+						50),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 64", p.getName()),
 						Chat.f("crackshot:shot give {0} KANSUTO", p.getName()))));

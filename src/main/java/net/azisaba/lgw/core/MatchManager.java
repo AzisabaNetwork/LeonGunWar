@@ -79,7 +79,7 @@ public class MatchManager {
 	// 試合の種類
 	private MatchMode matchMode = MatchMode.TEAM_DEATH_MATCH;
 	// チームのリーダー
-	private HashMap<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
+	private final HashMap<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
 
 	/**
 	 * 初期化メソッド
@@ -710,7 +710,8 @@ public class MatchManager {
 	}
 
 	public enum MatchMode {
-		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")), LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
+		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")),
+		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
 
 		private final String modeName;
 
