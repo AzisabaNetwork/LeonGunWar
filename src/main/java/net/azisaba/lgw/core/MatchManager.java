@@ -105,6 +105,11 @@ public class MatchManager {
 		// 各スコアボードチームの取得 / 作成 (赤、青、試合参加エントリー用)
 		initializeTeams();
 
+		// 全プレイヤーのスコアボードを変更
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			p.setScoreboard(scoreboard);
+		});
+
 		// 各チームのチェストプレートを設定
 		// 赤チーム
 		redChestplate = CustomItem.getTeamChestplate(BattleTeam.RED);
