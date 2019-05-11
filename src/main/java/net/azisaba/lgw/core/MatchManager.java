@@ -257,7 +257,7 @@ public class MatchManager {
 		// リーダーを削除
 		ldmLeaderMap.clear();
 		// キルストリーク削除
-		LeonGunWar.getPlugin().getKillStreaks().removeKillStreaks();
+		LeonGunWar.getPlugin().getKillStreaks().clear();
 
 		// ゲーム終了
 		isMatching = false;
@@ -725,7 +725,8 @@ public class MatchManager {
 	}
 
 	public enum MatchMode {
-		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")), LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
+		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")),
+		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
 
 		private final String modeName;
 
