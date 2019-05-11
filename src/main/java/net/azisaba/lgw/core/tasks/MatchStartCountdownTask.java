@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.tasks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -26,6 +27,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
 		boolean chat = false;
 		boolean title = false;
+		boolean sound = false;
 
 		// 以下の場合残り秒数をチャット欄もしくはタイトルに表示する
 		if (timeLeft % 10 == 0) { // 10の倍数の場合
@@ -33,6 +35,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 		} else if (timeLeft <= 5) { // 数字が5以下の場合
 			chat = true;
 			title = true;
+			sound = true;
 		}
 
 		// chatがtrueの場合表示
@@ -46,6 +49,13 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 		if (title) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				p.sendTitle(timeLeft + "", "", 0, 40, 10);
+			}
+		}
+
+		// soundがtrueの場合音を鳴らす
+		if (sound) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1f, 1f);
 			}
 		}
 	}
