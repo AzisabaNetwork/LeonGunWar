@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class ScoreboardDisplayer {
 
@@ -20,8 +20,7 @@ public class ScoreboardDisplayer {
 	 * @return スコアボードのタイトル
 	 */
 	private String scoreBoardTitle() {
-		return ChatColor.GOLD + "LeonGunWar" + ChatColor.GREEN + " v"
-				+ LeonGunWar.getPlugin().getDescription().getVersion();
+		return Chat.f("&6LeonGunWar&a v" + LeonGunWar.getPlugin().getDescription().getVersion());
 	}
 
 	/**
@@ -56,16 +55,14 @@ public class ScoreboardDisplayer {
 
 			// 文字を作成
 			String line1 = "";
-			String line2 = ChatColor.AQUA + "残り時間" + ChatColor.GREEN + ": " + ChatColor.RED + timeLeft + "秒";
+			String line2 = Chat.f("&b残り時間&a: &c" + timeLeft + "秒");
 			String line3 = "";
-			String line4 = BattleTeam.RED.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + redPoint
-					+ " Point(s)";
-			String line5 = BattleTeam.BLUE.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
-					+ " Point(s)";
+			String line4 = Chat.f(BattleTeam.RED.getDisplayTeamName() + "&a: &e" + redPoint + " Point(s)");
+			String line5 = Chat.f(BattleTeam.BLUE.getDisplayTeamName() + "&a: &e" + bluePoint + " Point(s)");
 			String line6 = "";
-			String line7 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
+			String line7 = Chat.f("&7現在のマップ&a: &c" + mapName);
 			String line8 = "";
-			String line9 = ChatColor.GOLD + "azisaba.net" + ChatColor.GRAY + " で今すぐ遊べ！";
+			String line9 = Chat.f("&6azisaba.net &7で今すぐ遊べ！");
 
 			// リストにして返す
 			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9);

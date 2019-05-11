@@ -33,6 +33,7 @@ import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.teams.DefaultTeamDistributor;
 import net.azisaba.lgw.core.teams.TeamDistributor;
+import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.LocationLoader;
 
@@ -143,8 +144,8 @@ public class MatchManager {
 			}
 
 			// メッセージを表示する
-			p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "あなたは " + BattleTeam.RED.getDisplayTeamName()
-					+ ChatColor.GRAY + " になりました！");
+			p.sendMessage(
+					Chat.f(LeonGunWar.GAME_PREFIX + "&7あなたは" + BattleTeam.RED.getDisplayTeamName() + "&7になりました！"));
 			// 防具を装備
 			p.getInventory().setChestplate(redChestplate);
 			// テレポート
@@ -162,8 +163,8 @@ public class MatchManager {
 			}
 
 			// メッセージを表示する
-			p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "あなたは " + BattleTeam.BLUE.getDisplayTeamName()
-					+ ChatColor.GRAY + " になりました！");
+			p.sendMessage(
+					Chat.f(LeonGunWar.GAME_PREFIX + "&7あなたは" + BattleTeam.BLUE.getDisplayTeamName() + "&7になりました！"));
 			// 防具を装備
 			p.getInventory().setChestplate(blueChestplate);
 			// テレポート

@@ -4,11 +4,11 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class RespawnKillProtectionTask extends BukkitRunnable {
 
@@ -30,13 +30,12 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 
 		// 0以下ならキャンセルしてreturn
 		if (remain <= 0) {
-			p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "無敵時間終了！");
+			p.sendMessage(Chat.f(LeonGunWar.GAME_PREFIX + "&7無敵時間終了！"));
 			cancel();
 			return;
 		}
 
 		// 残り秒数を表示
-		p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "無敵時間残り " + ChatColor.RED + remain + "秒"
-				+ ChatColor.GRAY + "！");
+		p.sendMessage(Chat.f(LeonGunWar.GAME_PREFIX + "&7無敵時間残り &c" + remain + "秒&7！"));
 	}
 }

@@ -1,11 +1,11 @@
 package net.azisaba.lgw.core.tasks;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class MatchStartCountdownTask extends BukkitRunnable {
 
@@ -39,8 +39,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
 		// chatがtrueの場合表示
 		if (chat) {
-			String msg = LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "試合開始まで残り " + ChatColor.RED + timeLeft + "秒"
-					+ ChatColor.GRAY + "！";
+			String msg = Chat.f(LeonGunWar.GAME_PREFIX + "&7試合開始まで残り&c" + timeLeft + "秒&7！");
 			Bukkit.broadcastMessage(msg);
 		}
 

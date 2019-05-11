@@ -2,7 +2,6 @@ package net.azisaba.lgw.core.utils;
 
 import java.util.Arrays;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +21,7 @@ public class CustomItem {
 	public static ItemStack getWonItem() {
 		ItemStack item = new ItemStack(Material.END_CRYSTAL);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(ChatColor.GOLD + "勝者の証");
+		meta.setDisplayName(Chat.f("&6勝者の証"));
 		meta.setLore(Arrays.asList("勝者に与えられる証", "ダイヤと交換できる"));
 		item.setItemMeta(meta);
 		return item;
