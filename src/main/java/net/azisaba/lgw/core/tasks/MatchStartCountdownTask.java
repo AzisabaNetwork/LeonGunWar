@@ -3,7 +3,6 @@ package net.azisaba.lgw.core.tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
@@ -47,16 +46,16 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
 		// titleがtrueの場合表示
 		if (title) {
-			for (Player p : Bukkit.getOnlinePlayers()) {
+			Bukkit.getOnlinePlayers().forEach(p -> {
 				p.sendTitle(timeLeft + "", "", 0, 40, 10);
-			}
+			});
 		}
 
 		// soundがtrueの場合音を鳴らす
 		if (sound) {
-			for (Player p : Bukkit.getOnlinePlayers()) {
+			Bukkit.getOnlinePlayers().forEach(p -> {
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1f, 1f);
-			}
+			});
 		}
 	}
 }
