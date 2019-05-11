@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -62,7 +61,7 @@ public class EntrySignListener implements Listener {
 		e.setCancelled(true);
 
 		// 4行目が[INACTIVE]ならキャンセル
-		if (ChatColor.stripColor(sign.getLine(3)).equals("[INACTIVE]")) {
+		if (Chat.r(sign.getLine(3)).equals("[INACTIVE]")) {
 			return;
 		}
 
@@ -113,7 +112,7 @@ public class EntrySignListener implements Listener {
 		e.setCancelled(true);
 
 		// 4行目が[INACTIVE]ならキャンセル
-		if (ChatColor.stripColor(sign.getLine(3)).equals("[INACTIVE]")) {
+		if (Chat.r(sign.getLine(3)).equals("[INACTIVE]")) {
 			return;
 		}
 
@@ -161,7 +160,7 @@ public class EntrySignListener implements Listener {
 		e.setCancelled(true);
 
 		// 元メッセージ
-		String line4 = ChatColor.stripColor(sign.getLine(3));
+		String line4 = Chat.r(sign.getLine(3));
 		// 編集先メッセージ
 		String edit = "";
 

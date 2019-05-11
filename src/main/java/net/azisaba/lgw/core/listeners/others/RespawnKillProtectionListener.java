@@ -43,10 +43,7 @@ public class RespawnKillProtectionListener implements Listener {
 				BattleTeam team = LeonGunWar.getPlugin().getManager().getBattleTeam(victim);
 
 				// 色を取得
-				ChatColor nameColor = ChatColor.RESET;
-				if (team != null) {
-					nameColor = team.getChatColor();
-				}
+				ChatColor nameColor = team != null ? team.getChatColor() : ChatColor.RESET;
 
 				((Player) e.getDamager()).sendMessage(
 						Chat.f("{0}{1}{2} &7は保護されています！", LeonGunWar.GAME_PREFIX, nameColor, victim.getName()));

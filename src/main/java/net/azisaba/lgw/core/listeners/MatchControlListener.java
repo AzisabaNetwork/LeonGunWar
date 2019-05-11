@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -158,8 +157,8 @@ public class MatchControlListener implements Listener {
 				// デスのパーセンテージ
 				double deathsPercentage = (double) deaths / (double) (kills + deaths) * 100d;
 
-				msg += ChatColor.LIGHT_PURPLE + Strings.repeat("┃", (int) killsPercentage / 2);
-				msg += ChatColor.DARK_PURPLE + Strings.repeat("┃", (int) deathsPercentage / 2);
+				msg += Chat.f("&d{0}", Strings.repeat("┃", (int) killsPercentage / 2));
+				msg += Chat.f("&5{0}", Strings.repeat("┃", (int) deathsPercentage / 2));
 
 				// キル数とデス数を数字で表示
 				msg = Chat.f("&e{0} Kill(s) {1} &e{2} Death(s)", kills, msg, deaths);
