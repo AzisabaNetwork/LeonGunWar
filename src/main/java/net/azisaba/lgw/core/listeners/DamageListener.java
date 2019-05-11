@@ -68,7 +68,7 @@ public class DamageListener implements Listener {
 		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
 
 		// タイトルを表示
-		killer.sendTitle("", ChatColor.RED + "+1 kill", 0, 20, 10);
+		killer.sendTitle("", ChatColor.RED + "+1 Kill", 0, 20, 10);
 		// 音を鳴らす
 		killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
 	}

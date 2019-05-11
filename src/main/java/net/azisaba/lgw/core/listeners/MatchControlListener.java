@@ -75,15 +75,15 @@ public class MatchControlListener implements Listener {
 		// 各チームのポイントを表示
 		for (BattleTeam team : BattleTeam.values()) {
 			int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
-			resultMessages.add(team.getDisplayTeamName() + ChatColor.RED + " " + point + "points");
+			resultMessages.add(team.getDisplayTeamName() + ChatColor.RED + " " + point + " Point(s)");
 		}
 
 		// MVPを表示 (ない場合は何も表示しない)
 		if (!mvpPlayers.isEmpty()) {
 			for (KDPlayerData data : mvpPlayers) {
 				resultMessages
-						.add(ChatColor.RED + "[MVP] " + data.getPlayerName() + " " + data.getKills() + "kills, "
-								+ data.getDeaths() + "deaths, " + data.getAssists() + "assists");
+						.add(ChatColor.RED + "[MVP] " + data.getPlayerName() + " " + data.getKills() + " Kill(s), "
+								+ data.getDeaths() + " Death(s), " + data.getAssists() + " Assist(s)");
 			}
 		}
 
@@ -105,8 +105,9 @@ public class MatchControlListener implements Listener {
 			int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
 
 			// プレイヤーの戦績を表示
-			p.sendMessage(ChatColor.GRAY + "[Your Score] " + p.getName() + " " + kills + "kills, " + deaths + "deaths, "
-					+ assists + "assists");
+			p.sendMessage(
+					ChatColor.GRAY + "[Your Score] " + p.getName() + " " + kills + " Kill(s), " + deaths + " Death(s), "
+							+ assists + " Assist(s)");
 		}
 	}
 
@@ -151,7 +152,7 @@ public class MatchControlListener implements Listener {
 
 			// 両方を足して0の場合は白く表示
 			if (kills + deaths == 0) {
-				msg = "0 kill " + Strings.repeat("┃", 50) + " 0 death";
+				msg = "0 Kill " + Strings.repeat("┃", 50) + " 0 Death";
 			} else { // それ以外の場合はメーター作成
 				// キルのパーセンテージ
 				double killsPercentage = (double) kills / (double) (kills + deaths) * 100d;
@@ -162,12 +163,12 @@ public class MatchControlListener implements Listener {
 				msg += ChatColor.DARK_PURPLE + Strings.repeat("┃", (int) deathsPercentage / 2);
 
 				// キル数とデス数を数字で表示
-				msg = ChatColor.YELLOW + "" + kills + " kill(s) " + msg;
-				msg += " " + ChatColor.YELLOW + "" + deaths + " death(s)";
+				msg = ChatColor.YELLOW + "" + kills + " Kill(s) " + msg;
+				msg += " " + ChatColor.YELLOW + "" + deaths + " Death(s)";
 			}
 
 			// アシスト数を表示
-			msg += " " + ChatColor.DARK_GRAY + "" + assists + " assist(s)";
+			msg += " " + ChatColor.DARK_GRAY + "" + assists + " Assist(s)";
 
 			// アクションバーに表示
 			JSONMessage.create(msg).actionbar(p);

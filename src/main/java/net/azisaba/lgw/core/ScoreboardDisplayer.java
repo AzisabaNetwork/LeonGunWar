@@ -36,8 +36,8 @@ public class ScoreboardDisplayer {
 			 *
 			 * 残り時間: ?秒
 			 *
-			 * 赤チーム: ? point
-			 * 青チーム: ? point
+			 * 赤チーム: ? Point(s)
+			 * 青チーム: ? Point(s)
 			 *
 			 * 現在のマップ: {マップ名}
 			 *
@@ -59,9 +59,9 @@ public class ScoreboardDisplayer {
 			String line2 = ChatColor.AQUA + "残り時間" + ChatColor.GREEN + ": " + ChatColor.RED + timeLeft + "秒";
 			String line3 = "";
 			String line4 = BattleTeam.RED.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + redPoint
-					+ " ポイント";
+					+ " Point(s)";
 			String line5 = BattleTeam.BLUE.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
-					+ " ポイント";
+					+ " Point(s)";
 			String line6 = "";
 			String line7 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
 			String line8 = "";
