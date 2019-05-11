@@ -20,7 +20,7 @@ public class ScoreboardDisplayer {
 	 * @return スコアボードのタイトル
 	 */
 	private String scoreBoardTitle() {
-		return Chat.f("&6LeonGunWar&a v" + LeonGunWar.getPlugin().getDescription().getVersion());
+		return Chat.f("&6LeonGunWar&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
 	}
 
 	/**

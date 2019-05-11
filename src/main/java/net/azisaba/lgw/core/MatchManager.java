@@ -145,7 +145,7 @@ public class MatchManager {
 
 			// メッセージを表示する
 			p.sendMessage(
-					Chat.f("{0}&7あなたは&r{1}&7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.RED.getDisplayTeamName()));
+					Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.RED.getDisplayTeamName()));
 			// 防具を装備
 			p.getInventory().setChestplate(redChestplate);
 			// テレポート
@@ -164,7 +164,7 @@ public class MatchManager {
 
 			// メッセージを表示する
 			p.sendMessage(
-					Chat.f("{0}&7あなたは&r{1}&7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.BLUE.getDisplayTeamName()));
+					Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.BLUE.getDisplayTeamName()));
 			// 防具を装備
 			p.getInventory().setChestplate(blueChestplate);
 			// テレポート
