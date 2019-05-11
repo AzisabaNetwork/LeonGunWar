@@ -126,6 +126,9 @@ public class MatchManager {
 
 		// マップを抽選
 		currentMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
+		// マップ名を表示
+		Bukkit.broadcastMessage(Chat.f("&7今回のマップは &6{0} &7です！", currentMap.getMapName()));
+
 		// 参加プレイヤーを取得
 		List<Player> entryPlayers = getEntryPlayers();
 		// プレイヤーを振り分け
