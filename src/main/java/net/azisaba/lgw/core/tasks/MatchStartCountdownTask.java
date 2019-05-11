@@ -14,7 +14,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-
+		// 1秒減らす
 		timeLeft--;
 
 		// 0の場合ゲームスタート

@@ -19,9 +19,10 @@ import com.google.common.base.Preconditions;
  */
 public class KillDeathCounter {
 
-	// キル数とデス数をカウントするHashMap
+	// キル数とデス数とアシスト数をカウントするHashMap
 	private final HashMap<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(),
 			assistCountMap = new HashMap<>();
+	// UUIDとプレイヤー名を紐付けるためのHashMap
 	private final HashMap<UUID, String> playerNameContainer = new HashMap<>();
 
 	/**
@@ -150,14 +151,16 @@ public class KillDeathCounter {
 	/**
 	 * もっとも試合に貢献したプレイヤーをリストで取得します (2人以上いることがあるため)
 	 * 存在しない場合は空のリストを返します
-	 * @return MVPのKDPlayerData
+	 * @return MVPのKDPlayerDataをList形式で
 	 */
 	public List<KDPlayerData> getMVPPlayer() {
-
+		// キルカウントMapから最大キル数を取得、ない場合は-1
 		int mvpKills = killCountMap.values().stream()
 				.max(Comparator.naturalOrder())
 				.orElse(-1);
 
+		// mvpKillsと同じキル数のプレイヤーだけ抽出して、KDPlayerDataに変換しList形式で取得
+		// mvpKillsが-1の場合は空のリストを返す
 		return killCountMap.entrySet().stream()
 				.filter(entry -> entry.getValue() == mvpKills)
 				.map(Entry::getKey)

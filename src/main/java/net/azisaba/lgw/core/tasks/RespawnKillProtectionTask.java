@@ -26,7 +26,6 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-
 		// 残り時間 (秒) 取得
 		int remain = (int) (invincibleSeconds - (System.currentTimeMillis() - respawnTime.get(p)) / 1000);
 

@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class LocationLoader {
 
+	// インスタンス作成を無効化
 	protected LocationLoader() {
 	}
 

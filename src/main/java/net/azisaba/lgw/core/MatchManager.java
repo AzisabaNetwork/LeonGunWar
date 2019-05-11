@@ -316,11 +316,19 @@ public class MatchManager {
 		}.runTaskTimer(LeonGunWar.getPlugin(), 20, 20);
 	}
 
+	/**
+	 * 全チームのプレイヤーをMap+List形式で取得します
+	 * @return チームごとのプレイヤーのMap
+	 */
 	public Map<BattleTeam, List<Player>> getTeamPlayers() {
 		return Stream.of(BattleTeam.values())
 				.collect(Collectors.toMap(Function.identity(), this::getTeamPlayers));
 	}
 
+	/**
+	 * 全チームの全プレイヤーを1つのList形式で取得します
+	 * @return 全プレイヤーのList
+	 */
 	public List<Player> getAllTeamPlayers() {
 		return getTeamPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList());
 	}
