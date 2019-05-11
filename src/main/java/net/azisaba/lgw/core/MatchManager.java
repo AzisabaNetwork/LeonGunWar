@@ -730,8 +730,8 @@ public class MatchManager {
 	}
 
 	public enum MatchMode {
-		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")),
-		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
+		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")), // チームデスマッチ (TDM)
+		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));// リーダーデスマッチ (LDM)
 
 		private final String modeName;
 
@@ -740,10 +740,14 @@ public class MatchManager {
 		}
 
 		public static MatchMode getFromString(String msg) {
-			if (msg.equalsIgnoreCase("LDM") || msg.replace(" ", "").equalsIgnoreCase("LeaderDeathMatch")) {
+			String msgNoSpace = msg.replace(" ", "");
+
+			if (msgNoSpace.equalsIgnoreCase("LDM")
+					|| msgNoSpace.equalsIgnoreCase("LeaderDeathMatch")) {
 				return MatchMode.LEADER_DEATH_MATCH;
-			} else if (msg.replace(" ", "").equalsIgnoreCase("TDM")
-					|| msg.replace(" ", "").equalsIgnoreCase("TeamDeathMatch")) {
+
+			} else if (msgNoSpace.equalsIgnoreCase("TDM")
+					|| msgNoSpace.equalsIgnoreCase("TeamDeathMatch")) {
 				return MatchMode.TEAM_DEATH_MATCH;
 			}
 
