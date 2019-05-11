@@ -152,7 +152,7 @@ public class MatchManager {
 			// 防具を装備
 			p.getInventory().setChestplate(redChestplate);
 			// DisplayNameを指定
-			p.setDisplayName(BattleTeam.RED.getChatColor() + p.getName());
+			p.setDisplayName(Chat.f("{0}{1}&r", BattleTeam.RED.getChatColor(), p.getName()));
 			// テレポート
 			p.teleport(currentMap.getSpawnPoint(BattleTeam.RED));
 		}
