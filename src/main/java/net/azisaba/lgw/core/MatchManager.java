@@ -535,6 +535,8 @@ public class MatchManager {
 			redTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
 			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
+			// 他プレイヤーに押されないように設定
+			redTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
 		}
 
 		// 青チーム取得(なかったら作成)
@@ -548,6 +550,8 @@ public class MatchManager {
 			blueTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
 			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
+			// 他プレイヤーに押されないように設定
+			blueTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
 		}
 
 		// エントリーチーム取得 (なかったら作成)
