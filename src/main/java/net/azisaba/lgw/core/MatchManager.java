@@ -201,6 +201,15 @@ public class MatchManager {
 
 				// チームのリーダーに設定
 				ldmLeaderMap.put(team, target);
+
+				// メッセージを表示
+				plist.forEach(p -> {
+					p.sendMessage(
+							Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれました！", LeonGunWar.GAME_PREFIX, target.getDisplayName()));
+				});
+
+				// リーダーにタイトルを表示
+				target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
 			}
 		}
 
