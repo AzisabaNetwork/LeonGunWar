@@ -1,5 +1,9 @@
 package net.azisaba.lgw.core;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
@@ -98,6 +102,26 @@ public class LeonGunWar extends JavaPlugin {
 		manager = new MatchManager();
 		manager.initialize();
 		killStreaks = new KillStreaks();
+
+		// 移行を簡単にする [DEBUG]
+		Stream.of(
+				"UnbreakableArmor",
+				"NoArrowGround",
+				"noKnockback",
+				"CancelMan",
+				"RecipeHaMouShindeiru",
+				"Yaitekanai",
+				"KillStreaks",
+				"Protectiontime",
+				"BugSolver",
+				"CatFood",
+				"ColorTeaming",
+				"ColorTeamingEntry",
+				"ExpTimer",
+				"BarAPI")
+				.map(Bukkit.getPluginManager()::getPlugin)
+				.filter(Objects::nonNull)
+				.forEach(Bukkit.getPluginManager()::disablePlugin);
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
