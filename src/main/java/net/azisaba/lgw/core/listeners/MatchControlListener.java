@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
@@ -35,14 +36,20 @@ public class MatchControlListener implements Listener {
 			return;
 		}
 
-		// 各チームのポイントを取得して比較し、一番ポイントが多いチームを取得
-		BattleTeam winner = Stream.of(BattleTeam.values())
-				.max(Comparator.comparing(LeonGunWar.getPlugin().getManager()::getCurrentTeamPoint))
-				.orElse(null);
+		// 一番高いポイントを取得
+		int maxPoint = Stream.of(BattleTeam.values())
+				.map(LeonGunWar.getPlugin().getManager()::getCurrentTeamPoint)
+				.max(Comparator.naturalOrder())
+				.orElse(-1);
+
+		// 一番高いポイントと同じポイントのチームをList形式で取得
+		List<BattleTeam> winners = Stream.of(BattleTeam.values())
+				.filter(team -> LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team) == maxPoint)
+				.collect(Collectors.toList());
 
 		// イベントを呼び出す
 		MatchFinishedEvent event = new MatchFinishedEvent(LeonGunWar.getPlugin().getManager().getCurrentGameMap(),
-				winner,
+				winners,
 				LeonGunWar.getPlugin().getManager().getTeamPlayers());
 		Bukkit.getPluginManager().callEvent(event);
 	}
@@ -53,9 +60,9 @@ public class MatchControlListener implements Listener {
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
 		// 勝ったチームがあれば勝者の証を付与
-		if (e.getWinner() != null) {
+		if (e.getWinners().size() == 1) {
 			// チームメンバーを取得
-			List<Player> winnerPlayers = e.getTeamPlayers(e.getWinner());
+			List<Player> winnerPlayers = e.getTeamPlayers(e.getWinners().get(0));
 
 			for (Player p : winnerPlayers) {
 				// 勝者の証を付与

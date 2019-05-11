@@ -24,7 +24,7 @@ public class MatchFinishedEvent extends Event {
 	// マッチを行ったマップ
 	private final GameMap map;
 	// 勝利したチーム
-	private final BattleTeam winner;
+	private final List<BattleTeam> winners;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 
@@ -33,9 +33,9 @@ public class MatchFinishedEvent extends Event {
 	 * @param winner 勝利したチーム
 	 * @param teamPlayers チームのプレイヤー
 	 */
-	public MatchFinishedEvent(GameMap map, BattleTeam winner, Map<BattleTeam, List<Player>> teamPlayers) {
+	public MatchFinishedEvent(GameMap map, List<BattleTeam> winners, Map<BattleTeam, List<Player>> teamPlayers) {
 		this.map = map;
-		this.winner = winner;
+		this.winners = winners;
 		this.teamPlayers = teamPlayers;
 	}
 
@@ -51,8 +51,8 @@ public class MatchFinishedEvent extends Event {
 		return map;
 	}
 
-	public BattleTeam getWinner() {
-		return winner;
+	public List<BattleTeam> getWinners() {
+		return winners;
 	}
 
 	@Override
