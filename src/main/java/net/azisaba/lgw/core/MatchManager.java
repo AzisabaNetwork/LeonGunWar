@@ -256,6 +256,8 @@ public class MatchManager {
 
 		// リーダーを削除
 		ldmLeaderMap.clear();
+		// キルストリーク削除
+		LeonGunWar.getPlugin().getKillStreaks().removeKillStreaks();
 
 		// ゲーム終了
 		isMatching = false;
@@ -662,6 +664,8 @@ public class MatchManager {
 			redTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
 			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
+			// 押し合いをなくす
+			redTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
 		}
 
 		// 青チーム取得(なかったら作成)
@@ -675,6 +679,8 @@ public class MatchManager {
 			blueTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
 			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
+			// 押し合いをなくす
+			blueTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
 		}
 
 		// エントリーチーム取得 (なかったら作成)
@@ -719,8 +725,7 @@ public class MatchManager {
 	}
 
 	public enum MatchMode {
-		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")),
-		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
+		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")), LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
 
 		private final String modeName;
 
