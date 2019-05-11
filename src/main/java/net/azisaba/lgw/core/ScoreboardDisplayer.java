@@ -20,7 +20,8 @@ public class ScoreboardDisplayer {
 	 * @return スコアボードのタイトル
 	 */
 	private String scoreBoardTitle() {
-		return ChatColor.GOLD + "LeonGunWar ver." + LeonGunWar.getPlugin().getDescription().getVersion();
+		return ChatColor.GOLD + "LeonGunWar" + ChatColor.GREEN + " v"
+				+ LeonGunWar.getPlugin().getDescription().getVersion();
 	}
 
 	/**
@@ -40,7 +41,7 @@ public class ScoreboardDisplayer {
 			 *
 			 * 現在のマップ: {マップ名}
 			 *
-			 * azisaba.net
+			 * azisaba.net で今すぐ遊べ！
 			 */
 
 			// マップ名を取得
@@ -58,13 +59,13 @@ public class ScoreboardDisplayer {
 			String line2 = ChatColor.AQUA + "残り時間" + ChatColor.GREEN + ": " + ChatColor.RED + timeLeft + "秒";
 			String line3 = "";
 			String line4 = BattleTeam.RED.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + redPoint
-					+ " point";
+					+ " ポイント";
 			String line5 = BattleTeam.BLUE.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
-					+ " point";
+					+ " ポイント";
 			String line6 = "";
 			String line7 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
 			String line8 = "";
-			String line9 = ChatColor.GOLD + "play azisaba.net";
+			String line9 = ChatColor.GOLD + "azisaba.net" + ChatColor.WHITE + " で今すぐ遊べ！";
 
 			// リストにして返す
 			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9);
