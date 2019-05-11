@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
@@ -161,22 +160,11 @@ public class DamageListener implements Listener {
 		// 殺したEntityが居ない場合自滅とする
 		if (p.getKiller() == null) {
 
-			// チーム取得
-			BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
-
-			final ChatColor nameColor;
-			// チームがない場合グレー
-			if (deathTeam == null) {
-				nameColor = ChatColor.GRAY;
-			} else {
-				nameColor = deathTeam.getChatColor();
-			}
-
 			// メッセージ削除
 			e.setDeathMessage(null);
 
 			// メッセージを作成
-			String msg = Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName());
+			String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getDisplayName());
 			// メッセージ送信
 			p.getWorld().getPlayers().forEach(player -> {
 				player.sendMessage(msg);
@@ -208,22 +196,11 @@ public class DamageListener implements Listener {
 			itemName = Chat.f("&6{0}", item.getType().name());
 		}
 
-		// killerのチーム
-		BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
-		// pのチーム (死んだプレイヤーのチーム)
-		BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
-
-		// killerTeamがnullではない場合は色を取得
-		ChatColor killerTeamColor = killerTeam != null ? killerTeam.getChatColor() : ChatColor.RESET;
-
-		// deathTeamがnullではない場合は色を取得
-		ChatColor deathTeamColor = deathTeam != null ? deathTeam.getChatColor() : ChatColor.RESET;
-
 		// メッセージ削除
 		e.setDeathMessage(null);
 		// メッセージ作成
-		String msg = Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
-				killer.getName(), itemName, deathTeamColor, p.getName());
+		String msg = Chat.f("{0}{1} &7━━━[ &r{2} &7]━━━> {3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(), itemName,
+				p.getDisplayName());
 
 		// メッセージ送信
 		p.getWorld().getPlayers().forEach(player -> {
