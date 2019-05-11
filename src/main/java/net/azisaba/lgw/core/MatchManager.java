@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,11 @@ public class MatchManager {
 
 	// ポイントを集計するHashMap
 	private final HashMap<BattleTeam, Integer> pointMap = new HashMap<>();
+
+	// 試合の種類
+	private MatchMode matchMode = MatchMode.TEAM_DEATH_MATCH;
+	// チームのリーダー
+	private HashMap<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
 
 	/**
 	 * 初期化メソッド
@@ -179,6 +185,25 @@ public class MatchManager {
 			p.teleport(currentMap.getSpawnPoint(BattleTeam.BLUE));
 		}
 
+		// LDMならリーダーを抽選
+		if (matchMode == MatchMode.LEADER_DEATH_MATCH) {
+			// チームとそのプレイヤーを取得
+			Map<BattleTeam, List<Player>> playerMap = getTeamPlayers();
+
+			// 各チームからリーダーを抽選する
+			for (BattleTeam team : playerMap.keySet()) {
+				List<Player> plist = playerMap.get(team);
+
+				// シャッフル
+				Collections.shuffle(plist);
+				// 先頭のプレイヤーを取得
+				Player target = plist.get(0);
+
+				// チームのリーダーに設定
+				ldmLeaderMap.put(team, target);
+			}
+		}
+
 		// タスクスタート
 		runMatchTask();
 
@@ -219,6 +244,9 @@ public class MatchManager {
 		Bukkit.getOnlinePlayers().forEach(p -> {
 			p.setDisplayName(p.getName());
 		});
+
+		// リーダーを削除
+		ldmLeaderMap.clear();
 
 		// ゲーム終了
 		isMatching = false;
@@ -561,6 +589,51 @@ public class MatchManager {
 	}
 
 	/**
+	 * 現在指定されている試合の種類を取得します
+	 * @return 試合の種類
+	 */
+	public MatchMode getMatchMode() {
+		return matchMode;
+	}
+
+	/**
+	 * LDMで使用されるメソッド。リーダーとなるプレイヤーを取得します
+	 * @param team リーダーを取得したいチーム
+	 * @return そのチームのリーダー / LDMが指定されていない場合もしくは存在しなければnullを返す
+	 */
+	public Player getLDMLeader(BattleTeam team) {
+		// 試合のモードがLDMでなければreturn null
+		if (matchMode != MatchMode.LEADER_DEATH_MATCH) {
+			return null;
+		}
+
+		// 指定してあったらそれを返し、なければnullを返す
+		return ldmLeaderMap.getOrDefault(team, null);
+	}
+
+	/**
+	 * LDMで使用されるメソッド。各チームのリーダーをMap形式で返します
+	 * @return そのチームのリーダー / LDMでなければ空のMapを返す
+	 */
+	public Map<BattleTeam, Player> getLDMLeaderMap() {
+		// 試合のモードがLDMでなければreturn null
+		if (matchMode != MatchMode.LEADER_DEATH_MATCH) {
+			return new HashMap<>();
+		}
+
+		return ldmLeaderMap;
+	}
+
+	public void setMatchMode(MatchMode mode) {
+		// 試合中ならIllegalStateExceptionを出す
+		Preconditions.checkState(!isMatching,
+				"A match is already started. You can only change match mode while not matching.");
+
+		// モードを設定
+		matchMode = mode;
+	}
+
+	/**
 	 * 各チームの初期化を行います
 	 */
 	private void initializeTeams() {
@@ -633,6 +706,31 @@ public class MatchManager {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
+		}
+	}
+
+	public enum MatchMode {
+		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")), LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
+
+		private final String modeName;
+
+		private MatchMode(String modeName) {
+			this.modeName = modeName;
+		}
+
+		public static MatchMode getFromString(String msg) {
+			if (msg.equalsIgnoreCase("LDM") || msg.replace(" ", "").equalsIgnoreCase("LeaderDeathMatch")) {
+				return MatchMode.LEADER_DEATH_MATCH;
+			} else if (msg.replace(" ", "").equalsIgnoreCase("TDM")
+					|| msg.replace(" ", "").equalsIgnoreCase("TeamDeathMatch")) {
+				return MatchMode.TEAM_DEATH_MATCH;
+			}
+
+			return null;
+		}
+
+		public String getModeName() {
+			return modeName;
 		}
 	}
 }

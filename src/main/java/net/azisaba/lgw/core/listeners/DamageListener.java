@@ -1,7 +1,9 @@
 package net.azisaba.lgw.core.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,8 @@ import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.MatchManager.MatchMode;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
@@ -150,6 +154,42 @@ public class DamageListener implements Listener {
 		lastDamaged.put(victim, damagedMap);
 	}
 
+	@EventHandler
+	public void onLeaderKilledDetector(PlayerDeathEvent e) {
+		MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+		// LDMではなければreturn
+		if (manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH) {
+			return;
+		}
+
+		// 死んだプレイヤー
+		Player death = e.getEntity();
+
+		// 各チームのリーダーを取得
+		Map<BattleTeam, Player> leaders = manager.getLDMLeaderMap();
+
+		// 死んだプレイヤーがリーダーだった場合、試合を終了する
+		for (BattleTeam team : leaders.keySet()) {
+
+			// リーダーではない場合continue
+			if (leaders.get(team) != death) {
+				continue;
+			}
+
+			// その他のチームを取得
+			List<BattleTeam> teams = new ArrayList<>(leaders.keySet());
+			// 殺されたリーダーのチームを削除
+			teams.remove(team);
+
+			// イベント作成、呼び出し
+			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
+					manager.getTeamPlayers());
+			Bukkit.getPluginManager().callEvent(event);
+			break;
+		}
+	}
+
 	/**
 	 * キルログを変更するListener
 	 */
@@ -199,7 +239,8 @@ public class DamageListener implements Listener {
 		// メッセージ削除
 		e.setDeathMessage(null);
 		// メッセージ作成
-		String msg = Chat.f("{0}&r{1} &7━━━[ &r{2} &7]━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(), itemName,
+		String msg = Chat.f("{0}&r{1} &7━━━[ &r{2} &7]━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(),
+				itemName,
 				p.getDisplayName());
 
 		// メッセージ送信
