@@ -54,10 +54,11 @@ public class MatchStartDetectListener implements Listener {
 			return;
 		}
 
-		// カウントダウン停止
-		LeonGunWar.getPlugin().getCountdown().stopCountdown();
-
-		// メッセージを表示
-		Bukkit.broadcastMessage(Chat.f("{0}&7人数が足りないため試合を開始できません！", LeonGunWar.GAME_PREFIX));
+		// カウントダウン中ならカウントダウン停止
+		if (LeonGunWar.getPlugin().getCountdown().isRunning()) {
+			LeonGunWar.getPlugin().getCountdown().stopCountdown();
+			// メッセージを表示
+			Bukkit.broadcastMessage(Chat.f("{0}&7人数が足りないため試合を開始できません！", LeonGunWar.GAME_PREFIX));
+		}
 	}
 }

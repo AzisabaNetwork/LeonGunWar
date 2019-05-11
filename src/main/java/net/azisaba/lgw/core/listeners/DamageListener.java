@@ -164,7 +164,7 @@ public class DamageListener implements Listener {
 			// チーム取得
 			BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 
-			ChatColor nameColor = null;
+			final ChatColor nameColor;
 			// チームがない場合グレー
 			if (deathTeam == null) {
 				nameColor = ChatColor.GRAY;
@@ -172,7 +172,13 @@ public class DamageListener implements Listener {
 				nameColor = deathTeam.getChatColor();
 			}
 
-			e.setDeathMessage(Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName()));
+			// メッセージ削除
+			e.setDeathMessage(null);
+
+			// メッセージ送信
+			p.getWorld().getPlayers().forEach(player -> {
+				player.sendMessage(Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName()));
+			});
 			return;
 		}
 
@@ -182,7 +188,7 @@ public class DamageListener implements Listener {
 		ItemStack item = killer.getInventory().getItemInMainHand();
 
 		// アイテム名を取得
-		String itemName = "";
+		final String itemName;
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
 			itemName = Chat.f("&6素手");
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
@@ -208,9 +214,13 @@ public class DamageListener implements Listener {
 		// deathTeamがnullではない場合は色を取得
 		ChatColor deathTeamColor = deathTeam != null ? deathTeam.getChatColor() : ChatColor.RESET;
 
-		// メッセージ変更
-		e.setDeathMessage(Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
-				killer.getName(), itemName, deathTeamColor, p.getName()));
+		// メッセージ削除
+		e.setDeathMessage(null);
+		// メッセージ送信
+		p.getWorld().getPlayers().forEach(player -> {
+			player.sendMessage(Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
+					killer.getName(), itemName, deathTeamColor, p.getName()));
+		});
 	}
 
 	@EventHandler
