@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core.tasks;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
@@ -10,24 +12,21 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 public class RespawnKillProtectionTask extends BukkitRunnable {
 
-	// 5秒間無敵
-	private final double invincibleSeconds = 5.0d;
-
 	// 対象のプレイヤー
 	private final Player p;
 
 	// プレイヤーごとの無敵残り時間
-	private final HashMap<Player, Long> respawnTime;
+	private final HashMap<Player, OffsetDateTime> remainTimes;
 
-	public RespawnKillProtectionTask(Player p, HashMap<Player, Long> respawnTime) {
+	public RespawnKillProtectionTask(Player p, HashMap<Player, OffsetDateTime> remainTimes) {
 		this.p = p;
-		this.respawnTime = respawnTime;
+		this.remainTimes = remainTimes;
 	}
 
 	@Override
 	public void run() {
 		// 残り時間 (秒) 取得
-		int remain = (int) (invincibleSeconds - (System.currentTimeMillis() - respawnTime.get(p)) / 1000);
+		long remain = Duration.between(OffsetDateTime.now(), remainTimes.get(p)).getSeconds();
 
 		// 0以下ならキャンセルしてreturn
 		if (remain <= 0) {

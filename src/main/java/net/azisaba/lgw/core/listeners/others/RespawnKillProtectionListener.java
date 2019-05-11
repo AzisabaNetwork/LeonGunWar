@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
@@ -16,9 +17,9 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class RespawnKillProtectionListener implements Listener {
 
-	private final double invincibleSeconds = 5.0d;
+	private final long invincibleSeconds = 6;
 
-	private final HashMap<Player, Long> respawnTime = new HashMap<>();
+	private final HashMap<Player, OffsetDateTime> remainTimes = new HashMap<>();
 	private final HashMap<Player, BukkitTask> taskMap = new HashMap<>();
 
 	@EventHandler
@@ -31,7 +32,7 @@ public class RespawnKillProtectionListener implements Listener {
 		Player victim = (Player) e.getEntity();
 
 		// リスポーンから5秒以内ならキャンセル
-		if (respawnTime.getOrDefault(victim, 0L) + 1000 * invincibleSeconds > System.currentTimeMillis()) {
+		if (OffsetDateTime.now().isBefore(remainTimes.getOrDefault(victim, OffsetDateTime.MIN))) {
 			e.setCancelled(true);
 
 			// 攻撃したプレイヤーにメッセージを表示
@@ -58,18 +59,16 @@ public class RespawnKillProtectionListener implements Listener {
 		Player p = e.getPlayer();
 
 		// リスポーン時間指定
-		respawnTime.put(p, System.currentTimeMillis());
+		remainTimes.put(p, OffsetDateTime.now().plusSeconds(invincibleSeconds));
 
-		// タスク終了
-		BukkitTask task = taskMap.getOrDefault(p, null);
-		if (task != null) {
-			task.cancel();
-		}
+		taskMap.compute(p, (p2, task) -> {
+			// タスク終了
+			if (task != null) {
+				task.cancel();
+			}
 
-		// タスク開始
-		task = new RespawnKillProtectionTask(p, respawnTime).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
-
-		// タスク更新
-		taskMap.put(p, task);
+			// タスク開始
+			return new RespawnKillProtectionTask(p2, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+		});
 	}
 }
