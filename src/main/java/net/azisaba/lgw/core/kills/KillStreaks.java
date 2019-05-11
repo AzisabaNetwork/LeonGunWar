@@ -48,19 +48,19 @@ public class KillStreaks {
 						Chat.f("crackshot:shot give {0} STOROBO", player.getName()))));
 		rewards.put(25, new KillReward(
 				player -> Chat.f("{0}&r{1} &7が &e{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, player.getDisplayName(), 25),
-				player -> null));
+				null));
 		rewards.put(30, new KillReward(
 				player -> Chat.f("{0}&r{1} &7が &b{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, player.getDisplayName(), 30),
-				player -> null));
+				null));
 		rewards.put(35, new KillReward(
 				player -> Chat.f("{0}&r{1} &7が &b{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, player.getDisplayName(), 35),
-				player -> null));
+				null));
 		rewards.put(40, new KillReward(
 				player -> Chat.f("{0}&r{1} &7が &c{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, player.getDisplayName(), 40),
-				player -> null));
+				null));
 		rewards.put(45, new KillReward(
 				player -> Chat.f("{0}&r{1} &7が &c{2}人 &7連続キル！", LeonGunWar.GAME_PREFIX, player.getDisplayName(), 45),
-				player -> null));
+				null));
 		rewards.put(50, new KillReward(
 				player -> Chat.f("{0}&7なんてこったい！ &r{1}&7 が &c{2}人 &7連続キル！ カンスト！", LeonGunWar.GAME_PREFIX,
 						player.getDisplayName(),
