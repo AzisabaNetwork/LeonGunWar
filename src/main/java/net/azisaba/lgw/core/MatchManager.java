@@ -331,9 +331,6 @@ public class MatchManager {
 		// スポーンにTP
 		p.teleport(getLobbySpawnLocation());
 
-		// プレイヤーのチームを取得
-		//		BattleTeam team = getBattleTeam(p);
-
 		// チームに含まれていれば退出させる
 		if (redTeam.hasEntry(p.getName())) {
 			redTeam.removeEntry(p.getName());
