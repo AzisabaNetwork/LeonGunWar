@@ -17,7 +17,6 @@ public class EnableKeepInventoryListener implements Listener {
 	}
 
 	public void setEnableKeepInventory(World world) {
-
 		// 既にKeepInventoryがtrueになってる場合はreturn
 		if (world.getGameRuleValue("keepInventory").equals("true")) {
 			return;
@@ -28,7 +27,6 @@ public class EnableKeepInventoryListener implements Listener {
 
 		// コンソールに有効化したよと表示
 		LeonGunWar.getPlugin().getLogger().info(world.getName() + " ワールドの keepInventory を true に設定したよ(´・ω・`)");
-
 	}
 
 	@EventHandler

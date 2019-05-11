@@ -6,8 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.MatchStartCountdown;
+import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 
@@ -19,12 +18,12 @@ public class MatchStartDetectListener implements Listener {
 	@EventHandler
 	public void matchStarter(PlayerEntryMatchEvent e) {
 		// すでに試合中ならreturn
-		if (MatchManager.isMatching()) {
+		if (LeonGunWar.getPlugin().getManager().isMatching()) {
 			return;
 		}
 
 		// エントリーしているプレイヤーを取得
-		List<Player> entryPlayers = MatchManager.getEntryPlayers();
+		List<Player> entryPlayers = LeonGunWar.getPlugin().getManager().getEntryPlayers();
 
 		// 人数が2人未満ならreturn
 		if (entryPlayers.size() < 2) {
@@ -32,7 +31,7 @@ public class MatchStartDetectListener implements Listener {
 		}
 
 		// カウントダウン開始
-		MatchStartCountdown.startCountdown();
+		LeonGunWar.getPlugin().getCountdown().startCountdown();
 	}
 
 	/**
@@ -41,12 +40,12 @@ public class MatchStartDetectListener implements Listener {
 	@EventHandler
 	public void matchStarter(PlayerLeaveEntryMatchEvent e) {
 		// すでに試合中ならreturn
-		if (MatchManager.isMatching()) {
+		if (LeonGunWar.getPlugin().getManager().isMatching()) {
 			return;
 		}
 
 		// エントリーしているプレイヤーを取得
-		List<Player> entryPlayers = MatchManager.getEntryPlayers();
+		List<Player> entryPlayers = LeonGunWar.getPlugin().getManager().getEntryPlayers();
 
 		// 人数が2人以上ならreturn
 		if (entryPlayers.size() >= 2) {
@@ -54,6 +53,6 @@ public class MatchStartDetectListener implements Listener {
 		}
 
 		// カウントダウン停止
-		MatchStartCountdown.stopCountdown();
+		LeonGunWar.getPlugin().getCountdown().stopCountdown();
 	}
 }

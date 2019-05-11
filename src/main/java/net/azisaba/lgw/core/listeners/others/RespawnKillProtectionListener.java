@@ -8,11 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.tasks.RespawnKillProtectionTask;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class RespawnKillProtectionListener implements Listener {
@@ -39,7 +38,7 @@ public class RespawnKillProtectionListener implements Listener {
 			if (e.getDamager() instanceof Player) {
 
 				// 攻撃されたプレイヤーのチームを取得
-				BattleTeam team = MatchManager.getBattleTeam(victim);
+				BattleTeam team = LeonGunWar.getPlugin().getManager().getBattleTeam(victim);
 
 				// 色を取得
 				ChatColor nameColor = ChatColor.WHITE;
@@ -48,7 +47,7 @@ public class RespawnKillProtectionListener implements Listener {
 				}
 
 				((Player) e.getDamager())
-						.sendMessage(LeonGunWar.GAME_PREFIX + " " + nameColor + victim.getName() + ChatColor.GRAY
+						.sendMessage(LeonGunWar.GAME_PREFIX + nameColor + victim.getName() + ChatColor.GRAY
 								+ "は保護されています！");
 			}
 		}
@@ -68,33 +67,9 @@ public class RespawnKillProtectionListener implements Listener {
 		}
 
 		// タスク開始
-		task = getRunnable(p).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+		task = new RespawnKillProtectionTask(p, respawnTime).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
 
 		// タスク更新
 		taskMap.put(p, task);
-	}
-
-	private BukkitRunnable getRunnable(Player p) {
-		return new BukkitRunnable() {
-			@Override
-			public void run() {
-
-				// 残り時間 (秒) 取得
-				int remainInvincibleSeconds = (int) (invincibleSeconds
-						- (System.currentTimeMillis() - respawnTime.get(p)) / 1000);
-
-				// 0以下ならキャンセルしてreturn
-				if (remainInvincibleSeconds <= 0) {
-					p.sendMessage(LeonGunWar.GAME_PREFIX + " " + ChatColor.GRAY + "無敵時間終了");
-					cancel();
-					return;
-				}
-
-				// 残り秒数を表示
-				p.sendMessage(
-						LeonGunWar.GAME_PREFIX + " " + ChatColor.GRAY + "無敵時間残り " + ChatColor.RED
-								+ remainInvincibleSeconds + "秒");
-			}
-		};
 	}
 }

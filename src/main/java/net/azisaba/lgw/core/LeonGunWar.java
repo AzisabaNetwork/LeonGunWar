@@ -17,18 +17,72 @@ import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.maps.MapContainer;
+import net.azisaba.lgw.core.maps.MapLoader;
 
 public class LeonGunWar extends JavaPlugin {
 
-	public static final String GAME_PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "PvP" + ChatColor.GRAY + "]";
+	public static final String GAME_PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "PvP" + ChatColor.GRAY + "]"
+			+ ChatColor.RESET + " ";
 
 	// plugin
 	private static LeonGunWar plugin;
 
+	private MatchStartCountdown countdown;
+	private ScoreboardDisplayer scoreboardDisplayer;
+	private MapLoader mapLoader;
+	private MapContainer mapContainer;
+	private MatchManager manager;
+
+	/**
+	 * MatchStartCountdownのインスタンスを返します
+	 * @return MatchStartCountdownのインスタンス
+	 */
+	public MatchStartCountdown getCountdown() {
+		return countdown;
+	}
+
+	/**
+	 * ScoreboardDisplayerのインスタンスを返します
+	 * @return ScoreboardDisplayerのインスタンス
+	 */
+	public ScoreboardDisplayer getScoreboardDisplayer() {
+		return scoreboardDisplayer;
+	}
+
+	/**
+	 * MapLoaderのインスタンスを返します
+	 * @return MapLoaderのインスタンス
+	 */
+	public MapLoader getMapLoader() {
+		return mapLoader;
+	}
+
+	/**
+	 * MapContainerのインスタンスを返します
+	 * @return MapContainerのインスタンス
+	 */
+	public MapContainer getMapContainer() {
+		return mapContainer;
+	}
+
+	/**
+	 * MatchManagerのインスタンスを返します
+	 * @return MatchManagerのインスタンス
+	 */
+	public MatchManager getManager() {
+		return manager;
+	}
+
 	@Override
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
-		initializeClasses();
+		countdown = new MatchStartCountdown();
+		scoreboardDisplayer = new ScoreboardDisplayer();
+		mapLoader = new MapLoader();
+		mapContainer = new MapContainer();
+		mapContainer.loadMaps();
+		manager = new MatchManager();
+		manager.initialize();
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
@@ -58,14 +112,6 @@ public class LeonGunWar extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getServer().getLogger().info(getName() + " disabled.");
-	}
-
-	/**
-	 * 初期化を必要とするファイルを初期化します
-	 */
-	private void initializeClasses() {
-		MapContainer.loadMaps();
-		MatchManager.initialize();
 	}
 
 	/**

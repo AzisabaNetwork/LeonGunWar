@@ -24,7 +24,7 @@ import net.azisaba.lgw.core.utils.LocationLoader;
 public class MapLoader {
 
 	// Mapデータを格納するフォルダ
-	private static File dataFolder = null;
+	private File dataFolder = null;
 
 	/**
 	 * 保存されているマップデータを読み込み、MapDataのリストを返します
@@ -32,7 +32,7 @@ public class MapLoader {
 	 *
 	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
-	protected static List<GameMap> loadMapData() {
+	protected List<GameMap> loadMapData() {
 		// dataFolderがnullの場合はフォルダを指定
 		checkDataFolder();
 
@@ -137,7 +137,7 @@ public class MapLoader {
 	 *
 	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
-	public static boolean saveGameMap(GameMap map, String fileName, boolean allowOverwrite) {
+	public boolean saveGameMap(GameMap map, String fileName, boolean allowOverwrite) {
 		// dataFolderがnullの場合はフォルダを指定
 		checkDataFolder();
 
@@ -183,7 +183,7 @@ public class MapLoader {
 	 * dataFolder フィールドがnullの場合はファイルを指定します
 	 * それ以外の場合は無視します
 	 */
-	private static void checkDataFolder() {
+	private void checkDataFolder() {
 		if (dataFolder == null) {
 			dataFolder = new File(LeonGunWar.getPlugin().getDataFolder(), "Maps");
 		}

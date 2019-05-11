@@ -19,7 +19,7 @@ public class ScoreboardDisplayer {
 	 * プレイヤーに表示するスコアボードのタイトルを取得します
 	 * @return スコアボードのタイトル
 	 */
-	private static String scoreBoardTitle() {
+	private String scoreBoardTitle() {
 		return ChatColor.GOLD + "LeonGunWar ver." + LeonGunWar.getPlugin().getDescription().getVersion();
 	}
 
@@ -27,9 +27,9 @@ public class ScoreboardDisplayer {
 	 * スコアボードに表示したい文章をListで指定する (上から)
 	 * @return The lines that you want to display in your scoreboard. (from above)
 	 */
-	private static List<String> boardLines() {
+	private List<String> boardLines() {
 		// 試合中の場合
-		if (MatchManager.isMatching()) {
+		if (LeonGunWar.getPlugin().getManager().isMatching()) {
 
 			/**
 			 *
@@ -44,14 +44,14 @@ public class ScoreboardDisplayer {
 			 */
 
 			// マップ名を取得
-			String mapName = MatchManager.getCurrentGameMap().getMapName();
+			String mapName = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getMapName();
 
 			// 赤、青チームの現在のポイントを取得
-			int redPoint = MatchManager.getCurrentTeamPoint(BattleTeam.RED);
-			int bluePoint = MatchManager.getCurrentTeamPoint(BattleTeam.BLUE);
+			int redPoint = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(BattleTeam.RED);
+			int bluePoint = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(BattleTeam.BLUE);
 
 			// 残り時間
-			int timeLeft = MatchManager.getTimeLeft();
+			int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft();
 
 			// 文字を作成
 			String line1 = "";
@@ -75,9 +75,9 @@ public class ScoreboardDisplayer {
 	}
 
 	// Objectiveを作成したいスコアボード
-	private static Scoreboard board;
+	private Scoreboard board;
 
-	static {
+	public ScoreboardDisplayer() {
 		// 初期設定でボードはMain
 		board = Bukkit.getScoreboardManager().getMainScoreboard();
 	}
@@ -86,15 +86,15 @@ public class ScoreboardDisplayer {
 	 * 使用したいScoreboardを指定
 	 * @param board 使用したいScoreboard
 	 */
-	public static void setScoreBoard(Scoreboard board) {
-		ScoreboardDisplayer.board = board;
+	public void setScoreBoard(Scoreboard board) {
+		this.board = board;
 	}
 
 	/**
 	 * プレイヤーにスコアボードを表示します
 	 * @param plist スコアボードを表示させたいプレイヤーのリスト
 	 */
-	public static void updateScoreboard(List<Player> plist) {
+	public void updateScoreboard(List<Player> plist) {
 		if (Bukkit.getOnlinePlayers().size() <= 0) {
 			return;
 		}
@@ -151,11 +151,11 @@ public class ScoreboardDisplayer {
 	/**
 	 * 現在設定されているEntryを全てリセットする
 	 */
-	private static void clearEntries() {
+	private void clearEntries() {
 		board.getEntries().forEach(board::resetScores);
 	}
 
-	public static void clearSideBar() {
+	public void clearSideBar() {
 		// boardがnullでなければSIDEBARを削除
 		if (board != null) {
 			board.clearSlot(DisplaySlot.SIDEBAR);

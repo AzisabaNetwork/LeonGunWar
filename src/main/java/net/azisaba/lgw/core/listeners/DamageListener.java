@@ -23,7 +23,7 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
@@ -42,7 +42,7 @@ public class DamageListener implements Listener {
 	@EventHandler(ignoreCancelled = false)
 	public void onKill(PlayerDeathEvent e) {
 		// 試合中でなければreturn
-		if (!MatchManager.isMatching()) {
+		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
 			return;
 		}
 
@@ -55,7 +55,7 @@ public class DamageListener implements Listener {
 		}
 
 		// チームを取得
-		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
+		BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
 
 		// killerTeamがnullの場合return
 		if (killerTeam == null) {
@@ -63,9 +63,9 @@ public class DamageListener implements Listener {
 		}
 
 		// ポイントを追加
-		MatchManager.addTeamPoint(killerTeam);
+		LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 		// 個人キルを追加
-		MatchManager.getKillDeathCounter().addKill(killer);
+		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
 
 		// タイトルを表示
 		killer.sendTitle("", ChatColor.RED + "+1 kill", 0, 20, 10);
@@ -81,7 +81,7 @@ public class DamageListener implements Listener {
 		Player deathPlayer = e.getEntity();
 
 		// チームを取得
-		BattleTeam deathPlayerTeam = MatchManager.getBattleTeam(deathPlayer);
+		BattleTeam deathPlayerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(deathPlayer);
 
 		// deathPlayerTeamがnullの場合return
 		if (deathPlayerTeam == null) {
@@ -89,7 +89,7 @@ public class DamageListener implements Listener {
 		}
 
 		// 死亡数を追加
-		MatchManager.getKillDeathCounter().addDeath(deathPlayer);
+		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addDeath(deathPlayer);
 
 		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
 		List<Entry<Player, Long>> entries = lastDamaged.getOrDefault(deathPlayer, new HashMap<>()).entrySet().stream()
@@ -108,7 +108,7 @@ public class DamageListener implements Listener {
 				continue;
 			}
 
-			MatchManager.getKillDeathCounter().addAssist(assist);
+			LeonGunWar.getPlugin().getManager().getKillDeathCounter().addAssist(assist);
 
 			// タイトルを表示
 			assist.sendTitle("", ChatColor.GRAY + "+1 Assist", 0, 20, 10);
@@ -161,7 +161,7 @@ public class DamageListener implements Listener {
 		if (p.getKiller() == null) {
 
 			// チーム取得
-			BattleTeam deathTeam = MatchManager.getBattleTeam(p);
+			BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 
 			ChatColor nameColor = null;
 			// チームがない場合グレー
@@ -197,9 +197,9 @@ public class DamageListener implements Listener {
 		}
 
 		// killerのチーム
-		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
+		BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
 		// pのチーム (死んだプレイヤーのチーム)
-		BattleTeam deathTeam = MatchManager.getBattleTeam(p);
+		BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 
 		StringBuilder builder = new StringBuilder();
 

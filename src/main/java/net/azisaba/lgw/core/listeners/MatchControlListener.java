@@ -17,8 +17,7 @@ import com.google.common.base.Strings;
 
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.ScoreboardDisplayer;
+import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -38,12 +37,13 @@ public class MatchControlListener implements Listener {
 
 		// 各チームのポイントを取得して比較し、一番ポイントが多いチームを取得
 		BattleTeam winner = Stream.of(BattleTeam.values())
-				.max(Comparator.comparing(MatchManager::getCurrentTeamPoint))
+				.max(Comparator.comparing(LeonGunWar.getPlugin().getManager()::getCurrentTeamPoint))
 				.orElse(null);
 
 		// イベントを呼び出す
-		MatchFinishedEvent event = new MatchFinishedEvent(MatchManager.getCurrentGameMap(), winner,
-				MatchManager.getTeamPlayers());
+		MatchFinishedEvent event = new MatchFinishedEvent(LeonGunWar.getPlugin().getManager().getCurrentGameMap(),
+				winner,
+				LeonGunWar.getPlugin().getManager().getTeamPlayers());
 		Bukkit.getPluginManager().callEvent(event);
 	}
 
@@ -67,14 +67,14 @@ public class MatchControlListener implements Listener {
 		List<Player> allPlayers = e.getAllTeamPlayers();
 
 		// MVPのプレイヤーを取得
-		List<KDPlayerData> mvpPlayers = MatchManager.getKillDeathCounter().getMVPPlayer();
+		List<KDPlayerData> mvpPlayers = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getMVPPlayer();
 		// MVPプレイヤーのメッセージ
 		List<String> resultMessages = new ArrayList<>(
 				Arrays.asList(ChatColor.LIGHT_PURPLE + "=== Team Point Information ==="));
 
 		// 各チームのポイントを表示
 		for (BattleTeam team : BattleTeam.values()) {
-			int point = MatchManager.getCurrentTeamPoint(team);
+			int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
 			resultMessages.add(team.getDisplayTeamName() + ChatColor.RED + " " + point + "points");
 		}
 
@@ -89,7 +89,7 @@ public class MatchControlListener implements Listener {
 
 		for (Player p : allPlayers) {
 			// スポーンにTP
-			p.teleport(MatchManager.getLobbySpawnLocation());
+			p.teleport(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation());
 
 			// アーマー削除
 			p.getInventory().setChestplate(null);
@@ -100,9 +100,9 @@ public class MatchControlListener implements Listener {
 			}
 
 			// 各記録を取得
-			int kills = MatchManager.getKillDeathCounter().getKills(p);
-			int deaths = MatchManager.getKillDeathCounter().getDeaths(p);
-			int assists = MatchManager.getKillDeathCounter().getAssists(p);
+			int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
+			int deaths = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDeaths(p);
+			int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
 
 			// プレイヤーの戦績を表示
 			p.sendMessage(ChatColor.GRAY + "[Your Score] " + p.getName() + " " + kills + "kills, " + deaths + "deaths, "
@@ -115,7 +115,7 @@ public class MatchControlListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void matchFinalizer(MatchFinishedEvent e) {
-		MatchManager.finalizeMatch();
+		LeonGunWar.getPlugin().getManager().finalizeMatch();
 	}
 
 	/**
@@ -124,10 +124,10 @@ public class MatchControlListener implements Listener {
 	@EventHandler
 	public void scoreboardUpdater(MatchTimeChangedEvent e) {
 		// 試合中のプレイヤーを取得
-		List<Player> players = MatchManager.getAllTeamPlayers();
+		List<Player> players = LeonGunWar.getPlugin().getManager().getAllTeamPlayers();
 
 		// スコアボードをアップデート
-		ScoreboardDisplayer.updateScoreboard(players);
+		LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(players);
 	}
 
 	/**
@@ -136,16 +136,16 @@ public class MatchControlListener implements Listener {
 	@EventHandler
 	public void actionbarUpdater(MatchTimeChangedEvent e) {
 		// 試合中のプレイヤーを取得
-		List<Player> players = MatchManager.getAllTeamPlayers();
+		List<Player> players = LeonGunWar.getPlugin().getManager().getAllTeamPlayers();
 
 		// アクションバーをアップデート
 		for (Player p : players) {
 			// キル数取得
-			int kills = MatchManager.getKillDeathCounter().getKills(p);
+			int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
 			// デス数取得
-			int deaths = MatchManager.getKillDeathCounter().getDeaths(p);
+			int deaths = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDeaths(p);
 			// アシスト数取得
-			int assists = MatchManager.getKillDeathCounter().getAssists(p);
+			int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
 
 			String msg = "";
 

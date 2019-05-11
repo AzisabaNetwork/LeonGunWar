@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.LeonGunWar;
 
 /**
  *
@@ -67,7 +67,7 @@ public class EntrySignListener implements Listener {
 		}
 
 		// エントリー
-		boolean success = MatchManager.addEntryPlayer(p);
+		boolean success = LeonGunWar.getPlugin().getManager().addEntryPlayer(p);
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
@@ -118,7 +118,7 @@ public class EntrySignListener implements Listener {
 		}
 
 		// エントリー
-		boolean success = MatchManager.removeEntryPlayer(p);
+		boolean success = LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
 
 		// メッセージを表示
 		if (success) { // エントリーした場合

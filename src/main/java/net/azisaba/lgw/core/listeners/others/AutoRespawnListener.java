@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class AutoRespawnListener implements Listener {
@@ -36,18 +36,18 @@ public class AutoRespawnListener implements Listener {
 
 	private Location getRespawnLocation(Player p) {
 		// チームを取得
-		BattleTeam playerTeam = MatchManager.getBattleTeam(p);
+		BattleTeam playerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 		// スポーン地点
 		Location spawnPoint = null;
 
 		// チームがnullではないならそのチームのスポーン地点にTPする
 		if (playerTeam != null) {
-			spawnPoint = MatchManager.getCurrentGameMap().getSpawnPoint(playerTeam);
+			spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(playerTeam);
 		}
 
 		// それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
 		if (spawnPoint == null) {
-			spawnPoint = MatchManager.getLobbySpawnLocation();
+			spawnPoint = LeonGunWar.getPlugin().getManager().getLobbySpawnLocation();
 		}
 
 		return spawnPoint;
