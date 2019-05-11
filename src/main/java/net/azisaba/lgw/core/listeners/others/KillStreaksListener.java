@@ -31,53 +31,55 @@ public class KillStreaksListener implements Listener {
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:emerald 2", p.getName()))));
 		rewards.put(3, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), "", 3),
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), "", 3),
 				null));
 		rewards.put(5, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), "", 5),
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), "", 5),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} STOROBO2", p.getName()))));
 		rewards.put(10, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
 						ChatColor.DARK_GREEN, 10),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} UAV", p.getName()))));
 		rewards.put(15, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
 						ChatColor.DARK_GREEN, 15),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} DEATHMACHINE", p.getName()))));
 		rewards.put(20, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.YELLOW,
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+						ChatColor.YELLOW,
 						20),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} STOROBO", p.getName()))));
 		rewards.put(25, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.YELLOW,
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+						ChatColor.YELLOW,
 						25),
 				p -> new ArrayList<String>()));
 		rewards.put(30, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
 						30),
 				p -> new ArrayList<String>()));
 		rewards.put(35, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
 						35),
 				p -> new ArrayList<String>()));
 		rewards.put(40, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
 						40),
 				p -> new ArrayList<String>()));
 		rewards.put(45, new Reward(
-				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 &7連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
 						45),
 				p -> new ArrayList<String>()));
 		rewards.put(50, new Reward(
-				p -> Chat.f("{0}なんてこったい &f{1}&7 が {2}{3}人&7 連続キル！ カンスト！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+				p -> Chat.f("{0}&7なんてこったい！ {1}&7 が {2}{3}人 &7連続キル！ カンスト！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
 						ChatColor.GOLD, 50),
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 64", p.getName()),
@@ -125,7 +127,7 @@ public class KillStreaksListener implements Listener {
 				.map(Map.Entry::getValue)
 				.map(Reward::getCommands)
 				.filter(Objects::nonNull)
-				.map(commands -> commands.apply(p))
+				.map(commands -> commands.apply(killer))
 				.flatMap(List::stream)
 				.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
 
@@ -135,7 +137,7 @@ public class KillStreaksListener implements Listener {
 				.map(Map.Entry::getValue)
 				.map(Reward::getMessage)
 				.filter(Objects::nonNull)
-				.map(message -> message.apply(p))
+				.map(message -> message.apply(killer))
 				.forEach(Bukkit::broadcastMessage);
 	}
 }
