@@ -26,6 +26,7 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class DamageListener implements Listener {
 
@@ -201,29 +202,15 @@ public class DamageListener implements Listener {
 		// pのチーム (死んだプレイヤーのチーム)
 		BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 
-		StringBuilder builder = new StringBuilder(LeonGunWar.GAME_PREFIX);
-
-		// killerTeamがnullではない場合は色を取得 (nullなら何もしない)
-		if (killerTeam != null) {
-			builder.append(killerTeam.getChatColor() + "");
-		}
-
-		// プレイヤー名とキルしたアイテムを表示
-		builder.append(killer.getName() + " " + ChatColor.GRAY + "━━━[ " + ChatColor.RESET + itemName + ChatColor.GRAY
-				+ " ]━━━> ");
+		// killerTeamがnullではない場合は色を取得
+		ChatColor killerTeamColor = killerTeam != null ? killerTeam.getChatColor() : ChatColor.RESET;
 
 		// deathTeamがnullではない場合は色を取得
-		if (deathTeam != null) {
-			builder.append(deathTeam.getChatColor() + "");
-		} else { // その他の場合は白
-			builder.append(ChatColor.RESET + "");
-		}
-
-		// プレイヤー名表示
-		builder.append(p.getName());
+		ChatColor deathTeamColor = deathTeam != null ? deathTeam.getChatColor() : ChatColor.RESET;
 
 		// メッセージ変更
-		e.setDeathMessage(builder.toString());
+		e.setDeathMessage(Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
+				killer.getName(), itemName, deathTeamColor, p.getName()));
 	}
 
 	@EventHandler

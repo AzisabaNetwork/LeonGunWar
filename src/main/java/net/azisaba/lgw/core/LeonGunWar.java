@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core;
 
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
@@ -19,11 +18,11 @@ import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.maps.MapLoader;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class LeonGunWar extends JavaPlugin {
 
-	public static final String GAME_PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "PvP" + ChatColor.GRAY + "]"
-			+ ChatColor.RESET + " ";
+	public static final String GAME_PREFIX = Chat.f("&7[&6PvP&7]&r ");
 
 	// plugin
 	private static LeonGunWar plugin;
@@ -89,7 +88,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
 
 		// コマンドの権限がない時のメッセージの指定
-		getServer().getPluginCommand("leongunwar").setPermissionMessage(ChatColor.RED + "権限がありません！");
+		getServer().getPluginCommand("leongunwar").setPermissionMessage(Chat.f("&c権限がありません！"));
 
 		// リスナーの登録
 		getServer().getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -108,12 +107,12 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new AutoRespawnListener(), this);
 		getServer().getPluginManager().registerEvents(new AfkKickEntryListener(), this);
 
-		getServer().getLogger().info(getName() + " enabled.");
+		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
 
 	@Override
 	public void onDisable() {
-		getServer().getLogger().info(getName() + " disabled.");
+		getServer().getLogger().info(Chat.f("{0} disabled.", getName()));
 	}
 
 	/**
