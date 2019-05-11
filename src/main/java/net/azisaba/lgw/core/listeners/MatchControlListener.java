@@ -21,6 +21,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 
 public class MatchControlListener implements Listener {
@@ -70,20 +71,19 @@ public class MatchControlListener implements Listener {
 		List<KDPlayerData> mvpPlayers = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getMVPPlayer();
 		// MVPプレイヤーのメッセージ
 		List<String> resultMessages = new ArrayList<>(
-				Arrays.asList(ChatColor.LIGHT_PURPLE + "=== Team Point Information ==="));
+				Arrays.asList(Chat.f("&d=== Team Point Information ===")));
 
 		// 各チームのポイントを表示
 		for (BattleTeam team : BattleTeam.values()) {
 			int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
-			resultMessages.add(team.getDisplayTeamName() + ChatColor.RED + " " + point + " Point(s)");
+			resultMessages.add(Chat.f("{0} &c{1} Point(s)", team.getDisplayTeamName(), point));
 		}
 
 		// MVPを表示 (ない場合は何も表示しない)
 		if (!mvpPlayers.isEmpty()) {
 			for (KDPlayerData data : mvpPlayers) {
-				resultMessages
-						.add(ChatColor.RED + "[MVP] " + data.getPlayerName() + " " + data.getKills() + " Kill(s), "
-								+ data.getDeaths() + " Death(s), " + data.getAssists() + " Assist(s)");
+				resultMessages.add(Chat.f("&c[MVP] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", data.getPlayerName(),
+						data.getKills(), data.getDeaths(), data.getAssists()));
 			}
 		}
 
@@ -105,9 +105,8 @@ public class MatchControlListener implements Listener {
 			int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
 
 			// プレイヤーの戦績を表示
-			p.sendMessage(
-					ChatColor.GRAY + "[Your Score] " + p.getName() + " " + kills + " Kill(s), " + deaths + " Death(s), "
-							+ assists + " Assist(s)");
+			p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
+					deaths, assists));
 		}
 	}
 
@@ -163,12 +162,11 @@ public class MatchControlListener implements Listener {
 				msg += ChatColor.DARK_PURPLE + Strings.repeat("┃", (int) deathsPercentage / 2);
 
 				// キル数とデス数を数字で表示
-				msg = ChatColor.YELLOW + "" + kills + " Kill(s) " + msg;
-				msg += " " + ChatColor.YELLOW + "" + deaths + " Death(s)";
+				msg = Chat.f("&e{0} Kill(s) {1} &e{2} Death(s)", kills, msg, deaths);
 			}
 
 			// アシスト数を表示
-			msg += " " + ChatColor.DARK_GRAY + "" + assists + " Assist(s)";
+			msg += Chat.f(" &8{0} Assist(s)", assists);
 
 			// アクションバーに表示
 			JSONMessage.create(msg).actionbar(p);

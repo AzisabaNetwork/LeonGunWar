@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.md_5.bungee.api.ChatColor;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class AfkKickEntryListener implements Listener {
 
@@ -81,9 +81,9 @@ public class AfkKickEntryListener implements Listener {
 						LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
 						LeonGunWar.getPlugin().getManager().kickPlayer(p);
 
-						p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "放置と判定されたため試合から退出しました");
+						p.sendMessage(Chat.f("{0}&7放置と判定されたため試合から退出しました", LeonGunWar.GAME_PREFIX));
 
-						LeonGunWar.getPlugin().getLogger().info(p.getName() + "を試合から退出させました");
+						LeonGunWar.getPlugin().getLogger().info(Chat.f("{0} を試合から退出させました", p.getName()));
 					}
 				});
 			}

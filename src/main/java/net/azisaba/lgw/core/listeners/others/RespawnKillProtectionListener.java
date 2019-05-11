@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.tasks.RespawnKillProtectionTask;
 import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class RespawnKillProtectionListener implements Listener {
 
@@ -42,14 +43,13 @@ public class RespawnKillProtectionListener implements Listener {
 				BattleTeam team = LeonGunWar.getPlugin().getManager().getBattleTeam(victim);
 
 				// 色を取得
-				ChatColor nameColor = ChatColor.WHITE;
+				ChatColor nameColor = ChatColor.RESET;
 				if (team != null) {
 					nameColor = team.getChatColor();
 				}
 
-				((Player) e.getDamager())
-						.sendMessage(LeonGunWar.GAME_PREFIX + nameColor + victim.getName() + ChatColor.GRAY
-								+ " は保護されています！");
+				((Player) e.getDamager()).sendMessage(
+						Chat.f("{0}{1}{2} &7は保護されています！", LeonGunWar.GAME_PREFIX, nameColor, victim.getName()));
 			}
 		}
 	}

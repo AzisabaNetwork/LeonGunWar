@@ -69,7 +69,7 @@ public class DamageListener implements Listener {
 		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
 
 		// タイトルを表示
-		killer.sendTitle("", ChatColor.RED + "+1 Kill", 0, 20, 10);
+		killer.sendTitle("", Chat.f("&c+1 Kill"), 0, 20, 10);
 		// 音を鳴らす
 		killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
 	}
@@ -112,7 +112,7 @@ public class DamageListener implements Listener {
 			LeonGunWar.getPlugin().getManager().getKillDeathCounter().addAssist(assist);
 
 			// タイトルを表示
-			assist.sendTitle("", ChatColor.GRAY + "+1 Assist", 0, 20, 10);
+			assist.sendTitle("", Chat.f("&7+1 Assist"), 0, 20, 10);
 			// 音を鳴らす
 			assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 		}
@@ -172,7 +172,7 @@ public class DamageListener implements Listener {
 				nameColor = deathTeam.getChatColor();
 			}
 
-			e.setDeathMessage(LeonGunWar.GAME_PREFIX + nameColor + p.getName() + ChatColor.GRAY + " は自滅した！");
+			e.setDeathMessage(Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName()));
 			return;
 		}
 
@@ -184,7 +184,7 @@ public class DamageListener implements Listener {
 		// アイテム名を取得
 		String itemName = "";
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
-			itemName = ChatColor.GOLD + "素手";
+			itemName = Chat.f("&6素手");
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
 			// CrackShot Pluginを取得
 			CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
@@ -194,7 +194,7 @@ public class DamageListener implements Listener {
 			// DisplayNameを取得
 			itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 		} else { // それ以外
-			itemName = ChatColor.GOLD + item.getType().name();
+			itemName = Chat.f("&6{0}", item.getType().name());
 		}
 
 		// killerのチーム
