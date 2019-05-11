@@ -1,7 +1,6 @@
 package net.azisaba.lgw.core.listeners;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -40,8 +39,8 @@ public class EntrySignListener implements Listener {
 		Player p = e.getPlayer();
 		Block clickedBlock = e.getClickedBlock();
 
-		// スニーク + 左クリックならreturn
-		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking() && p.getGameMode() == GameMode.CREATIVE) {
+		// 権限を持っており スニーク + クリックならreturn
+		if (p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking()) {
 			return;
 		}
 
@@ -91,8 +90,8 @@ public class EntrySignListener implements Listener {
 		Player p = e.getPlayer();
 		Block clickedBlock = e.getClickedBlock();
 
-		// スニーク + 左クリックならreturn
-		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking() && p.getGameMode() == GameMode.CREATIVE) {
+		// 権限を持っておりスニーク + クリックならreturn
+		if (p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking()) {
 			return;
 		}
 
@@ -128,7 +127,7 @@ public class EntrySignListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
 	public void changeSignState(PlayerInteractEvent e) {
 		// ブロックをシフト + 右クリックしていなければreturn
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking()) {
@@ -174,7 +173,7 @@ public class EntrySignListener implements Listener {
 
 		// 変更
 		sign.setLine(3, edit);
-		// 必要か分からないのでとりあえず設定
-		clickedBlock.getState().setData(sign.getData());
+		// 更新
+		sign.update();
 	}
 }
