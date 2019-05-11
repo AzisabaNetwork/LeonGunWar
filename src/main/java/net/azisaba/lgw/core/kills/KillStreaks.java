@@ -71,15 +71,15 @@ public class KillStreaks {
 		this.rewards = Collections.unmodifiableMap(rewards);
 	}
 
-	public void removeKillStreaks() {
+	public void clear() {
 		streaksMap.clear();
 	}
 
-	public void removeKillStreak(Player player) {
+	public void remove(Player player) {
 		streaksMap.remove(player.getUniqueId());
 	}
 
-	public AtomicInteger getKillStreak(Player player) {
+	public AtomicInteger get(Player player) {
 		streaksMap.putIfAbsent(player.getUniqueId(), new AtomicInteger(0));
 		return streaksMap.get(player.getUniqueId());
 	}

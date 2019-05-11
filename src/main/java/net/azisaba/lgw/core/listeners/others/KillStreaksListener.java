@@ -27,7 +27,7 @@ public class KillStreaksListener implements Listener {
 		Player killer = p.getKiller();
 
 		// カウントを追加
-		int streaks = LeonGunWar.getPlugin().getKillStreaks().getKillStreak(killer).incrementAndGet();
+		int streaks = LeonGunWar.getPlugin().getKillStreaks().get(killer).incrementAndGet();
 
 		// 報酬を付与
 		LeonGunWar.getPlugin().getKillStreaks().getRewards().entrySet().stream()
