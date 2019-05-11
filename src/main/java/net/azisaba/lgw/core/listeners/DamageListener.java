@@ -171,7 +171,7 @@ public class DamageListener implements Listener {
 				nameColor = deathTeam.getChatColor();
 			}
 
-			e.setDeathMessage(nameColor + p.getName() + ChatColor.GRAY + "は自滅した！");
+			e.setDeathMessage(LeonGunWar.GAME_PREFIX + nameColor + p.getName() + ChatColor.GRAY + " は自滅した！");
 			return;
 		}
 
@@ -209,8 +209,8 @@ public class DamageListener implements Listener {
 		}
 
 		// プレイヤー名とキルしたアイテムを表示
-		builder.append(killer.getName() + " " + ChatColor.GRAY + "━━━[" + ChatColor.RESET + itemName + ChatColor.GRAY
-				+ "]━━━> ");
+		builder.append(LeonGunWar.GAME_PREFIX + killer.getName() + " " + ChatColor.GRAY + "━━━[ " + ChatColor.RESET
+				+ itemName + ChatColor.GRAY + " ]━━━> ");
 
 		// deathTeamがnullではない場合は色を取得
 		if (deathTeam != null) {
