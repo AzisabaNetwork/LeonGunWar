@@ -730,8 +730,8 @@ public class MatchManager {
 	}
 
 	public enum MatchMode {
-		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")), // チームデスマッチ (TDM)
-		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));// リーダーデスマッチ (LDM)
+		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")),
+		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
 
 		private final String modeName;
 
