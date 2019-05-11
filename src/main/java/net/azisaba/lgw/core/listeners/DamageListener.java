@@ -175,10 +175,15 @@ public class DamageListener implements Listener {
 			// メッセージ削除
 			e.setDeathMessage(null);
 
+			// メッセージを作成
+			String msg = Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName());
 			// メッセージ送信
 			p.getWorld().getPlayers().forEach(player -> {
-				player.sendMessage(Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName()));
+				player.sendMessage(msg);
 			});
+
+			// コンソールに出力
+			Bukkit.getConsoleSender().sendMessage(msg);
 			return;
 		}
 
@@ -216,11 +221,17 @@ public class DamageListener implements Listener {
 
 		// メッセージ削除
 		e.setDeathMessage(null);
+		// メッセージ作成
+		String msg = Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
+				killer.getName(), itemName, deathTeamColor, p.getName());
+
 		// メッセージ送信
 		p.getWorld().getPlayers().forEach(player -> {
-			player.sendMessage(Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
-					killer.getName(), itemName, deathTeamColor, p.getName()));
+			player.sendMessage(msg);
 		});
+
+		// コンソールに出力
+		Bukkit.getConsoleSender().sendMessage(msg);
 	}
 
 	@EventHandler
