@@ -80,7 +80,7 @@ public class MatchModeSignListener implements Listener {
 			LeonGunWar.getPlugin().getManager().setMatchMode(mode);
 			Bukkit.broadcastMessage(Chat.f("{0}&7モードを {1} &7に変更しました！", LeonGunWar.GAME_PREFIX, mode.getModeName()));
 		} catch (IllegalStateException ex) {
-			p.sendMessage(Chat.f("{0}&7現在試合中のためモード変更ができません！", LeonGunWar.GAME_PREFIX));
+			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！次の試合で設定できます！", LeonGunWar.GAME_PREFIX));
 		}
 	}
 

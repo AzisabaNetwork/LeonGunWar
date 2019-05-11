@@ -77,7 +77,7 @@ public class MatchManager {
 	private final HashMap<BattleTeam, Integer> pointMap = new HashMap<>();
 
 	// 試合の種類
-	private MatchMode matchMode = MatchMode.TEAM_DEATH_MATCH;
+	private MatchMode matchMode = null;
 	// チームのリーダー
 	private final HashMap<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
 
@@ -263,6 +263,8 @@ public class MatchManager {
 		ldmLeaderMap.clear();
 		// キルストリーク削除
 		LeonGunWar.getPlugin().getKillStreaks().clear();
+		// モードをnullに設定
+		matchMode = null;
 
 		// ゲーム終了
 		isMatching = false;
@@ -641,12 +643,16 @@ public class MatchManager {
 	}
 
 	public void setMatchMode(MatchMode mode) {
-		// 試合中ならIllegalStateExceptionを出す
-		Preconditions.checkState(!isMatching,
-				"A match is already started. You can only change match mode while not matching.");
+		// 既に設定されていればIllegalStateExceptionを出す
+		Preconditions.checkState(matchMode == null, "The mode is already set.");
 
 		// モードを設定
 		matchMode = mode;
+
+		// すでに人数が集まっている場合はカウントダウンを開始
+		if (getEntryPlayers().size() >= 2) {
+			LeonGunWar.getPlugin().getCountdown().startCountdown();
+		}
 	}
 
 	/**
