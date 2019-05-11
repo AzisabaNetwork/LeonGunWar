@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.md_5.bungee.api.ChatColor;
 
 public class AfkKickEntryListener implements Listener {
 
@@ -78,6 +79,8 @@ public class AfkKickEntryListener implements Listener {
 					if (lastMovedMilliSecond + (1000 * 30) < System.currentTimeMillis()) {
 						LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
 						LeonGunWar.getPlugin().getManager().kickPlayer(p);
+
+						p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "放置と判定されたため試合から退出しました");
 
 						LeonGunWar.getPlugin().getLogger().info(p.getName() + "を試合から退出させました");
 					}
