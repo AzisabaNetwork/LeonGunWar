@@ -76,15 +76,23 @@ public class AfkKickEntryListener implements Listener {
 					// プレイヤーが最後に動いた秒数を取得
 					long lastMovedMilliSecond = lastMoved.getOrDefault(p, 0L);
 
-					// 30秒より多ければエントリー解除してspawnに戻す
-					if (lastMovedMilliSecond + 1000 * 30 < System.currentTimeMillis()) {
-						LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
-						LeonGunWar.getPlugin().getManager().kickPlayer(p);
-
-						p.sendMessage(Chat.f("{0}&7放置と判定されたため試合から退出しました", LeonGunWar.GAME_PREFIX));
-
-						LeonGunWar.getPlugin().getLogger().info(Chat.f("{0} を試合から退出させました", p.getName()));
+					// 30秒より少なければreturn
+					if (lastMovedMilliSecond + 1000 * 30 > System.currentTimeMillis()) {
+						return;
 					}
+
+					// 権限を持っていればreturn
+					if (p.hasPermission("leongunwar.afkkick.exempt")) {
+						return;
+					}
+
+					// 試合から退出 & エントリー解除
+					LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
+					LeonGunWar.getPlugin().getManager().kickPlayer(p);
+
+					p.sendMessage(Chat.f("{0}&7放置と判定されたため試合から退出しました", LeonGunWar.GAME_PREFIX));
+
+					LeonGunWar.getPlugin().getLogger().info(Chat.f("{0} を試合から退出させました", p.getName()));
 				});
 			}
 		}.runTaskTimer(LeonGunWar.getPlugin(), 1, 20 * 3);
