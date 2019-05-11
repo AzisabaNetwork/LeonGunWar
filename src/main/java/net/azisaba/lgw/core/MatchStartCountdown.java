@@ -30,4 +30,12 @@ public class MatchStartCountdown {
 			task = null;
 		}
 	}
+
+	/**
+	 * 現在カウントダウンが行われているかどうかを返します
+	 * @return カウントダウン中かどうか
+	 */
+	public boolean isRunning() {
+		return task != null;
+	}
 }
