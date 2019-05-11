@@ -321,6 +321,9 @@ public class MatchManager {
 		// スポーンにTP
 		p.teleport(getLobbySpawnLocation());
 
+		// プレイヤーのチームを取得
+		BattleTeam team = getBattleTeam(p);
+
 		// チームに含まれていれば退出させる
 		if (redTeam.hasEntry(p.getName())) {
 			redTeam.removeEntry(p.getName());
@@ -333,6 +336,15 @@ public class MatchManager {
 
 		// アーマー削除
 		p.getInventory().setChestplate(null);
+
+		// 退出メッセージを試合中のプレイヤーに送信
+		String msg = Chat.f("{0}{1}{2}が試合から離脱しました", LeonGunWar.GAME_PREFIX, team.getChatColor(), p.getName());
+		getAllTeamPlayers().forEach(player -> {
+			player.sendMessage(msg);
+		});
+
+		// コンソールに出力
+		Bukkit.getConsoleSender().sendMessage(msg);
 	}
 
 	/**
