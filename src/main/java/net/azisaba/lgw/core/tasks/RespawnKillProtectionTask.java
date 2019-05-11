@@ -30,7 +30,7 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 
 		// 0以下ならキャンセルしてreturn
 		if (remain <= 0) {
-			p.sendMessage(Chat.f("{0}&7無敵時間終了", LeonGunWar.GAME_PREFIX));
+			p.sendMessage(Chat.f("{0}&7無敵時間終了！", LeonGunWar.GAME_PREFIX));
 			cancel();
 			return;
 		}
