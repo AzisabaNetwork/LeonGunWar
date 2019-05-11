@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.MatchManager.MatchMode;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -42,6 +43,12 @@ public class PlayerControlListener implements Listener {
 	public void onPlayerKicked(PlayerKickMatchEvent e) {
 		Player p = e.getPlayer();
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+		// LDMではなかった場合return
+		if (manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH) {
+			return;
+		}
+
 		// 試合中のプレイヤー取得
 		Map<BattleTeam, List<Player>> playerMap = manager.getTeamPlayers();
 
