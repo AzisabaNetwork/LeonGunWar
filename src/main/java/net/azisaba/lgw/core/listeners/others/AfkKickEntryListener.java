@@ -17,7 +17,7 @@ import net.md_5.bungee.api.ChatColor;
 public class AfkKickEntryListener implements Listener {
 
 	// 最後にプレイヤーが動いた時のミリ秒を保存
-	private HashMap<Player, Long> lastMoved = new HashMap<>();
+	private final HashMap<Player, Long> lastMoved = new HashMap<>();
 
 	public AfkKickEntryListener() {
 		// コンストラクタが呼び出されたときにタスクを開始
@@ -59,8 +59,8 @@ public class AfkKickEntryListener implements Listener {
 
 				Bukkit.getOnlinePlayers().forEach(p -> {
 					// プレイヤーが試合をしていない&エントリーしていなければreturn
-					boolean matching = (LeonGunWar.getPlugin().getManager().isMatching()
-							&& LeonGunWar.getPlugin().getManager().getBattleTeam(p) != null);
+					boolean matching = LeonGunWar.getPlugin().getManager().isMatching()
+							&& LeonGunWar.getPlugin().getManager().getBattleTeam(p) != null;
 					boolean entrying = LeonGunWar.getPlugin().getManager().isEntryPlayer(p);
 
 					// 試合もエントリーもしていないプレイヤーならreturn
@@ -77,7 +77,7 @@ public class AfkKickEntryListener implements Listener {
 					long lastMovedMilliSecond = lastMoved.getOrDefault(p, 0L);
 
 					// 30秒より多ければエントリー解除してspawnに戻す
-					if (lastMovedMilliSecond + (1000 * 30) < System.currentTimeMillis()) {
+					if (lastMovedMilliSecond + 1000 * 30 < System.currentTimeMillis()) {
 						LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
 						LeonGunWar.getPlugin().getManager().kickPlayer(p);
 
