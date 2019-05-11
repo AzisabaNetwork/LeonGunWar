@@ -87,6 +87,6 @@ public class AfkKickEntryListener implements Listener {
 					}
 				});
 			}
-		}.runTaskTimer(LeonGunWar.getPlugin(), 1, 20 * 10);
+		}.runTaskTimer(LeonGunWar.getPlugin(), 1, 20 * 3);
 	}
 }
