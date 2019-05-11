@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.LeonGunWar;
 
@@ -16,7 +17,7 @@ public class LgwCommand implements CommandExecutor {
 			return true;
 		}
 
-		// debug1なら
+		// debug_startなら
 		if (args[0].equalsIgnoreCase("debug_start")) {
 			// 試合中ならreturn
 			if (LeonGunWar.getPlugin().getManager().isMatching()) {
@@ -35,6 +36,11 @@ public class LgwCommand implements CommandExecutor {
 			return true;
 		}
 
+		// debugnameなら
+		if (args[0].equalsIgnoreCase("debugname")) {
+			sender.sendMessage(((Player) sender).getDisplayName());
+			return true;
+		}
 		return true;
 	}
 }
