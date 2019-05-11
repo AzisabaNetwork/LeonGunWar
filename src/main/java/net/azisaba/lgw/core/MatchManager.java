@@ -411,6 +411,12 @@ public class MatchManager {
 	 * @return プレイヤーが参加しているチーム
 	 */
 	public BattleTeam getBattleTeam(Player p) {
+
+		// 試合をしていなければreturn null
+		if (isMatching) {
+			return null;
+		}
+
 		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
 		for (BattleTeam team : BattleTeam.values()) {
 
