@@ -12,6 +12,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.utils.Chat;
 
 /**
  *
@@ -70,9 +71,9 @@ public class EntrySignListener implements Listener {
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
-			p.sendMessage(ChatColor.GREEN + "エントリーに参加しました！");
+			p.sendMessage(Chat.f("&aエントリーに参加しました！"));
 		} else { // すでにエントリーしている場合
-			p.sendMessage(ChatColor.RED + "すでにエントリーしています！");
+			p.sendMessage(Chat.f("&cすでにエントリーしています！"));
 		}
 	}
 
@@ -121,9 +122,9 @@ public class EntrySignListener implements Listener {
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
-			p.sendMessage(ChatColor.GREEN + "エントリーを解除しました！");
+			p.sendMessage(Chat.f("&aエントリーを解除しました！"));
 		} else { // すでにエントリーしている場合
-			p.sendMessage(ChatColor.RED + "まだエントリーしていません！");
+			p.sendMessage(Chat.f("&cまたエントリーしていません！"));
 		}
 	}
 
@@ -166,9 +167,9 @@ public class EntrySignListener implements Listener {
 
 		// 4行目の編集
 		if (line4.equalsIgnoreCase("[INACTIVE]")) { // [INACTIVE] の場合
-			edit = ChatColor.GREEN + "[ACTIVE]";
+			edit = Chat.f("&a[ACTIVE]");
 		} else { // それ以外の場合は [INACITVE]に変更
-			edit = ChatColor.RED + "[INACTIVE]";
+			edit = Chat.f("&c[INACTIVE]");
 		}
 
 		// 変更
