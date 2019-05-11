@@ -60,9 +60,10 @@ public class AfkKickEntryListener implements Listener {
 				Bukkit.getOnlinePlayers().forEach(p -> {
 					// プレイヤーが試合をしていない&エントリーしていなければreturn
 					boolean matching = (LeonGunWar.getPlugin().getManager().isMatching()
-							&& LeonGunWar.getPlugin().getManager().getBattleTeam(p) == null);
+							&& LeonGunWar.getPlugin().getManager().getBattleTeam(p) != null);
 					boolean entrying = LeonGunWar.getPlugin().getManager().isEntryPlayer(p);
 
+					// 試合もエントリーもしていないプレイヤーならreturn
 					if (!matching && !entrying) {
 						return;
 					}
