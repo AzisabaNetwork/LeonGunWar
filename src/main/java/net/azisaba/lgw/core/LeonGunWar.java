@@ -37,12 +37,12 @@ public class LeonGunWar extends JavaPlugin {
 	// plugin
 	private static LeonGunWar plugin;
 
-	private MatchStartCountdown countdown;
-	private ScoreboardDisplayer scoreboardDisplayer;
-	private MapLoader mapLoader;
-	private MapContainer mapContainer;
-	private MatchManager manager;
-	private KillStreaks killStreaks;
+	private final MatchStartCountdown countdown = new MatchStartCountdown();
+	private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
+	private final MapLoader mapLoader = new MapLoader();
+	private final MapContainer mapContainer = new MapContainer();
+	private final MatchManager manager = new MatchManager();
+	private final KillStreaks killStreaks = new KillStreaks();
 
 	/**
 	 * MatchStartCountdownのインスタンスを返します
@@ -95,14 +95,8 @@ public class LeonGunWar extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
-		countdown = new MatchStartCountdown();
-		scoreboardDisplayer = new ScoreboardDisplayer();
-		mapLoader = new MapLoader();
-		mapContainer = new MapContainer();
 		mapContainer.loadMaps();
-		manager = new MatchManager();
 		manager.initialize();
-		killStreaks = new KillStreaks();
 
 		// 移行を簡単にする [DEBUG]
 		Stream.of(

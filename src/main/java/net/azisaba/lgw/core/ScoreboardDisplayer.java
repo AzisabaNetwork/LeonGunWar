@@ -73,12 +73,8 @@ public class ScoreboardDisplayer {
 	}
 
 	// Objectiveを作成したいスコアボード
-	private Scoreboard board;
-
-	public ScoreboardDisplayer() {
-		// 初期設定でボードはMain
-		board = Bukkit.getScoreboardManager().getMainScoreboard();
-	}
+	// 初期設定でボードはMain
+	private Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
 
 	/**
 	 * 使用したいScoreboardを指定

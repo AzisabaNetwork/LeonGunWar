@@ -1,34 +1,30 @@
 package net.azisaba.lgw.core;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.bukkit.scheduler.BukkitTask;
 
 import net.azisaba.lgw.core.tasks.MatchStartCountdownTask;
 
 public class MatchStartCountdown {
 
-	private BukkitTask task = null;
+	private final AtomicReference<BukkitTask> task = new AtomicReference<>();
 
 	/**
 	 * カウントダウンが行われていない場合、カウントダウンをスタートします
 	 */
 	public void startCountdown() {
 		// すでにタイマースタートしている場合はreturn
-		if (task != null) {
-			return;
-		}
-
 		// Runnable取得してスタート
-		task = new MatchStartCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+		task.compareAndSet(null, new MatchStartCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 0, 20));
 	}
 
 	/**
 	 * カウントダウンが実行されていた場合、カウントダウンを停止します
 	 */
 	public void stopCountdown() {
-		if (task != null) {
-			task.cancel();
-			task = null;
-		}
+		Optional.ofNullable(task.getAndSet(null)).ifPresent(BukkitTask::cancel);
 	}
 
 	/**
@@ -36,6 +32,6 @@ public class MatchStartCountdown {
 	 * @return カウントダウン中かどうか
 	 */
 	public boolean isRunning() {
-		return task != null;
+		return task.get() != null;
 	}
 }
