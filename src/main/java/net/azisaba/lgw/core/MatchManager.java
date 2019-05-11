@@ -68,8 +68,10 @@ public class MatchManager {
 
 	// マッチで使用するスコアボード
 	private Scoreboard scoreboard;
-	// 赤、青、試合参加エントリー用のスコアボードチーム
-	private Team redTeam, blueTeam, entry;
+	// 赤、青用のスコアボードチーム
+	private Team redTeam, blueTeam;
+	// 試合に参加するプレイヤーのリスト
+	private List<Player> entryPlayers = new ArrayList<>();
 	// 赤、青チームのチェストプレート
 	private ItemStack redChestplate, blueChestplate;
 
@@ -276,12 +278,12 @@ public class MatchManager {
 	 */
 	public boolean addEntryPlayer(Player p) {
 		// すでに参加している場合はreturn false
-		if (entry.hasEntry(p.getName())) {
+		if (entryPlayers.contains(p)) {
 			return false;
 		}
 
 		// エントリー追加
-		entry.addEntry(p.getName());
+		entryPlayers.add(p);
 		// イベント呼び出し
 		PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
 		Bukkit.getPluginManager().callEvent(event);
@@ -291,16 +293,16 @@ public class MatchManager {
 
 	/**
 	 * プレイヤーをマッチ参加用のエントリーから退出させます
-	 * @param p 参加させたいプレイヤー
+	 * @param p 退出させたいプレイヤー
 	 */
 	public boolean removeEntryPlayer(Player p) {
 		// 参加していない場合はreturn false
-		if (!entry.hasEntry(p.getName())) {
+		if (!entryPlayers.contains(p)) {
 			return false;
 		}
 
 		// エントリー解除
-		entry.removeEntry(p.getName());
+		entryPlayers.remove(p);
 		// イベント呼び出し
 		PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
 		Bukkit.getPluginManager().callEvent(event);
@@ -314,7 +316,7 @@ public class MatchManager {
 	 * @return エントリーに参加しているかどうか
 	 */
 	public boolean isEntryPlayer(Player p) {
-		return entry.hasEntry(p.getName());
+		return entryPlayers.contains(p);
 	}
 
 	/**
@@ -322,24 +324,7 @@ public class MatchManager {
 	 * @return entryスコアボードチームに参加しているプレイヤー
 	 */
 	public List<Player> getEntryPlayers() {
-		// リスト作成
-		List<Player> players = new ArrayList<>();
-
-		// 名前からプレイヤー検索
-		for (String entryName : new ArrayList<>(entry.getEntries())) {
-			Player target = Bukkit.getPlayerExact(entryName);
-
-			// プレイヤーが見つからない場合はエントリー解除してcontinue
-			if (target == null) {
-				entry.removeEntry(entryName);
-				continue;
-			}
-
-			// リストに追加
-			players.add(target);
-		}
-
-		return players;
+		return entryPlayers;
 	}
 
 	/**
@@ -692,15 +677,6 @@ public class MatchManager {
 			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
 			// 押し合いをなくす
 			blueTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
-		}
-
-		// エントリーチーム取得 (なかったら作成)
-		entry = scoreboard.getTeam("Entry");
-		if (entry == null) {
-			// チーム作成
-			entry = scoreboard.registerNewTeam("Entry");
-			// チームの色を指定
-			entry.setColor(ChatColor.GREEN);
 		}
 	}
 

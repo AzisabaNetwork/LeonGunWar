@@ -63,4 +63,12 @@ public class PlayerControlListener implements Listener {
 			}
 		}
 	}
+
+	/**
+	 * プレイヤーが退出したときにエントリーを解除するリスナー
+	 */
+	@EventHandler
+	public void onPlayerQUit(PlayerQuitEvent e) {
+		LeonGunWar.getPlugin().getManager().removeEntryPlayer(e.getPlayer());
+	}
 }
