@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
+import net.md_5.bungee.api.ChatColor;
 
 public class KillStreaksListener implements Listener {
 
@@ -36,6 +38,50 @@ public class KillStreaksListener implements Listener {
 				p -> Arrays.asList(
 						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
 						Chat.f("crackshot:shot give {0} STOROBO2", p.getName()))));
+		rewards.put(10, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+						ChatColor.DARK_GREEN, 10),
+				p -> Arrays.asList(
+						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
+						Chat.f("crackshot:shot give {0} UAV", p.getName()))));
+		rewards.put(15, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+						ChatColor.DARK_GREEN, 15),
+				p -> Arrays.asList(
+						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
+						Chat.f("crackshot:shot give {0} DEATHMACHINE", p.getName()))));
+		rewards.put(20, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.YELLOW,
+						20),
+				p -> Arrays.asList(
+						Chat.f("minecraft:give {0} minecraft:diamond 1", p.getName()),
+						Chat.f("crackshot:shot give {0} STOROBO", p.getName()))));
+		rewards.put(25, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.YELLOW,
+						25),
+				p -> new ArrayList<String>()));
+		rewards.put(30, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
+						30),
+				p -> new ArrayList<String>()));
+		rewards.put(35, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.AQUA,
+						35),
+				p -> new ArrayList<String>()));
+		rewards.put(40, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
+						40),
+				p -> new ArrayList<String>()));
+		rewards.put(45, new Reward(
+				p -> Chat.f("{0}&r{1} &7が {2}{3}人 連続キル！", LeonGunWar.GAME_PREFIX, p.getDisplayName(), ChatColor.RED,
+						45),
+				p -> new ArrayList<String>()));
+		rewards.put(50, new Reward(
+				p -> Chat.f("{0}なんてこったい &f{1}&7 が {2}{3}人&7 連続キル！ カンスト！", LeonGunWar.GAME_PREFIX, p.getDisplayName(),
+						ChatColor.GOLD, 50),
+				p -> Arrays.asList(
+						Chat.f("minecraft:give {0} minecraft:diamond 64", p.getName()),
+						Chat.f("crackshot:shot give {0} KANSUTO", p.getName()))));
 	}
 
 	public class Reward {
@@ -55,6 +101,7 @@ public class KillStreaksListener implements Listener {
 		public Function<Player, List<String>> getCommands() {
 			return commands;
 		}
+
 	}
 
 	@EventHandler
