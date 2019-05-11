@@ -166,6 +166,11 @@ public class DamageListener implements Listener {
 		// 死んだプレイヤー
 		Player death = e.getEntity();
 
+		// 死んだプレイヤーと殺したプレイヤーが同じ (またはnull) ならreturn
+		if (death.getKiller() == null || death == death.getKiller()) {
+			return;
+		}
+
 		// 各チームのリーダーを取得
 		Map<BattleTeam, Player> leaders = manager.getLDMLeaderMap();
 
