@@ -76,7 +76,6 @@ public class MatchManager {
 	/**
 	 * 初期化メソッド
 	 * Pluginが有効化されたときのみ呼び出されることを前提としています
-	 * @param plugin LeonGunWar plugin
 	 */
 	protected void initialize() {
 		// すでに初期化されている場合はreturn
