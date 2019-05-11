@@ -576,8 +576,6 @@ public class MatchManager {
 			redTeam = scoreboard.registerNewTeam("Red");
 			// チームの色を指定
 			redTeam.setColor(ChatColor.DARK_RED);
-			// Prefixを指定
-			blueTeam.setPrefix(ChatColor.DARK_RED.toString());
 			// フレンドリーファイアーを無効化
 			redTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
@@ -591,8 +589,6 @@ public class MatchManager {
 			blueTeam = scoreboard.registerNewTeam("Blue");
 			// チームの色を指定
 			blueTeam.setColor(ChatColor.DARK_BLUE);
-			// Prefixを指定
-			blueTeam.setPrefix(ChatColor.DARK_BLUE.toString());
 			// フレンドリーファイアーを無効化
 			blueTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
