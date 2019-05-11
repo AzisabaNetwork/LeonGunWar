@@ -39,7 +39,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
 		// chatがtrueの場合表示
 		if (chat) {
-			String msg = Chat.f(LeonGunWar.GAME_PREFIX + "&7試合開始まで残り&c" + timeLeft + "秒&7！");
+			String msg = Chat.f("{0}&7試合開始まで残り &c{1}秒&7", LeonGunWar.GAME_PREFIX, timeLeft);
 			Bukkit.broadcastMessage(msg);
 		}
 

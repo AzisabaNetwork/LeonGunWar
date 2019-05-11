@@ -55,14 +55,14 @@ public class ScoreboardDisplayer {
 
 			// 文字を作成
 			String line1 = "";
-			String line2 = Chat.f("&b残り時間&a: &c" + timeLeft + "秒");
+			String line2 = Chat.f("&b残り時間&a: &c{0}秒", timeLeft);
 			String line3 = "";
-			String line4 = Chat.f(BattleTeam.RED.getDisplayTeamName() + "&a: &e" + redPoint + " Point(s)");
-			String line5 = Chat.f(BattleTeam.BLUE.getDisplayTeamName() + "&a: &e" + bluePoint + " Point(s)");
+			String line4 = Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.RED.getDisplayTeamName(), redPoint);
+			String line5 = Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.BLUE.getDisplayTeamName(), bluePoint);
 			String line6 = "";
-			String line7 = Chat.f("&7現在のマップ&a: &c" + mapName);
+			String line7 = Chat.f("&7現在のマップ&a: &c{0}", mapName);
 			String line8 = "";
-			String line9 = Chat.f("&6azisaba.net &7で今すぐ遊べ！");
+			String line9 = Chat.f("&6{0} &7で今すぐ遊べ！", "azisaba.net");
 
 			// リストにして返す
 			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9);
