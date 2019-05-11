@@ -151,6 +151,8 @@ public class MatchManager {
 					Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.RED.getDisplayTeamName()));
 			// 防具を装備
 			p.getInventory().setChestplate(redChestplate);
+			// DisplayNameを指定
+			p.setDisplayName(BattleTeam.RED.getChatColor() + p.getName());
 			// テレポート
 			p.teleport(currentMap.getSpawnPoint(BattleTeam.RED));
 		}
@@ -170,6 +172,8 @@ public class MatchManager {
 					Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.BLUE.getDisplayTeamName()));
 			// 防具を装備
 			p.getInventory().setChestplate(blueChestplate);
+			// DisplayNameを指定
+			p.setDisplayName(BattleTeam.BLUE.getChatColor() + p.getName());
 			// テレポート
 			p.teleport(currentMap.getSpawnPoint(BattleTeam.BLUE));
 		}
@@ -202,7 +206,6 @@ public class MatchManager {
 
 		// 残り時間を0に
 		timeLeft.set(0);
-
 		// チームのポイントを0に
 		pointMap.clear();
 
@@ -211,6 +214,10 @@ public class MatchManager {
 
 		// サイドバーを削除
 		LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
+		// 全プレイヤーのdisplayNameを初期化
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			p.setDisplayName(p.getName());
+		});
 
 		// ゲーム終了
 		isMatching = false;
@@ -339,6 +346,8 @@ public class MatchManager {
 
 		// アーマー削除
 		p.getInventory().setChestplate(null);
+		// displayName初期化
+		p.setDisplayName(p.getName());
 
 		// 退出メッセージを試合中のプレイヤーに送信
 		String msg = Chat.f("{0}{1}{2}&7が試合から離脱しました", LeonGunWar.GAME_PREFIX, team.getChatColor(), p.getName());
