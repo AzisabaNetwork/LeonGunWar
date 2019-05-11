@@ -3,6 +3,7 @@ package net.azisaba.lgw.core;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
+import net.azisaba.lgw.core.kills.KillStreaks;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.EntrySignListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
@@ -36,6 +37,7 @@ public class LeonGunWar extends JavaPlugin {
 	private MapLoader mapLoader;
 	private MapContainer mapContainer;
 	private MatchManager manager;
+	private KillStreaks killStreaks;
 
 	/**
 	 * MatchStartCountdownのインスタンスを返します
@@ -77,6 +79,14 @@ public class LeonGunWar extends JavaPlugin {
 		return manager;
 	}
 
+	/**
+	 * KillStreaksのインスタンスを返します
+	 * @return KillStreaksのインスタンス
+	 */
+	public KillStreaks getKillStreaks() {
+		return killStreaks;
+	}
+
 	@Override
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
@@ -87,6 +97,7 @@ public class LeonGunWar extends JavaPlugin {
 		mapContainer.loadMaps();
 		manager = new MatchManager();
 		manager.initialize();
+		killStreaks = new KillStreaks();
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
