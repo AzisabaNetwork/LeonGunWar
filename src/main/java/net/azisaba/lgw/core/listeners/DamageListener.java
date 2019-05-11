@@ -201,7 +201,7 @@ public class DamageListener implements Listener {
 		// pのチーム (死んだプレイヤーのチーム)
 		BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 
-		StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new StringBuilder(LeonGunWar.GAME_PREFIX);
 
 		// killerTeamがnullではない場合は色を取得 (nullなら何もしない)
 		if (killerTeam != null) {
@@ -209,8 +209,8 @@ public class DamageListener implements Listener {
 		}
 
 		// プレイヤー名とキルしたアイテムを表示
-		builder.append(LeonGunWar.GAME_PREFIX + killer.getName() + " " + ChatColor.GRAY + "━━━[ " + ChatColor.RESET
-				+ itemName + ChatColor.GRAY + " ]━━━> ");
+		builder.append(killer.getName() + " " + ChatColor.GRAY + "━━━[ " + ChatColor.RESET + itemName + ChatColor.GRAY
+				+ " ]━━━> ");
 
 		// deathTeamがnullではない場合は色を取得
 		if (deathTeam != null) {
