@@ -71,7 +71,7 @@ public class MatchManager {
 	// 赤、青用のスコアボードチーム
 	private Team redTeam, blueTeam;
 	// 試合に参加するプレイヤーのリスト
-	private List<Player> entryPlayers = new ArrayList<>();
+	private final List<Player> entryPlayers = new ArrayList<>();
 	// 赤、青チームのチェストプレート
 	private ItemStack redChestplate, blueChestplate;
 

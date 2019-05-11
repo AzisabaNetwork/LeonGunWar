@@ -1,5 +1,9 @@
 package net.azisaba.lgw.core;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
@@ -16,6 +20,7 @@ import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
+import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.KillStreaksListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
@@ -99,6 +104,26 @@ public class LeonGunWar extends JavaPlugin {
 		manager.initialize();
 		killStreaks = new KillStreaks();
 
+		// 移行を簡単にする [DEBUG]
+		Stream.of(
+				"UnbreakableArmor",
+				"NoArrowGround",
+				"noKnockback",
+				"CancelMan",
+				"RecipeHaMouShindeiru",
+				"Yaitekanai",
+				"KillStreaks",
+				"Protectiontime",
+				"BugSolver",
+				"CatFood",
+				"ColorTeaming",
+				"ColorTeamingEntry",
+				"ExpTimer",
+				"BarAPI")
+				.map(Bukkit.getPluginManager()::getPlugin)
+				.filter(Objects::nonNull)
+				.forEach(Bukkit.getPluginManager()::disablePlugin);
+
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
 
@@ -125,6 +150,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new AutoRespawnListener(), this);
 		getServer().getPluginManager().registerEvents(new AfkKickEntryListener(), this);
 		getServer().getPluginManager().registerEvents(new KillStreaksListener(), this);
+		getServer().getPluginManager().registerEvents(new DisableRecipeListener(), this);
 
 		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
