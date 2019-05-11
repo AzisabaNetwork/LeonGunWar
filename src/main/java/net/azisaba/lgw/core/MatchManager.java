@@ -143,7 +143,8 @@ public class MatchManager {
 			}
 
 			// メッセージを表示する
-			p.sendMessage("あなたは" + BattleTeam.RED.getDisplayTeamName() + ChatColor.RESET + "になりました!");
+			p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "あなたは " + BattleTeam.RED.getDisplayTeamName()
+					+ ChatColor.GRAY + " になりました！");
 			// 防具を装備
 			p.getInventory().setChestplate(redChestplate);
 			// テレポート
@@ -161,7 +162,8 @@ public class MatchManager {
 			}
 
 			// メッセージを表示する
-			p.sendMessage("あなたは" + BattleTeam.BLUE.getDisplayTeamName() + ChatColor.RESET + "になりました!");
+			p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "あなたは " + BattleTeam.BLUE.getDisplayTeamName()
+					+ ChatColor.GRAY + " になりました！");
 			// 防具を装備
 			p.getInventory().setChestplate(blueChestplate);
 			// テレポート

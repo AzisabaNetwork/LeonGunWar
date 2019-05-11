@@ -37,7 +37,8 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
 		// chatがtrueの場合表示
 		if (chat) {
-			String msg = ChatColor.GRAY + "試合開始まで残り" + ChatColor.RED + timeLeft + ChatColor.GRAY + "秒！";
+			String msg = LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "試合開始まで残り " + ChatColor.RED + timeLeft + "秒"
+					+ ChatColor.GRAY + "！";
 			Bukkit.broadcastMessage(msg);
 		}
 

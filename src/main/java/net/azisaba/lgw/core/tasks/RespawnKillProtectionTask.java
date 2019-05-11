@@ -31,12 +31,13 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 
 		// 0以下ならキャンセルしてreturn
 		if (remain <= 0) {
-			p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "無敵時間終了");
+			p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "無敵時間終了！");
 			cancel();
 			return;
 		}
 
 		// 残り秒数を表示
-		p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "無敵時間残り " + ChatColor.RED + remain + "秒");
+		p.sendMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "無敵時間残り " + ChatColor.RED + remain + "秒"
+				+ ChatColor.GRAY + "！");
 	}
 }
