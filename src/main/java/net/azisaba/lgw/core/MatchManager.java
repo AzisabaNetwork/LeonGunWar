@@ -27,6 +27,7 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
+import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.maps.GameMap;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
@@ -355,6 +356,10 @@ public class MatchManager {
 
 		// displayName初期化
 		p.setDisplayName(p.getName());
+
+		// イベント呼び出し
+		PlayerKickMatchEvent event = new PlayerKickMatchEvent(p);
+		Bukkit.getPluginManager().callEvent(event);
 	}
 
 	/**
