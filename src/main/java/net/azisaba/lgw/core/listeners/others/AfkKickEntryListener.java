@@ -78,6 +78,8 @@ public class AfkKickEntryListener implements Listener {
 					if (lastMovedMilliSecond + (1000 * 30) < System.currentTimeMillis()) {
 						LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
 						LeonGunWar.getPlugin().getManager().kickPlayer(p);
+
+						LeonGunWar.getPlugin().getLogger().info(p.getName() + "を試合から退出させました");
 					}
 				});
 			}
