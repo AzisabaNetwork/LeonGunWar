@@ -6,6 +6,7 @@ import net.azisaba.lgw.core.commands.LgwCommand;
 import net.azisaba.lgw.core.kills.KillStreaks;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.EntrySignListener;
+import net.azisaba.lgw.core.listeners.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchModeSignListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -108,6 +109,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new MatchControlListener(), this);
 		getServer().getPluginManager().registerEvents(new EntrySignListener(), this);
 		getServer().getPluginManager().registerEvents(new MatchModeSignListener(), this);
+		getServer().getPluginManager().registerEvents(new JoinAfterSignListener(), this);
 		getServer().getPluginManager().registerEvents(new MatchStartDetectListener(), this);
 		getServer().getPluginManager().registerEvents(new DamageListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerControlListener(), this);

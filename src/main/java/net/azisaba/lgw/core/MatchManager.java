@@ -160,15 +160,8 @@ public class MatchManager {
 				continue;
 			}
 
-			// メッセージを表示する
-			p.sendMessage(
-					Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.RED.getDisplayTeamName()));
-			// 防具を装備
-			p.getInventory().setChestplate(redChestplate);
-			// DisplayNameを指定
-			p.setDisplayName(Chat.f("{0}{1}&r", BattleTeam.RED.getChatColor(), p.getName()));
-			// テレポート
-			p.teleport(currentMap.getSpawnPoint(BattleTeam.RED));
+			// セットアップ
+			setUpPlayer(p, BattleTeam.RED);
 		}
 
 		// 青チームの処理
@@ -181,15 +174,8 @@ public class MatchManager {
 				continue;
 			}
 
-			// メッセージを表示する
-			p.sendMessage(
-					Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, BattleTeam.BLUE.getDisplayTeamName()));
-			// 防具を装備
-			p.getInventory().setChestplate(blueChestplate);
-			// DisplayNameを指定
-			p.setDisplayName(Chat.f("{0}{1}&r", BattleTeam.BLUE.getChatColor(), p.getName()));
-			// テレポート
-			p.teleport(currentMap.getSpawnPoint(BattleTeam.BLUE));
+			// セットアップ
+			setUpPlayer(p, BattleTeam.BLUE);
 		}
 
 		// LDMならリーダーを抽選
@@ -569,6 +555,29 @@ public class MatchManager {
 		teamDistributor = distributor;
 	}
 
+	public boolean addPlayerIntoBattle(Player p) {
+		// すでに参加している場合はreturn
+		if (getAllTeamPlayers().contains(p)) {
+			return false;
+		}
+
+		// チーム分けする
+		teamDistributor.distributePlayer(p, Arrays.asList(redTeam, blueTeam));
+
+		// セットアップする
+		if (redTeam.getEntries().contains(p.getName())) {
+			// セットアップ
+			setUpPlayer(p, BattleTeam.RED);
+		} else if (blueTeam.getEntries().contains(p.getName())) {
+			// セットアップ
+			setUpPlayer(p, BattleTeam.BLUE);
+		}
+
+		Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getDisplayName()));
+
+		return true;
+	}
+
 	/**
 	 * ロビーのスポーン地点を取得します
 	 * 初期化前に呼び出された場合はIllegalStateExceptionを投げます
@@ -637,6 +646,23 @@ public class MatchManager {
 		// すでに人数が集まっている場合はカウントダウンを開始
 		if (getEntryPlayers().size() >= 2) {
 			LeonGunWar.getPlugin().getCountdown().startCountdown();
+		}
+	}
+
+	private void setUpPlayer(Player p, BattleTeam team) {
+		// メッセージを表示する
+		p.sendMessage(
+				Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, team.getDisplayTeamName()));
+		// DisplayNameを指定
+		p.setDisplayName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
+		// テレポート
+		p.teleport(currentMap.getSpawnPoint(team));
+
+		// 防具を装備
+		if (team == BattleTeam.RED) {
+			p.getInventory().setChestplate(redChestplate);
+		} else if (team == BattleTeam.BLUE) {
+			p.getInventory().setChestplate(blueChestplate);
 		}
 	}
 
