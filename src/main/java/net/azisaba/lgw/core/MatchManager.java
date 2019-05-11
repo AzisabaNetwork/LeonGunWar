@@ -251,6 +251,15 @@ public class MatchManager {
 	}
 
 	/**
+	 * プレイヤーが次の試合に参加するエントリーをしているかどうかを確認します
+	 * @param p 確認したいプレイヤー
+	 * @return エントリーに参加しているかどうか
+	 */
+	public boolean isEntryPlayer(Player p) {
+		return entry.hasEntry(p.getName());
+	}
+
+	/**
 	 * 試合に参加するプレイヤーのリストを取得します
 	 * @return entryスコアボードチームに参加しているプレイヤー
 	 */
@@ -300,6 +309,26 @@ public class MatchManager {
 		}
 
 		matchTask = new MatchCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 20, 20);
+	}
+
+	/**
+	 * プレイヤーを試合から退出させます
+	 * @param p 退出させたいプレイヤー
+	 */
+	public void kickPlayer(Player p) {
+
+		// スポーンにTP
+		p.teleport(getLobbySpawnLocation());
+
+		// チームに含まれていれば退出させる
+		if (redTeam.hasEntry(p.getName())) {
+			redTeam.removeEntry(p.getName());
+		} else if (blueTeam.hasEntry(p.getName())) {
+			blueTeam.removeEntry(p.getName());
+		}
+
+		// 回復
+		p.setHealth(20);
 	}
 
 	/**
