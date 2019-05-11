@@ -330,6 +330,9 @@ public class MatchManager {
 
 		// 回復
 		p.setHealth(20);
+
+		// アーマー削除
+		p.getInventory().setChestplate(null);
 	}
 
 	/**
