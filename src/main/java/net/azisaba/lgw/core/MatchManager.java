@@ -97,7 +97,7 @@ public class MatchManager {
 		// デフォルトのTeamDistributorを指定
 		teamDistributor = new DefaultTeamDistributor();
 		// メインではない新しいスコアボードを取得
-		scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+		scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
 		// ScoreboardDisplayerにScoreboardを設定
 		LeonGunWar.getPlugin().getScoreboardDisplayer().setScoreBoard(scoreboard);
