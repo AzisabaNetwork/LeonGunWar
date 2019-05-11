@@ -551,6 +551,14 @@ public class MatchManager {
 	}
 
 	/**
+	 * 試合時に使用されるスコアボードを取得します
+	 * @return 試合で使用されるスコアボード
+	 */
+	public Scoreboard getScoreboard() {
+		return scoreboard;
+	}
+
+	/**
 	 * 各チームの初期化を行います
 	 */
 	private void initializeTeams() {
@@ -572,8 +580,6 @@ public class MatchManager {
 			redTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
 			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
-			// 他プレイヤーに押されないように設定
-			redTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
 		}
 
 		// 青チーム取得(なかったら作成)
@@ -589,8 +595,6 @@ public class MatchManager {
 			blueTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
 			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
-			// 他プレイヤーに押されないように設定
-			blueTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
 		}
 
 		// エントリーチーム取得 (なかったら作成)

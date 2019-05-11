@@ -10,6 +10,7 @@ import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.PlayerControlListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
+import net.azisaba.lgw.core.listeners.others.DisableCollisionListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
@@ -108,6 +109,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
 		getServer().getPluginManager().registerEvents(new AutoRespawnListener(), this);
 		getServer().getPluginManager().registerEvents(new AfkKickEntryListener(), this);
+		getServer().getPluginManager().registerEvents(new DisableCollisionListener(), this);
 
 		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
