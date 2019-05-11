@@ -157,8 +157,8 @@ public class DamageListener implements Listener {
 	public void deathMessageChanger(PlayerDeathEvent e) {
 		Player p = e.getEntity();
 
-		// 殺したEntityが居ない場合自滅とする
-		if (p.getKiller() == null) {
+		// 殺したEntityが居ない場合か、同じプレイヤーの場合自滅とする
+		if (p.getKiller() == null || p.getKiller() == p) {
 
 			// メッセージ削除
 			e.setDeathMessage(null);
@@ -199,7 +199,7 @@ public class DamageListener implements Listener {
 		// メッセージ削除
 		e.setDeathMessage(null);
 		// メッセージ作成
-		String msg = Chat.f("{0}{1} &7━━━[ &r{2} &7]━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(), itemName,
+		String msg = Chat.f("{0}&r{1} &7━━━[ &r{2} &7]━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(), itemName,
 				p.getDisplayName());
 
 		// メッセージ送信
