@@ -19,7 +19,7 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class JoinAfterSignListener implements Listener {
 
-	private HashMap<UUID, Long> lastClicked = new HashMap<>();
+	private final HashMap<UUID, Long> lastClicked = new HashMap<>();
 
 	/**
 	 * 試合参加看板をクリックしたことを検知し、プレイヤーを試合に参加させるリスナー
@@ -27,7 +27,7 @@ public class JoinAfterSignListener implements Listener {
 	@EventHandler
 	public void onClickJoinEntrySign(PlayerInteractEvent e) {
 		// 最終クリックが10分より前ならreturn
-		if (lastClicked.getOrDefault(e.getPlayer(), 0L) + (1000 * 60 * 10) > System.currentTimeMillis()) {
+		if (lastClicked.getOrDefault(e.getPlayer(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis()) {
 			e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
 			return;
 		}

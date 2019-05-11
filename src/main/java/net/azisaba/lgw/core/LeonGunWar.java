@@ -123,6 +123,27 @@ public class LeonGunWar extends JavaPlugin {
 				.map(Bukkit.getPluginManager()::getPlugin)
 				.filter(Objects::nonNull)
 				.forEach(Bukkit.getPluginManager()::disablePlugin);
+		Stream.of(
+				"cargo",
+				"carrier",
+				"drone",
+				"encore",
+				"express",
+				"grind",
+				"hijacked",
+				"magma",
+				"meltdown",
+				"nuketown",
+				"overflow",
+				"plaza",
+				"raid",
+				"slums",
+				"standoff",
+				"studio",
+				"vertigo")
+				.map(Bukkit::getWorld)
+				.filter(Objects::nonNull)
+				.forEach(world -> Bukkit.unloadWorld(world, true));
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
