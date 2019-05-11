@@ -49,7 +49,7 @@ public class RespawnKillProtectionListener implements Listener {
 
 				((Player) e.getDamager())
 						.sendMessage(LeonGunWar.GAME_PREFIX + nameColor + victim.getName() + ChatColor.GRAY
-								+ "は保護されています！");
+								+ " は保護されています！");
 			}
 		}
 	}
