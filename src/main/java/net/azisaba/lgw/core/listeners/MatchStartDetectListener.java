@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +10,7 @@ import org.bukkit.event.Listener;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
+import net.md_5.bungee.api.ChatColor;
 
 public class MatchStartDetectListener implements Listener {
 
@@ -54,5 +56,8 @@ public class MatchStartDetectListener implements Listener {
 
 		// カウントダウン停止
 		LeonGunWar.getPlugin().getCountdown().stopCountdown();
+
+		// メッセージを表示
+		Bukkit.broadcastMessage(LeonGunWar.GAME_PREFIX + ChatColor.GRAY + "人数が足りないため試合を開始できません！");
 	}
 }
