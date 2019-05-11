@@ -28,5 +28,4 @@ public interface TeamDistributor {
 	 * @param teams チームのリスト
 	 */
 	void distributePlayer(Player p, List<Team> teams);
-
 }

@@ -10,25 +10,25 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 public class MapContainer {
 
-	private static final List<GameMap> MAP_LIST = new ArrayList<>();
+	private final List<GameMap> mapList = new ArrayList<>();
 
-	private static boolean loaded = false;
+	private boolean loaded = false;
 
 	/**
 	 * ファイルに保存してあるマップデータをロードします
 	 * このメソッドはPluginのロード時にのみ呼び出されることを想定しています
 	 * @param plugin
 	 */
-	public static void loadMaps() {
+	public void loadMaps() {
 		// すでにメソッドが呼び出されている場合はreturn
 		if (loaded) {
 			return;
 		}
 
 		// 保存されているマップデータの収集
-		MAP_LIST.addAll(MapLoader.loadMapData());
+		mapList.addAll(LeonGunWar.getPlugin().getMapLoader().loadMapData());
 
-		LeonGunWar.getPlugin().getLogger().info(MAP_LIST.size() + "個のマップをロードしました。");
+		LeonGunWar.getPlugin().getLogger().info(mapList.size() + "個のマップをロードしました。");
 
 		// ロード完了
 		loaded = true;
@@ -40,10 +40,10 @@ public class MapContainer {
 	 *
 	 * @exception IllegalStateException MapContainerが初期化される前に呼び出された場合
 	 */
-	public static List<GameMap> getAllGameMap() {
+	public List<GameMap> getAllGameMap() {
 		Preconditions.checkState(loaded, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
-		return MAP_LIST;
+		return mapList;
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class MapContainer {
 	 *
 	 * @exception IllegalStateException MapContainerが初期化される前に呼び出された場合
 	 */
-	public static GameMap getRandomMap() {
+	public GameMap getRandomMap() {
 		Preconditions.checkState(loaded, "\"" + MapContainer.class.getName() + "\" is not initialized yet.");
 
 		// 登録されているマップが0この場合nullをreturn
-		if (MAP_LIST.size() <= 0) {
+		if (mapList.size() <= 0) {
 			return null;
 		}
 
 		// 0からmapListのサイズ -1 までの値でランダムな数字を生成
-		int randomNumber = ThreadLocalRandom.current().nextInt(MAP_LIST.size());
+		int randomNumber = ThreadLocalRandom.current().nextInt(mapList.size());
 
 		// リストから取得してreturn
-		return MAP_LIST.get(randomNumber);
+		return mapList.get(randomNumber);
 	}
 }

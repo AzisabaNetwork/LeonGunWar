@@ -5,8 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.MatchStartCountdown;
+import net.azisaba.lgw.core.LeonGunWar;
 
 public class LgwCommand implements CommandExecutor {
 
@@ -20,19 +19,19 @@ public class LgwCommand implements CommandExecutor {
 		// debug1なら
 		if (args[0].equalsIgnoreCase("debug_start")) {
 			// 試合中ならreturn
-			if (MatchManager.isMatching()) {
+			if (LeonGunWar.getPlugin().getManager().isMatching()) {
 				return true;
 			}
 			// サーバー内のプレイヤーを試合に参加
 			Bukkit.getOnlinePlayers().forEach(p -> {
-				MatchManager.addEntryPlayer(p);
+				LeonGunWar.getPlugin().getManager().addEntryPlayer(p);
 			});
 
 			// カウントダウン終了
-			MatchStartCountdown.stopCountdown();
+			LeonGunWar.getPlugin().getCountdown().stopCountdown();
 
 			// 試合開始
-			MatchManager.startMatch();
+			LeonGunWar.getPlugin().getManager().startMatch();
 			return true;
 		}
 

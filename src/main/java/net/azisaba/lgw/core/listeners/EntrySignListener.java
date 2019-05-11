@@ -1,7 +1,5 @@
 package net.azisaba.lgw.core.listeners;
 
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -12,7 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.utils.Chat;
 
 /**
  *
@@ -40,8 +39,8 @@ public class EntrySignListener implements Listener {
 		Player p = e.getPlayer();
 		Block clickedBlock = e.getClickedBlock();
 
-		// スニーク + 左クリックならreturn
-		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking() && p.getGameMode() == GameMode.CREATIVE) {
+		// 権限を持っており スニーク + クリックならreturn
+		if (p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking()) {
 			return;
 		}
 
@@ -62,18 +61,18 @@ public class EntrySignListener implements Listener {
 		e.setCancelled(true);
 
 		// 4行目が[INACTIVE]ならキャンセル
-		if (ChatColor.stripColor(sign.getLine(3)).equals("[INACTIVE]")) {
+		if (Chat.r(sign.getLine(3)).equals("[INACTIVE]")) {
 			return;
 		}
 
 		// エントリー
-		boolean success = MatchManager.addEntryPlayer(p);
+		boolean success = LeonGunWar.getPlugin().getManager().addEntryPlayer(p);
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
-			p.sendMessage(ChatColor.GREEN + "エントリーに参加しました！");
+			p.sendMessage(Chat.f("&aエントリーに参加しました！"));
 		} else { // すでにエントリーしている場合
-			p.sendMessage(ChatColor.RED + "すでにエントリーしています！");
+			p.sendMessage(Chat.f("&cすでにエントリーしています！"));
 		}
 	}
 
@@ -91,8 +90,8 @@ public class EntrySignListener implements Listener {
 		Player p = e.getPlayer();
 		Block clickedBlock = e.getClickedBlock();
 
-		// スニーク + 左クリックならreturn
-		if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking() && p.getGameMode() == GameMode.CREATIVE) {
+		// 権限を持っておりスニーク + クリックならreturn
+		if (p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking()) {
 			return;
 		}
 
@@ -113,22 +112,22 @@ public class EntrySignListener implements Listener {
 		e.setCancelled(true);
 
 		// 4行目が[INACTIVE]ならキャンセル
-		if (ChatColor.stripColor(sign.getLine(3)).equals("[INACTIVE]")) {
+		if (Chat.r(sign.getLine(3)).equals("[INACTIVE]")) {
 			return;
 		}
 
 		// エントリー
-		boolean success = MatchManager.removeEntryPlayer(p);
+		boolean success = LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
-			p.sendMessage(ChatColor.GREEN + "エントリーを解除しました！");
+			p.sendMessage(Chat.f("&aエントリーを解除しました！"));
 		} else { // すでにエントリーしている場合
-			p.sendMessage(ChatColor.RED + "まだエントリーしていません！");
+			p.sendMessage(Chat.f("&cまたエントリーしていません！"));
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
 	public void changeSignState(PlayerInteractEvent e) {
 		// ブロックをシフト + 右クリックしていなければreturn
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking()) {
@@ -161,20 +160,20 @@ public class EntrySignListener implements Listener {
 		e.setCancelled(true);
 
 		// 元メッセージ
-		String line4 = ChatColor.stripColor(sign.getLine(3));
+		String line4 = Chat.r(sign.getLine(3));
 		// 編集先メッセージ
 		String edit = "";
 
 		// 4行目の編集
 		if (line4.equalsIgnoreCase("[INACTIVE]")) { // [INACTIVE] の場合
-			edit = ChatColor.GREEN + "[ACTIVE]";
+			edit = Chat.f("&a[ACTIVE]");
 		} else { // それ以外の場合は [INACITVE]に変更
-			edit = ChatColor.RED + "[INACTIVE]";
+			edit = Chat.f("&c[INACTIVE]");
 		}
 
 		// 変更
 		sign.setLine(3, edit);
-		// 必要か分からないのでとりあえず設定
-		clickedBlock.getState().setData(sign.getData());
+		// 更新
+		sign.update();
 	}
 }

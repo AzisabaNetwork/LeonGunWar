@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,12 +14,6 @@ import net.azisaba.lgw.core.LeonGunWar;
  *
  */
 public class NoArrowGroundListener implements Listener {
-
-	private final LeonGunWar plugin;
-
-	public NoArrowGroundListener(LeonGunWar plugin) {
-		this.plugin = plugin;
-	}
 
 	/**
 	 * 矢がブロックに当たったことを検知し削除します
@@ -34,7 +29,7 @@ public class NoArrowGroundListener implements Listener {
 		Arrow arrow = (Arrow) e.getEntity();
 
 		// 1tick後にその矢がブロックに当たっているか確認
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+		Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
 			// ブロックに刺さっているか確認
 			if (arrow != null && arrow.isOnGround()) {
 				// 矢を削除
@@ -42,5 +37,4 @@ public class NoArrowGroundListener implements Listener {
 			}
 		}, 1);
 	}
-
 }

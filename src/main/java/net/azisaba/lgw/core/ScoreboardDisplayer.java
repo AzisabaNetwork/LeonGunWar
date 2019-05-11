@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class ScoreboardDisplayer {
 
@@ -19,52 +19,50 @@ public class ScoreboardDisplayer {
 	 * プレイヤーに表示するスコアボードのタイトルを取得します
 	 * @return スコアボードのタイトル
 	 */
-	private static String scoreBoardTitle() {
-		return ChatColor.GOLD + "LeonGunWar ver." + LeonGunWar.getPlugin().getDescription().getVersion();
+	private String scoreBoardTitle() {
+		return Chat.f("&6LeonGunWar&a v" + LeonGunWar.getPlugin().getDescription().getVersion());
 	}
 
 	/**
 	 * スコアボードに表示したい文章をListで指定する (上から)
 	 * @return The lines that you want to display in your scoreboard. (from above)
 	 */
-	private static List<String> boardLines() {
+	private List<String> boardLines() {
 		// 試合中の場合
-		if (MatchManager.isMatching()) {
+		if (LeonGunWar.getPlugin().getManager().isMatching()) {
 
 			/**
 			 *
 			 * 残り時間: ?秒
 			 *
-			 * 赤チーム: ? point
-			 * 青チーム: ? point
+			 * 赤チーム: ? Point(s)
+			 * 青チーム: ? Point(s)
 			 *
 			 * 現在のマップ: {マップ名}
 			 *
-			 * azisaba.net
+			 * azisaba.net で今すぐ遊べ！
 			 */
 
 			// マップ名を取得
-			String mapName = MatchManager.getCurrentGameMap().getMapName();
+			String mapName = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getMapName();
 
 			// 赤、青チームの現在のポイントを取得
-			int redPoint = MatchManager.getCurrentTeamPoint(BattleTeam.RED);
-			int bluePoint = MatchManager.getCurrentTeamPoint(BattleTeam.BLUE);
+			int redPoint = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(BattleTeam.RED);
+			int bluePoint = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(BattleTeam.BLUE);
 
 			// 残り時間
-			int timeLeft = MatchManager.getTimeLeft();
+			int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().get();
 
 			// 文字を作成
 			String line1 = "";
-			String line2 = ChatColor.AQUA + "残り時間" + ChatColor.GREEN + ": " + ChatColor.RED + timeLeft + "秒";
+			String line2 = Chat.f("&b残り時間&a: &c{0}秒", timeLeft);
 			String line3 = "";
-			String line4 = BattleTeam.RED.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + redPoint
-					+ " point";
-			String line5 = BattleTeam.BLUE.getDisplayTeamName() + ChatColor.GREEN + ": " + ChatColor.YELLOW + bluePoint
-					+ " point";
+			String line4 = Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.RED.getDisplayTeamName(), redPoint);
+			String line5 = Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.BLUE.getDisplayTeamName(), bluePoint);
 			String line6 = "";
-			String line7 = ChatColor.GRAY + "現在のマップ" + ChatColor.GREEN + ": " + ChatColor.RED + mapName;
+			String line7 = Chat.f("&7現在のマップ&a: &c{0}", mapName);
 			String line8 = "";
-			String line9 = ChatColor.GOLD + "play azisaba.net";
+			String line9 = Chat.f("&6{0} &7で今すぐ遊べ！", "azisaba.net");
 
 			// リストにして返す
 			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9);
@@ -75,9 +73,9 @@ public class ScoreboardDisplayer {
 	}
 
 	// Objectiveを作成したいスコアボード
-	private static Scoreboard board;
+	private Scoreboard board;
 
-	static {
+	public ScoreboardDisplayer() {
 		// 初期設定でボードはMain
 		board = Bukkit.getScoreboardManager().getMainScoreboard();
 	}
@@ -86,15 +84,15 @@ public class ScoreboardDisplayer {
 	 * 使用したいScoreboardを指定
 	 * @param board 使用したいScoreboard
 	 */
-	public static void setScoreBoard(Scoreboard board) {
-		ScoreboardDisplayer.board = board;
+	public void setScoreBoard(Scoreboard board) {
+		this.board = board;
 	}
 
 	/**
 	 * プレイヤーにスコアボードを表示します
 	 * @param plist スコアボードを表示させたいプレイヤーのリスト
 	 */
-	public static void updateScoreboard(List<Player> plist) {
+	public void updateScoreboard(List<Player> plist) {
 		if (Bukkit.getOnlinePlayers().size() <= 0) {
 			return;
 		}
@@ -151,7 +149,14 @@ public class ScoreboardDisplayer {
 	/**
 	 * 現在設定されているEntryを全てリセットする
 	 */
-	private static void clearEntries() {
+	private void clearEntries() {
 		board.getEntries().forEach(board::resetScores);
+	}
+
+	public void clearSideBar() {
+		// boardがnullでなければSIDEBARを削除
+		if (board != null) {
+			board.clearSlot(DisplaySlot.SIDEBAR);
+		}
 	}
 }

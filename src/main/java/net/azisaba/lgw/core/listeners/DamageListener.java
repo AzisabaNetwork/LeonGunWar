@@ -1,7 +1,12 @@
 package net.azisaba.lgw.core.listeners;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
@@ -12,26 +17,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class DamageListener implements Listener {
 
-	private final LeonGunWar plugin;
-
 	private final CSUtility crackShot = new CSUtility();
 
-	public DamageListener(LeonGunWar plugin) {
-		this.plugin = plugin;
-	}
+	// 最初のHashMapはダメージを受けた側のプレイヤーであり、そのValueとなるHashMapにはどのプレイヤーが何秒にそのプレイヤーを攻撃したか
+	// アシストの判定に使用される
+	private final HashMap<Player, HashMap<Player, Long>> lastDamaged = new HashMap<>();
 
 	/**
 	 * プレイヤーを殺したことを検知するリスナー
@@ -40,7 +43,7 @@ public class DamageListener implements Listener {
 	@EventHandler(ignoreCancelled = false)
 	public void onKill(PlayerDeathEvent e) {
 		// 試合中でなければreturn
-		if (!MatchManager.isMatching()) {
+		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
 			return;
 		}
 
@@ -53,7 +56,7 @@ public class DamageListener implements Listener {
 		}
 
 		// チームを取得
-		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
+		BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
 
 		// killerTeamがnullの場合return
 		if (killerTeam == null) {
@@ -61,12 +64,12 @@ public class DamageListener implements Listener {
 		}
 
 		// ポイントを追加
-		MatchManager.addTeamPoint(killerTeam);
+		LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 		// 個人キルを追加
-		MatchManager.getKillDeathCounter().addKill(killer);
+		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
 
 		// タイトルを表示
-		killer.sendTitle("", ChatColor.RED + "+1 kill", 0, 20, 10);
+		killer.sendTitle("", Chat.f("&c+1 Kill"), 0, 20, 10);
 		// 音を鳴らす
 		killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
 	}
@@ -79,7 +82,7 @@ public class DamageListener implements Listener {
 		Player deathPlayer = e.getEntity();
 
 		// チームを取得
-		BattleTeam deathPlayerTeam = MatchManager.getBattleTeam(deathPlayer);
+		BattleTeam deathPlayerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(deathPlayer);
 
 		// deathPlayerTeamがnullの場合return
 		if (deathPlayerTeam == null) {
@@ -87,40 +90,65 @@ public class DamageListener implements Listener {
 		}
 
 		// 死亡数を追加
-		MatchManager.getKillDeathCounter().addDeath(deathPlayer);
+		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addDeath(deathPlayer);
 
-		// 即時リスポーン (座標指定は別リスナーで)
-		deathPlayer.spigot().respawn();
+		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
+		List<Entry<Player, Long>> entries = lastDamaged.getOrDefault(deathPlayer, new HashMap<>()).entrySet().stream()
+				.filter(entry -> entry.getValue() + 10 * 1000 > System.currentTimeMillis())
+				.collect(Collectors.toList());
+
+		// 殺したプレイヤーを取得
+		Player killer = deathPlayer.getKiller();
+
+		// アシスト追加
+		for (Entry<Player, Long> assistEntry : entries) {
+			Player assist = assistEntry.getKey();
+
+			// プレイヤーがkillしたプレイヤーならcontinue
+			if (assist == killer) {
+				continue;
+			}
+
+			LeonGunWar.getPlugin().getManager().getKillDeathCounter().addAssist(assist);
+
+			// タイトルを表示
+			assist.sendTitle("", Chat.f("&7+1 Assist"), 0, 20, 10);
+			// 音を鳴らす
+			assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+		}
+
+		// lastDamagedを初期化
+		if (lastDamaged.containsKey(deathPlayer)) {
+			lastDamaged.remove(deathPlayer);
+		}
 	}
 
+	/**
+	 * プレイヤーが他のプレイヤーに攻撃したときにミリ秒を記録します
+	 * この秒数はアシスト判定に使用されます
+	 * @param e
+	 */
 	@EventHandler
-	public void onRespawn(PlayerRespawnEvent e) {
-		Player p = e.getPlayer();
+	public void onAttackPlayer(WeaponDamageEntityEvent e) {
+		Player attacker = e.getPlayer();
 
-		// チームを取得
-		BattleTeam playerTeam = MatchManager.getBattleTeam(p);
-		// スポーン地点
-		Location spawnPoint = null;
-
-		// チームがnullではないならそのチームのスポーン地点にTPする
-		if (playerTeam != null) {
-			spawnPoint = MatchManager.getCurrentGameMap().getSpawnPoint(playerTeam);
+		// ダメージを受けたEntityがPlayerでなければreturn
+		if (!(e.getVictim() instanceof Player)) {
+			return;
 		}
 
-		// それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
-		if (spawnPoint == null) {
-			spawnPoint = MatchManager.getLobbySpawnLocation();
+		Player victim = (Player) e.getVictim();
+
+		// 同じプレイヤーならreturn
+		if (attacker == victim) {
+			return;
 		}
 
-		e.setRespawnLocation(spawnPoint);
+		// ミリ秒を指定
+		HashMap<Player, Long> damagedMap = lastDamaged.getOrDefault(victim, new HashMap<>());
+		damagedMap.put(attacker, System.currentTimeMillis());
 
-		// 消火
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				p.setFireTicks(0);
-			}
-		}.runTaskLater(plugin, 1);
+		lastDamaged.put(victim, damagedMap);
 	}
 
 	/**
@@ -134,9 +162,9 @@ public class DamageListener implements Listener {
 		if (p.getKiller() == null) {
 
 			// チーム取得
-			BattleTeam deathTeam = MatchManager.getBattleTeam(p);
+			BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 
-			ChatColor nameColor = null;
+			final ChatColor nameColor;
 			// チームがない場合グレー
 			if (deathTeam == null) {
 				nameColor = ChatColor.GRAY;
@@ -144,7 +172,18 @@ public class DamageListener implements Listener {
 				nameColor = deathTeam.getChatColor();
 			}
 
-			e.setDeathMessage(nameColor + p.getName() + ChatColor.GRAY + "は自滅した！");
+			// メッセージ削除
+			e.setDeathMessage(null);
+
+			// メッセージを作成
+			String msg = Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName());
+			// メッセージ送信
+			p.getWorld().getPlayers().forEach(player -> {
+				player.sendMessage(msg);
+			});
+
+			// コンソールに出力
+			Bukkit.getConsoleSender().sendMessage(msg);
 			return;
 		}
 
@@ -154,49 +193,45 @@ public class DamageListener implements Listener {
 		ItemStack item = killer.getInventory().getItemInMainHand();
 
 		// アイテム名を取得
-		String itemName = "";
+		final String itemName;
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
-			itemName = ChatColor.GOLD + "素手";
+			itemName = Chat.f("&6素手");
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
 			// CrackShot Pluginを取得
-			CSDirector crackshot = (CSDirector) plugin.getServer().getPluginManager().getPlugin("CrackShot");
+			CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
 			// 銃ID取得
 			String nodes = crackShot.getWeaponTitle(item);
 			// DisplayNameを取得
 			itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 		} else { // それ以外
-			itemName = ChatColor.GOLD + item.getType().name();
+			itemName = Chat.f("&6{0}", item.getType().name());
 		}
 
 		// killerのチーム
-		BattleTeam killerTeam = MatchManager.getBattleTeam(killer);
+		BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
 		// pのチーム (死んだプレイヤーのチーム)
-		BattleTeam deathTeam = MatchManager.getBattleTeam(p);
+		BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
 
-		StringBuilder builder = new StringBuilder();
-
-		// killerTeamがnullではない場合は色を取得 (nullなら何もしない)
-		if (killerTeam != null) {
-			builder.append(killerTeam.getChatColor() + "");
-		}
-
-		// プレイヤー名とキルしたアイテムを表示
-		builder.append(killer.getName() + " " + ChatColor.GRAY + "━━━[" + ChatColor.RESET + itemName + ChatColor.GRAY
-				+ "]━━━> ");
+		// killerTeamがnullではない場合は色を取得
+		ChatColor killerTeamColor = killerTeam != null ? killerTeam.getChatColor() : ChatColor.RESET;
 
 		// deathTeamがnullではない場合は色を取得
-		if (deathTeam != null) {
-			builder.append(deathTeam.getChatColor() + "");
-		} else { // その他の場合は白
-			builder.append(ChatColor.RESET + "");
-		}
+		ChatColor deathTeamColor = deathTeam != null ? deathTeam.getChatColor() : ChatColor.RESET;
 
-		// プレイヤー名表示
-		builder.append(p.getName());
+		// メッセージ削除
+		e.setDeathMessage(null);
+		// メッセージ作成
+		String msg = Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
+				killer.getName(), itemName, deathTeamColor, p.getName());
 
-		// メッセージ変更
-		e.setDeathMessage(builder.toString());
+		// メッセージ送信
+		p.getWorld().getPlayers().forEach(player -> {
+			player.sendMessage(msg);
+		});
+
+		// コンソールに出力
+		Bukkit.getConsoleSender().sendMessage(msg);
 	}
 
 	@EventHandler
@@ -218,5 +253,13 @@ public class DamageListener implements Listener {
 
 		// キャンセル
 		e.setCancelled(true);
+	}
+
+	/**
+	 * 試合が終わった時に lastDamaged を初期化します
+	 */
+	@EventHandler
+	public void onMatchFinished(MatchFinishedEvent e) {
+		lastDamaged.clear();
 	}
 }

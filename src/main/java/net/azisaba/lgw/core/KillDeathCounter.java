@@ -19,8 +19,10 @@ import com.google.common.base.Preconditions;
  */
 public class KillDeathCounter {
 
-	// キル数とデス数をカウントするHashMap
-	private final HashMap<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>();
+	// キル数とデス数とアシスト数をカウントするHashMap
+	private final HashMap<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(),
+			assistCountMap = new HashMap<>();
+	// UUIDとプレイヤー名を紐付けるためのHashMap
 	private final HashMap<UUID, String> playerNameContainer = new HashMap<>();
 
 	/**
@@ -106,16 +108,59 @@ public class KillDeathCounter {
 	}
 
 	/**
+	 * プレイヤーのアシスト数を1追加します
+	 * @param player アシスト数を追加したいプレイヤー
+	 *
+	 * @exception IllegalArgumentException playerがnullの場合
+	 */
+	public void addAssist(Player player) {
+		// playerがnullの場合 IllegalArgumentException
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
+
+		// プレイヤー情報を保存
+		updatePlayerName(player);
+
+		// すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
+		int assist = assistCountMap.getOrDefault(player.getUniqueId(), 0);
+
+		// アシスト追加
+		assist++;
+
+		// HashMapにセット
+		assistCountMap.put(player.getUniqueId(), assist);
+	}
+
+	/**
+	 * プレイヤーのアシスト数を取得します
+	 * @param player アシスト数を取得したいプレイヤー
+	 * @return プレイヤーのアシスト数
+	 *
+	 * @exception IllegalArgumentException playerがnullの場合
+	 */
+	public int getAssists(Player player) {
+		// playerがnullの場合 IllegalArgumentException
+		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
+
+		// プレイヤー情報を保存
+		updatePlayerName(player);
+
+		// プレイヤーのアシスト数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
+		return assistCountMap.getOrDefault(player.getUniqueId(), 0);
+	}
+
+	/**
 	 * もっとも試合に貢献したプレイヤーをリストで取得します (2人以上いることがあるため)
 	 * 存在しない場合は空のリストを返します
-	 * @return MVPのKDPlayerData
+	 * @return MVPのKDPlayerDataをList形式で
 	 */
 	public List<KDPlayerData> getMVPPlayer() {
-
+		// キルカウントMapから最大キル数を取得、ない場合は-1
 		int mvpKills = killCountMap.values().stream()
 				.max(Comparator.naturalOrder())
 				.orElse(-1);
 
+		// mvpKillsと同じキル数のプレイヤーだけ抽出して、KDPlayerDataに変換しList形式で取得
+		// mvpKillsが-1の場合は空のリストを返す
 		return killCountMap.entrySet().stream()
 				.filter(entry -> entry.getValue() == mvpKills)
 				.map(Entry::getKey)
@@ -126,9 +171,11 @@ public class KillDeathCounter {
 					int kills = killCountMap.getOrDefault(mvp, 0);
 					// デス数取得 (なければ0)
 					int deaths = deathCountMap.getOrDefault(mvp, 0);
+					// アシスト数取得 (なければ0)
+					int assists = assistCountMap.getOrDefault(mvp, 0);
 
 					// KDPlayerData作成
-					return new KDPlayerData(mvp, playerName, kills, deaths);
+					return new KDPlayerData(mvp, playerName, kills, deaths, assists);
 				})
 				.collect(Collectors.toList());
 	}
@@ -154,12 +201,14 @@ public class KillDeathCounter {
 		private final UUID uuid;
 		private final int kills;
 		private final int deaths;
+		private final int assists;
 
-		private KDPlayerData(UUID uuid, String playerName, int kills, int deaths) {
+		private KDPlayerData(UUID uuid, String playerName, int kills, int deaths, int assists) {
 			this.playerName = playerName;
 			this.uuid = uuid;
 			this.kills = kills;
 			this.deaths = deaths;
+			this.assists = assists;
 		}
 
 		public String getPlayerName() {
@@ -176,6 +225,10 @@ public class KillDeathCounter {
 
 		public int getDeaths() {
 			return deaths;
+		}
+
+		public int getAssists() {
+			return assists;
 		}
 	}
 }
