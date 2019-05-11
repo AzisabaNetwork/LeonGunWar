@@ -413,7 +413,7 @@ public class MatchManager {
 	public BattleTeam getBattleTeam(Player p) {
 
 		// 試合をしていなければreturn null
-		if (isMatching) {
+		if (!isMatching) {
 			return null;
 		}
 
