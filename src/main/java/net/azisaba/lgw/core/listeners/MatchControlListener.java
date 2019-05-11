@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,8 +19,10 @@ import com.google.common.base.Strings;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
+import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
@@ -60,14 +63,18 @@ public class MatchControlListener implements Listener {
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
 		// 勝ったチームがあれば勝者の証を付与
-		if (e.getWinners().size() == 1) {
-			// チームメンバーを取得
-			List<Player> winnerPlayers = e.getTeamPlayers(e.getWinners().get(0));
+		if (e.getWinners().size() >= 1) {
 
-			for (Player p : winnerPlayers) {
-				// 勝者の証を付与
-				p.getInventory().addItem(CustomItem.getWonItem());
-			}
+			// 各チームに勝者の証を付与
+			e.getWinners().forEach(wonTeam -> {
+				// チームメンバーを取得
+				List<Player> winnerPlayers = e.getTeamPlayers(wonTeam);
+
+				for (Player p : winnerPlayers) {
+					// 勝者の証を付与
+					p.getInventory().addItem(CustomItem.getWonItem());
+				}
+			});
 		}
 
 		// 試合に参加した全プレイヤーを取得
@@ -176,6 +183,27 @@ public class MatchControlListener implements Listener {
 
 			// アクションバーに表示
 			JSONMessage.create(msg).actionbar(p);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerKickedMatch(PlayerKickMatchEvent e) {
+		MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+		// 現在のプレイヤーを取得
+		Map<BattleTeam, List<Player>> playerMap = manager.getTeamPlayers();
+
+		// もし0人のチームがある場合は試合を強制終了
+		for (List<Player> playerList : playerMap.values()) {
+			if (playerList.size() <= 0) {
+
+				// イベント作成
+				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(),
+						new ArrayList<BattleTeam>(), playerMap);
+				// 呼び出し
+				Bukkit.getPluginManager().callEvent(event);
+				break;
+			}
 		}
 	}
 }
