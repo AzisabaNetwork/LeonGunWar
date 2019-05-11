@@ -52,7 +52,7 @@ public class ScoreboardDisplayer {
 			int bluePoint = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(BattleTeam.BLUE);
 
 			// 残り時間
-			int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft();
+			int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().get();
 
 			// 文字を作成
 			String line1 = "";

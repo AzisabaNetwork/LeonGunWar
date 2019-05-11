@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,7 +18,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -26,10 +26,10 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.google.common.base.Preconditions;
 
-import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.maps.GameMap;
+import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.teams.DefaultTeamDistributor;
 import net.azisaba.lgw.core.teams.TeamDistributor;
@@ -57,7 +57,7 @@ public class MatchManager {
 	// 現在のマップ
 	private GameMap currentMap = null;
 	// 試合の残り時間
-	private int timeLeft = 0;
+	private final AtomicInteger timeLeft = new AtomicInteger(0);
 	// 試合を動かすタスク
 	private BukkitTask matchTask;
 	// KDカウンター
@@ -121,7 +121,7 @@ public class MatchManager {
 
 		// timeLeftを600に変更
 		//		timeLeft = 600;
-		timeLeft = 60; // Debug
+		timeLeft.set(60); // Debug
 
 		// マップを抽選
 		currentMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
@@ -195,7 +195,7 @@ public class MatchManager {
 		}
 
 		// 残り時間を0に
-		timeLeft = 0;
+		timeLeft.set(0);
 
 		// チームのポイントを0に
 		pointMap.clear();
@@ -297,23 +297,7 @@ public class MatchManager {
 			return;
 		}
 
-		matchTask = new BukkitRunnable() {
-			@Override
-			public void run() {
-				// matchTimeを減らす
-				timeLeft -= 1;
-
-				// イベントを呼び出す
-				MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);
-				Bukkit.getPluginManager().callEvent(event);
-
-				// 0になったらストップ
-				if (timeLeft == 0) {
-					cancel();
-					return;
-				}
-			}
-		}.runTaskTimer(LeonGunWar.getPlugin(), 20, 20);
+		matchTask = new MatchCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 20, 20);
 	}
 
 	/**
@@ -432,7 +416,7 @@ public class MatchManager {
 	 * 試合の残り秒数を返します
 	 * @return 試合の残り秒数
 	 */
-	public int getTimeLeft() {
+	public AtomicInteger getTimeLeft() {
 		return timeLeft;
 	}
 
