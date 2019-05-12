@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.google.common.base.Strings;
+
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
@@ -78,7 +80,10 @@ public class MatchModeSignListener implements Listener {
 		// モードを指定
 		try {
 			LeonGunWar.getPlugin().getManager().setMatchMode(mode);
-			Bukkit.broadcastMessage(Chat.f("{0}&7モードを {1} &7に変更しました！", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+			Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+			Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+			Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
+			Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 		} catch (IllegalStateException ex) {
 			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！次の試合で設定できます！", LeonGunWar.GAME_PREFIX));
 		}

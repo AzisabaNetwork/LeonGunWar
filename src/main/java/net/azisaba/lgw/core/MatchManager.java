@@ -26,6 +26,7 @@ import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
@@ -210,6 +211,12 @@ public class MatchManager {
 		Bukkit.getOnlinePlayers().forEach(p -> {
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
 		});
+
+		// 開始メッセージ
+		Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+		Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, "10分"));
+		Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, matchMode.description));
+		Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
 		// タスクスタート
 		runMatchTask();
@@ -760,13 +767,15 @@ public class MatchManager {
 	}
 
 	public enum MatchMode {
-		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ")),
-		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"));
+		TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ"), Chat.f("&7先に &a50キル &7で勝利")),
+		LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"), Chat.f("&7相手チームの &dリーダー &7を倒して勝利"));
 
 		private final String modeName;
+		private final String description;
 
-		private MatchMode(String modeName) {
+		private MatchMode(String modeName, String description) {
 			this.modeName = modeName;
+			this.description = description;
 		}
 
 		public static MatchMode getFromString(String msg) {
@@ -786,6 +795,10 @@ public class MatchManager {
 
 		public String getModeName() {
 			return modeName;
+		}
+
+		public String getDescription() {
+			return description;
 		}
 	}
 }
