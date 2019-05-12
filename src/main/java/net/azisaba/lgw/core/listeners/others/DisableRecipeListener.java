@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,11 @@ public class DisableRecipeListener implements Listener {
 
 		// クラフト後のアイテムにカスタム名がある場合は無視
 		if (result.hasItemMeta() && result.getItemMeta().hasDisplayName()) {
+			return;
+		}
+
+		// クラフト後のアイテムがダイヤブロックかエメラルドブロックの場合は無視
+		if (result.getType() == Material.DIAMOND_BLOCK || result.getType() == Material.EMERALD_BLOCK) {
 			return;
 		}
 
