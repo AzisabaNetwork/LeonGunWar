@@ -244,7 +244,14 @@ public class MatchManager {
 		LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
 		// 全プレイヤーのdisplayNameを初期化
 		Bukkit.getOnlinePlayers().forEach(p -> {
-			p.setDisplayName(p.getName());
+
+			// エントリーしていたら緑色
+			if (entryPlayers.contains(p)) {
+				p.setDisplayName(Chat.f("&a{0}", p.getName()));
+			} else {
+				// その他はリセット
+				p.setDisplayName(p.getName());
+			}
 		});
 
 		// リーダーを削除
@@ -270,6 +277,9 @@ public class MatchManager {
 
 		// エントリー追加
 		entryPlayers.add(p);
+		// 名前の色を変更
+		p.setDisplayName(Chat.f("&a{0}", p.getName()));
+
 		// イベント呼び出し
 		PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
 		Bukkit.getPluginManager().callEvent(event);
@@ -289,6 +299,9 @@ public class MatchManager {
 
 		// エントリー解除
 		entryPlayers.remove(p);
+		// 名前リセット
+		p.setDisplayName(p.getName());
+
 		// イベント呼び出し
 		PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
 		Bukkit.getPluginManager().callEvent(event);
