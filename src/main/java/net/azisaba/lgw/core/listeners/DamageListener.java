@@ -66,10 +66,10 @@ public class DamageListener implements Listener {
 			return;
 		}
 
-		// ポイントを追加
-		LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 		// 個人キルを追加
 		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
+		// ポイントを追加
+		LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 
 		// タイトルを表示
 		killer.sendTitle("", Chat.f("&c+1 Kill"), 0, 20, 10);
@@ -154,7 +154,7 @@ public class DamageListener implements Listener {
 		lastDamaged.put(victim, damagedMap);
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = false, priority = EventPriority.HIGH)
 	public void onLeaderKilledDetector(PlayerDeathEvent e) {
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 
