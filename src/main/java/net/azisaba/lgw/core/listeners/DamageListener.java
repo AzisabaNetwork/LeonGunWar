@@ -244,7 +244,7 @@ public class DamageListener implements Listener {
 		// メッセージ削除
 		e.setDeathMessage(null);
 		// メッセージ作成
-		String msg = Chat.f("{0}&r{1} &7━━━[ &r{2} &7]━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(),
+		String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(),
 				itemName,
 				p.getDisplayName());
 

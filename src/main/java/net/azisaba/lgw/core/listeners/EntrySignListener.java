@@ -70,9 +70,9 @@ public class EntrySignListener implements Listener {
 
 		// メッセージを表示
 		if (success) { // エントリーした場合
-			p.sendMessage(Chat.f("&aエントリーに参加しました！"));
+			p.sendMessage(Chat.f("{0}&aゲームにエントリーしました。", LeonGunWar.GAME_PREFIX));
 		} else { // すでにエントリーしている場合
-			p.sendMessage(Chat.f("&cすでにエントリーしています！"));
+			p.sendMessage(Chat.f("{0}&cあなたは、既に参加しています。", LeonGunWar.GAME_PREFIX));
 		}
 	}
 
@@ -116,14 +116,14 @@ public class EntrySignListener implements Listener {
 			return;
 		}
 
-		// エントリー
+		// エントリー解除
 		boolean success = LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
 
 		// メッセージを表示
-		if (success) { // エントリーした場合
-			p.sendMessage(Chat.f("&aエントリーを解除しました！"));
-		} else { // すでにエントリーしている場合
-			p.sendMessage(Chat.f("&cまたエントリーしていません！"));
+		if (success) { // エントリー解除した場合
+			p.sendMessage(Chat.f("{0}&aゲームから退出しました。", LeonGunWar.GAME_PREFIX));
+		} else { // すでにエントリーしていない場合
+			p.sendMessage(Chat.f("{0}&cあなたは、エントリーしていません。", LeonGunWar.GAME_PREFIX));
 		}
 	}
 

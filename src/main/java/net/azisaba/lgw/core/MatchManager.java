@@ -141,7 +141,7 @@ public class MatchManager {
 		// マップを抽選
 		currentMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
 		// マップ名を表示
-		Bukkit.broadcastMessage(Chat.f("{0}&7今回のマップは &6{1} &7です！", LeonGunWar.GAME_PREFIX, currentMap.getMapName()));
+		Bukkit.broadcastMessage(Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentMap.getMapName()));
 
 		// 参加プレイヤーを取得
 		List<Player> entryPlayers = getEntryPlayers();
@@ -363,7 +363,7 @@ public class MatchManager {
 		p.getInventory().setChestplate(null);
 
 		// 退出メッセージを試合中のプレイヤーに送信
-		String msg = Chat.f("{0}{1}&7が試合から離脱しました", LeonGunWar.GAME_PREFIX, p.getDisplayName());
+		String msg = Chat.f("{0}{1} &7が試合から離脱しました", LeonGunWar.GAME_PREFIX, p.getDisplayName());
 		getAllTeamPlayers().forEach(player -> {
 			player.sendMessage(msg);
 		});
