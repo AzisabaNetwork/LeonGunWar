@@ -246,7 +246,7 @@ public class MatchControlListener implements Listener {
 		// 残り時間が指定された時間の場合チャット欄でお知らせ
 		if (e.getTimeLeft() == 60) {
 			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, "1分"));
-		} else if (e.getTimeLeft() == 30 || e.getTimeLeft() == 10 || (0 < e.getTimeLeft() && e.getTimeLeft() <= 5)) {
+		} else if (e.getTimeLeft() == 30 || e.getTimeLeft() == 10 || 0 < e.getTimeLeft() && e.getTimeLeft() <= 5) {
 			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}秒&7！", LeonGunWar.GAME_PREFIX, e.getTimeLeft()));
 		}
 
@@ -272,7 +272,7 @@ public class MatchControlListener implements Listener {
 		// 名前を変更
 		progressBar.setTitle(Chat.f("&6残り時間 - {0}", formatSeconds(e.getTimeLeft())));
 		// 進行度を設定
-		progressBar.setProgress(((double) e.getTimeLeft()) / 600d);
+		progressBar.setProgress(e.getTimeLeft() / 600d);
 
 		Bukkit.getOnlinePlayers().forEach(p -> {
 
@@ -304,7 +304,7 @@ public class MatchControlListener implements Listener {
 		if (seconds >= 3600) {
 			int hour = (int) Math.floor(seconds / 3600);
 			time.append(String.format("%02d", hour) + ":");
-			seconds = seconds - (hour * 3600);
+			seconds = seconds - hour * 3600;
 		} else {
 			time.append("00:");
 		}
@@ -313,7 +313,7 @@ public class MatchControlListener implements Listener {
 		if (seconds >= 60) {
 			int minutes = (int) Math.floor(seconds / 60);
 			time.append(String.format("%02d", minutes) + ":");
-			seconds = seconds - (minutes * 60);
+			seconds = seconds - minutes * 60;
 		} else {
 			time.append("00:");
 		}

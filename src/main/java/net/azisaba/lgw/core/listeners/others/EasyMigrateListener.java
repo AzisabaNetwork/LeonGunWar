@@ -46,7 +46,33 @@ public class EasyMigrateListener implements Listener {
 			"slums",
 			"standoff",
 			"studio",
-			"vertigo");
+			"vertigo",
+			// ここから軽量化目的
+			"world_nether",
+			"world_the_end",
+			"test",
+			"session",
+			"Enigma",
+			"event",
+			"hunt",
+			"easter",
+			"nepnep",
+			"sector",
+			"runway2",
+			"FFADuelLobby",
+			"newlob",
+			"freef",
+			"souko",
+			"testtype",
+			"duel1",
+			"duel2",
+			"duel3",
+			"duel4",
+			"duel5",
+			"duel6",
+			"duel7",
+			"duel8",
+			"duel9");
 
 	public EasyMigrateListener() {
 		unnecessaryPlugins.stream()
