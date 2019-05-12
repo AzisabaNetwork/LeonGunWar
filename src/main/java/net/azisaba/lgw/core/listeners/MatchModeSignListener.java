@@ -54,17 +54,17 @@ public class MatchModeSignListener implements Listener {
 		Sign sign = (Sign) clickedBlock.getState();
 
 		// 1行目が [mode] でなければreturn
-		if (!sign.getLine(0).equals("[mode]")) {
+		if (!Chat.r(sign.getLine(0)).equalsIgnoreCase("[mode]")) {
+			return;
+		}
+
+		// 4行目が[ACTIVE]でなければreturn
+		if (!sign.getLine(3).equals(LeonGunWar.SIGN_ACTIVE)) {
 			return;
 		}
 
 		// イベントをキャンセル
 		e.setCancelled(true);
-
-		// 4行目が[INACTIVE]ならキャンセル
-		if (Chat.r(sign.getLine(3)).equals("[INACTIVE]")) {
-			return;
-		}
 
 		// 2行目を取得し、MatchModeに変換
 		String line2 = Chat.r(sign.getLine(1));
@@ -117,15 +117,15 @@ public class MatchModeSignListener implements Listener {
 		e.setCancelled(true);
 
 		// 元メッセージ
-		String line4 = Chat.r(sign.getLine(3));
+		String line4 = sign.getLine(3);
 		// 編集先メッセージ
 		String edit = "";
 
 		// 4行目の編集
-		if (line4.equalsIgnoreCase("[INACTIVE]")) { // [INACTIVE] の場合
-			edit = Chat.f("&a[ACTIVE]");
+		if (line4.equals(LeonGunWar.SIGN_INACTIVE)) { // [INACTIVE] の場合
+			edit = LeonGunWar.SIGN_ACTIVE;
 		} else { // それ以外の場合は [INACITVE]に変更
-			edit = Chat.f("&c[INACTIVE]");
+			edit = LeonGunWar.SIGN_INACTIVE;
 		}
 
 		// 変更

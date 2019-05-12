@@ -30,6 +30,8 @@ import net.azisaba.lgw.core.utils.Chat;
 public class LeonGunWar extends JavaPlugin {
 
 	public static final String GAME_PREFIX = Chat.f("&7[&6PvP&7]&r ");
+	public static final String SIGN_ACTIVE = Chat.f("&a[ACTIVE]");
+	public static final String SIGN_INACTIVE = Chat.f("&c[INACTIVE]");
 
 	// plugin
 	private static LeonGunWar plugin;
