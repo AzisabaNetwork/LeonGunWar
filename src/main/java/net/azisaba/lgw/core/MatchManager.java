@@ -210,6 +210,7 @@ public class MatchManager {
 		Bukkit.getOnlinePlayers().forEach(p -> {
 			p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
 		});
+
 		// タスクスタート
 		runMatchTask();
 
