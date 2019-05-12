@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +30,7 @@ import com.google.common.base.Preconditions;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
+import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.maps.GameMap;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.teams.BattleTeam;
@@ -561,6 +563,10 @@ public class MatchManager {
 
 		// 設定
 		pointMap.put(team, currentPoint);
+
+		// イベント呼び出し
+		TeamPointIncreasedEvent event = new TeamPointIncreasedEvent(team, currentPoint);
+		Bukkit.getPluginManager().callEvent(event);
 	}
 
 	/**
