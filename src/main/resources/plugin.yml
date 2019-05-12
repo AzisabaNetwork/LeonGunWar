@@ -15,3 +15,5 @@ permissions:
     default: op
   leongunwar.command.leongunwar:
     default: op
+  leongunwar.afkkick.exempt:
+    default: op

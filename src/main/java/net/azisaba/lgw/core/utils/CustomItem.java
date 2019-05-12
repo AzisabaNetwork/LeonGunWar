@@ -21,8 +21,8 @@ public class CustomItem {
 	public static ItemStack getWonItem() {
 		ItemStack item = new ItemStack(Material.END_CRYSTAL);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(Chat.f("&6勝者の証"));
-		meta.setLore(Arrays.asList("勝者に与えられる証", "ダイヤと交換できる"));
+		meta.setDisplayName(Chat.f("&6勝者の証&6"));
+		meta.setLore(Arrays.asList(Chat.f("&5勝者に与えられる証"), Chat.f("&5ダイヤと交換できる")));
 		item.setItemMeta(meta);
 		return item;
 	}

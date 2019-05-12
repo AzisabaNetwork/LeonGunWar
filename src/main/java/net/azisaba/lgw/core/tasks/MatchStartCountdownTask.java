@@ -9,8 +9,7 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class MatchStartCountdownTask extends BukkitRunnable {
 
-	//			private int timeLeft = 21;
-	private int timeLeft = 5; // デバッグ
+	private int timeLeft = 21;
 
 	@Override
 	public void run() {

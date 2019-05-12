@@ -32,6 +32,11 @@ public class MatchStartDetectListener implements Listener {
 			return;
 		}
 
+		// モードがnullの場合return
+		if (LeonGunWar.getPlugin().getManager().getMatchMode() == null) {
+			return;
+		}
+
 		// カウントダウン開始
 		LeonGunWar.getPlugin().getCountdown().startCountdown();
 	}

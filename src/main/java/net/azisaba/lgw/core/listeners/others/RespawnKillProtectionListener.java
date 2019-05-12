@@ -3,17 +3,17 @@ package net.azisaba.lgw.core.listeners.others;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.tasks.RespawnKillProtectionTask;
-import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
 
 public class RespawnKillProtectionListener implements Listener {
@@ -36,17 +36,23 @@ public class RespawnKillProtectionListener implements Listener {
 		if (OffsetDateTime.now().isBefore(remainTimes.getOrDefault(victim, OffsetDateTime.MIN))) {
 			e.setCancelled(true);
 
-			// 攻撃したプレイヤーにメッセージを表示
+			Player attacker = null;
+			// 攻撃したEntityがプレイヤーならメッセージ送信対象に指定
 			if (e.getDamager() instanceof Player) {
+				attacker = (Player) e.getDamager();
+			} else if (e.getDamager() instanceof Projectile) {
+				// 攻撃したEntityが投げ物なら、投げたEntityを取得
+				ProjectileSource shooter = ((Projectile) e.getDamager()).getShooter();
 
-				// 攻撃されたプレイヤーのチームを取得
-				BattleTeam team = LeonGunWar.getPlugin().getManager().getBattleTeam(victim);
+				// shooterがプレイヤーならメッセージ送信対象に指定
+				if (shooter instanceof Player) {
+					attacker = (Player) shooter;
+				}
+			}
 
-				// 色を取得
-				ChatColor nameColor = team != null ? team.getChatColor() : ChatColor.RESET;
-
-				((Player) e.getDamager()).sendMessage(
-						Chat.f("{0}{1}{2} &7は保護されています！", LeonGunWar.GAME_PREFIX, nameColor, victim.getName()));
+			// attackerがnullではない場合、メッセージを送信
+			if (attacker != null) {
+				attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
 			}
 		}
 	}

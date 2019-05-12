@@ -16,7 +16,7 @@ public class LgwCommand implements CommandExecutor {
 			return true;
 		}
 
-		// debug1なら
+		// debug_startなら
 		if (args[0].equalsIgnoreCase("debug_start")) {
 			// 試合中ならreturn
 			if (LeonGunWar.getPlugin().getManager().isMatching()) {

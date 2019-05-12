@@ -4,21 +4,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.base.Strings;
 
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.MatchManager.MatchMode;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
+import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
+import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
@@ -35,14 +46,20 @@ public class MatchControlListener implements Listener {
 			return;
 		}
 
-		// 各チームのポイントを取得して比較し、一番ポイントが多いチームを取得
-		BattleTeam winner = Stream.of(BattleTeam.values())
-				.max(Comparator.comparing(LeonGunWar.getPlugin().getManager()::getCurrentTeamPoint))
-				.orElse(null);
+		// 一番高いポイントを取得
+		int maxPoint = Stream.of(BattleTeam.values())
+				.map(LeonGunWar.getPlugin().getManager()::getCurrentTeamPoint)
+				.max(Comparator.naturalOrder())
+				.orElse(-1);
+
+		// 一番高いポイントと同じポイントのチームをList形式で取得
+		List<BattleTeam> winners = Stream.of(BattleTeam.values())
+				.filter(team -> LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team) == maxPoint)
+				.collect(Collectors.toList());
 
 		// イベントを呼び出す
 		MatchFinishedEvent event = new MatchFinishedEvent(LeonGunWar.getPlugin().getManager().getCurrentGameMap(),
-				winner,
+				winners,
 				LeonGunWar.getPlugin().getManager().getTeamPlayers());
 		Bukkit.getPluginManager().callEvent(event);
 	}
@@ -53,14 +70,18 @@ public class MatchControlListener implements Listener {
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
 		// 勝ったチームがあれば勝者の証を付与
-		if (e.getWinner() != null) {
-			// チームメンバーを取得
-			List<Player> winnerPlayers = e.getTeamPlayers(e.getWinner());
+		if (e.getWinners().size() >= 1) {
 
-			for (Player p : winnerPlayers) {
-				// 勝者の証を付与
-				p.getInventory().addItem(CustomItem.getWonItem());
-			}
+			// 各チームに勝者の証を付与
+			e.getWinners().forEach(wonTeam -> {
+				// チームメンバーを取得
+				List<Player> winnerPlayers = e.getTeamPlayers(wonTeam);
+
+				for (Player p : winnerPlayers) {
+					// 勝者の証を付与
+					p.getInventory().addItem(CustomItem.getWonItem());
+				}
+			});
 		}
 
 		// 試合に参加した全プレイヤーを取得
@@ -170,5 +191,140 @@ public class MatchControlListener implements Listener {
 			// アクションバーに表示
 			JSONMessage.create(msg).actionbar(p);
 		}
+	}
+
+	@EventHandler
+	public void onPlayerKickedMatch(PlayerKickMatchEvent e) {
+		MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+		// 現在のプレイヤーを取得
+		Map<BattleTeam, List<Player>> playerMap = manager.getTeamPlayers();
+
+		// もし0人のチームがある場合は試合を強制終了
+		for (List<Player> playerList : playerMap.values()) {
+			if (playerList.size() <= 0) {
+
+				// イベント作成
+				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(),
+						new ArrayList<BattleTeam>(), playerMap);
+				// 呼び出し
+				Bukkit.getPluginManager().callEvent(event);
+				break;
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onAddTeamPoint(TeamPointIncreasedEvent e) {
+
+		// TDMではない場合return
+		if (LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.TEAM_DEATH_MATCH) {
+			return;
+		}
+
+		// 40ならメッセージを表示
+		if (e.getCurrentPoint() == 40) {
+			Bukkit.broadcastMessage(
+					Chat.f("{0}&7残り&e{1}キル&7で&r{2}&7が勝利！", LeonGunWar.GAME_PREFIX, 10,
+							e.getTeam().getDisplayTeamName()));
+		} else if (e.getCurrentPoint() == 45) {
+			Bukkit.broadcastMessage(
+					Chat.f("{0}&7残り&e{1}キル&7で&r{2}&7が勝利！", LeonGunWar.GAME_PREFIX, 5,
+							e.getTeam().getDisplayTeamName()));
+		} else if (e.getCurrentPoint() == 50) {
+			MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+			// 試合終了
+			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()),
+					manager.getTeamPlayers());
+			Bukkit.getPluginManager().callEvent(event);
+		}
+	}
+
+	@EventHandler
+	public void remainTimeMessage(MatchTimeChangedEvent e) {
+		// 残り時間が指定された時間の場合チャット欄でお知らせ
+		if (e.getTimeLeft() == 60) {
+			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, "1分"));
+		} else if (e.getTimeLeft() == 30 || e.getTimeLeft() == 10 || 0 < e.getTimeLeft() && e.getTimeLeft() <= 5) {
+			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}秒&7！", LeonGunWar.GAME_PREFIX, e.getTimeLeft()));
+		}
+
+		// 5秒以下なら音を鳴らす
+		if (0 < e.getTimeLeft() && e.getTimeLeft() <= 5) {
+			Bukkit.getOnlinePlayers().forEach(p -> {
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1, 1);
+			});
+		}
+	}
+
+	@EventHandler
+	public void remainTimeBossbar(MatchTimeChangedEvent e) {
+
+		final BossBar progressBar;
+
+		// progressBarがnullならバーを作成
+		if (LeonGunWar.getPlugin().getManager().getBossBar() == null) {
+			// 名前は後で設定するので空欄
+			progressBar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
+			// 設定
+			LeonGunWar.getPlugin().getManager().setBossBar(progressBar);
+		} else {
+			progressBar = LeonGunWar.getPlugin().getManager().getBossBar();
+		}
+
+		// 名前を変更
+		progressBar.setTitle(Chat.f("&6残り時間 - {0}", formatSeconds(e.getTimeLeft())));
+		// 進行度を設定
+		progressBar.setProgress(e.getTimeLeft() / 600d);
+
+		Bukkit.getOnlinePlayers().forEach(p -> {
+
+			// プレイヤーにボスバーが表示されていなかったら表示
+			if (!progressBar.getPlayers().contains(p)) {
+				progressBar.addPlayer(p);
+			}
+		});
+	}
+
+	@EventHandler
+	public void bossBarClearListener(MatchFinishedEvent e) {
+		// 1tick送らせて削除
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				BossBar progressBar = LeonGunWar.getPlugin().getManager().getBossBar();
+
+				// 全プレイヤーから削除
+				progressBar.removeAll();
+				// nullに設定
+				LeonGunWar.getPlugin().getManager().setBossBar(null);
+			}
+		}.runTaskLater(LeonGunWar.getPlugin(), 1);
+	}
+
+	private String formatSeconds(int seconds) {
+		StringBuilder time = new StringBuilder();
+		// 3600より多かったら時間にする
+		if (seconds >= 3600) {
+			int hour = (int) Math.floor(seconds / 3600);
+			time.append(String.format("%02d", hour) + ":");
+			seconds = seconds - hour * 3600;
+		} else {
+			time.append("00:");
+		}
+
+		// 60より多かったら分にする
+		if (seconds >= 60) {
+			int minutes = (int) Math.floor(seconds / 60);
+			time.append(String.format("%02d", minutes) + ":");
+			seconds = seconds - minutes * 60;
+		} else {
+			time.append("00:");
+		}
+
+		// 0より多かったら秒にする
+		time.append(String.format("%02d", seconds));
+		return time.toString();
 	}
 }

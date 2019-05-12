@@ -1,18 +1,26 @@
 package net.azisaba.lgw.core;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
+import net.azisaba.lgw.core.kills.KillStreaks;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.EntrySignListener;
+import net.azisaba.lgw.core.listeners.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
+import net.azisaba.lgw.core.listeners.MatchModeSignListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
+import net.azisaba.lgw.core.listeners.PlayerControlListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
+import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
+import net.azisaba.lgw.core.listeners.others.EasyMigrateListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
+import net.azisaba.lgw.core.listeners.others.KillStreaksListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
@@ -23,15 +31,18 @@ import net.azisaba.lgw.core.utils.Chat;
 public class LeonGunWar extends JavaPlugin {
 
 	public static final String GAME_PREFIX = Chat.f("&7[&6PvP&7]&r ");
+	public static final String SIGN_ACTIVE = Chat.f("&a[ACTIVE]");
+	public static final String SIGN_INACTIVE = Chat.f("&c[INACTIVE]");
 
 	// plugin
 	private static LeonGunWar plugin;
 
-	private MatchStartCountdown countdown;
-	private ScoreboardDisplayer scoreboardDisplayer;
-	private MapLoader mapLoader;
-	private MapContainer mapContainer;
-	private MatchManager manager;
+	private final MatchStartCountdown countdown = new MatchStartCountdown();
+	private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
+	private final MapLoader mapLoader = new MapLoader();
+	private final MapContainer mapContainer = new MapContainer();
+	private final MatchManager manager = new MatchManager();
+	private final KillStreaks killStreaks = new KillStreaks();
 
 	/**
 	 * MatchStartCountdownのインスタンスを返します
@@ -73,16 +84,22 @@ public class LeonGunWar extends JavaPlugin {
 		return manager;
 	}
 
+	/**
+	 * KillStreaksのインスタンスを返します
+	 * @return KillStreaksのインスタンス
+	 */
+	public KillStreaks getKillStreaks() {
+		return killStreaks;
+	}
+
 	@Override
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
-		countdown = new MatchStartCountdown();
-		scoreboardDisplayer = new ScoreboardDisplayer();
-		mapLoader = new MapLoader();
-		mapContainer = new MapContainer();
 		mapContainer.loadMaps();
-		manager = new MatchManager();
 		manager.initialize();
+
+		// 移行を簡単にする [DEBUG]
+		getServer().getPluginManager().registerEvents(new EasyMigrateListener(), this);
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
@@ -93,8 +110,11 @@ public class LeonGunWar extends JavaPlugin {
 		// リスナーの登録
 		getServer().getPluginManager().registerEvents(new MatchControlListener(), this);
 		getServer().getPluginManager().registerEvents(new EntrySignListener(), this);
+		getServer().getPluginManager().registerEvents(new MatchModeSignListener(), this);
+		getServer().getPluginManager().registerEvents(new JoinAfterSignListener(), this);
 		getServer().getPluginManager().registerEvents(new MatchStartDetectListener(), this);
 		getServer().getPluginManager().registerEvents(new DamageListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerControlListener(), this);
 
 		// リスナーの登録 (others)
 		getServer().getPluginManager().registerEvents(new NoArrowGroundListener(), this);
@@ -106,12 +126,22 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
 		getServer().getPluginManager().registerEvents(new AutoRespawnListener(), this);
 		getServer().getPluginManager().registerEvents(new AfkKickEntryListener(), this);
+		getServer().getPluginManager().registerEvents(new KillStreaksListener(), this);
+		getServer().getPluginManager().registerEvents(new DisableRecipeListener(), this);
 
 		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
 
 	@Override
 	public void onDisable() {
+		// Plugin終了時の処理を呼び出す
+		getManager().onDisablePlugin();
+
+		// DisplayNameを戻す
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			p.setDisplayName(p.getName());
+		});
+
 		getServer().getLogger().info(Chat.f("{0} disabled.", getName()));
 	}
 

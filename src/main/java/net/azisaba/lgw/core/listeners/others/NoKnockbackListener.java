@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners.others;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.util.Vector;
 
 /**
  * ノックバックを無効化するためのクラス
@@ -17,6 +18,6 @@ public class NoKnockbackListener implements Listener {
 	 */
 	@EventHandler
 	public void onPlayerVelocity(PlayerVelocityEvent e) {
-		e.setCancelled(true);
+		e.setVelocity(new Vector(0, 0, 0));
 	}
 }

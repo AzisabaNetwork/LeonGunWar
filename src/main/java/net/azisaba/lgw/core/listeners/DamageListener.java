@@ -1,12 +1,13 @@
 package net.azisaba.lgw.core.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
@@ -24,6 +25,8 @@ import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.MatchManager.MatchMode;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
@@ -63,10 +66,10 @@ public class DamageListener implements Listener {
 			return;
 		}
 
-		// ポイントを追加
-		LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 		// 個人キルを追加
 		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
+		// ポイントを追加
+		LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 
 		// タイトルを表示
 		killer.sendTitle("", Chat.f("&c+1 Kill"), 0, 20, 10);
@@ -121,6 +124,9 @@ public class DamageListener implements Listener {
 		if (lastDamaged.containsKey(deathPlayer)) {
 			lastDamaged.remove(deathPlayer);
 		}
+
+		// 連続キルを停止
+		LeonGunWar.getPlugin().getKillStreaks().remove(deathPlayer);
 	}
 
 	/**
@@ -151,6 +157,47 @@ public class DamageListener implements Listener {
 		lastDamaged.put(victim, damagedMap);
 	}
 
+	@EventHandler(ignoreCancelled = false, priority = EventPriority.HIGH)
+	public void onLeaderKilledDetector(PlayerDeathEvent e) {
+		MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+		// LDMではなければreturn
+		if (manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH) {
+			return;
+		}
+
+		// 死んだプレイヤー
+		Player death = e.getEntity();
+
+		// 死んだプレイヤーと殺したプレイヤーが同じ (またはnull) ならreturn
+		if (death.getKiller() == null || death == death.getKiller()) {
+			return;
+		}
+
+		// 各チームのリーダーを取得
+		Map<BattleTeam, Player> leaders = manager.getLDMLeaderMap();
+
+		// 死んだプレイヤーがリーダーだった場合、試合を終了する
+		for (BattleTeam team : leaders.keySet()) {
+
+			// リーダーではない場合continue
+			if (leaders.get(team) != death) {
+				continue;
+			}
+
+			// その他のチームを取得
+			List<BattleTeam> teams = new ArrayList<>(leaders.keySet());
+			// 殺されたリーダーのチームを削除
+			teams.remove(team);
+
+			// イベント作成、呼び出し
+			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
+					manager.getTeamPlayers());
+			Bukkit.getPluginManager().callEvent(event);
+			break;
+		}
+	}
+
 	/**
 	 * キルログを変更するListener
 	 */
@@ -158,25 +205,14 @@ public class DamageListener implements Listener {
 	public void deathMessageChanger(PlayerDeathEvent e) {
 		Player p = e.getEntity();
 
-		// 殺したEntityが居ない場合自滅とする
-		if (p.getKiller() == null) {
-
-			// チーム取得
-			BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
-
-			final ChatColor nameColor;
-			// チームがない場合グレー
-			if (deathTeam == null) {
-				nameColor = ChatColor.GRAY;
-			} else {
-				nameColor = deathTeam.getChatColor();
-			}
+		// 殺したEntityが居ない場合か、同じプレイヤーの場合自滅とする
+		if (p.getKiller() == null || p.getKiller() == p) {
 
 			// メッセージ削除
 			e.setDeathMessage(null);
 
 			// メッセージを作成
-			String msg = Chat.f("{0}{1}{2} &7は自滅した！", LeonGunWar.GAME_PREFIX, nameColor, p.getName());
+			String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getDisplayName());
 			// メッセージ送信
 			p.getWorld().getPlayers().forEach(player -> {
 				player.sendMessage(msg);
@@ -208,22 +244,12 @@ public class DamageListener implements Listener {
 			itemName = Chat.f("&6{0}", item.getType().name());
 		}
 
-		// killerのチーム
-		BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
-		// pのチーム (死んだプレイヤーのチーム)
-		BattleTeam deathTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(p);
-
-		// killerTeamがnullではない場合は色を取得
-		ChatColor killerTeamColor = killerTeam != null ? killerTeam.getChatColor() : ChatColor.RESET;
-
-		// deathTeamがnullではない場合は色を取得
-		ChatColor deathTeamColor = deathTeam != null ? deathTeam.getChatColor() : ChatColor.RESET;
-
 		// メッセージ削除
 		e.setDeathMessage(null);
 		// メッセージ作成
-		String msg = Chat.f("{0}{1}{2} &7━━━[ &r{3} &7]━━━> {4}{5}", LeonGunWar.GAME_PREFIX, killerTeamColor,
-				killer.getName(), itemName, deathTeamColor, p.getName());
+		String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(),
+				itemName,
+				p.getDisplayName());
 
 		// メッセージ送信
 		p.getWorld().getPlayers().forEach(player -> {
