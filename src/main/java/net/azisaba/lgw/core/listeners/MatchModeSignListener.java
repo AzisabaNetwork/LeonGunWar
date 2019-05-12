@@ -104,7 +104,7 @@ public class MatchModeSignListener implements Listener {
 		Sign sign = (Sign) clickedBlock.getState();
 
 		// 1行目が [entry] または [leave] でなければreturn
-		if (!sign.getLine(0).equals("[mode]")) {
+		if (!Chat.r(sign.getLine(0)).equalsIgnoreCase("[mode]")) {
 			return;
 		}
 
