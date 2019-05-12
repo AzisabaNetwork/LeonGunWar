@@ -77,7 +77,7 @@ public class AfkKickEntryListener implements Listener {
 					long lastMovedMilliSecond = lastMoved.getOrDefault(p, 0L);
 
 					// 30秒より少なければreturn
-					if (lastMovedMilliSecond + 1000 * 30 > System.currentTimeMillis()) {
+					if (lastMovedMilliSecond + 1000 * 60 > System.currentTimeMillis()) {
 						return;
 					}
 
