@@ -54,8 +54,8 @@ public class JoinAfterSignListener implements Listener {
 		// Signにキャスト
 		Sign sign = (Sign) clickedBlock.getState();
 
-		// 1行目が [entry] でなければreturn
-		if (!sign.getLine(0).equals("[join]")) {
+		// 1行目が [rejoin] でなければreturn
+		if (!sign.getLine(0).equals("[rejoin]")) {
 			return;
 		}
 
