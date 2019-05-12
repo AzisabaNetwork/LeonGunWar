@@ -171,7 +171,7 @@ public class MatchControlListener implements Listener {
 
 			// 両方を足して0の場合は白く表示
 			if (kills + deaths == 0) {
-				msg = "0 Kill " + Strings.repeat("┃", 50) + " 0 Death";
+				msg = Chat.f("&6&l{0} &rKill(s) &7[ &r{1} &7] &6&l{2} &rDeath(s)", 0, Strings.repeat("┃", 50), 0);
 			} else { // それ以外の場合はメーター作成
 				// キルのパーセンテージ
 				double killsPercentage = (double) kills / (double) (kills + deaths) * 100d;
@@ -182,11 +182,11 @@ public class MatchControlListener implements Listener {
 				msg += Chat.f("&5{0}", Strings.repeat("┃", (int) deathsPercentage / 2));
 
 				// キル数とデス数を数字で表示
-				msg = Chat.f("&e{0} Kill(s) {1} &e{2} Death(s)", kills, msg, deaths);
+				msg = Chat.f("&6&l{0} &rKill(s) &7[ &r{1} &7] &6&l{2} &rDeath(s)", kills, msg, deaths);
 			}
 
 			// アシスト数を表示
-			msg += Chat.f(" &8{0} Assist(s)", assists);
+			msg += Chat.f(" &7&l/ &6&l{0} &rAssist(s)", assists);
 
 			// アクションバーに表示
 			JSONMessage.create(msg).actionbar(p);
