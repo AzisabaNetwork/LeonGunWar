@@ -32,6 +32,7 @@ public class AutoRespawnListener implements Listener {
 		Player p = e.getPlayer();
 
 		new BukkitRunnable() {
+			@Override
 			public void run() {
 
 				// 体力と空腹度を1にする
