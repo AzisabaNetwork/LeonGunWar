@@ -229,7 +229,7 @@ public class DamageListener implements Listener {
 		ItemStack item = killer.getInventory().getItemInMainHand();
 
 		// アイテム名を取得
-		final String itemName;
+		String itemName;
 		if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
 			itemName = Chat.f("&6素手");
 		} else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
@@ -240,6 +240,11 @@ public class DamageListener implements Listener {
 			String nodes = crackShot.getWeaponTitle(item);
 			// DisplayNameを取得
 			itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
+
+			// DisplayNameがnullの場合は普通にアイテム名を取得
+			if (itemName == null) {
+				itemName = item.getItemMeta().getDisplayName();
+			}
 		} else { // それ以外
 			itemName = Chat.f("&6{0}", item.getType().name());
 		}
