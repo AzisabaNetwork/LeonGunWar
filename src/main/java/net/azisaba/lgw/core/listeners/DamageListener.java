@@ -124,6 +124,9 @@ public class DamageListener implements Listener {
 		if (lastDamaged.containsKey(deathPlayer)) {
 			lastDamaged.remove(deathPlayer);
 		}
+
+		// 連続キルを停止
+		LeonGunWar.getPlugin().getKillStreaks().remove(deathPlayer);
 	}
 
 	/**

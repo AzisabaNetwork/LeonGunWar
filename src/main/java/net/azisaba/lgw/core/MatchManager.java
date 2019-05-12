@@ -16,6 +16,9 @@ import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -85,6 +88,9 @@ public class MatchManager {
 	// チームのリーダー
 	private final HashMap<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
 
+	// 試合時間を表示するボスバー
+	private BossBar bar = null;
+
 	/**
 	 * 初期化メソッド
 	 * Pluginが有効化されたときのみ呼び出されることを前提としています
@@ -138,6 +144,9 @@ public class MatchManager {
 
 		// timeLeftを600に変更
 		timeLeft.set(600);
+
+		// ボスバー作成
+		bar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
 
 		// マップを抽選
 		currentMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
@@ -638,6 +647,21 @@ public class MatchManager {
 	}
 
 	/**
+	 * 試合時間を表示するボスバーを取得します
+	 * @return 試合に使用するボスバー
+	 */
+	public BossBar getBossBar() {
+		return bar;
+	}
+
+	/**
+	 * 試合時間を表示するボスバーを設定します
+	 */
+	public void setBossBar(BossBar bar) {
+		this.bar = bar;
+	}
+
+	/**
 	 * LDMで使用されるメソッド。リーダーとなるプレイヤーを取得します
 	 * @param team リーダーを取得したいチーム
 	 * @return そのチームのリーダー / LDMが指定されていない場合もしくは存在しなければnullを返す
@@ -676,6 +700,40 @@ public class MatchManager {
 		if (getEntryPlayers().size() >= 2) {
 			LeonGunWar.getPlugin().getCountdown().startCountdown();
 		}
+	}
+
+	protected void onDisablePlugin() {
+		// 試合をしていなければreturn
+		if (!isMatching) {
+			return;
+		}
+
+		// 試合に参加しているプレイヤーを取得
+		List<Player> plist = getAllTeamPlayers();
+
+		// 全員をロビーにTP
+		plist.forEach(p -> {
+
+			// メッセージを表示
+			p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
+			// スポーンにTP
+			p.teleport(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation());
+
+			// アーマー削除
+			p.getInventory().setChestplate(null);
+
+			// 各記録を取得
+			int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
+			int deaths = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDeaths(p);
+			int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
+
+			// プレイヤーの戦績を表示
+			p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
+					deaths, assists));
+		});
+
+		// ボスバーを非表示
+		bar.removeAll();
 	}
 
 	private void setUpPlayer(Player p, BattleTeam team) {

@@ -258,15 +258,19 @@ public class MatchControlListener implements Listener {
 		}
 	}
 
-	private BossBar progressBar = null;
-
 	@EventHandler
 	public void remainTimeBossbar(MatchTimeChangedEvent e) {
 
+		final BossBar progressBar;
+
 		// progressBarがnullならバーを作成
-		if (progressBar == null) {
+		if (LeonGunWar.getPlugin().getManager().getBossBar() == null) {
 			// 名前は後で設定するので空欄
 			progressBar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
+			// 設定
+			LeonGunWar.getPlugin().getManager().setBossBar(progressBar);
+		} else {
+			progressBar = LeonGunWar.getPlugin().getManager().getBossBar();
 		}
 
 		// 名前を変更
@@ -289,11 +293,12 @@ public class MatchControlListener implements Listener {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
+				BossBar progressBar = LeonGunWar.getPlugin().getManager().getBossBar();
+
 				// 全プレイヤーから削除
 				progressBar.removeAll();
-
 				// nullに設定
-				progressBar = null;
+				LeonGunWar.getPlugin().getManager().setBossBar(null);
 			}
 		}.runTaskLater(LeonGunWar.getPlugin(), 1);
 	}
