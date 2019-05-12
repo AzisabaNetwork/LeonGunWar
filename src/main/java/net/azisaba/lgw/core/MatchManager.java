@@ -136,8 +136,7 @@ public class MatchManager {
 		Preconditions.checkState(!isMatching, "A match is already started.");
 
 		// timeLeftを600に変更
-		//		timeLeft = 600;
-		timeLeft.set(60); // Debug
+		timeLeft.set(600);
 
 		// マップを抽選
 		currentMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
