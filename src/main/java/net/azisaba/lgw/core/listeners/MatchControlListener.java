@@ -20,6 +20,7 @@ import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.KillDeathCounter.KDPlayerData;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.MatchManager.MatchMode;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
@@ -210,6 +211,12 @@ public class MatchControlListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onAddTeamPoint(TeamPointIncreasedEvent e) {
+
+		// TDMではない場合return
+		if (LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.TEAM_DEATH_MATCH) {
+			return;
+		}
+
 		// 40ならメッセージを表示
 		if (e.getCurrentPoint() == 40) {
 			Bukkit.broadcastMessage(
