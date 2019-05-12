@@ -64,7 +64,7 @@ public class ScoreboardDisplayer {
 			String line6 = "";
 			String line7 = Chat.f("&7現在のマップ&a: &c{0}", mapName);
 			String line8 = "";
-			String line9 = Chat.f("&6{0} &7で今すぐ遊べ！", "azisaba.net");
+			String line9 = Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net");
 
 			// リストにして返す
 			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9);
