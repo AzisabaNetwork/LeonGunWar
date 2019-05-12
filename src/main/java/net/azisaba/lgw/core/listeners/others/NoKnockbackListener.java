@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -18,7 +19,8 @@ public class NoKnockbackListener implements Listener {
 	 */
 	@EventHandler
 	public void onPlayerVelocity(PlayerVelocityEvent e) {
-		if (e.getPlayer().getLastDamageCause().getCause() != DamageCause.PROJECTILE) {
+		Player p = e.getPlayer();
+		if (p.getLastDamageCause() != null && p.getLastDamageCause().getCause() != DamageCause.PROJECTILE) {
 			e.setVelocity(new Vector());
 		} else {
 			e.setCancelled(true);
