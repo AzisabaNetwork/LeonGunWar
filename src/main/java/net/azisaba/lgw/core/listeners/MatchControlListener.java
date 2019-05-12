@@ -9,10 +9,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.base.Strings;
 
@@ -234,5 +239,87 @@ public class MatchControlListener implements Listener {
 					manager.getTeamPlayers());
 			Bukkit.getPluginManager().callEvent(event);
 		}
+	}
+
+	@EventHandler
+	public void remainTimeMessage(MatchTimeChangedEvent e) {
+		// 残り時間が指定された時間の場合チャット欄でお知らせ
+		if (e.getTimeLeft() == 60) {
+			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, "1分"));
+		} else if (e.getTimeLeft() == 30 || e.getTimeLeft() == 10 || (0 < e.getTimeLeft() && e.getTimeLeft() <= 5)) {
+			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}秒&7！", LeonGunWar.GAME_PREFIX, e.getTimeLeft()));
+		}
+
+		// 5秒以下なら音を鳴らす
+		if (0 < e.getTimeLeft() && e.getTimeLeft() <= 5) {
+			Bukkit.getOnlinePlayers().forEach(p -> {
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1, 1);
+			});
+		}
+	}
+
+	private BossBar progressBar = null;
+
+	@EventHandler
+	public void remainTimeBossbar(MatchTimeChangedEvent e) {
+
+		// progressBarがnullならバーを作成
+		if (progressBar == null) {
+			// 名前は後で設定するので空欄
+			progressBar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
+		}
+
+		// 名前を変更
+		progressBar.setTitle(Chat.f("&6残り時間 - {0}", formatSeconds(e.getTimeLeft())));
+		// 進行度を設定
+		progressBar.setProgress(((double) e.getTimeLeft()) / 600d);
+
+		Bukkit.getOnlinePlayers().forEach(p -> {
+
+			// プレイヤーにボスバーが表示されていなかったら表示
+			if (!progressBar.getPlayers().contains(p)) {
+				progressBar.addPlayer(p);
+			}
+		});
+	}
+
+	@EventHandler
+	public void bossBarClearListener(MatchFinishedEvent e) {
+		// 1tick送らせて削除
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				// 全プレイヤーから削除
+				progressBar.removeAll();
+
+				// nullに設定
+				progressBar = null;
+			}
+		}.runTaskLater(LeonGunWar.getPlugin(), 1);
+	}
+
+	private String formatSeconds(int seconds) {
+		StringBuilder time = new StringBuilder();
+		// 3600より多かったら時間にする
+		if (seconds >= 3600) {
+			int hour = (int) Math.floor(seconds / 3600);
+			time.append(String.format("%02d", hour) + ":");
+			seconds = seconds - (hour * 3600);
+		} else {
+			time.append("00:");
+		}
+
+		// 60より多かったら分にする
+		if (seconds >= 60) {
+			int minutes = (int) Math.floor(seconds / 60);
+			time.append(String.format("%02d", minutes) + ":");
+			seconds = seconds - (minutes * 60);
+		} else {
+			time.append("00:");
+		}
+
+		// 0より多かったら秒にする
+		time.append(String.format("%02d", seconds));
+		return time.toString();
 	}
 }
