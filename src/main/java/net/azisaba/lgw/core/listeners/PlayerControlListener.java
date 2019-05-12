@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
@@ -70,5 +71,28 @@ public class PlayerControlListener implements Listener {
 	@EventHandler
 	public void onPlayerQUit(PlayerQuitEvent e) {
 		LeonGunWar.getPlugin().getManager().removeEntryPlayer(e.getPlayer());
+	}
+
+	@EventHandler
+	public void onChangeWorld(PlayerChangedWorldEvent e) {
+		Player p = e.getPlayer();
+
+		// 試合中ではなかったらreturn
+		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
+			return;
+		}
+
+		// プレイヤーが試合をしていなかったらreturn
+		if (!LeonGunWar.getPlugin().getManager().getAllTeamPlayers().contains(p)) {
+			return;
+		}
+
+		// Fromが試合のワールドではなかったらreturn
+		if (e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
+			return;
+		}
+
+		// 退出
+		LeonGunWar.getPlugin().getManager().leavePlayer(p);
 	}
 }

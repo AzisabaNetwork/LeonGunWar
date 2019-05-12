@@ -383,6 +383,10 @@ public class MatchManager {
 		// スポーンにTP
 		p.teleport(getLobbySpawnLocation());
 
+		leavePlayer(p);
+	}
+
+	public void leavePlayer(Player p) {
 		// チームに含まれていれば退出させる
 		if (redTeam.hasEntry(p.getName())) {
 			redTeam.removeEntry(p.getName());
