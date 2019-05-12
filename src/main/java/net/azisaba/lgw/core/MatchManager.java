@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -681,7 +680,7 @@ public class MatchManager {
 			// チーム作成
 			redTeam = scoreboard.registerNewTeam("Red");
 			// チームの色を指定
-			redTeam.setColor(ChatColor.DARK_RED);
+			redTeam.setColor(BattleTeam.RED.getChatColor());
 			// フレンドリーファイアーを無効化
 			redTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
@@ -696,7 +695,7 @@ public class MatchManager {
 			// チーム作成
 			blueTeam = scoreboard.registerNewTeam("Blue");
 			// チームの色を指定
-			blueTeam.setColor(ChatColor.DARK_BLUE);
+			blueTeam.setColor(BattleTeam.BLUE.getChatColor());
 			// フレンドリーファイアーを無効化
 			blueTeam.setAllowFriendlyFire(false);
 			// 他チームからネームタグが見えるのを無効化
