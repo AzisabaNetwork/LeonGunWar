@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager.MatchMode;
 
 public class LgwCommand implements CommandExecutor {
 
@@ -26,6 +27,11 @@ public class LgwCommand implements CommandExecutor {
 			Bukkit.getOnlinePlayers().forEach(p -> {
 				LeonGunWar.getPlugin().getManager().addEntryPlayer(p);
 			});
+
+			// モード指定されてなければTDMに指定
+			if (LeonGunWar.getPlugin().getManager().getMatchMode() == null) {
+				LeonGunWar.getPlugin().getManager().setMatchMode(MatchMode.TEAM_DEATH_MATCH);
+			}
 
 			// カウントダウン終了
 			LeonGunWar.getPlugin().getCountdown().stopCountdown();
