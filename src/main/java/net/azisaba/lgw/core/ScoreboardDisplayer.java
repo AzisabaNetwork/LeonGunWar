@@ -10,6 +10,8 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.google.common.base.Preconditions;
+
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
 
@@ -73,8 +75,7 @@ public class ScoreboardDisplayer {
 	}
 
 	// Objectiveを作成したいスコアボード
-	// 初期設定でボードはMain
-	private Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+	private Scoreboard board;
 
 	/**
 	 * 使用したいScoreboardを指定
@@ -89,6 +90,8 @@ public class ScoreboardDisplayer {
 	 * @param plist スコアボードを表示させたいプレイヤーのリスト
 	 */
 	public void updateScoreboard(List<Player> plist) {
+		Preconditions.checkNotNull(board, "A scoreboard is not initialized yet.");
+
 		if (Bukkit.getOnlinePlayers().size() <= 0) {
 			return;
 		}
@@ -146,13 +149,15 @@ public class ScoreboardDisplayer {
 	 * 現在設定されているEntryを全てリセットする
 	 */
 	private void clearEntries() {
+		Preconditions.checkNotNull(board, "A scoreboard is not initialized yet.");
+
 		board.getEntries().forEach(board::resetScores);
 	}
 
 	public void clearSideBar() {
+		Preconditions.checkNotNull(board, "A scoreboard is not initialized yet.");
+
 		// boardがnullでなければSIDEBARを削除
-		if (board != null) {
-			board.clearSlot(DisplaySlot.SIDEBAR);
-		}
+		board.clearSlot(DisplaySlot.SIDEBAR);
 	}
 }

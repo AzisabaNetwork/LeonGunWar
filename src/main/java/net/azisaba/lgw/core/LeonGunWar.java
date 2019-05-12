@@ -1,9 +1,5 @@
 package net.azisaba.lgw.core;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
@@ -21,6 +17,7 @@ import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
+import net.azisaba.lgw.core.listeners.others.EasyMigrateListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.KillStreaksListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
@@ -99,45 +96,7 @@ public class LeonGunWar extends JavaPlugin {
 		manager.initialize();
 
 		// 移行を簡単にする [DEBUG]
-		Stream.of(
-				"UnbreakableArmor",
-				"NoArrowGround",
-				"noKnockback",
-				"CancelMan",
-				"RecipeHaMouShindeiru",
-				"Yaitekanai",
-				"KillStreaks",
-				"Protectiontime",
-				"BugSolver",
-				"CatFood",
-				"ColorTeaming",
-				"ColorTeamingEntry",
-				"ExpTimer",
-				"BarAPI")
-				.map(Bukkit.getPluginManager()::getPlugin)
-				.filter(Objects::nonNull)
-				.forEach(Bukkit.getPluginManager()::disablePlugin);
-		Stream.of(
-				"cargo",
-				"carrier",
-				"drone",
-				"encore",
-				"express",
-				"grind",
-				"hijacked",
-				"magma",
-				"meltdown",
-				"nuketown",
-				"overflow",
-				"plaza",
-				"raid",
-				"slums",
-				"standoff",
-				"studio",
-				"vertigo")
-				.map(Bukkit::getWorld)
-				.filter(Objects::nonNull)
-				.forEach(world -> Bukkit.unloadWorld(world, true));
+		getServer().getPluginManager().registerEvents(new EasyMigrateListener(), this);
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
