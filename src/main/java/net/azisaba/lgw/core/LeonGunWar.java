@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
@@ -133,6 +134,11 @@ public class LeonGunWar extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+
+		// 全プレイヤーのDisplayNameを戻す
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			p.setDisplayName(p.getName());
+		});
 		getServer().getLogger().info(Chat.f("{0} disabled.", getName()));
 	}
 
