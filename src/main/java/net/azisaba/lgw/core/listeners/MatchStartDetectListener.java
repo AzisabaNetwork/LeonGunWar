@@ -37,8 +37,10 @@ public class MatchStartDetectListener implements Listener {
 			return;
 		}
 
-		// カウントダウン開始
-		LeonGunWar.getPlugin().getCountdown().startCountdown();
+		// カウントダウンが始まっていない場合はカウントダウン開始
+		if (!LeonGunWar.getPlugin().getCountdown().isRunning()) {
+			LeonGunWar.getPlugin().getCountdown().startCountdown();
+		}
 	}
 
 	/**
