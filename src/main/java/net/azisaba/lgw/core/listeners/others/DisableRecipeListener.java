@@ -28,6 +28,11 @@ public class DisableRecipeListener implements Listener {
 			return;
 		}
 
+		// クラフト後のアイテムがダイヤかエメラルドの場合は無視
+		if (result.getType() == Material.DIAMOND || result.getType() == Material.EMERALD) {
+			return;
+		}
+
 		// クラフト後のアイテムがダイヤブロックかエメラルドブロックの場合は無視
 		if (result.getType() == Material.DIAMOND_BLOCK || result.getType() == Material.EMERALD_BLOCK) {
 			return;
