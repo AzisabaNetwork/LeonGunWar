@@ -387,6 +387,12 @@ public class MatchManager {
 	}
 
 	public void leavePlayer(Player p) {
+
+		// 試合中でない場合はreturn
+		if (!isMatching) {
+			return;
+		}
+
 		// チームに含まれていれば退出させる
 		if (redTeam.hasEntry(p.getName())) {
 			redTeam.removeEntry(p.getName());
@@ -481,12 +487,6 @@ public class MatchManager {
 	 * @return プレイヤーが参加しているチーム
 	 */
 	public BattleTeam getBattleTeam(Player p) {
-
-		// 試合をしていなければreturn null
-		if (!isMatching) {
-			return null;
-		}
-
 		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
 		for (BattleTeam team : BattleTeam.values()) {
 
@@ -509,11 +509,6 @@ public class MatchManager {
 	 * @return 試合中のマップ
 	 */
 	public GameMap getCurrentGameMap() {
-		// 試合中でなかったらnullを返す
-		if (!isMatching) {
-			return null;
-		}
-
 		return currentMap;
 	}
 
@@ -536,6 +531,14 @@ public class MatchManager {
 	}
 
 	/**
+	 * 現在試合中かどうか指定します
+	 * @param value trueで試合中、falseで試合をしていない状態に設定
+	 */
+	public void setMatching(boolean value) {
+		isMatching = value;
+	}
+
+	/**
 	 * 試合の残り秒数を返します
 	 * @return 試合の残り秒数
 	 */
@@ -555,11 +558,6 @@ public class MatchManager {
 	public int getCurrentTeamPoint(BattleTeam team) {
 		// teamがnullならIllegalArgumentException
 		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
-
-		// 試合中でなかったら-1を返す
-		if (!isMatching) {
-			return -1;
-		}
 
 		// ポイント取得、無ければ0
 		return pointMap.getOrDefault(team, 0);

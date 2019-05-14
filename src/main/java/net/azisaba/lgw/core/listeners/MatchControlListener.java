@@ -64,6 +64,14 @@ public class MatchControlListener implements Listener {
 		Bukkit.getPluginManager().callEvent(event);
 	}
 
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void setMatchingListener(MatchFinishedEvent e) {
+		// 試合中ならfalseにする
+		if (LeonGunWar.getPlugin().getManager().isMatching()) {
+			LeonGunWar.getPlugin().getManager().setMatching(false);
+		}
+	}
+
 	/**
 	 * 試合が終わった時の処理を担当するリスナー
 	 */
