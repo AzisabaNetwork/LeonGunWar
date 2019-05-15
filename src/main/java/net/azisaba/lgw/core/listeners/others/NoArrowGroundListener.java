@@ -1,12 +1,12 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.tasks.RemoveGroundArrowTask;
 
 /**
  * 地面に当たった矢を削除するリスナーです。
@@ -28,13 +28,6 @@ public class NoArrowGroundListener implements Listener {
 
 		Arrow arrow = (Arrow) e.getEntity();
 
-		// 1tick後にその矢がブロックに当たっているか確認
-		Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
-			// ブロックに刺さっているか確認
-			if (arrow != null && arrow.isOnGround()) {
-				// 矢を削除
-				arrow.remove();
-			}
-		}, 1);
+		new RemoveGroundArrowTask(arrow).runTaskLater(LeonGunWar.getPlugin(), 0);
 	}
 }

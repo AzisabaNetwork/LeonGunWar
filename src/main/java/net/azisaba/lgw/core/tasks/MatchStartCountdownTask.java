@@ -9,13 +9,10 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class MatchStartCountdownTask extends BukkitRunnable {
 
-	private int timeLeft = 21;
+	private int timeLeft = 20;
 
 	@Override
 	public void run() {
-		// 1秒減らす
-		timeLeft--;
-
 		// 0の場合ゲームスタート
 		if (timeLeft <= 0) {
 			LeonGunWar.getPlugin().getCountdown().stopCountdown();
@@ -55,5 +52,8 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1f, 1f);
 			});
 		}
+
+		// 1秒減らす
+		timeLeft--;
 	}
 }

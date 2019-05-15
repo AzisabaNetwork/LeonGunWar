@@ -65,14 +65,14 @@ public class RespawnKillProtectionListener implements Listener {
 		// リスポーン時間指定
 		remainTimes.put(p, Instant.now().plusSeconds(invincibleSeconds));
 
-		taskMap.compute(p, (p2, task) -> {
+		taskMap.computeIfPresent(p, (key, task) -> {
 			// タスク終了
 			if (task != null) {
 				task.cancel();
 			}
 
 			// タスク開始
-			return new RespawnKillProtectionTask(p2, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+			return new RespawnKillProtectionTask(p, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
 		});
 	}
 }

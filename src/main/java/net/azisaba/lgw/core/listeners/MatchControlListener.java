@@ -14,8 +14,8 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.base.Strings;
 
@@ -28,6 +28,7 @@ import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
+import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
@@ -62,7 +63,7 @@ public class MatchControlListener implements Listener {
 		Bukkit.getPluginManager().callEvent(event);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW)
 	public void setMatchingListener(MatchFinishedEvent e) {
 		// 試合中ならfalseにする
 		if (LeonGunWar.getPlugin().getManager().isMatching()) {
@@ -294,18 +295,8 @@ public class MatchControlListener implements Listener {
 
 	@EventHandler
 	public void bossBarClearListener(MatchFinishedEvent e) {
-		// 1tick送らせて削除
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				BossBar progressBar = LeonGunWar.getPlugin().getManager().getBossBar();
-
-				// 全プレイヤーから削除
-				progressBar.removeAll();
-				// nullに設定
-				LeonGunWar.getPlugin().getManager().setBossBar(null);
-			}
-		}.runTaskLater(LeonGunWar.getPlugin(), 1);
+		// 遅らせて削除
+		new RemoveBossBarTask().runTaskLater(LeonGunWar.getPlugin(), 0);
 	}
 
 	private String formatSeconds(int seconds) {

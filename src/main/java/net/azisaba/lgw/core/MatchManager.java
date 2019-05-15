@@ -370,7 +370,7 @@ public class MatchManager {
 			return;
 		}
 
-		matchTask = new MatchCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 20, 20);
+		matchTask = new MatchCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
 	}
 
 	/**
@@ -499,6 +499,15 @@ public class MatchManager {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 対象のプレイヤーが試合中かどうかを取得します
+	 * @param p 対象のプレイヤー
+	 * @return 対象のプレイヤーが試合中かどうか
+	 */
+	public boolean isPlayerMatching(Player p) {
+		return isMatching() && getBattleTeam(p) != null;
 	}
 
 	/**
@@ -823,6 +832,30 @@ public class MatchManager {
 				ex.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * プレイヤーのリスポーン地点を取得します
+	 * @param p 対象のプレイヤー
+	 * @return 対象のプレイヤーがリスポーンするべき場所
+	 */
+	public Location getRespawnLocation(Player p) {
+		// チームを取得
+		BattleTeam playerTeam = getBattleTeam(p);
+		// スポーン地点
+		Location spawnPoint = null;
+
+		// チームがnullではないならそのチームのスポーン地点にTPする
+		if (playerTeam != null) {
+			spawnPoint = getCurrentGameMap().getSpawnPoint(playerTeam);
+		}
+
+		// それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
+		if (spawnPoint == null) {
+			spawnPoint = getLobbySpawnLocation();
+		}
+
+		return spawnPoint;
 	}
 
 	public enum MatchMode {
