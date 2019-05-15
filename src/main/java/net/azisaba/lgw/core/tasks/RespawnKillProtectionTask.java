@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.tasks;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 	@Override
 	public void run() {
 		// 残り時間 (秒) 取得
-		long remain = Instant.now().until(remainTimes.get(p), ChronoUnit.SECONDS);
+		long remain = Duration.between(Instant.now(), remainTimes.get(p)).plusSeconds(1).getSeconds();
 
 		// 0以下ならキャンセルしてreturn
 		if (remain <= 0) {
