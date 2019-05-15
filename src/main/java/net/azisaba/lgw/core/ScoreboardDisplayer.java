@@ -14,6 +14,7 @@ import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 
 public class ScoreboardDisplayer {
 
@@ -57,7 +58,7 @@ public class ScoreboardDisplayer {
 
 			// 文字を作成
 			String line1 = "";
-			String line2 = Chat.f("&b残り時間&a: &c{0}秒", timeLeft);
+			String line2 = Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft));
 			String line3 = "";
 			String line4 = Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.RED.getDisplayTeamName(), redPoint);
 			String line5 = Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.BLUE.getDisplayTeamName(), bluePoint);

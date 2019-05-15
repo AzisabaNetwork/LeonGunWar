@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,6 +32,7 @@ import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.teams.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 
 public class MatchControlListener implements Listener {
 
@@ -282,7 +282,7 @@ public class MatchControlListener implements Listener {
 		}
 
 		// 名前を変更
-		progressBar.setTitle(Chat.f("&6残り時間 - {0}", formatSeconds(e.getTimeLeft())));
+		progressBar.setTitle(Chat.f("&6残り時間 - {0}", SecondOfDay.toString(e.getTimeLeft())));
 		// 進行度を設定
 		progressBar.setProgress(e.getTimeLeft() / 600d);
 
@@ -299,9 +299,5 @@ public class MatchControlListener implements Listener {
 	public void bossBarClearListener(MatchFinishedEvent e) {
 		// 遅らせて削除
 		new RemoveBossBarTask().runTaskLater(LeonGunWar.getPlugin(), 0);
-	}
-
-	private String formatSeconds(int seconds) {
-		return LocalTime.ofSecondOfDay(seconds).toString();
 	}
 }
