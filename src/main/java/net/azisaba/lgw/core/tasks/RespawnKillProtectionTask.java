@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.tasks;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.util.HashMap;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,9 +16,9 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 	private final Player p;
 
 	// プレイヤーごとの無敵残り時間
-	private final HashMap<Player, OffsetDateTime> remainTimes;
+	private final Map<Player, Instant> remainTimes;
 
-	public RespawnKillProtectionTask(Player p, HashMap<Player, OffsetDateTime> remainTimes) {
+	public RespawnKillProtectionTask(Player p, Map<Player, Instant> remainTimes) {
 		this.p = p;
 		this.remainTimes = remainTimes;
 	}
@@ -26,7 +26,7 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 	@Override
 	public void run() {
 		// 残り時間 (秒) 取得
-		long remain = Duration.between(OffsetDateTime.now(), remainTimes.get(p)).getSeconds();
+		long remain = Instant.now().until(remainTimes.get(p), ChronoUnit.SECONDS);
 
 		// 0以下ならキャンセルしてreturn
 		if (remain <= 0) {

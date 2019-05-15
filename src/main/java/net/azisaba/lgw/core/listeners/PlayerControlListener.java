@@ -57,8 +57,7 @@ public class PlayerControlListener implements Listener {
 		for (List<Player> plist : playerMap.values()) {
 			if (plist.contains(p)) {
 				// イベント作成、呼び出し
-				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(),
-						new ArrayList<BattleTeam>(), manager.getTeamPlayers());
+				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(), manager.getTeamPlayers());
 				Bukkit.getPluginManager().callEvent(event);
 				break;
 			}

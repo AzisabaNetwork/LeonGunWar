@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -17,7 +16,7 @@ import net.azisaba.lgw.core.teams.BattleTeam;
 
 public class AutoRespawnListener implements Listener {
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player deathPlayer = e.getEntity();
 
@@ -25,7 +24,7 @@ public class AutoRespawnListener implements Listener {
 		deathPlayer.spigot().respawn();
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) {
 		e.setRespawnLocation(getRespawnLocation(e.getPlayer()));
 

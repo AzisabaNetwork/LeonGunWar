@@ -3,7 +3,7 @@ package net.azisaba.lgw.core;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -20,10 +20,9 @@ import com.google.common.base.Preconditions;
 public class KillDeathCounter {
 
 	// キル数とデス数とアシスト数をカウントするHashMap
-	private final HashMap<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(),
-			assistCountMap = new HashMap<>();
+	private final Map<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(), assistCountMap = new HashMap<>();
 	// UUIDとプレイヤー名を紐付けるためのHashMap
-	private final HashMap<UUID, String> playerNameContainer = new HashMap<>();
+	private final Map<UUID, String> playerNameContainer = new HashMap<>();
 
 	/**
 	 * プレイヤーのキル数を1追加します
@@ -163,7 +162,7 @@ public class KillDeathCounter {
 		// mvpKillsが-1の場合は空のリストを返す
 		return killCountMap.entrySet().stream()
 				.filter(entry -> entry.getValue() == mvpKills)
-				.map(Entry::getKey)
+				.map(Map.Entry::getKey)
 				.map(mvp -> {
 					// プレイヤー名取得 (なければnull)
 					String playerName = playerNameContainer.getOrDefault(mvp, null);

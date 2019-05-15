@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.maps;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,11 +18,11 @@ public class GameMap {
 	// プレイヤーに表示するマップ名
 	private String mapName;
 	// 各チームのスポーン地点
-	private final HashMap<BattleTeam, Location> spawnMap;
+	private final Map<BattleTeam, Location> spawnMap;
 	// マップのワールド
 	private World world;
 
-	public GameMap(String mapName, World world, HashMap<BattleTeam, Location> spawnMap) {
+	public GameMap(String mapName, World world, Map<BattleTeam, Location> spawnMap) {
 		this.mapName = mapName;
 		this.world = world;
 

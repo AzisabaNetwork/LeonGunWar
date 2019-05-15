@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ import net.azisaba.lgw.core.utils.Chat;
 public class AfkKickEntryListener implements Listener {
 
 	// 最後にプレイヤーが動いた時のミリ秒を保存
-	private final HashMap<Player, Long> lastMoved = new HashMap<>();
+	private final Map<Player, Long> lastMoved = new HashMap<>();
 
 	public AfkKickEntryListener() {
 		// コンストラクタが呼び出されたときにタスクを開始

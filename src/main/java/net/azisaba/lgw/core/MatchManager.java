@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -81,12 +80,12 @@ public class MatchManager {
 	private ItemStack redChestplate, blueChestplate;
 
 	// ポイントを集計するHashMap
-	private final HashMap<BattleTeam, Integer> pointMap = new HashMap<>();
+	private final Map<BattleTeam, Integer> pointMap = new HashMap<>();
 
 	// 試合の種類
 	private MatchMode matchMode = null;
 	// チームのリーダー
-	private final HashMap<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
+	private final Map<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
 
 	// 試合時間を表示するボスバー
 	private BossBar bar = null;
@@ -428,7 +427,7 @@ public class MatchManager {
 	 * @return チームごとのプレイヤーのMap
 	 */
 	public Map<BattleTeam, List<Player>> getTeamPlayers() {
-		return Stream.of(BattleTeam.values())
+		return Arrays.stream(BattleTeam.values())
 				.collect(Collectors.toMap(Function.identity(), this::getTeamPlayers));
 	}
 

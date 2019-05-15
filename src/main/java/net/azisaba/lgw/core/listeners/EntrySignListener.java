@@ -5,7 +5,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -127,7 +126,7 @@ public class EntrySignListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
+	@EventHandler
 	public void changeSignState(PlayerInteractEvent e) {
 		// ブロックをシフト + 右クリックしていなければreturn
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking()) {

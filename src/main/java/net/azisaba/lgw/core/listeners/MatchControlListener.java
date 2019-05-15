@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -15,7 +14,6 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -47,13 +45,13 @@ public class MatchControlListener implements Listener {
 		}
 
 		// 一番高いポイントを取得
-		int maxPoint = Stream.of(BattleTeam.values())
+		int maxPoint = Arrays.stream(BattleTeam.values())
 				.map(LeonGunWar.getPlugin().getManager()::getCurrentTeamPoint)
 				.max(Comparator.naturalOrder())
 				.orElse(-1);
 
 		// 一番高いポイントと同じポイントのチームをList形式で取得
-		List<BattleTeam> winners = Stream.of(BattleTeam.values())
+		List<BattleTeam> winners = Arrays.stream(BattleTeam.values())
 				.filter(team -> LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team) == maxPoint)
 				.collect(Collectors.toList());
 
@@ -64,7 +62,7 @@ public class MatchControlListener implements Listener {
 		Bukkit.getPluginManager().callEvent(event);
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler
 	public void setMatchingListener(MatchFinishedEvent e) {
 		// 試合中ならfalseにする
 		if (LeonGunWar.getPlugin().getManager().isMatching()) {
@@ -141,7 +139,7 @@ public class MatchControlListener implements Listener {
 	/**
 	 * 最後に finalizeMatch メソッドを実行するためのリスナー
 	 */
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void matchFinalizer(MatchFinishedEvent e) {
 		LeonGunWar.getPlugin().getManager().finalizeMatch();
 	}
@@ -213,8 +211,7 @@ public class MatchControlListener implements Listener {
 			if (playerList.size() <= 0) {
 
 				// イベント作成
-				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(),
-						new ArrayList<BattleTeam>(), playerMap);
+				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(), playerMap);
 				// 呼び出し
 				Bukkit.getPluginManager().callEvent(event);
 				break;
@@ -222,7 +219,7 @@ public class MatchControlListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onAddTeamPoint(TeamPointIncreasedEvent e) {
 
 		// TDMではない場合return

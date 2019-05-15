@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -8,7 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,7 +19,7 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class JoinAfterSignListener implements Listener {
 
-	private final HashMap<UUID, Long> lastClicked = new HashMap<>();
+	private final Map<UUID, Long> lastClicked = new HashMap<>();
 
 	/**
 	 * 試合参加看板をクリックしたことを検知し、プレイヤーを試合に参加させるリスナー
@@ -80,7 +80,7 @@ public class JoinAfterSignListener implements Listener {
 		lastClicked.put(p.getUniqueId(), System.currentTimeMillis());
 	}
 
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
+	@EventHandler
 	public void changeSignState(PlayerInteractEvent e) {
 		// ブロックをシフト + 右クリックしていなければreturn
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking()) {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -55,7 +56,7 @@ public class MapLoader {
 			// フィールド作成
 			String mapName = null;
 			World world = null;
-			HashMap<BattleTeam, Location> spawnMap = new HashMap<>();
+			Map<BattleTeam, Location> spawnMap = new HashMap<>();
 
 			// 全データを読み込めたか
 			boolean successLoad = true;

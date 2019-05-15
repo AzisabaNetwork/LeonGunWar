@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,7 +11,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -37,13 +34,13 @@ public class DamageListener implements Listener {
 
 	// 最初のHashMapはダメージを受けた側のプレイヤーであり、そのValueとなるHashMapにはどのプレイヤーが何秒にそのプレイヤーを攻撃したか
 	// アシストの判定に使用される
-	private final HashMap<Player, HashMap<Player, Long>> lastDamaged = new HashMap<>();
+	private final Map<Player, Map<Player, Long>> lastDamaged = new HashMap<>();
 
 	/**
 	 * プレイヤーを殺したことを検知するリスナー
 	 * 死亡したプレイヤーの処理は他のリスナーで行います
 	 */
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
 		// 試合中でなければreturn
 		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
@@ -80,7 +77,7 @@ public class DamageListener implements Listener {
 	/**
 	 * 試合中のプレイヤーが死亡した場合、死亡カウントを増加させ、即時リスポーンさせます
 	 */
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player deathPlayer = e.getEntity();
 
@@ -95,30 +92,24 @@ public class DamageListener implements Listener {
 		// 死亡数を追加
 		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addDeath(deathPlayer);
 
-		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
-		List<Entry<Player, Long>> entries = lastDamaged.getOrDefault(deathPlayer, new HashMap<>()).entrySet().stream()
-				.filter(entry -> entry.getValue() + 10 * 1000 > System.currentTimeMillis())
-				.collect(Collectors.toList());
-
 		// 殺したプレイヤーを取得
 		Player killer = deathPlayer.getKiller();
 
-		// アシスト追加
-		for (Entry<Player, Long> assistEntry : entries) {
-			Player assist = assistEntry.getKey();
+		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
+		// プレイヤーがkillしたプレイヤーならcontinue
+		lastDamaged.getOrDefault(deathPlayer, new HashMap<>()).entrySet().stream()
+				.filter(entry -> entry.getValue() + 10 * 1000 > System.currentTimeMillis())
+				.map(Map.Entry::getKey)
+				.filter(assist -> assist != killer)
+				.forEach(assist -> {
+					// アシスト追加
+					LeonGunWar.getPlugin().getManager().getKillDeathCounter().addAssist(assist);
 
-			// プレイヤーがkillしたプレイヤーならcontinue
-			if (assist == killer) {
-				continue;
-			}
-
-			LeonGunWar.getPlugin().getManager().getKillDeathCounter().addAssist(assist);
-
-			// タイトルを表示
-			assist.sendTitle("", Chat.f("&7+1 Assist"), 0, 20, 10);
-			// 音を鳴らす
-			assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-		}
+					// タイトルを表示
+					assist.sendTitle("", Chat.f("&7+1 Assist"), 0, 20, 10);
+					// 音を鳴らす
+					assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+				});
 
 		// lastDamagedを初期化
 		if (lastDamaged.containsKey(deathPlayer)) {
@@ -151,13 +142,13 @@ public class DamageListener implements Listener {
 		}
 
 		// ミリ秒を指定
-		HashMap<Player, Long> damagedMap = lastDamaged.getOrDefault(victim, new HashMap<>());
+		Map<Player, Long> damagedMap = lastDamaged.getOrDefault(victim, new HashMap<>());
 		damagedMap.put(attacker, System.currentTimeMillis());
 
 		lastDamaged.put(victim, damagedMap);
 	}
 
-	@EventHandler(ignoreCancelled = false, priority = EventPriority.HIGH)
+	@EventHandler
 	public void onLeaderKilledDetector(PlayerDeathEvent e) {
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 
@@ -201,7 +192,7 @@ public class DamageListener implements Listener {
 	/**
 	 * キルログを変更するListener
 	 */
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
+	@EventHandler
 	public void deathMessageChanger(PlayerDeathEvent e) {
 		Player p = e.getEntity();
 

@@ -1,7 +1,8 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -18,10 +19,10 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class RespawnKillProtectionListener implements Listener {
 
-	private final long invincibleSeconds = 6;
+	private final long invincibleSeconds = 5;
 
-	private final HashMap<Player, OffsetDateTime> remainTimes = new HashMap<>();
-	private final HashMap<Player, BukkitTask> taskMap = new HashMap<>();
+	private final Map<Player, Instant> remainTimes = new HashMap<>();
+	private final Map<Player, BukkitTask> taskMap = new HashMap<>();
 
 	@EventHandler
 	public void onDamageByEntity(EntityDamageByEntityEvent e) {
@@ -33,7 +34,7 @@ public class RespawnKillProtectionListener implements Listener {
 		Player victim = (Player) e.getEntity();
 
 		// リスポーンから5秒以内ならキャンセル
-		if (OffsetDateTime.now().isBefore(remainTimes.getOrDefault(victim, OffsetDateTime.MIN))) {
+		if (Instant.now().isBefore(remainTimes.getOrDefault(victim, Instant.now()))) {
 			e.setCancelled(true);
 
 			Player attacker = null;
@@ -62,7 +63,7 @@ public class RespawnKillProtectionListener implements Listener {
 		Player p = e.getPlayer();
 
 		// リスポーン時間指定
-		remainTimes.put(p, OffsetDateTime.now().plusSeconds(invincibleSeconds));
+		remainTimes.put(p, Instant.now().plusSeconds(invincibleSeconds));
 
 		taskMap.compute(p, (p2, task) -> {
 			// タスク終了
