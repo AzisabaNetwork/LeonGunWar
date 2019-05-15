@@ -10,6 +10,9 @@ public class RemoveBossBarTask extends BukkitRunnable {
 	@Override
 	public void run() {
 		BossBar progressBar = LeonGunWar.getPlugin().getManager().getBossBar();
+		if (progressBar == null) {
+			return;
+		}
 
 		// 全プレイヤーから削除
 		progressBar.removeAll();

@@ -213,7 +213,8 @@ public class MatchControlListener implements Listener {
 			if (playerList.size() <= 0) {
 
 				// イベント作成
-				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(), playerMap);
+				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(),
+						playerMap);
 				// 呼び出し
 				Bukkit.getPluginManager().callEvent(event);
 				break;

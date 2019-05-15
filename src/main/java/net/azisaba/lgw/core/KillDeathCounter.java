@@ -20,7 +20,8 @@ import com.google.common.base.Preconditions;
 public class KillDeathCounter {
 
 	// キル数とデス数とアシスト数をカウントするHashMap
-	private final Map<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(), assistCountMap = new HashMap<>();
+	private final Map<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(),
+			assistCountMap = new HashMap<>();
 	// UUIDとプレイヤー名を紐付けるためのHashMap
 	private final Map<UUID, String> playerNameContainer = new HashMap<>();
 
