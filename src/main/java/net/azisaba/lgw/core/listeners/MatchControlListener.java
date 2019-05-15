@@ -74,7 +74,7 @@ public class MatchControlListener implements Listener {
 	/**
 	 * 試合が終わった時の処理を担当するリスナー
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW)
 	public void onMatchFinished(MatchFinishedEvent e) {
 		// 勝ったチームがあれば勝者の証を付与
 		if (e.getWinners().size() >= 1) {
