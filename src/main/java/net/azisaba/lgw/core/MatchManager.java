@@ -370,7 +370,7 @@ public class MatchManager {
 			return;
 		}
 
-		matchTask = new MatchCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+		matchTask = new MatchCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 20, 20);
 	}
 
 	/**
