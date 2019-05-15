@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -300,27 +301,6 @@ public class MatchControlListener implements Listener {
 	}
 
 	private String formatSeconds(int seconds) {
-		StringBuilder time = new StringBuilder();
-		// 3600より多かったら時間にする
-		if (seconds >= 3600) {
-			int hour = (int) Math.floor(seconds / 3600);
-			time.append(String.format("%02d", hour) + ":");
-			seconds = seconds - hour * 3600;
-		} else {
-			time.append("00:");
-		}
-
-		// 60より多かったら分にする
-		if (seconds >= 60) {
-			int minutes = (int) Math.floor(seconds / 60);
-			time.append(String.format("%02d", minutes) + ":");
-			seconds = seconds - minutes * 60;
-		} else {
-			time.append("00:");
-		}
-
-		// 0より多かったら秒にする
-		time.append(String.format("%02d", seconds));
-		return time.toString();
+		return LocalTime.ofSecondOfDay(seconds).toString();
 	}
 }
