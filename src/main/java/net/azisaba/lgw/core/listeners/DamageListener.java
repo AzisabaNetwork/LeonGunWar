@@ -11,6 +11,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -148,7 +149,7 @@ public class DamageListener implements Listener {
 		lastDamaged.put(victim, damagedMap);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onLeaderKilledDetector(PlayerDeathEvent e) {
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 
