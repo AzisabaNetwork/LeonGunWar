@@ -14,10 +14,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class TradeBoardManager {
 
-	private static File dataFolder = null;
-	private static HashMap<Location, SignData> signs = new HashMap<>();
+	private File dataFolder = null;
+	private HashMap<Location, SignData> signs = new HashMap<>();
 
-	protected static void init() {
+	protected void init() {
 		dataFolder = new File(LeonGunWar.getPlugin().getDataFolder(), "Signs");
 
 		if (!dataFolder.exists()) {
@@ -68,7 +68,7 @@ public class TradeBoardManager {
 		}
 	}
 
-	public static SignData getSignData(Location loc) {
+	public SignData getSignData(Location loc) {
 		if (signs.containsKey(loc)) {
 			return signs.get(loc);
 		}
@@ -76,13 +76,13 @@ public class TradeBoardManager {
 		return null;
 	}
 
-	public static void removeSignData(Location loc) {
+	public void removeSignData(Location loc) {
 		if (signs.containsKey(loc)) {
 			signs.remove(loc);
 		}
 	}
 
-	public static boolean addSignData(Location loc, String playerName, UUID author, long breakAt) {
+	public boolean addSignData(Location loc, String playerName, UUID author, long breakAt) {
 		if (signs.containsKey(loc)) {
 			return false;
 		}
@@ -91,11 +91,11 @@ public class TradeBoardManager {
 		return true;
 	}
 
-	public static List<SignData> getAllSignData() {
+	public List<SignData> getAllSignData() {
 		return new ArrayList<>(signs.values());
 	}
 
-	protected static void saveAll() {
+	protected void saveAll() {
 
 		if (!dataFolder.exists()) {
 			dataFolder.mkdirs();
@@ -124,7 +124,7 @@ public class TradeBoardManager {
 		}
 	}
 
-	private static Location locationFromString(String str) {
+	private Location locationFromString(String str) {
 		String[] split = str.split(",");
 		Location loc = null;
 		try {
@@ -138,7 +138,7 @@ public class TradeBoardManager {
 		return loc;
 	}
 
-	private static File locationToFile(Location loc) {
+	private File locationToFile(Location loc) {
 		return new File(dataFolder,
 				loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ()
 						+ ".yml");

@@ -47,6 +47,7 @@ public class LeonGunWar extends JavaPlugin {
 	private final MatchManager manager = new MatchManager();
 	private final KillStreaks killStreaks = new KillStreaks();
 	private final SignRemoveTask signRemoveTask = new SignRemoveTask();
+	private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
 	/**
 	 * MatchStartCountdownのインスタンスを返します
@@ -104,12 +105,20 @@ public class LeonGunWar extends JavaPlugin {
 		return signRemoveTask;
 	}
 
+	/**
+	 * TradeBoardManagerのインスタンスを返します
+	 * @return TradeBoardManagerのインスタンス
+	 */
+	public TradeBoardManager getTradeBoardManager() {
+		return tradeBoardManager;
+	}
+
 	@Override
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
 		mapContainer.loadMaps();
 		manager.initialize();
-		TradeBoardManager.init();
+		tradeBoardManager.init();
 
 		// 移行を簡単にする [DEBUG]
 		getServer().getPluginManager().registerEvents(new EasyMigrateListener(), this);
