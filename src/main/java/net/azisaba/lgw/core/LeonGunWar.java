@@ -26,6 +26,7 @@ import net.azisaba.lgw.core.listeners.others.KillStreaksListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
+import net.azisaba.lgw.core.listeners.others.TradeBoardListener;
 import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.maps.MapLoader;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
@@ -153,6 +154,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new KillStreaksListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableRecipeListener(), this);
 		getServer().getPluginManager().registerEvents(new CrackShotLimitListener(), this);
+		getServer().getPluginManager().registerEvents(new TradeBoardListener(), this);
 
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
 		signRemoveTask.runTaskTimer(this, 60, 20 * 60 * 10);
