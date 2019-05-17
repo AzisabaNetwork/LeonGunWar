@@ -113,44 +113,44 @@ public class LeonGunWar extends JavaPlugin {
 		tradeBoardManager.init();
 
 		// 移行を簡単にする [DEBUG]
-		getServer().getPluginManager().registerEvents(new EasyMigrateListener(), this);
+		Bukkit.getPluginManager().registerEvents(new EasyMigrateListener(), this);
 
 		// コマンドの登録
-		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
-		getServer().getPluginCommand("uav").setExecutor(new UAVCommand());
+		Bukkit.getPluginCommand("leongunwar").setExecutor(new LgwCommand());
+		Bukkit.getPluginCommand("uav").setExecutor(new UAVCommand());
 
 		// コマンドの権限がない時のメッセージの指定
-		getServer().getPluginCommand("leongunwar").setPermissionMessage(Chat.f("&c権限がありません！"));
-		getServer().getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
+		Bukkit.getPluginCommand("leongunwar").setPermissionMessage(Chat.f("&c権限がありません！"));
+		Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
 
 		// リスナーの登録
-		getServer().getPluginManager().registerEvents(new MatchControlListener(), this);
-		getServer().getPluginManager().registerEvents(new EntrySignListener(), this);
-		getServer().getPluginManager().registerEvents(new MatchModeSignListener(), this);
-		getServer().getPluginManager().registerEvents(new JoinAfterSignListener(), this);
-		getServer().getPluginManager().registerEvents(new MatchStartDetectListener(), this);
-		getServer().getPluginManager().registerEvents(new DamageListener(), this);
-		getServer().getPluginManager().registerEvents(new PlayerControlListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
+		Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
+		Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
 
 		// リスナーの登録 (others)
-		getServer().getPluginManager().registerEvents(new NoArrowGroundListener(), this);
-		getServer().getPluginManager().registerEvents(new NoKnockbackListener(), this);
-		getServer().getPluginManager().registerEvents(new DisableItemDamageListener(), this);
-		getServer().getPluginManager().registerEvents(new DisableOpenInventoryListener(), this);
-		getServer().getPluginManager().registerEvents(new DisableOffhandListener(), this);
-		getServer().getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
-		getServer().getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
-		getServer().getPluginManager().registerEvents(new AutoRespawnListener(), this);
-		getServer().getPluginManager().registerEvents(new AfkKickEntryListener(), this);
-		getServer().getPluginManager().registerEvents(new KillStreaksListener(), this);
-		getServer().getPluginManager().registerEvents(new DisableRecipeListener(), this);
-		getServer().getPluginManager().registerEvents(new CrackShotLimitListener(), this);
-		getServer().getPluginManager().registerEvents(new TradeBoardListener(), this);
+		Bukkit.getPluginManager().registerEvents(new NoArrowGroundListener(), this);
+		Bukkit.getPluginManager().registerEvents(new NoKnockbackListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableItemDamageListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableOpenInventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableOffhandListener(), this);
+		Bukkit.getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
+		Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
+		Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new KillStreaksListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
+		Bukkit.getPluginManager().registerEvents(new CrackShotLimitListener(), this);
+		Bukkit.getPluginManager().registerEvents(new TradeBoardListener(), this);
 
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
 		new SignRemoveTask().runTaskTimer(this, 60, 20 * 60 * 10);
 
-		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
+		Bukkit.getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class LeonGunWar extends JavaPlugin {
 		// 武器交換掲示板の看板を保存
 		tradeBoardManager.saveAll();
 
-		getServer().getLogger().info(Chat.f("{0} disabled.", getName()));
+		Bukkit.getLogger().info(Chat.f("{0} disabled.", getName()));
 	}
 
 	/**
