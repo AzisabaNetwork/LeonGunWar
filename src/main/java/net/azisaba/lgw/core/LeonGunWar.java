@@ -14,6 +14,8 @@ import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.PlayerControlListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
+import net.azisaba.lgw.core.listeners.others.CrackShotKnifeListener;
+import net.azisaba.lgw.core.listeners.others.CrackShotStoroboListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
@@ -97,6 +99,7 @@ public class LeonGunWar extends JavaPlugin {
 		// 初期化が必要なファイルを初期化する
 		mapContainer.loadMaps();
 		manager.initialize();
+		KeizibanManager.init();
 
 		// 移行を簡単にする [DEBUG]
 		getServer().getPluginManager().registerEvents(new EasyMigrateListener(), this);
@@ -128,6 +131,8 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new AfkKickEntryListener(), this);
 		getServer().getPluginManager().registerEvents(new KillStreaksListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableRecipeListener(), this);
+		getServer().getPluginManager().registerEvents(new CrackShotKnifeListener(), this);
+		getServer().getPluginManager().registerEvents(new CrackShotStoroboListener(), this);
 
 		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
