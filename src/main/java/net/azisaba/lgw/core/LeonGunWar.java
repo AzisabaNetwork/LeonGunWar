@@ -15,8 +15,7 @@ import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.PlayerControlListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
-import net.azisaba.lgw.core.listeners.others.CrackShotKnifeListener;
-import net.azisaba.lgw.core.listeners.others.CrackShotStoroboListener;
+import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
@@ -144,8 +143,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new AfkKickEntryListener(), this);
 		getServer().getPluginManager().registerEvents(new KillStreaksListener(), this);
 		getServer().getPluginManager().registerEvents(new DisableRecipeListener(), this);
-		getServer().getPluginManager().registerEvents(new CrackShotKnifeListener(), this);
-		getServer().getPluginManager().registerEvents(new CrackShotStoroboListener(), this);
+		getServer().getPluginManager().registerEvents(new CrackShotLimitListener(), this);
 
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
 		signRemoveTask.runTaskTimer(this, 60, 20 * 60 * 10);
