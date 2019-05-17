@@ -156,7 +156,7 @@ public class LeonGunWar extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		// Plugin終了時の処理を呼び出す
-		getManager().onDisablePlugin();
+		manager.onDisablePlugin();
 
 		// DisplayNameを戻す
 		Bukkit.getOnlinePlayers().forEach(p -> {
