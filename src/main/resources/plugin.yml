@@ -10,10 +10,16 @@ commands:
     description: Nothing
     permission: leongunwar.command.leongunwar
     aliases: ["lgw"]
+  uav:
+    usage: /uav [Player]
+    description: Nothing
+    permission: leongunwar.command.uav
 permissions:
   leongunwar.entrysign.changestate:
     default: op
   leongunwar.command.leongunwar:
     default: op
   leongunwar.afkkick.exempt:
+    default: op
+  leongunwar.command.uav:
     default: op
