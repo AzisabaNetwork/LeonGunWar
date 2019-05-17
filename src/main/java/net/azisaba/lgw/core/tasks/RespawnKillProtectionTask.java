@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 
 public class RespawnKillProtectionTask extends BukkitRunnable {
 
@@ -36,6 +37,6 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 		}
 
 		// 残り秒数を表示
-		p.sendMessage(Chat.f("{0}&7無敵時間残り &c{1}秒&7！", LeonGunWar.GAME_PREFIX, remain));
+		p.sendMessage(Chat.f("{0}&7無敵時間残り &c{1}&7！", LeonGunWar.GAME_PREFIX, SecondOfDay.f(remain)));
 	}
 }

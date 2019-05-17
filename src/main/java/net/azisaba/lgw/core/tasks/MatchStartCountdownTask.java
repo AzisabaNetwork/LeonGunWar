@@ -6,6 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 
 public class MatchStartCountdownTask extends BukkitRunnable {
 
@@ -35,7 +36,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
 		// chatがtrueの場合表示
 		if (chat) {
-			String msg = Chat.f("{0}&7試合開始まで残り &c{1}秒&7", LeonGunWar.GAME_PREFIX, timeLeft);
+			String msg = Chat.f("{0}&7試合開始まで残り &c{1}&7", LeonGunWar.GAME_PREFIX, SecondOfDay.f(timeLeft));
 			Bukkit.broadcastMessage(msg);
 		}
 

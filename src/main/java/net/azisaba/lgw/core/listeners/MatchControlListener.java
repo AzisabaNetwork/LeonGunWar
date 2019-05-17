@@ -251,15 +251,15 @@ public class MatchControlListener implements Listener {
 
 	@EventHandler
 	public void remainTimeMessage(MatchTimeChangedEvent e) {
+		int timeLeft = e.getTimeLeft();
+
 		// 残り時間が指定された時間の場合チャット欄でお知らせ
-		if (e.getTimeLeft() == 60) {
-			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, "1分"));
-		} else if (e.getTimeLeft() == 30 || e.getTimeLeft() == 10 || 0 < e.getTimeLeft() && e.getTimeLeft() <= 5) {
-			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}秒&7！", LeonGunWar.GAME_PREFIX, e.getTimeLeft()));
+		if (Arrays.asList(60, 30, 10, 5, 4, 3, 2, 1).contains(timeLeft)) {
+			Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, SecondOfDay.f(timeLeft)));
 		}
 
 		// 5秒以下なら音を鳴らす
-		if (0 < e.getTimeLeft() && e.getTimeLeft() <= 5) {
+		if (Arrays.asList(5, 4, 3, 2, 1).contains(timeLeft)) {
 			Bukkit.getOnlinePlayers().forEach(p -> {
 				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1, 1);
 			});

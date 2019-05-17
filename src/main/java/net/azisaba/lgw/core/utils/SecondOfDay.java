@@ -10,7 +10,7 @@ public class SecondOfDay {
 	}
 
 	// 1日のうちの秒として取得し、日本語化
-	public static String f(int secondOfDay) {
+	public static String f(long secondOfDay) {
 		LocalTime time = LocalTime.ofSecondOfDay(secondOfDay);
 		DateTimeFormatter formatter = new DateTimeFormatterBuilder()
 				.appendPattern(time.getHour() > 0 ? "H時間" : "")
@@ -21,7 +21,7 @@ public class SecondOfDay {
 	}
 
 	// 1日のうちの秒として取得し、シンプルに文字列化
-	public static String toString(int secondOfDay) {
+	public static String toString(long secondOfDay) {
 		return LocalTime.ofSecondOfDay(secondOfDay).toString();
 	}
 }
