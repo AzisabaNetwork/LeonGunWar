@@ -8,9 +8,7 @@ public class SignData {
 
 	private final String playerName;
 	private final UUID author;
-
 	private final long breakAt;
-
 	private final Location loc;
 
 	public SignData(Location loc, String playerName, UUID author, long breakAt) {

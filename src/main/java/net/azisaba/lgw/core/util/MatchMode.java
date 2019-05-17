@@ -17,17 +17,16 @@ public enum MatchMode {
 
 	public static MatchMode getFromString(String msg) {
 		String msgNoSpace = msg.replace(" ", "");
-
-		if (msgNoSpace.equalsIgnoreCase("LDM")
-				|| msgNoSpace.equalsIgnoreCase("LeaderDeathMatch")) {
-			return MatchMode.LEADER_DEATH_MATCH;
-
-		} else if (msgNoSpace.equalsIgnoreCase("TDM")
-				|| msgNoSpace.equalsIgnoreCase("TeamDeathMatch")) {
-			return MatchMode.TEAM_DEATH_MATCH;
+		switch (msgNoSpace.toLowerCase()) {
+		case "ldm":
+		case "leaderdeathmatch":
+			return LEADER_DEATH_MATCH;
+		case "tdm":
+		case "teamdeathmatch":
+			return TEAM_DEATH_MATCH;
+		default:
+			return null;
 		}
-
-		return null;
 	}
 
 	public String getModeName() {
