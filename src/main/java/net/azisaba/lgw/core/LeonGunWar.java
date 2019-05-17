@@ -29,6 +29,7 @@ import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.maps.MapContainer;
 import net.azisaba.lgw.core.maps.MapLoader;
+import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
 
 public class LeonGunWar extends JavaPlugin {
@@ -46,6 +47,7 @@ public class LeonGunWar extends JavaPlugin {
 	private final MapContainer mapContainer = new MapContainer();
 	private final MatchManager manager = new MatchManager();
 	private final KillStreaks killStreaks = new KillStreaks();
+	private final SignRemoveTask signRemoveTask = new SignRemoveTask();
 
 	/**
 	 * MatchStartCountdownのインスタンスを返します
@@ -95,6 +97,14 @@ public class LeonGunWar extends JavaPlugin {
 		return killStreaks;
 	}
 
+	/**
+	 * SignRemoveTaskのインスタンスを返します
+	 * @return KillStreaksのインスタンス
+	 */
+	public SignRemoveTask getSignRemoveTask() {
+		return signRemoveTask;
+	}
+
 	@Override
 	public void onEnable() {
 		// 初期化が必要なファイルを初期化する
@@ -136,6 +146,9 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new DisableRecipeListener(), this);
 		getServer().getPluginManager().registerEvents(new CrackShotKnifeListener(), this);
 		getServer().getPluginManager().registerEvents(new CrackShotStoroboListener(), this);
+
+		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
+		signRemoveTask.runTaskTimer(this, 60, 20 * 60 * 10);
 
 		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
