@@ -170,6 +170,9 @@ public class LeonGunWar extends JavaPlugin {
 			p.setDisplayName(p.getName());
 		});
 
+		// 武器交換掲示板の看板を保存
+		tradeBoardManager.saveAll();
+
 		getServer().getLogger().info(Chat.f("{0} disabled.", getName()));
 	}
 
