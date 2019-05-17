@@ -109,7 +109,7 @@ public class LeonGunWar extends JavaPlugin {
 		// 初期化が必要なファイルを初期化する
 		mapContainer.loadMaps();
 		manager.initialize();
-		KeizibanManager.init();
+		TradeBoardManager.init();
 
 		// 移行を簡単にする [DEBUG]
 		getServer().getPluginManager().registerEvents(new EasyMigrateListener(), this);

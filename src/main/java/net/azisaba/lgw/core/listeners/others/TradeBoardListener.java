@@ -22,11 +22,11 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import net.azisaba.lgw.core.KeizibanManager;
+import net.azisaba.lgw.core.TradeBoardManager;
 import net.azisaba.lgw.core.SignData;
 import net.md_5.bungee.api.ChatColor;
 
-public class KeijibanListener implements Listener {
+public class TradeBoardListener implements Listener {
 
 	private final long expireMilliSeconds = 1000L * 60L * 60L * 24L * 7L;
 
@@ -56,7 +56,7 @@ public class KeijibanListener implements Listener {
 		UUID uuid = p.getUniqueId();
 		long expire = System.currentTimeMillis() + expireMilliSeconds;
 
-		boolean success = KeizibanManager.addSignData(b.getLocation(), playerName, uuid, expire);
+		boolean success = TradeBoardManager.addSignData(b.getLocation(), playerName, uuid, expire);
 		if (success) {
 			p.sendMessage(ChatColor.GREEN + "看板を正常に登録しました！");
 		} else {
@@ -93,11 +93,11 @@ public class KeijibanListener implements Listener {
 		}
 
 		if (p.getGameMode() == GameMode.CREATIVE) {
-			KeizibanManager.removeSignData(b.getLocation());
+			TradeBoardManager.removeSignData(b.getLocation());
 			return;
 		}
 
-		SignData data = KeizibanManager.getSignData(b.getLocation());
+		SignData data = TradeBoardManager.getSignData(b.getLocation());
 		if (data == null) {
 			e.setCancelled(true);
 			p.sendMessage(ChatColor.RED + "自分の設置した看板のみ破壊することができます！");
@@ -105,7 +105,7 @@ public class KeijibanListener implements Listener {
 		}
 
 		if (data.getAuthor().equals(p.getUniqueId()) || p.getGameMode() == GameMode.CREATIVE) {
-			KeizibanManager.removeSignData(b.getLocation());
+			TradeBoardManager.removeSignData(b.getLocation());
 			return;
 		}
 
@@ -131,7 +131,7 @@ public class KeijibanListener implements Listener {
 			return;
 		}
 
-		SignData data = KeizibanManager.getSignData(b.getLocation());
+		SignData data = TradeBoardManager.getSignData(b.getLocation());
 		if (data == null) {
 			return;
 		}

@@ -12,7 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class KeizibanManager {
+public class TradeBoardManager {
 
 	private static File dataFolder = null;
 	private static HashMap<Location, SignData> signs = new HashMap<>();
