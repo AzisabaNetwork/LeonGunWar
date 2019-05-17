@@ -13,8 +13,6 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 
-import net.azisaba.lgw.core.LeonGunWar;
-
 /**
  * CrackShotのアイテムの連打を無効化するリスナー
  * @author siloneco
@@ -37,42 +35,34 @@ public class CrackShotLimitListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onWeaponDamage(WeaponDamageEntityEvent e) {
-		if (e.getWeaponTitle().equals("Combat_Knife")) {
-			Player p = e.getPlayer();
-
-			if (!knifeMap.containsKey(p)) {
-				knifeMap.put(p, System.currentTimeMillis());
-				return;
-			}
-
-			if (knifeMap.get(p) + 1000 * knifeCooldown > System.currentTimeMillis()) {
-				e.setCancelled(true);
-				return;
-			}
-
-			knifeMap.put(p, System.currentTimeMillis());
+		if (!e.getWeaponTitle().equals("Combat_Knife")) {
+			return;
 		}
+
+		Player p = e.getPlayer();
+
+		if (knifeMap.getOrDefault(p, 0L) + (1000 * knifeCooldown) > System.currentTimeMillis()) {
+			e.setCancelled(true);
+			return;
+		}
+
+		knifeMap.put(p, System.currentTimeMillis());
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onShoot(WeaponPreShootEvent e) {
-		if (e.getWeaponTitle().equals("STOROBO2")) {
-
-			Player p = e.getPlayer();
-
-			if (!storoboMap.containsKey(p)) {
-				storoboMap.put(p, System.currentTimeMillis());
-				return;
-			}
-
-			if (storoboMap.get(p) + 1000 * storoboCooldown > System.currentTimeMillis()) {
-				e.setCancelled(true);
-				LeonGunWar.getPlugin().getLogger().info("Cancelled Lightning Strike for " + p.getName());
-				return;
-			}
-
-			storoboMap.put(p, System.currentTimeMillis());
+		if (!e.getWeaponTitle().equals("STOROBO2")) {
+			return;
 		}
+
+		Player p = e.getPlayer();
+
+		if (storoboMap.getOrDefault(p, 0L) + (1000 * storoboCooldown) > System.currentTimeMillis()) {
+			e.setCancelled(true);
+			return;
+		}
+
+		storoboMap.put(p, System.currentTimeMillis());
 	}
 
 	@EventHandler
