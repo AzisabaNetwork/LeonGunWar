@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core;
+package net.azisaba.lgw.core.util;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 
 import com.google.common.base.Preconditions;
 
-import net.azisaba.lgw.core.util.KDPlayerData;
-
 /**
  *
  * KDを保存するクラスです
@@ -22,8 +20,9 @@ import net.azisaba.lgw.core.util.KDPlayerData;
 public class KillDeathCounter {
 
 	// キル数とデス数とアシスト数をカウントするHashMap
-	private final Map<UUID, Integer> killCountMap = new HashMap<>(), deathCountMap = new HashMap<>(),
-			assistCountMap = new HashMap<>();
+	private final Map<UUID, Integer> killCountMap = new HashMap<>();
+	private final Map<UUID, Integer> deathCountMap = new HashMap<>();
+	private final Map<UUID, Integer> assistCountMap = new HashMap<>();
 	// UUIDとプレイヤー名を紐付けるためのHashMap
 	private final Map<UUID, String> playerNameContainer = new HashMap<>();
 
