@@ -5,16 +5,15 @@ import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.KeizibanManager;
-import net.azisaba.lgw.core.SignData;
 
 public class SignRemoveTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		for (SignData data : KeizibanManager.getAllSignData()) {
 
+		KeizibanManager.getAllSignData().forEach(data -> {
 			if (data.getBreakAt() < System.currentTimeMillis()) {
-				continue;
+				return;
 			}
 
 			Block b = data.getLocation().getBlock();
@@ -22,6 +21,6 @@ public class SignRemoveTask extends BukkitRunnable {
 				b.setType(Material.AIR);
 				KeizibanManager.removeSignData(data.getLocation());
 			}
-		}
+		});
 	}
 }
