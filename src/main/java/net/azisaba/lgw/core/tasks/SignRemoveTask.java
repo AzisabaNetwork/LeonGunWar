@@ -4,14 +4,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.azisaba.lgw.core.TradeBoardManager;
+import net.azisaba.lgw.core.LeonGunWar;
 
 public class SignRemoveTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
 
-		TradeBoardManager.getAllSignData().forEach(data -> {
+		LeonGunWar.getPlugin().getTradeBoardManager().getAllSignData().forEach(data -> {
 			if (data.getBreakAt() < System.currentTimeMillis()) {
 				return;
 			}
@@ -19,7 +19,7 @@ public class SignRemoveTask extends BukkitRunnable {
 			Block b = data.getLocation().getBlock();
 			if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
 				b.setType(Material.AIR);
-				TradeBoardManager.removeSignData(data.getLocation());
+				LeonGunWar.getPlugin().getTradeBoardManager().removeSignData(data.getLocation());
 			}
 		});
 	}
