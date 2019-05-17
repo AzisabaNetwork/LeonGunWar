@@ -12,7 +12,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.base.Preconditions;
 
-import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 

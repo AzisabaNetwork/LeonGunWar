@@ -13,10 +13,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.MatchManager.MatchMode;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.MatchMode;
 
 public class PlayerControlListener implements Listener {
 

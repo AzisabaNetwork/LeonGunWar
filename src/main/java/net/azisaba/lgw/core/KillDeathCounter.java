@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 
 import com.google.common.base.Preconditions;
 
+import net.azisaba.lgw.core.util.KDPlayerData;
+
 /**
  *
  * KDを保存するクラスです
@@ -187,48 +189,5 @@ public class KillDeathCounter {
 	 */
 	private void updatePlayerName(Player player) {
 		playerNameContainer.put(player.getUniqueId(), player.getName());
-	}
-
-	/**
-	 *
-	 * キル数とデス数、プレイヤーデータを格納したクラス
-	 * @author siloneco
-	 *
-	 */
-	public class KDPlayerData {
-
-		private final String playerName;
-		private final UUID uuid;
-		private final int kills;
-		private final int deaths;
-		private final int assists;
-
-		private KDPlayerData(UUID uuid, String playerName, int kills, int deaths, int assists) {
-			this.playerName = playerName;
-			this.uuid = uuid;
-			this.kills = kills;
-			this.deaths = deaths;
-			this.assists = assists;
-		}
-
-		public String getPlayerName() {
-			return playerName;
-		}
-
-		public UUID getUuid() {
-			return uuid;
-		}
-
-		public int getKills() {
-			return kills;
-		}
-
-		public int getDeaths() {
-			return deaths;
-		}
-
-		public int getAssists() {
-			return assists;
-		}
 	}
 }

@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.util.BattleTeam;
 
 // 動的にフレッシュなアイテムを提供するクラス
 public class CustomItem {

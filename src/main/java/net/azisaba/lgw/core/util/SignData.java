@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core;
+package net.azisaba.lgw.core.util;
 
 import java.util.UUID;
 

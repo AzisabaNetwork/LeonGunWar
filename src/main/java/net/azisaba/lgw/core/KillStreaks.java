@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.kills;
+package net.azisaba.lgw.core;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.entity.Player;
 
-import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.KillReward;
 import net.azisaba.lgw.core.utils.Chat;
 
 public class KillStreaks {

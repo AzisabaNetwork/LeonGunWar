@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager.MatchMode;
+import net.azisaba.lgw.core.util.MatchMode;
 
 public class LgwCommand implements CommandExecutor {
 

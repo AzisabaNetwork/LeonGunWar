@@ -1,11 +1,9 @@
-package net.azisaba.lgw.core.maps;
+package net.azisaba.lgw.core.util;
 
 import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-
-import net.azisaba.lgw.core.teams.BattleTeam;
 
 /**
  *

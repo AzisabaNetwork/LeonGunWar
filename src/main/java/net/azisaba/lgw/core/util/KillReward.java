@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.kills;
+package net.azisaba.lgw.core.util;
 
 import java.util.List;
 import java.util.function.Function;

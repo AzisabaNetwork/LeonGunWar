@@ -13,6 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import net.azisaba.lgw.core.util.SignData;
+
 public class TradeBoardManager {
 
 	// 看板の情報を保存するフォルダ

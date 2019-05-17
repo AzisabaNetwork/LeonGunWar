@@ -3,7 +3,7 @@ package net.azisaba.lgw.core.events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.util.BattleTeam;
 
 /**
  * チームのポイントが増えたときに呼び出されるイベント

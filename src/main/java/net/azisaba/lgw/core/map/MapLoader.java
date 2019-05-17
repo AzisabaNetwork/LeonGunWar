@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.maps;
+package net.azisaba.lgw.core.map;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.teams.BattleTeam;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.utils.LocationLoader;
 
 /**

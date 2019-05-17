@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.google.common.base.Strings;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager.MatchMode;
+import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 
 /**

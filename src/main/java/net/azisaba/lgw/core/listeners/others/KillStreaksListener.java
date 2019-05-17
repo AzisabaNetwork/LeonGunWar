@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.kills.KillReward;
+import net.azisaba.lgw.core.util.KillReward;
 
 public class KillStreaksListener implements Listener {
 

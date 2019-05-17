@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.maps;
+package net.azisaba.lgw.core.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.GameMap;
 
 public class MapContainer {
 

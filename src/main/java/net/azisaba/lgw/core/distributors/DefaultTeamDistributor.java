@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.teams;
+package net.azisaba.lgw.core.distributors;
 
 import java.util.Collections;
 import java.util.Comparator;

@@ -24,7 +24,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.SignData;
+import net.azisaba.lgw.core.util.SignData;
 import net.azisaba.lgw.core.utils.Chat;
 import net.md_5.bungee.api.ChatColor;
 

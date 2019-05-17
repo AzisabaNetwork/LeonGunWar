@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.teams;
+package net.azisaba.lgw.core.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;

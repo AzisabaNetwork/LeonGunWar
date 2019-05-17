@@ -5,7 +5,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
-import net.azisaba.lgw.core.kills.KillStreaks;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.EntrySignListener;
 import net.azisaba.lgw.core.listeners.JoinAfterSignListener;
@@ -27,8 +26,8 @@ import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.TradeBoardListener;
-import net.azisaba.lgw.core.maps.MapContainer;
-import net.azisaba.lgw.core.maps.MapLoader;
+import net.azisaba.lgw.core.map.MapContainer;
+import net.azisaba.lgw.core.map.MapLoader;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
 
