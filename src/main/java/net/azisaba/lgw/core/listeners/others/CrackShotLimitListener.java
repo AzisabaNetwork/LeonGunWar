@@ -23,12 +23,12 @@ public class CrackShotLimitListener implements Listener {
 	// コンバットナイフ用のクールタイムMap
 	private final HashMap<Player, Long> knifeMap = new HashMap<>();
 	// コンバットナイフのクールダウンの秒数
-	private double knifeCooldown;
+	private final double knifeCooldown;
 
 	// ライトニングストライク用のクールタイムMap
 	private final HashMap<Player, Long> storoboMap = new HashMap<>();
 	// ライトニングストライクのクールダウンの秒数
-	private double storoboCooldown;
+	private final double storoboCooldown;
 
 	// インスタンス作成時にナイフとライトニングストライクのクールダウン時間を取得する
 	public CrackShotLimitListener() {
@@ -50,7 +50,7 @@ public class CrackShotLimitListener implements Listener {
 
 		Player p = e.getPlayer();
 		// クールダウン中ならキャンセルしてreturn
-		if (knifeMap.getOrDefault(p, 0L) + (1000 * knifeCooldown) > System.currentTimeMillis()) {
+		if (knifeMap.getOrDefault(p, 0L) + 1000 * knifeCooldown > System.currentTimeMillis()) {
 			e.setCancelled(true);
 			return;
 		}
@@ -72,7 +72,7 @@ public class CrackShotLimitListener implements Listener {
 
 		Player p = e.getPlayer();
 		// クールタイム中ならキャンセル
-		if (storoboMap.getOrDefault(p, 0L) + (1000 * storoboCooldown) > System.currentTimeMillis()) {
+		if (storoboMap.getOrDefault(p, 0L) + 1000 * storoboCooldown > System.currentTimeMillis()) {
 			e.setCancelled(true);
 			return;
 		}
