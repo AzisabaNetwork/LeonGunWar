@@ -99,7 +99,7 @@ public class LeonGunWar extends JavaPlugin {
 
 	/**
 	 * SignRemoveTaskのインスタンスを返します
-	 * @return KillStreaksのインスタンス
+	 * @return SignRemoveTaskのインスタンス
 	 */
 	public SignRemoveTask getSignRemoveTask() {
 		return signRemoveTask;
