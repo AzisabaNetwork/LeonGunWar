@@ -47,7 +47,6 @@ public class LeonGunWar extends JavaPlugin {
 	private final MapContainer mapContainer = new MapContainer();
 	private final MatchManager manager = new MatchManager();
 	private final KillStreaks killStreaks = new KillStreaks();
-	private final SignRemoveTask signRemoveTask = new SignRemoveTask();
 	private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
 	/**
@@ -96,14 +95,6 @@ public class LeonGunWar extends JavaPlugin {
 	 */
 	public KillStreaks getKillStreaks() {
 		return killStreaks;
-	}
-
-	/**
-	 * SignRemoveTaskのインスタンスを返します
-	 * @return SignRemoveTaskのインスタンス
-	 */
-	public SignRemoveTask getSignRemoveTask() {
-		return signRemoveTask;
 	}
 
 	/**
@@ -157,7 +148,7 @@ public class LeonGunWar extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TradeBoardListener(), this);
 
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
-		signRemoveTask.runTaskTimer(this, 60, 20 * 60 * 10);
+		new SignRemoveTask().runTaskTimer(this, 60, 20 * 60 * 10);
 
 		getServer().getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
