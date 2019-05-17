@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
+import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.kills.KillStreaks;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.EntrySignListener;
@@ -106,9 +107,11 @@ public class LeonGunWar extends JavaPlugin {
 
 		// コマンドの登録
 		getServer().getPluginCommand("leongunwar").setExecutor(new LgwCommand());
+		getServer().getPluginCommand("uav").setExecutor(new UAVCommand());
 
 		// コマンドの権限がない時のメッセージの指定
 		getServer().getPluginCommand("leongunwar").setPermissionMessage(Chat.f("&c権限がありません！"));
+		getServer().getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
 
 		// リスナーの登録
 		getServer().getPluginManager().registerEvents(new MatchControlListener(), this);
