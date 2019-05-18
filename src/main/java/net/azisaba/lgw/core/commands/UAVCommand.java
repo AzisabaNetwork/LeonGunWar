@@ -67,7 +67,7 @@ public class UAVCommand implements CommandExecutor {
 		Map<BattleTeam, List<Player>> teamPlayerMap = manager.getTeamPlayers();
 
 		// プレイヤーがチームに所属していない場合はメッセージを表示
-		if (allPlayers.contains(shooter)) {
+		if (!allPlayers.contains(shooter)) {
 			LeonGunWar.getPlugin().getLogger().warning(shooter.getName() + " はどのチームにも所属していません。");
 			shooter.sendMessage(ChatColor.RED + "あなたはどのチームにも所属していません。");
 			return true;
