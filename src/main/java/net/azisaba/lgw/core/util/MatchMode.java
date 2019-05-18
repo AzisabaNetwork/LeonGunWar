@@ -20,9 +20,11 @@ public enum MatchMode {
 		switch (msgNoSpace.toLowerCase()) {
 		case "ldm":
 		case "leaderdeathmatch":
+		case "leader":
 			return LEADER_DEATH_MATCH;
 		case "tdm":
 		case "teamdeathmatch":
+		case "team":
 			return TEAM_DEATH_MATCH;
 		default:
 			return null;
