@@ -82,7 +82,7 @@ public class KillStreaks {
 		streaksMap.remove(player.getUniqueId());
 		if (killer != null) {
 			Bukkit.broadcastMessage(Chat.f("{0}&r{1} &7が &r{2} &7の連続キルを阻止！", LeonGunWar.GAME_PREFIX,
-					player.getDisplayName(), killer.getDisplayName()));
+					killer.getDisplayName(), player.getDisplayName()));
 		}
 	}
 
