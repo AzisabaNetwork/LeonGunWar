@@ -84,7 +84,9 @@ public class KillStreaks {
 		int minStreaks = rewards.entrySet().stream()
 				.sorted(Comparator.comparing(Map.Entry::getKey))
 				.filter(entry -> entry.getValue().getMessage() != null)
-				.map(Map.Entry::getKey).findFirst().orElse(-1);
+				.map(Map.Entry::getKey)
+				.findFirst()
+				.orElse(-1);
 
 		if (killer != null && streaks >= minStreaks) {
 			Bukkit.broadcastMessage(Chat.f("{0}&r{1} &7が &r{2} &7の連続キルを阻止！", LeonGunWar.GAME_PREFIX,
