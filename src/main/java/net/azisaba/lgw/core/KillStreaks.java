@@ -2,6 +2,7 @@ package net.azisaba.lgw.core;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,11 +80,18 @@ public class KillStreaks {
 	}
 
 	public void removedBy(Player player, Player killer) {
-		streaksMap.remove(player.getUniqueId());
-		if (killer != null) {
+		int streaks = get(player).get();
+		int minStreaks = rewards.entrySet().stream()
+				.sorted(Comparator.comparing(Map.Entry::getKey))
+				.filter(entry -> entry.getValue().getMessage() != null)
+				.map(Map.Entry::getKey).findFirst().orElse(-1);
+
+		if (killer != null && streaks >= minStreaks) {
 			Bukkit.broadcastMessage(Chat.f("{0}&r{1} &7が &r{2} &7の連続キルを阻止！", LeonGunWar.GAME_PREFIX,
 					killer.getDisplayName(), player.getDisplayName()));
 		}
+
+		streaksMap.remove(player.getUniqueId());
 	}
 
 	public AtomicInteger get(Player player) {
