@@ -787,6 +787,8 @@ public class MatchManager {
 			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
 			// 押し合いをなくす
 			redTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+			// Prefixを設定
+			redTeam.setPrefix(BattleTeam.RED.getChatColor() + "");
 		}
 
 		// 青チーム取得(なかったら作成)
@@ -802,6 +804,8 @@ public class MatchManager {
 			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
 			// 押し合いをなくす
 			blueTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+			// Prefixを設定
+			blueTeam.setPrefix(BattleTeam.BLUE.getChatColor() + "");
 		}
 	}
 
