@@ -28,7 +28,8 @@ public class EasyMigrateListener implements Listener {
 			"ColorTeaming",
 			"ColorTeamingEntry",
 			"ExpTimer",
-			"BarAPI");
+			"BarAPI",
+			"SiloSupporter");
 	private final List<String> unnecessaryWorlds = Arrays.asList(
 			"cargo",
 			"carrier",
