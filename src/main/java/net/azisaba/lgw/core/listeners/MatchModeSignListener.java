@@ -84,7 +84,7 @@ public class MatchModeSignListener implements Listener {
 			Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
 			Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 		} catch (IllegalStateException ex) {
-			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！次の試合で設定できます！", LeonGunWar.GAME_PREFIX));
+			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
 		}
 	}
 
