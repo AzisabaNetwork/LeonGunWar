@@ -20,7 +20,7 @@ import net.md_5.bungee.api.ChatColor;
 public class UAVCommand implements CommandExecutor {
 
 	private final double uavRadius = 60d;
-	private final double uavSeconds = 3d;
+	private final double uavSeconds = 10d;
 
 	private final HashMap<Player, Long> lastExecuted = new HashMap<>();
 
