@@ -3,10 +3,13 @@ package net.azisaba.lgw.core;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.util.KillReward;
@@ -75,13 +78,41 @@ public class KillStreaks {
 		streaksMap.clear();
 	}
 
-	public void remove(Player player) {
+	public void removedBy(Player player, Player killer) {
 		streaksMap.remove(player.getUniqueId());
+		if (killer != null) {
+			Bukkit.broadcastMessage(Chat.f("{0}&r{1} &7が &r{2} &7の連続キルを阻止！", LeonGunWar.GAME_PREFIX,
+					player.getDisplayName(), killer.getDisplayName()));
+		}
 	}
 
 	public AtomicInteger get(Player player) {
 		streaksMap.putIfAbsent(player.getUniqueId(), new AtomicInteger(0));
 		return streaksMap.get(player.getUniqueId());
+	}
+
+	public void add(Player player) {
+		// カウントを追加
+		int streaks = get(player).incrementAndGet();
+
+		// 報酬を付与
+		rewards.entrySet().stream()
+				.filter(entry -> streaks % entry.getKey() == 0)
+				.map(Map.Entry::getValue)
+				.map(KillReward::getCommands)
+				.filter(Objects::nonNull)
+				.map(commands -> commands.apply(player))
+				.flatMap(List::stream)
+				.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+
+		// キルストリークをお知らせ
+		rewards.entrySet().stream()
+				.filter(entry -> streaks == entry.getKey())
+				.map(Map.Entry::getValue)
+				.map(KillReward::getMessage)
+				.filter(Objects::nonNull)
+				.map(message -> message.apply(player))
+				.forEach(Bukkit::broadcastMessage);
 	}
 
 	public Map<Integer, KillReward> getRewards() {
