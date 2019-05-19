@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -83,6 +84,11 @@ public class MatchModeSignListener implements Listener {
 			Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
 			Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
 			Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+
+			// 音を鳴らす
+			Bukkit.getOnlinePlayers().forEach(p -> {
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
+			});
 		} catch (IllegalStateException ex) {
 			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
 		}
