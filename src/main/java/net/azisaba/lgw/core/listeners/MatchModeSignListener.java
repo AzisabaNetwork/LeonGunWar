@@ -86,8 +86,8 @@ public class MatchModeSignListener implements Listener {
 			Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
 			// 音を鳴らす
-			Bukkit.getOnlinePlayers().forEach(p -> {
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
+			Bukkit.getOnlinePlayers().forEach(player -> {
+				player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
 			});
 		} catch (IllegalStateException ex) {
 			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
