@@ -13,6 +13,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 
@@ -42,6 +43,7 @@ public class ScoreboardDisplayer {
 			 * 青チーム: ? Point(s)
 			 *
 			 * 現在のマップ: {マップ名}
+			 * 現在のモード: {モード}
 			 *
 			 * azisaba.net で今すぐ遊べ！
 			 */
@@ -56,6 +58,9 @@ public class ScoreboardDisplayer {
 			// 残り時間
 			int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().get();
 
+			// 試合のモード
+			MatchMode mode = LeonGunWar.getPlugin().getManager().getMatchMode();
+
 			// 文字を作成
 			String line1 = "";
 			String line2 = Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft));
@@ -64,11 +69,12 @@ public class ScoreboardDisplayer {
 			String line5 = Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.BLUE.getDisplayTeamName(), bluePoint);
 			String line6 = "";
 			String line7 = Chat.f("&7現在のマップ&a: &c{0}", mapName);
-			String line8 = "";
-			String line9 = Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net");
+			String line8 = Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName());
+			String line9 = "";
+			String line10 = Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net");
 
 			// リストにして返す
-			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9);
+			return Arrays.asList(line1, line2, line3, line4, line5, line6, line7, line8, line9, line10);
 		}
 
 		// 試合をしていない場合
