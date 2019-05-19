@@ -71,7 +71,13 @@ public class LgwCommand implements CommandExecutor {
 
 			Player p = (Player) sender;
 
-			// args[1]移行を取得
+			// マップ名が指定されていない場合はreturn
+			if (args.length <= 1) {
+				p.sendMessage(Chat.f("&cマップ名を指定してください！"));
+				return true;
+			}
+
+ 			// args[1]移行を取得
 			String mapName = String.join(" ", args).substring(args[0].length() + 1);
 
 			// 指定されたマップがない場合はreturn
