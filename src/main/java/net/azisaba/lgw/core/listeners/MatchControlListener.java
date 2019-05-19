@@ -232,14 +232,10 @@ public class MatchControlListener implements Listener {
 			return;
 		}
 
-		// 40ならメッセージを表示
-		if (e.getCurrentPoint() == 40) {
+		// 40か45ならメッセージを表示
+		if (e.getCurrentPoint() == 40 || e.getCurrentPoint() == 45) {
 			Bukkit.broadcastMessage(
-					Chat.f("{0}&7残り&e{1}キル&7で&r{2}&7が勝利！", LeonGunWar.GAME_PREFIX, 10,
-							e.getTeam().getDisplayTeamName()));
-		} else if (e.getCurrentPoint() == 45) {
-			Bukkit.broadcastMessage(
-					Chat.f("{0}&7残り&e{1}キル&7で&r{2}&7が勝利！", LeonGunWar.GAME_PREFIX, 5,
+					Chat.f("{0}&7残り &e{1} キル&7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX, 50 - e.getCurrentPoint(),
 							e.getTeam().getDisplayTeamName()));
 		} else if (e.getCurrentPoint() == 50) {
 			MatchManager manager = LeonGunWar.getPlugin().getManager();
