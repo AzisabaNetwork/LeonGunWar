@@ -115,17 +115,19 @@ public class MatchControlListener implements Listener {
 			}
 		}
 
+		// 結果を全プレイヤーに表示
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			for (String msg : resultMessages) {
+				p.sendMessage(msg);
+			}
+		});
+
 		for (Player p : allPlayers) {
 			// スポーンにTP
 			p.teleport(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation());
 
 			// アーマー削除
 			p.getInventory().setChestplate(null);
-
-			// 結果を表示
-			for (String msg : resultMessages) {
-				p.sendMessage(msg);
-			}
 
 			// 各記録を取得
 			int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
