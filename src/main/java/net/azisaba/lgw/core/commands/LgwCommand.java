@@ -103,6 +103,9 @@ public class LgwCommand implements CommandExecutor {
 					msg.tooltip(Chat.f("&eクリックでテレポート"));
 					msg.runCommand(Chat.f("/essentials:tppos {0} {1} {2} {3} {4} {5}", spawn.getX(), spawn.getY(),
 							spawn.getZ(), spawn.getYaw(), spawn.getPitch(), spawn.getWorld().getName()));
+
+					// メッセージを送信
+					msg.send(p);
 				});
 
 				// 1より少ない場合 (0以下の場合)
