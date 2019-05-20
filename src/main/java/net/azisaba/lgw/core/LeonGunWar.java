@@ -151,7 +151,7 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
 
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
-		new SignRemoveTask().runTaskTimer(this, 60, 20 * 60 * 10);
+		new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
 
 		Bukkit.getLogger().info(Chat.f("{0} enabled.", getName()));
 	}
