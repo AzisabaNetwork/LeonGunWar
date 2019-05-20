@@ -75,7 +75,7 @@ public class TradeBoardManager {
 						signs.put(loc, data);
 
 						// ログを出力
-						LeonGunWar.getPlugin().getLogger().info(locStr + " の看板をロードしました。");
+						LeonGunWar.getPlugin().getLogger().fine(locStr + " の看板をロードしました。");
 					} else {
 						// 失敗したログを出力
 						LeonGunWar.getPlugin().getLogger().warning(locStr + " の看板はロードされませんでした。");

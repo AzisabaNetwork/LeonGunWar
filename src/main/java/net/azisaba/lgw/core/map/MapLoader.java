@@ -124,7 +124,7 @@ public class MapLoader {
 			// リストに追加
 			gameMapList.add(data);
 
-			LeonGunWar.getPlugin().getLogger().info("マップ " + data.getMapName() + " をロードしました。");
+			LeonGunWar.getPlugin().getLogger().fine("マップ " + data.getMapName() + " をロードしました。");
 		}
 
 		// gameMapListを返す
