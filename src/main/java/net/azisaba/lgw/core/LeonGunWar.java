@@ -19,6 +19,7 @@ import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
 import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
+import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
 import net.azisaba.lgw.core.listeners.others.EasyMigrateListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.KillStreaksListener;
@@ -145,6 +146,7 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CrackShotLimitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new TradeBoardListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableTNTBlockDamageListener(), this);
 
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
 		new SignRemoveTask().runTaskTimer(this, 60, 20 * 60 * 10);
