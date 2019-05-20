@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -26,7 +27,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.SignData;
 import net.azisaba.lgw.core.utils.Chat;
-import net.md_5.bungee.api.ChatColor;
 
 /**
  * 掲示板を管理するListener
@@ -70,7 +70,7 @@ public class TradeBoardListener implements Listener {
 		// 空白の看板なら破壊
 		if (isEmpty(e.getLines())) {
 			b.breakNaturally();
-			p.sendMessage(ChatColor.RED + "空白の看板なため破壊しました");
+			p.sendMessage(Chat.f("&c空白の看板なため破壊しました"));
 			return;
 		}
 
@@ -86,11 +86,11 @@ public class TradeBoardListener implements Listener {
 
 		// 成功か失敗かで分岐
 		if (success) {
-			p.sendMessage(ChatColor.GREEN + "看板を正常に登録しました！");
+			p.sendMessage(Chat.f("&a看板を正常に登録しました！"));
 		} else {
 			// 失敗したら破壊してメッセージを表示
 			b.breakNaturally();
-			p.sendMessage(ChatColor.RED + "看板の登録に失敗しました。申し訳ありませんが別の場所を利用してください。");
+			p.sendMessage(Chat.f("&c看板の登録に失敗しました。申し訳ありませんが別の場所を利用してください。"));
 		}
 	}
 
@@ -142,7 +142,7 @@ public class TradeBoardListener implements Listener {
 		// データがない場合は運営が設置した看板と判定しキャンセル
 		if (data == null) {
 			e.setCancelled(true);
-			p.sendMessage(ChatColor.RED + "自分の設置した看板のみ破壊することができます！");
+			p.sendMessage(Chat.f("&c自分の設置した看板のみ破壊することができます！"));
 			return;
 		}
 
@@ -157,8 +157,8 @@ public class TradeBoardListener implements Listener {
 		p.sendMessage(Chat.f("&cこの看板は&e{0}&cによって作成されたものです！", data.getPlayerName()));
 	}
 
-	private final HashMap<Player, SignData> lastClicked = new HashMap<>();
-	private final HashMap<Player, Long> lastClickedMilli = new HashMap<>();
+	private final Map<Player, SignData> lastClicked = new HashMap<>();
+	private final Map<Player, Long> lastClickedMilli = new HashMap<>();
 
 	/**
 	 * 右クリックで看板の作者を表示するListener
@@ -189,7 +189,7 @@ public class TradeBoardListener implements Listener {
 		}
 
 		// 作成者を表示
-		p.sendMessage(ChatColor.GREEN + "作成者: " + ChatColor.YELLOW + data.getPlayerName());
+		p.sendMessage(Chat.f("&a作成者: &e{0}", data.getPlayerName()));
 
 		// クリック情報を保存
 		lastClicked.put(p, data);

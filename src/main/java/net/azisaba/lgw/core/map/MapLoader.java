@@ -123,6 +123,8 @@ public class MapLoader {
 			GameMap data = new GameMap(mapName, world, spawnMap);
 			// リストに追加
 			gameMapList.add(data);
+
+			LeonGunWar.getPlugin().getLogger().info("マップ " + data.getMapName() + " をロードしました。");
 		}
 
 		// gameMapListを返す

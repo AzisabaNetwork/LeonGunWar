@@ -15,26 +15,26 @@ import org.bukkit.potion.PotionEffectType;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.BattleTeam;
-import net.md_5.bungee.api.ChatColor;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class UAVCommand implements CommandExecutor {
 
 	private final double uavRadius = 60d;
 	private final double uavSeconds = 10d;
 
-	private final HashMap<Player, Long> lastExecuted = new HashMap<>();
+	private final Map<Player, Long> lastExecuted = new HashMap<>();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// コンソールではない場合はreturn
 		if (sender instanceof Player) {
-			sender.sendMessage(ChatColor.RED + "このコマンドはConsoleでのみ実行可能です。");
+			sender.sendMessage(Chat.f("&cこのコマンドはConsoleでのみ実行可能です。"));
 			return true;
 		}
 
 		// UAVを使用したプレイヤーが指定されていない場合はreturn
 		if (args.length == 0) {
-			sender.sendMessage(ChatColor.RED + "Usage: " + cmd.getUsage().replace("{LABEL}", label));
+			sender.sendMessage(Chat.f("&cUsage: {0}", cmd.getUsage().replace("{LABEL}", label)));
 			return true;
 		}
 
@@ -43,13 +43,7 @@ public class UAVCommand implements CommandExecutor {
 
 		// プレイヤーが存在しない場合はメッセージを表示してreturn
 		if (shooter == null) {
-			sender.sendMessage(ChatColor.RED + "プレイヤーが見つかりません。");
-			return true;
-		}
-
-		// LeonGunWar pluginが有効ではない場合はreturn
-		if (!isLeonGunWarEnabled()) {
-			LeonGunWar.getPlugin().getLogger().warning("LeonGunWarがロードされていないためUAVを正常に実行できませんでした。");
+			sender.sendMessage(Chat.f("&cプレイヤーが見つかりません。"));
 			return true;
 		}
 
@@ -69,7 +63,7 @@ public class UAVCommand implements CommandExecutor {
 		// プレイヤーがチームに所属していない場合はメッセージを表示
 		if (!allPlayers.contains(shooter)) {
 			LeonGunWar.getPlugin().getLogger().warning(shooter.getName() + " はどのチームにも所属していません。");
-			shooter.sendMessage(ChatColor.RED + "あなたはどのチームにも所属していません。");
+			shooter.sendMessage(Chat.f("&cあなたはどのチームにも所属していません。"));
 			return true;
 		}
 
@@ -113,17 +107,4 @@ public class UAVCommand implements CommandExecutor {
 		return true;
 	}
 
-	/**
-	 * LeonGunWar pluginが有効化されているかどうか確認します
-	 * @return LeonGunWar pluginが有効化されていればtrue, されていなければfalse
-	 */
-	private boolean isLeonGunWarEnabled() {
-		LeonGunWar plugin = (LeonGunWar) Bukkit.getPluginManager().getPlugin("LeonGunWar");
-
-		if (plugin != null) {
-			return plugin.isEnabled();
-		}
-
-		return false;
-	}
 }

@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,12 +22,12 @@ import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 public class CrackShotLimitListener implements Listener {
 
 	// コンバットナイフ用のクールタイムMap
-	private final HashMap<Player, Long> knifeMap = new HashMap<>();
+	private final Map<Player, Long> knifeMap = new HashMap<>();
 	// コンバットナイフのクールダウンの秒数
 	private final double knifeCooldown;
 
 	// ライトニングストライク用のクールタイムMap
-	private final HashMap<Player, Long> storoboMap = new HashMap<>();
+	private final Map<Player, Long> storoboMap = new HashMap<>();
 	// ライトニングストライクのクールダウンの秒数
 	private final double storoboCooldown;
 

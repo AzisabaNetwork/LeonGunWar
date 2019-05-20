@@ -29,7 +29,7 @@ public class MapContainer {
 		// 保存されているマップデータの収集
 		mapList.addAll(LeonGunWar.getPlugin().getMapLoader().loadMapData());
 
-		LeonGunWar.getPlugin().getLogger().info(mapList.size() + "個のマップをロードしました。");
+		LeonGunWar.getPlugin().getLogger().info(mapList.size() + " 個のマップをロードしました。");
 
 		// ロード完了
 		loaded = true;

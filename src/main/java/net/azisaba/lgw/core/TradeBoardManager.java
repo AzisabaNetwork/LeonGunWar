@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,7 +21,7 @@ public class TradeBoardManager {
 	// 看板の情報を保存するフォルダ
 	private File dataFolder;
 	// 座標に対応する看板データを保存するMap
-	private final HashMap<Location, SignData> signs = new HashMap<>();
+	private final Map<Location, SignData> signs = new HashMap<>();
 
 	/**
 	 * 保存されている看板の情報をファイルからロードします。
@@ -64,8 +65,7 @@ public class TradeBoardManager {
 					}
 
 					// 人に読みやすい形式に変更
-					locStr = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + ","
-							+ loc.getBlockZ();
+					locStr = loc.getWorld().getName() + " - " + loc.toVector().toBlockVector();
 
 					// uuidもplayerNameもnullの場合return
 					if (uuid != null && playerName != null) {
@@ -75,13 +75,14 @@ public class TradeBoardManager {
 						signs.put(loc, data);
 
 						// ログを出力
-						LeonGunWar.getPlugin().getLogger().info(locStr + "の看板をロードしました");
+						LeonGunWar.getPlugin().getLogger().info(locStr + " の看板をロードしました。");
 					} else {
 						// 失敗したログを出力
-						LeonGunWar.getPlugin().getLogger().warning(locStr + "の看板はロードされませんでした");
+						LeonGunWar.getPlugin().getLogger().warning(locStr + " の看板はロードされませんでした。");
 					}
 				});
 
+		LeonGunWar.getPlugin().getLogger().info(signs.size() + " 個の看板をロードしました。");
 	}
 
 	/**
