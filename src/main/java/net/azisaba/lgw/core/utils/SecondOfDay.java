@@ -15,7 +15,7 @@ public class SecondOfDay {
 		DateTimeFormatter formatter = new DateTimeFormatterBuilder()
 				.appendPattern(time.getHour() > 0 ? "H時間" : "")
 				.appendPattern(time.getMinute() > 0 ? "m分" : "")
-				.appendPattern("s秒")
+				.appendPattern(time.getSecond() > 0 ? "s秒" : "")
 				.toFormatter();
 		return time.format(formatter);
 	}
