@@ -77,7 +77,7 @@ public class LgwCommand implements CommandExecutor {
 				return true;
 			}
 
- 			// args[1]移行を取得
+			// args[1]移行を取得
 			String mapName = String.join(" ", args).substring(args[0].length() + 1);
 
 			// 指定されたマップがない場合はreturn
