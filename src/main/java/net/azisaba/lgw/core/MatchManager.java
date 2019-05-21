@@ -407,14 +407,9 @@ public class MatchManager {
 		// アーマー削除
 		p.getInventory().setChestplate(null);
 
-		// 退出メッセージを試合中のプレイヤーに送信
-		String msg = Chat.f("{0}{1} &7が試合から離脱しました", LeonGunWar.GAME_PREFIX, p.getDisplayName());
-		getAllTeamPlayers().forEach(player -> {
-			player.sendMessage(msg);
-		});
-
-		// コンソールに出力
-		Bukkit.getConsoleSender().sendMessage(msg);
+		// 退出メッセージを全員に送信
+		String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getDisplayName());
+		Bukkit.broadcastMessage(msg);
 
 		// displayName初期化
 		p.setDisplayName(p.getName());
