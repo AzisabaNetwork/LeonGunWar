@@ -163,7 +163,7 @@ public class TradeBoardManager {
 
 			// 看板の情報をセット
 			conf.set("PlayerName", sign.getPlayerName());
-			conf.set("UUID", sign.getAuthor().toString());
+			conf.set("UUID", sign.getAuthor());
 			conf.set("Expire", sign.getBreakAt());
 
 			// ファイルを取得

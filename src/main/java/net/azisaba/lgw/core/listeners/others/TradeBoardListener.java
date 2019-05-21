@@ -1,7 +1,10 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -19,7 +22,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.google.common.base.Objects;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -43,7 +45,7 @@ import net.azisaba.lgw.core.utils.Chat;
 public class TradeBoardListener implements Listener {
 
 	// 1週間をミリ秒で取得
-	private final long expireMilliSeconds = 1000L * 60L * 60L * 24L * 7L;
+	private final long expireMilliSeconds = ChronoUnit.WEEKS.getDuration().toMillis();
 
 	/**
 	 * 看板を設置したときに内容を読み取り、登録やキャンセルをするListener
@@ -183,7 +185,7 @@ public class TradeBoardListener implements Listener {
 
 		// クリック連打を対策
 		// 前回クリックしたデータと同じデータであり、3秒以上たっていない場合はreturn
-		if (Objects.equal(lastClicked.getOrDefault(p, null), data)
+		if (Objects.equals(lastClicked.getOrDefault(p, null), data)
 				&& lastClickedMilli.getOrDefault(p, 0L) + 3000 > System.currentTimeMillis()) {
 			return;
 		}
@@ -202,16 +204,10 @@ public class TradeBoardListener implements Listener {
 	 * @return 全て空白ならtrue、1文字でも入っていればfalse
 	 */
 	private boolean isEmpty(String[] lines) {
-		for (String line : lines) {
-			if (line == null) {
-				continue;
-			}
-			if (!line.trim().equals("")) {
-				return false;
-			}
-		}
-
-		return true;
+		return Arrays.stream(lines)
+				.filter(Objects::nonNull)
+				.map(String::trim)
+				.allMatch(String::isEmpty);
 	}
 
 	/**
