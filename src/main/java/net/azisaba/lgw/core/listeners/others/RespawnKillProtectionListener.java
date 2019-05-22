@@ -75,4 +75,21 @@ public class RespawnKillProtectionListener implements Listener {
 			return new RespawnKillProtectionTask(p, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
 		});
 	}
+
+	@EventHandler
+	public void onDamage(EntityDamageByEntityEvent e) {
+
+		// プレイヤーではない場合はreturn
+		if (!(e.getDamager() instanceof Player)) {
+			return;
+		}
+
+		Player p = (Player) e.getDamager();
+
+		// プレイヤーが無敵時間の場合、攻撃をキャンセル
+		if (Instant.now().isBefore(remainTimes.getOrDefault(p, Instant.now()))) {
+			e.setCancelled(true);
+			p.sendMessage(Chat.f("{0} &rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
+		}
+	}
 }
