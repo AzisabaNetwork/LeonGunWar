@@ -79,6 +79,7 @@ public class TradeBoardListener implements Listener {
 			return;
 		}
 
+		// 機能付き看板なら破壊
 		if (e.getLine(0) != null && denySigns.contains(e.getLine(0).toLowerCase().trim())) {
 			b.breakNaturally();
 			p.sendMessage(Chat.f("&c無効な内容の看板なため破壊しました"));
