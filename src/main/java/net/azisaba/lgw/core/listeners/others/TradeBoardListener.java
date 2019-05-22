@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners.others;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -47,6 +48,8 @@ public class TradeBoardListener implements Listener {
 	// 1週間をミリ秒で取得
 	private final long expireMilliSeconds = ChronoUnit.WEEKS.getDuration().toMillis();
 
+	private final List<String> denySigns = Arrays.asList("[entry]", "[leave]", "[rejoin]", "[mode]");
+
 	/**
 	 * 看板を設置したときに内容を読み取り、登録やキャンセルをするListener
 	 */
@@ -73,6 +76,12 @@ public class TradeBoardListener implements Listener {
 		if (isEmpty(e.getLines())) {
 			b.breakNaturally();
 			p.sendMessage(Chat.f("&c空白の看板なため破壊しました"));
+			return;
+		}
+
+		if (e.getLine(0) != null && denySigns.contains(e.getLine(0).toLowerCase().trim())) {
+			b.breakNaturally();
+			p.sendMessage(Chat.f("&c無効な内容の看板なため破壊しました"));
 			return;
 		}
 
