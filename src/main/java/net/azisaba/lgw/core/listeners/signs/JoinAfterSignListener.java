@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.listeners;
+package net.azisaba.lgw.core.listeners.signs;
 
 import java.util.HashMap;
 import java.util.Map;
