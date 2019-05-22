@@ -126,7 +126,7 @@ public class DamageListener implements Listener {
 	 * この秒数はアシスト判定に使用されます
 	 * @param e
 	 */
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onAttackPlayer(WeaponDamageEntityEvent e) {
 		Player attacker = e.getPlayer();
 
@@ -140,6 +140,18 @@ public class DamageListener implements Listener {
 		// 同じプレイヤーならreturn
 		if (attacker == victim) {
 			return;
+		}
+
+		// 同じチームならreturn
+		MatchManager manager = LeonGunWar.getPlugin().getManager();
+		if (manager.isMatching() && manager.getBattleTeam(attacker) != null) {
+
+			// 攻撃を加えたチームのプレイヤーリストを取得
+			List<Player> teamPlayers = manager.getTeamPlayers(manager.getBattleTeam(attacker));
+			// 両方チームに含まれている場合はreturn
+			if (teamPlayers.contains(attacker) && teamPlayers.contains(victim)) {
+				return;
+			}
 		}
 
 		// ミリ秒を指定
