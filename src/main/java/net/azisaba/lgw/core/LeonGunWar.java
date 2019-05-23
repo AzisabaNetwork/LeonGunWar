@@ -124,7 +124,7 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginCommand("leongunwar").setPermissionMessage(Chat.f("&c権限がありません！"));
 		Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
 
-		// リスナーの追加
+		// リスナーの登録
 		Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
 		Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
 		Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
@@ -133,7 +133,7 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
 
-		// リスナーの追加 (others)
+		// リスナーの登録 (others)
 		Bukkit.getPluginManager().registerEvents(new NoArrowGroundListener(), this);
 		Bukkit.getPluginManager().registerEvents(new NoKnockbackListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DisableItemDamageListener(), this);
