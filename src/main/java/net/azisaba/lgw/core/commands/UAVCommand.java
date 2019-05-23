@@ -106,5 +106,4 @@ public class UAVCommand implements CommandExecutor {
 		LeonGunWar.getPlugin().getLogger().info("正常に " + shooter.getName() + " のUAVを実行しました。");
 		return true;
 	}
-
 }

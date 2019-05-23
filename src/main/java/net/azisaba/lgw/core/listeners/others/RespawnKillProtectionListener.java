@@ -89,7 +89,7 @@ public class RespawnKillProtectionListener implements Listener {
 		// プレイヤーが無敵時間の場合、攻撃をキャンセル
 		if (Instant.now().isBefore(remainTimes.getOrDefault(p, Instant.now()))) {
 			e.setCancelled(true);
-			p.sendMessage(Chat.f("{0} &rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
+			p.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
 		}
 	}
 }

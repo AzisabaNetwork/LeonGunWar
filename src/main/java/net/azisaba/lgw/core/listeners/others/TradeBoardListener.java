@@ -75,14 +75,14 @@ public class TradeBoardListener implements Listener {
 		// 空白の看板なら破壊
 		if (isEmpty(e.getLines())) {
 			b.breakNaturally();
-			p.sendMessage(Chat.f("&c空白の看板なため破壊しました"));
+			p.sendMessage(Chat.f("&c空白の看板なため破壊しました。"));
 			return;
 		}
 
 		// 機能付き看板なら破壊
 		if (e.getLine(0) != null && denySigns.contains(Chat.r(e.getLine(0).toLowerCase().trim()))) {
 			b.breakNaturally();
-			p.sendMessage(Chat.f("&c無効な内容の看板なため破壊しました"));
+			p.sendMessage(Chat.f("&c無効な内容の看板なため破壊しました。"));
 			return;
 		}
 
