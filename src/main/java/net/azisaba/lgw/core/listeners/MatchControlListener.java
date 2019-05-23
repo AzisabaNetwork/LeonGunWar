@@ -39,7 +39,7 @@ public class MatchControlListener implements Listener {
 	/**
 	 * 試合が終わったときにMatchFinishedEventを呼び出すリスナー
 	 */
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void matchFinishDetector(MatchTimeChangedEvent e) {
 		// 時間を取得して0じゃなかったらreturn
 		if (e.getTimeLeft() > 0) {
@@ -203,7 +203,7 @@ public class MatchControlListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerKickedMatch(PlayerKickMatchEvent e) {
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 
@@ -224,7 +224,7 @@ public class MatchControlListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onAddTeamPoint(TeamPointIncreasedEvent e) {
 
 		// TDMではない場合return

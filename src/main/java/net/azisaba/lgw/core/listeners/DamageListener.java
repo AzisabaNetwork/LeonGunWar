@@ -163,7 +163,7 @@ public class DamageListener implements Listener {
 		lastDamaged.put(victim, damagedMap);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onLeaderKilledDetector(PlayerDeathEvent e) {
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 

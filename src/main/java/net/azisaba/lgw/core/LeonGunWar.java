@@ -1,10 +1,6 @@
 package net.azisaba.lgw.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.LgwCommand;
@@ -117,11 +113,8 @@ public class LeonGunWar extends JavaPlugin {
 		manager.initialize();
 		tradeBoardManager.init();
 
-		// リスナーを保持するリスト
-		List<Listener> listeners = new ArrayList<>();
-
 		// 移行を簡単にする [DEBUG]
-		listeners.add(new EasyMigrateListener());
+		Bukkit.getPluginManager().registerEvents(new EasyMigrateListener(), this);
 
 		// コマンドの登録
 		Bukkit.getPluginCommand("leongunwar").setExecutor(new LgwCommand());
@@ -132,35 +125,30 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
 
 		// リスナーの追加
-		listeners.add(new MatchControlListener());
-		listeners.add(new EntrySignListener());
-		listeners.add(new MatchModeSignListener());
-		listeners.add(new JoinAfterSignListener());
-		listeners.add(new MatchStartDetectListener());
-		listeners.add(new DamageListener());
-		listeners.add(new PlayerControlListener());
+		Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
+		Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
+		Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
 
 		// リスナーの追加 (others)
-		listeners.add(new NoArrowGroundListener());
-		listeners.add(new NoKnockbackListener());
-		listeners.add(new DisableItemDamageListener());
-		listeners.add(new DisableOpenInventoryListener());
-		listeners.add(new DisableOffhandListener());
-		listeners.add(new EnableKeepInventoryListener());
-		listeners.add(new RespawnKillProtectionListener());
-		listeners.add(new AutoRespawnListener());
-		listeners.add(new AfkKickEntryListener());
-		listeners.add(new KillStreaksListener());
-		listeners.add(new DisableRecipeListener());
-		listeners.add(new CrackShotLimitListener());
-		listeners.add(new TradeBoardListener());
-		listeners.add(new DisableTNTBlockDamageListener());
-		listeners.add(new SignWithColorListener());
-
-		// 非同期でリスナーを登録
-		listeners.stream()
-				.map(listener -> (Runnable) () -> Bukkit.getPluginManager().registerEvents(listener, this))
-				.forEach(register -> Bukkit.getScheduler().runTaskLaterAsynchronously(this, register, 0));
+		Bukkit.getPluginManager().registerEvents(new NoArrowGroundListener(), this);
+		Bukkit.getPluginManager().registerEvents(new NoKnockbackListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableItemDamageListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableOpenInventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableOffhandListener(), this);
+		Bukkit.getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
+		Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
+		Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new KillStreaksListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
+		Bukkit.getPluginManager().registerEvents(new CrackShotLimitListener(), this);
+		Bukkit.getPluginManager().registerEvents(new TradeBoardListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DisableTNTBlockDamageListener(), this);
+		Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
 
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
 		new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
