@@ -510,11 +510,11 @@ public class MatchManager {
 
 	/**
 	 * 対象の複数のプレイヤーが同じチームどうかを取得します
-	 * @param p 対象の複数のプレイヤー
+	 * @param players 対象の複数のプレイヤー
 	 * @return 対象の複数のプレイヤーが同じチームどうか
 	 */
 	public boolean isSameBattleTeam(Player... players) {
-		return isMatching() && players.length >= 2 && Arrays.stream(players)
+		return isMatching() && players.length > 0 && Arrays.stream(players)
 				.map(this::getBattleTeam)
 				.filter(Objects::nonNull)
 				.allMatch(players[0]::equals);
