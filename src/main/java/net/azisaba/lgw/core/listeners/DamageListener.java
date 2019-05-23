@@ -126,7 +126,7 @@ public class DamageListener implements Listener {
 	 * この秒数はアシスト判定に使用されます
 	 * @param e
 	 */
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler
 	public void onAttackPlayer(WeaponDamageEntityEvent e) {
 		Player attacker = e.getPlayer();
 
@@ -161,7 +161,7 @@ public class DamageListener implements Listener {
 		lastDamaged.put(victim, damagedMap);
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLeaderKilledDetector(PlayerDeathEvent e) {
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 
