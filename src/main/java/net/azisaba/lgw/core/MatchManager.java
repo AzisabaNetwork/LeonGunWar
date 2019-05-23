@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -503,8 +504,20 @@ public class MatchManager {
 	 * @param p 対象のプレイヤー
 	 * @return 対象のプレイヤーが試合中かどうか
 	 */
-	public boolean isPlayerMatching(Player p) {
-		return isMatching() && getBattleTeam(p) != null;
+	public boolean isPlayerMatching(Player player) {
+		return isMatching() && getBattleTeam(player) != null;
+	}
+
+	/**
+	 * 対象の複数のプレイヤーが同じチームどうかを取得します
+	 * @param p 対象の複数のプレイヤー
+	 * @return 対象の複数のプレイヤーが同じチームどうか
+	 */
+	public boolean isSameBattleTeam(Player... players) {
+		return isMatching() && players.length >= 2 && Arrays.stream(players)
+				.map(this::getBattleTeam)
+				.filter(Objects::nonNull)
+				.allMatch(players[0]::equals);
 	}
 
 	/**

@@ -29,7 +29,7 @@ public class PlayerControlListener implements Listener {
 
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 		// プレイヤーが試合中でなければreturn
-		if (!manager.isMatching() || manager.getBattleTeam(p) == null) {
+		if (!manager.isPlayerMatching(p)) {
 			return;
 		}
 

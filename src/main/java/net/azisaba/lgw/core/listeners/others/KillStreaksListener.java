@@ -11,14 +11,13 @@ public class KillStreaksListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		Player p = e.getEntity();
+		Player deader = e.getEntity();
+		Player killer = deader.getKiller();
 
 		// 自滅は無視
-		if (p.getKiller() == null || p.getKiller() == p) {
+		if (killer == null || killer == deader) {
 			return;
 		}
-
-		Player killer = p.getKiller();
 
 		// カウントを追加
 		LeonGunWar.getPlugin().getKillStreaks().add(killer);

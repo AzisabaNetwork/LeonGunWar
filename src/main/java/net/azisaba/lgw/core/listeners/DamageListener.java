@@ -145,15 +145,8 @@ public class DamageListener implements Listener {
 		}
 
 		// 同じチームならreturn
-		MatchManager manager = LeonGunWar.getPlugin().getManager();
-		if (manager.isMatching() && manager.getBattleTeam(attacker) != null) {
-
-			// 攻撃を加えたチームのプレイヤーリストを取得
-			List<Player> teamPlayers = manager.getTeamPlayers(manager.getBattleTeam(attacker));
-			// 両方チームに含まれている場合はreturn
-			if (teamPlayers.contains(attacker) && teamPlayers.contains(victim)) {
-				return;
-			}
+		if (LeonGunWar.getPlugin().getManager().isSameBattleTeam(attacker, victim)) {
+			return;
 		}
 
 		// ミリ秒を指定
