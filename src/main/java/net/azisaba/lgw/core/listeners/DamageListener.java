@@ -81,25 +81,25 @@ public class DamageListener implements Listener {
 	 */
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
-		Player deathPlayer = e.getEntity();
+		Player deader = e.getEntity();
 
 		// チームを取得
-		BattleTeam deathPlayerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(deathPlayer);
+		BattleTeam deaderTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(deader);
 
-		// deathPlayerTeamがnullの場合return
-		if (deathPlayerTeam == null) {
+		// deaderTeamがnullの場合return
+		if (deaderTeam == null) {
 			return;
 		}
 
 		// 死亡数を追加
-		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addDeath(deathPlayer);
+		LeonGunWar.getPlugin().getManager().getKillDeathCounter().addDeath(deader);
 
 		// 殺したプレイヤーを取得
-		Player killer = deathPlayer.getKiller();
+		Player killer = deader.getKiller();
 
 		// アシスト判定になるキーを取得 (過去10秒以内に攻撃したプレイヤー)
 		// プレイヤーがkillしたプレイヤーならcontinue
-		lastDamaged.getOrDefault(deathPlayer, new HashMap<>()).entrySet().stream()
+		lastDamaged.getOrDefault(deader, new HashMap<>()).entrySet().stream()
 				.filter(entry -> entry.getValue() + 10 * 1000 > System.currentTimeMillis())
 				.map(Map.Entry::getKey)
 				.filter(Objects::nonNull)
@@ -115,12 +115,12 @@ public class DamageListener implements Listener {
 				});
 
 		// lastDamagedを初期化
-		if (lastDamaged.containsKey(deathPlayer)) {
-			lastDamaged.remove(deathPlayer);
+		if (lastDamaged.containsKey(deader)) {
+			lastDamaged.remove(deader);
 		}
 
 		// 連続キルを停止
-		LeonGunWar.getPlugin().getKillStreaks().removedBy(deathPlayer, killer);
+		LeonGunWar.getPlugin().getKillStreaks().removedBy(deader, killer);
 	}
 
 	/**

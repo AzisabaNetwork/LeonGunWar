@@ -14,10 +14,10 @@ public class AutoRespawnListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onDeath(PlayerDeathEvent e) {
-		Player deathPlayer = e.getEntity();
+		Player deader = e.getEntity();
 
 		// リスポーン
-		deathPlayer.spigot().respawn();
+		deader.spigot().respawn();
 	}
 
 	@EventHandler
