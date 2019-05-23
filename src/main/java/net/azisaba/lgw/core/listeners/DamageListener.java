@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -101,6 +102,7 @@ public class DamageListener implements Listener {
 		lastDamaged.getOrDefault(deathPlayer, new HashMap<>()).entrySet().stream()
 				.filter(entry -> entry.getValue() + 10 * 1000 > System.currentTimeMillis())
 				.map(Map.Entry::getKey)
+				.filter(Objects::nonNull)
 				.filter(assist -> assist != killer)
 				.forEach(assist -> {
 					// アシスト追加
