@@ -501,7 +501,7 @@ public class MatchManager {
 
 	/**
 	 * 対象のプレイヤーが試合中かどうかを取得します
-	 * @param p 対象のプレイヤー
+	 * @param player 対象のプレイヤー
 	 * @return 対象のプレイヤーが試合中かどうか
 	 */
 	public boolean isPlayerMatching(Player player) {
