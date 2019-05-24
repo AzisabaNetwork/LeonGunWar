@@ -3,6 +3,7 @@ package net.azisaba.lgw.core;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
@@ -41,6 +42,8 @@ public class LeonGunWar extends JavaPlugin {
 	public static final String GAME_PREFIX = Chat.f("&7[&6PvP&7]&r ");
 	public static final String SIGN_ACTIVE = Chat.f("&a[ACTIVE]");
 	public static final String SIGN_INACTIVE = Chat.f("&c[INACTIVE]");
+
+	public static JSONMessage QUICK_BAR;
 
 	// plugin
 	private static LeonGunWar plugin;
@@ -111,6 +114,17 @@ public class LeonGunWar extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+
+		QUICK_BAR = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
+				.then(Chat.f("&a[エントリー]"))
+				.runCommand("/leongunwar:match entry")
+				.then(" ")
+				.then(Chat.f("&c[エントリー解除]"))
+				.runCommand("/leongunwar:match leave")
+				.then(" ")
+				.then(Chat.f("&6[途中参加]"))
+				.runCommand("/leongunwar:match rejoin");
+
 		// 初期化が必要なファイルを初期化する
 		mapContainer.loadMaps();
 		manager.initialize();

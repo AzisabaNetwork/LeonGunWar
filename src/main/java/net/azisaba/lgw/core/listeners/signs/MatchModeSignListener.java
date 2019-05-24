@@ -90,6 +90,9 @@ public class MatchModeSignListener implements Listener {
 			Bukkit.getOnlinePlayers().forEach(player -> {
 				player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
 			});
+
+			// 全プレイヤーにQuickメッセージを送信
+			LeonGunWar.QUICK_BAR.send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
 		} catch (IllegalStateException ex) {
 			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
 		}

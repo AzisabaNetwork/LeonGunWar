@@ -140,10 +140,14 @@ public class MatchControlListener implements Listener {
 
 	/**
 	 * 最後に finalizeMatch メソッドを実行するためのリスナー
+	 * ついでにQuickメッセージも表示
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void matchFinalizer(MatchFinishedEvent e) {
 		LeonGunWar.getPlugin().getManager().finalizeMatch();
+
+		// 全プレイヤーにQuickメッセージを送信
+		LeonGunWar.QUICK_BAR.send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
 	}
 
 	/**
