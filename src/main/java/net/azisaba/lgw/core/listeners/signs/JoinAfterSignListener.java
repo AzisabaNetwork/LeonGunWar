@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,7 +25,7 @@ public class JoinAfterSignListener implements Listener {
 	/**
 	 * 試合参加看板をクリックしたことを検知し、プレイヤーを試合に参加させるリスナー
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onClickJoinEntrySign(PlayerInteractEvent e) {
 		// 最終クリックが10分より前ならreturn
 		if (lastClicked.getOrDefault(e.getPlayer(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis()) {
