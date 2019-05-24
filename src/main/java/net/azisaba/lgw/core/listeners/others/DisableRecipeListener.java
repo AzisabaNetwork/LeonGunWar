@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 public class DisableRecipeListener implements Listener {
 
 	// priority MONITORでresultを元のアイテムに変更するListener
-	private HashMap<Player, ItemStack> cancelPlayerMap = new HashMap<>();
+	private final HashMap<Player, ItemStack> cancelPlayerMap = new HashMap<>();
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCraftItem(CraftItemEvent e) {
@@ -64,7 +64,7 @@ public class DisableRecipeListener implements Listener {
 		Player p = (Player) e.getWhoClicked();
 
 		// mapにプレイヤーが含まれている場合アイテムをセット
-		if (cancelPlayerMap.containsKey((Player) e.getWhoClicked())) {
+		if (cancelPlayerMap.containsKey(e.getWhoClicked())) {
 			e.getInventory().setResult(cancelPlayerMap.get(p));
 
 			// 削除

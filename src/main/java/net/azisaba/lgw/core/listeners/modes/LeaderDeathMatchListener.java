@@ -60,13 +60,10 @@ public class LeaderDeathMatchListener implements Listener {
 
 			// このイベントの後にイベント作成、呼び出し
 			// 遅らせる理由は最後のキルが表示されないため
-			Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
-				@Override
-				public void run() {
-					MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
-							manager.getTeamPlayers());
-					Bukkit.getPluginManager().callEvent(event);
-				}
+			Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
+				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
+						manager.getTeamPlayers());
+				Bukkit.getPluginManager().callEvent(event);
 			}, 0L);
 			break;
 		}
