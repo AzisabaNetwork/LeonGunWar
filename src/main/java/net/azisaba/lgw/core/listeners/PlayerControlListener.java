@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -68,7 +69,7 @@ public class PlayerControlListener implements Listener {
 	/**
 	 * プレイヤーが退出したときにエントリーを解除するリスナー
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerQUit(PlayerQuitEvent e) {
 		LeonGunWar.getPlugin().getManager().removeEntryPlayer(e.getPlayer());
 	}

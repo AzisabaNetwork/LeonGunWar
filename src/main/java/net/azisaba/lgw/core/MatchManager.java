@@ -381,11 +381,10 @@ public class MatchManager {
 	 * @param p 退出させたいプレイヤー
 	 */
 	public void kickPlayer(Player p) {
+		leavePlayer(p);
 
 		// スポーンにTP
 		p.teleport(getLobbySpawnLocation());
-
-		leavePlayer(p);
 	}
 
 	public void leavePlayer(Player p) {
