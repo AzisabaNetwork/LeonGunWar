@@ -25,11 +25,9 @@ import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.KDPlayerData;
-import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
@@ -221,29 +219,6 @@ public class MatchControlListener implements Listener {
 				Bukkit.getPluginManager().callEvent(event);
 				break;
 			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onAddTeamPoint(TeamPointIncreasedEvent e) {
-
-		// TDMではない場合return
-		if (LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.TEAM_DEATH_MATCH) {
-			return;
-		}
-
-		// 40か45ならメッセージを表示
-		if (e.getCurrentPoint() == 40 || e.getCurrentPoint() == 45) {
-			Bukkit.broadcastMessage(
-					Chat.f("{0}&7残り &e{1}キル &7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX, 50 - e.getCurrentPoint(),
-							e.getTeam().getDisplayTeamName()));
-		} else if (e.getCurrentPoint() == 50) {
-			MatchManager manager = LeonGunWar.getPlugin().getManager();
-
-			// 試合終了
-			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()),
-					manager.getTeamPlayers());
-			Bukkit.getPluginManager().callEvent(event);
 		}
 	}
 
