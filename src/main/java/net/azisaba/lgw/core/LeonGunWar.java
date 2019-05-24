@@ -137,6 +137,7 @@ public class LeonGunWar extends JavaPlugin {
 
 		// リスナーの登録 (modes)
 		Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
+		//		Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
 
 		// リスナーの登録 (others)
