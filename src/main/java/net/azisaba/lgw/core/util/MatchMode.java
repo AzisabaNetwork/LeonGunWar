@@ -6,7 +6,7 @@ public enum MatchMode {
 
 	TEAM_DEATH_MATCH(Chat.f("&9チームデスマッチ"), Chat.f("&9TDM"), Chat.f("&7先に &a50キル &7で勝利")),
 	LEADER_DEATH_MATCH(Chat.f("&dリーダーデスマッチ"), Chat.f("&dLDM"), Chat.f("&7相手チームの &dリーダー &7を倒して勝利")),
-	TEAM_DEATH_MATCH_NOLIMIT(Chat.f("&6上限なしチームデスマッチ"), Chat.f("&6TDM"), Chat.f("&7終了時に &cキル数が多いチーム &7が勝利"));
+	TEAM_DEATH_MATCH_NOLIMIT(Chat.f("&6上限なしチームデスマッチ"), Chat.f("&6TDM-NOLIMIT"), Chat.f("&7終了時に &cキル数が多いチーム &7が勝利"));
 
 	private final String modeName;
 	private final String shortModeName;
