@@ -156,7 +156,7 @@ public class DamageListener implements Listener {
 		lastDamaged.put(victim, damagedMap);
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = false)
 	public void onLeaderKilledDetector(PlayerDeathEvent e) {
 		MatchManager manager = LeonGunWar.getPlugin().getManager();
 
@@ -189,10 +189,16 @@ public class DamageListener implements Listener {
 			// 殺されたリーダーのチームを削除
 			teams.remove(team);
 
-			// イベント作成、呼び出し
-			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
-					manager.getTeamPlayers());
-			Bukkit.getPluginManager().callEvent(event);
+			// このイベントの後にイベント作成、呼び出し
+			// 遅らせる理由は最後のキルが表示されないため
+			Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
+				@Override
+				public void run() {
+					MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
+							manager.getTeamPlayers());
+					Bukkit.getPluginManager().callEvent(event);
+				}
+			}, 0L);
 			break;
 		}
 	}
@@ -200,7 +206,7 @@ public class DamageListener implements Listener {
 	/**
 	 * キルログを変更するListener
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void deathMessageChanger(PlayerDeathEvent e) {
 		Player p = e.getEntity();
 
