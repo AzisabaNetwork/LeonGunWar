@@ -1,9 +1,12 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -11,7 +14,10 @@ import org.bukkit.inventory.ItemStack;
 // レシピを無効化するリスナー
 public class DisableRecipeListener implements Listener {
 
-	@EventHandler
+	// priority MONITORでresultを元のアイテムに変更するListener
+	private HashMap<Player, ItemStack> cancelPlayerMap = new HashMap<>();
+
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCraftItem(CraftItemEvent e) {
 		Player p = (Player) e.getWhoClicked();
 
@@ -43,5 +49,26 @@ public class DisableRecipeListener implements Listener {
 
 		// 音を鳴らす
 		p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+
+		// Priority MONITORで元のアイテムに戻すためにHashMapに追加
+		ItemStack item = result.clone();
+		cancelPlayerMap.put(p, item);
+	}
+
+	/**
+	 * CrackShotがignoreCancelled = trueにしていないため、こちらでキャンセルしても向こう側でResultアイテムの名前が変わってしまい、
+	 * 2回目のクリックでクラフトできてはいけないアイテムまでクラフトできてしまうため、MONITORでデフォルトアイテムを再セットするメソッド
+	 */
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+	public void restoreDefaultItem(CraftItemEvent e) {
+		Player p = (Player) e.getWhoClicked();
+
+		// mapにプレイヤーが含まれている場合アイテムをセット
+		if (cancelPlayerMap.containsKey((Player) e.getWhoClicked())) {
+			e.getInventory().setResult(cancelPlayerMap.get(p));
+
+			// 削除
+			cancelPlayerMap.remove(p);
+		}
 	}
 }
