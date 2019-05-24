@@ -79,7 +79,7 @@ public class EntrySignListener implements Listener {
 	/**
 	 * エントリー解除看板をクリックしたことを検知し、プレイヤーをエントリー解除するリスナー
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onClickLeaveEntrySign(PlayerInteractEvent e) {
 		// ブロックをクリックしていなければreturn
 		if (e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
