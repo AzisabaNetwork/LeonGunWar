@@ -210,7 +210,8 @@ public class MatchManager {
 				// メッセージを表示
 				plist.forEach(p -> {
 					p.sendMessage(
-							Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれました！", LeonGunWar.GAME_PREFIX, target.getDisplayName()));
+							Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれました！", LeonGunWar.GAME_PREFIX,
+									target.getPlayerListName()));
 				});
 
 				// リーダーにタイトルを表示
@@ -271,12 +272,15 @@ public class MatchManager {
 		// 全プレイヤーのdisplayNameを初期化
 		Bukkit.getOnlinePlayers().forEach(p -> {
 
-			// エントリーしていたら緑色
+			// DisplayNameをリセット
+			p.setDisplayName(p.getName());
+
+			// PlayerListの色はエントリーしていたら緑色
 			if (entryPlayers.contains(p)) {
-				p.setDisplayName(Chat.f("&a{0}", p.getName()));
+				p.setPlayerListName(Chat.f("&a{0}", p.getName()));
 			} else {
 				// その他はリセット
-				p.setDisplayName(p.getName());
+				p.setPlayerListName(p.getName());
 			}
 		});
 
@@ -303,8 +307,11 @@ public class MatchManager {
 
 		// エントリー追加
 		entryPlayers.add(p);
-		// 名前の色を変更
-		p.setDisplayName(Chat.f("&a{0}", p.getName()));
+		// 名前がデフォルトの場合
+		if (p.getPlayerListName().equals(p.getName())) {
+			// 名前の色を変更
+			p.setPlayerListName(Chat.f("&a{0}", p.getName()));
+		}
 
 		// イベント呼び出し
 		PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
@@ -325,8 +332,12 @@ public class MatchManager {
 
 		// エントリー解除
 		entryPlayers.remove(p);
-		// 名前リセット
-		p.setDisplayName(p.getName());
+
+		// DisplayNameが緑で始まっていたら元に戻す
+		if (p.getPlayerListName().startsWith(Chat.f("&a"))) {
+			// 名前リセット
+			p.setPlayerListName(p.getName());
+		}
 
 		// イベント呼び出し
 		PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
@@ -411,11 +422,11 @@ public class MatchManager {
 		p.getInventory().setChestplate(null);
 
 		// 退出メッセージを全員に送信
-		String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getDisplayName());
+		String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
 		Bukkit.broadcastMessage(msg);
 
 		// displayName初期化
-		p.setDisplayName(p.getName());
+		p.setPlayerListName(p.getName());
 
 		// イベント呼び出し
 		PlayerKickMatchEvent event = new PlayerKickMatchEvent(p);
@@ -635,7 +646,7 @@ public class MatchManager {
 			setUpPlayer(p, BattleTeam.BLUE);
 		}
 
-		Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getDisplayName()));
+		Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
 		return true;
 	}
@@ -764,8 +775,9 @@ public class MatchManager {
 		// メッセージを表示する
 		p.sendMessage(
 				Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, team.getDisplayTeamName()));
-		// DisplayNameを指定
+		// DisplayNameとPlayerListNameを指定
 		p.setDisplayName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
+		p.setPlayerListName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
 		// テレポート
 		p.teleport(currentMap.getSpawnPoint(team));
 
