@@ -17,7 +17,7 @@ import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 
-public class LgwCommand implements CommandExecutor {
+public class LgwAdminCommand implements CommandExecutor {
 
 	// ミスって本家で実行してしまうとまずいので/lgw debug_startにロックをかけれるように
 	private final boolean allowDebug = false;

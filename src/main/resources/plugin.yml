@@ -6,10 +6,10 @@ description: ${project.description}
 website: ${project.url}
 softdepend: ["Multiverse-Core", "CrackShot"]
 commands:
-  leongunwar:
+  leongunwaradmin:
     description: Nothing
     permission: leongunwar.command.leongunwar
-    aliases: ["lgw"]
+    aliases: ["lgwadmin"]
   uav:
     usage: /uav [Player]
     description: Nothing
