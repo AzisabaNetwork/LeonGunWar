@@ -35,7 +35,7 @@ import net.azisaba.lgw.core.utils.SecondOfDay;
 public class MatchControlListener implements Listener {
 
 	/**
-	 * 試合が終わったときにMatchFinishedEventを呼び出すリスナー
+	 * 制限時間が0秒になったときにMatchFinishedEventを呼び出すリスナー
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void matchFinishDetector(MatchTimeChangedEvent e) {
