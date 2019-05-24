@@ -14,6 +14,9 @@ commands:
     usage: /uav [Player]
     description: Nothing
     permission: leongunwar.command.uav
+  match:
+    usage: /match <entry/rejoin/leave> (player)
+    permission: leongunwar.command.match
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -22,4 +25,8 @@ permissions:
   leongunwar.afkkick.exempt:
     default: op
   leongunwar.command.uav:
+    default: op
+  leongunwar.command.match:
+    default: true
+  leongunwar.command.match.other:
     default: op
