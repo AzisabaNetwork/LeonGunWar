@@ -3,7 +3,8 @@ package net.azisaba.lgw.core;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.azisaba.lgw.core.commands.LgwCommand;
+import net.azisaba.lgw.core.commands.LgwAdminCommand;
+import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
@@ -119,12 +120,14 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new EasyMigrateListener(), this);
 
 		// コマンドの登録
-		Bukkit.getPluginCommand("leongunwar").setExecutor(new LgwCommand());
+		Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
 		Bukkit.getPluginCommand("uav").setExecutor(new UAVCommand());
+		Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
 
 		// コマンドの権限がない時のメッセージの指定
-		Bukkit.getPluginCommand("leongunwar").setPermissionMessage(Chat.f("&c権限がありません！"));
+		Bukkit.getPluginCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
 		Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
+		Bukkit.getPluginCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
 
 		// リスナーの登録
 		Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
