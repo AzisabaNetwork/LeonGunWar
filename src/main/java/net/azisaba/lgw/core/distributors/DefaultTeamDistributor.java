@@ -7,6 +7,9 @@ import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+
 /**
  *
  * デフォルトのチーム振り分けクラス
@@ -32,9 +35,12 @@ public class DefaultTeamDistributor implements TeamDistributor {
 	 */
 	@Override
 	public void distributePlayer(Player player, List<Team> teams) {
-		// エントリーが少ないチームにプレイヤーを追加 (同じ場合は最初の要素)
+
+		MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+		// エントリーが少ないチームにプレイヤーを追加 (同じ場合はポイントが少ない方、それでも同じなら最初の要素)
 		teams.stream()
-				.sorted(Comparator.comparing(Team::getSize))
+				.sorted(Comparator.comparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
 				.findFirst()
 				.ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
 	}

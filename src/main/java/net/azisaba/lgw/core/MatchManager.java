@@ -513,6 +513,28 @@ public class MatchManager {
 	}
 
 	/**
+	 * スコアボードのチームに対応するBattleTeamを取得する
+	 * @param team 取得したいスコアボードのチーム
+	 * @return teamに対応するBattleTeam (不明ならnull)
+	 */
+	public BattleTeam getBattleTeam(Team team) {
+		// 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
+		for (BattleTeam battleTeam : BattleTeam.values()) {
+
+			// スコアボードのTeamを取得
+			Team scoreboardTeam = getScoreboardTeam(battleTeam);
+
+			// 同じならreturn
+			if (scoreboardTeam == team) {
+				return battleTeam;
+			}
+		}
+
+		// 無ければnull
+		return null;
+	}
+
+	/**
 	 * 対象のプレイヤーが試合中かどうかを取得します
 	 * @param player 対象のプレイヤー
 	 * @return 対象のプレイヤーが試合中かどうか
@@ -594,6 +616,22 @@ public class MatchManager {
 
 		// ポイント取得、無ければ0
 		return pointMap.getOrDefault(team, 0);
+	}
+
+	public int getCurrentTeamPoint(Team team) {
+		// teamがnullならIllegalArgumentException
+		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
+
+		// battleTeamに変換
+		BattleTeam battleTeam = getBattleTeam(team);
+
+		// 変換失敗なら0を返す
+		if (battleTeam == null) {
+			return 0;
+		}
+
+		// ポイントを取得、無ければ0
+		return pointMap.getOrDefault(battleTeam, 0);
 	}
 
 	/**
