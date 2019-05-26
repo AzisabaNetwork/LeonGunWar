@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
@@ -95,5 +96,13 @@ public class PlayerControlListener implements Listener {
 
 		// 退出
 		LeonGunWar.getPlugin().getManager().leavePlayer(p);
+	}
+
+	/**
+	 * 参加時にQuickメッセージを表示します
+	 */
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void sendQuickMessage(PlayerJoinEvent e) {
+		LeonGunWar.getQuickBar().send(e.getPlayer());
 	}
 }
