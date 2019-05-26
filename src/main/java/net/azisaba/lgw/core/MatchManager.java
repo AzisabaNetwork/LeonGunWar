@@ -237,7 +237,7 @@ public class MatchManager {
 		isMatching = true;
 
 		// 全プレイヤーにQuickメッセージを送信
-		LeonGunWar.QUICK_BAR.send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
+		LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
 	}
 
 	/**

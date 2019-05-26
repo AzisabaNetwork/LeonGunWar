@@ -6,13 +6,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class PlayPlayerHealingAnimationTask extends BukkitRunnable {
 
 	private final Player p;
-
-	public PlayPlayerHealingAnimationTask(Player p) {
-		this.p = p;
-	}
 
 	@Override
 	public void run() {

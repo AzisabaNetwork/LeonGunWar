@@ -19,7 +19,6 @@ import org.bukkit.event.Listener;
 
 import com.google.common.base.Strings;
 
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
@@ -31,6 +30,8 @@ import net.azisaba.lgw.core.util.KDPlayerData;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
+
+import me.rayzr522.jsonmessage.JSONMessage;
 
 public class MatchControlListener implements Listener {
 
@@ -147,7 +148,7 @@ public class MatchControlListener implements Listener {
 		LeonGunWar.getPlugin().getManager().finalizeMatch();
 
 		// 全プレイヤーにQuickメッセージを送信
-		LeonGunWar.QUICK_BAR.send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
+		LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
 	}
 
 	/**

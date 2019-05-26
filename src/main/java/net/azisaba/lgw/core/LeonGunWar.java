@@ -3,7 +3,6 @@ package net.azisaba.lgw.core;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
@@ -37,16 +36,23 @@ import net.azisaba.lgw.core.map.MapLoader;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
 
+import lombok.Getter;
+
+import me.rayzr522.jsonmessage.JSONMessage;
+
+@Getter
 public class LeonGunWar extends JavaPlugin {
 
 	public static final String GAME_PREFIX = Chat.f("&7[&6PvP&7]&r ");
 	public static final String SIGN_ACTIVE = Chat.f("&a[ACTIVE]");
 	public static final String SIGN_INACTIVE = Chat.f("&c[INACTIVE]");
 
-	public static JSONMessage QUICK_BAR;
-
 	// plugin
+	@Getter
 	private static LeonGunWar plugin;
+
+	@Getter
+	private static JSONMessage quickBar;
 
 	private final MatchStartCountdown countdown = new MatchStartCountdown();
 	private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
@@ -56,66 +62,10 @@ public class LeonGunWar extends JavaPlugin {
 	private final KillStreaks killStreaks = new KillStreaks();
 	private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
-	/**
-	 * MatchStartCountdownのインスタンスを返します
-	 * @return MatchStartCountdownのインスタンス
-	 */
-	public MatchStartCountdown getCountdown() {
-		return countdown;
-	}
-
-	/**
-	 * ScoreboardDisplayerのインスタンスを返します
-	 * @return ScoreboardDisplayerのインスタンス
-	 */
-	public ScoreboardDisplayer getScoreboardDisplayer() {
-		return scoreboardDisplayer;
-	}
-
-	/**
-	 * MapLoaderのインスタンスを返します
-	 * @return MapLoaderのインスタンス
-	 */
-	public MapLoader getMapLoader() {
-		return mapLoader;
-	}
-
-	/**
-	 * MapContainerのインスタンスを返します
-	 * @return MapContainerのインスタンス
-	 */
-	public MapContainer getMapContainer() {
-		return mapContainer;
-	}
-
-	/**
-	 * MatchManagerのインスタンスを返します
-	 * @return MatchManagerのインスタンス
-	 */
-	public MatchManager getManager() {
-		return manager;
-	}
-
-	/**
-	 * KillStreaksのインスタンスを返します
-	 * @return KillStreaksのインスタンス
-	 */
-	public KillStreaks getKillStreaks() {
-		return killStreaks;
-	}
-
-	/**
-	 * TradeBoardManagerのインスタンスを返します
-	 * @return TradeBoardManagerのインスタンス
-	 */
-	public TradeBoardManager getTradeBoardManager() {
-		return tradeBoardManager;
-	}
-
 	@Override
 	public void onEnable() {
-
-		QUICK_BAR = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
+		plugin = this;
+		quickBar = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
 				.then(Chat.f("&a[エントリー]"))
 				.runCommand("/leongunwar:match entry")
 				.then(" ")
@@ -195,13 +145,5 @@ public class LeonGunWar extends JavaPlugin {
 		tradeBoardManager.saveAll();
 
 		Bukkit.getLogger().info(Chat.f("{0} が無効化されました。", getName()));
-	}
-
-	/**
-	 * LeonGunWar pluginのインスタンスを返します
-	 * @return LeonGunWarのインスタンス
-	 */
-	public static LeonGunWar getPlugin() {
-		return plugin != null ? plugin : (plugin = JavaPlugin.getPlugin(LeonGunWar.class));
 	}
 }

@@ -4,28 +4,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * プレイヤーがエントリーしたときに呼び出されるイベント
  * @author siloneco
  *
  */
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class PlayerEntryMatchEvent extends Event {
 
 	// エントリーしたプレイヤー
 	private final Player entryPlayer;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
-
-	/**
-	 * @param entryPlayer エントリーしたプレイヤー
-	 */
-	public PlayerEntryMatchEvent(Player entryPlayer) {
-		this.entryPlayer = entryPlayer;
-	}
-
-	public Player getEntryPlayer() {
-		return entryPlayer;
-	}
 
 	@Override
 	public HandlerList getHandlers() {

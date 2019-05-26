@@ -5,11 +5,16 @@ import org.bukkit.event.HandlerList;
 
 import net.azisaba.lgw.core.util.BattleTeam;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * チームのポイントが増えたときに呼び出されるイベント
  * @author siloneco
  *
  */
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class TeamPointIncreasedEvent extends Event {
 
 	// ポイントが増えたチーム
@@ -17,22 +22,6 @@ public class TeamPointIncreasedEvent extends Event {
 	private final int currentPoint;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
-
-	/**
-	 * @param entryPlayer エントリーしたプレイヤー
-	 */
-	public TeamPointIncreasedEvent(BattleTeam team, int currentPoint) {
-		this.team = team;
-		this.currentPoint = currentPoint;
-	}
-
-	public BattleTeam getTeam() {
-		return team;
-	}
-
-	public int getCurrentPoint() {
-		return currentPoint;
-	}
 
 	@Override
 	public HandlerList getHandlers() {

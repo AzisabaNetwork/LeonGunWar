@@ -5,12 +5,15 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import lombok.Data;
+
 /**
  *
  * @author siloneco
  * ゲームを行うマップの情報を格納するクラス
  *
  */
+@Data
 public class GameMap {
 
 	// プレイヤーに表示するマップ名
@@ -34,24 +37,8 @@ public class GameMap {
 		this.spawnMap = spawnMap;
 	}
 
-	public String getMapName() {
-		return mapName;
-	}
-
-	public void setMapName(String mapName) {
-		this.mapName = mapName;
-	}
-
 	public Location getSpawnPoint(BattleTeam team) {
 		// 指定されていない場合はreturn null
 		return spawnMap.getOrDefault(team, null);
-	}
-
-	public World getWorld() {
-		return world;
-	}
-
-	public void setWorld(World world) {
-		this.world = world;
 	}
 }

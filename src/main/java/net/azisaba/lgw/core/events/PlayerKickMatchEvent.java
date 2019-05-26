@@ -4,28 +4,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * プレイヤーが試合からキックされたときに呼び出されるイベント
  * @author siloneco
  *
  */
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class PlayerKickMatchEvent extends Event {
 
 	// キックされたプレイヤー
-	private final Player kickedPlayer;
+	private final Player player;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
-
-	/**
-	 * @param kickPlayer キックされたプレイヤー
-	 */
-	public PlayerKickMatchEvent(Player kickedPlayer) {
-		this.kickedPlayer = kickedPlayer;
-	}
-
-	public Player getPlayer() {
-		return kickedPlayer;
-	}
 
 	@Override
 	public HandlerList getHandlers() {

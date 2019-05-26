@@ -4,11 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class LocationLoader {
+import lombok.experimental.UtilityClass;
 
-	// インスタンス作成を無効化
-	protected LocationLoader() {
-	}
+@UtilityClass
+public class LocationLoader {
 
 	/**
 	 *
@@ -19,7 +18,7 @@ public class LocationLoader {
 	 * @param loc 設定するLocation
 	 * @param key 設定するキー
 	 */
-	public static void setLocation(YamlConfiguration conf, Location loc, String key) {
+	public void setLocation(YamlConfiguration conf, Location loc, String key) {
 		conf.set(key + ".X", loc.getX());
 		conf.set(key + ".Y", loc.getY());
 		conf.set(key + ".Z", loc.getZ());
@@ -36,7 +35,7 @@ public class LocationLoader {
 	 * @param loc 設定するLocation
 	 * @param key 設定するキー
 	 */
-	public static void setLocationWithWorld(YamlConfiguration conf, Location loc, String key) {
+	public void setLocationWithWorld(YamlConfiguration conf, Location loc, String key) {
 		conf.set(key + ".World", loc.getWorld().getName());
 		conf.set(key + ".X", loc.getX());
 		conf.set(key + ".Y", loc.getY());
@@ -54,7 +53,7 @@ public class LocationLoader {
 	 * @param key
 	 * @return
 	 */
-	public static Location getLocation(YamlConfiguration conf, String key) {
+	public Location getLocation(YamlConfiguration conf, String key) {
 		Location loc = null;
 
 		// x, y, zの値が保存されているかの確認 (保存されていなければnullを返す)

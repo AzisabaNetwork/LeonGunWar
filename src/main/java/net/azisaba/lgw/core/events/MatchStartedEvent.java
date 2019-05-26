@@ -11,28 +11,24 @@ import org.bukkit.event.HandlerList;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * マッチが開始されたときに呼び出されるイベント
  * @author siloneco
  *
  */
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class MatchStartedEvent extends Event {
 
-	// 各チームのプレイヤーリスト
-	private final Map<BattleTeam, List<Player>> teamPlayers;
 	// 試合を行うマップ
 	private final GameMap map;
+	// 各チームのプレイヤーリスト
+	private final Map<BattleTeam, List<Player>> teamPlayers;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
-
-	/**
-	 * @param teamPlayers チームのプレイヤーリスト
-	 * @param map 試合を行うGameMap
-	 */
-	public MatchStartedEvent(Map<BattleTeam, List<Player>> teamPlayers, GameMap map) {
-		this.teamPlayers = teamPlayers;
-		this.map = map;
-	}
 
 	public List<Player> getAllTeamPlayers() {
 		return teamPlayers.values().stream().flatMap(List::stream).collect(Collectors.toList());
@@ -40,10 +36,6 @@ public class MatchStartedEvent extends Event {
 
 	public List<Player> getTeamPlayers(BattleTeam team) {
 		return teamPlayers.get(team);
-	}
-
-	public GameMap getGameMap() {
-		return map;
 	}
 
 	@Override

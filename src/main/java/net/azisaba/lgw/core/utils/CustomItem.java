@@ -10,15 +10,14 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import net.azisaba.lgw.core.util.BattleTeam;
 
+import lombok.experimental.UtilityClass;
+
 // 動的にフレッシュなアイテムを提供するクラス
+@UtilityClass
 public class CustomItem {
 
-	// は？(威圧)
-	protected CustomItem() {
-	}
-
 	// 勝利したチームに配布するアイテム (卍勝者の証卍)
-	public static ItemStack getWonItem() {
+	public ItemStack getWonItem() {
 		ItemStack item = new ItemStack(Material.END_CRYSTAL);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(Chat.f("&6勝者の証&6"));
@@ -28,7 +27,7 @@ public class CustomItem {
 	}
 
 	// チームの色付きチェストプレート！！
-	public static ItemStack getTeamChestplate(BattleTeam team) {
+	public ItemStack getTeamChestplate(BattleTeam team) {
 		ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
 		meta.setDisplayName(team.getDisplayTeamName());

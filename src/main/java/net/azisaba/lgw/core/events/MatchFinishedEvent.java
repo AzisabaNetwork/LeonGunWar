@@ -11,33 +11,27 @@ import org.bukkit.event.HandlerList;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 // TODO MVPとかの情報も載せたい。
 /**
  * マッチが終了したときに呼び出されるイベント
  * @author siloneco
  *
  */
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class MatchFinishedEvent extends Event {
 
-	// 各チームのプレイヤー
-	private final Map<BattleTeam, List<Player>> teamPlayers;
 	// マッチを行ったマップ
 	private final GameMap map;
 	// 勝利したチーム
 	private final List<BattleTeam> winners;
+	// 各チームのプレイヤー
+	private final Map<BattleTeam, List<Player>> teamPlayers;
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
-
-	/**
-	 * @param map マッチを行ったマップ
-	 * @param winner 勝利したチーム
-	 * @param teamPlayers チームのプレイヤー
-	 */
-	public MatchFinishedEvent(GameMap map, List<BattleTeam> winners, Map<BattleTeam, List<Player>> teamPlayers) {
-		this.map = map;
-		this.winners = winners;
-		this.teamPlayers = teamPlayers;
-	}
 
 	public List<Player> getAllTeamPlayers() {
 		return teamPlayers.values().stream().flatMap(List::stream).collect(Collectors.toList());
@@ -45,14 +39,6 @@ public class MatchFinishedEvent extends Event {
 
 	public List<Player> getTeamPlayers(BattleTeam team) {
 		return teamPlayers.get(team);
-	}
-
-	public GameMap getMap() {
-		return map;
-	}
-
-	public List<BattleTeam> getWinners() {
-		return winners;
 	}
 
 	@Override

@@ -3,14 +3,13 @@ package net.azisaba.lgw.core.tasks;
 import org.bukkit.entity.Arrow;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import lombok.RequiredArgsConstructor;
+
 // 矢がブロックに当たっているか確認、当たっていたら削除
+@RequiredArgsConstructor
 public class RemoveGroundArrowTask extends BukkitRunnable {
 
 	private final Arrow arrow;
-
-	public RemoveGroundArrowTask(Arrow arrow) {
-		this.arrow = arrow;
-	}
 
 	@Override
 	public void run() {

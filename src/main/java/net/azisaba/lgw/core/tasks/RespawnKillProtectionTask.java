@@ -11,6 +11,9 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class RespawnKillProtectionTask extends BukkitRunnable {
 
 	// 対象のプレイヤー
@@ -18,11 +21,6 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
 
 	// プレイヤーごとの無敵残り時間
 	private final Map<Player, Instant> remainTimes;
-
-	public RespawnKillProtectionTask(Player p, Map<Player, Instant> remainTimes) {
-		this.p = p;
-		this.remainTimes = remainTimes;
-	}
 
 	@Override
 	public void run() {

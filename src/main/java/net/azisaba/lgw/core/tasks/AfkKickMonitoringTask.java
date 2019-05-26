@@ -9,13 +9,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class AfkKickMonitoringTask extends BukkitRunnable {
 
 	private final Map<Player, Long> lastMoved;
-
-	public AfkKickMonitoringTask(Map<Player, Long> lastMoved) {
-		this.lastMoved = lastMoved;
-	}
 
 	@Override
 	public void run() {
