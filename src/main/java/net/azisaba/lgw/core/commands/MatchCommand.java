@@ -20,9 +20,9 @@ import net.azisaba.lgw.core.utils.Chat;
 public class MatchCommand implements CommandExecutor {
 
 	// 連打防止のクールダウン
-	private HashMap<UUID, Long> cooldown = new HashMap<>();
+	private final HashMap<UUID, Long> cooldown = new HashMap<>();
 	// このコマンドのPrefix
-	private String prefix = Chat.f("&7[&bQuick&7] &r");
+	private final String prefix = Chat.f("&7[&bQuick&7] &r");
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -60,7 +60,7 @@ public class MatchCommand implements CommandExecutor {
 			}
 
 			// 自分以外のプレイヤーを指定していた場合はself = falseに変更
-			if (!(sender instanceof Player) || ((Player) sender) != target) {
+			if (!(sender instanceof Player) || (Player) sender != target) {
 				self = false;
 			}
 
