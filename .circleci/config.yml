@@ -1,13 +1,15 @@
 version: 2.1
 
 commands:
-  save-artifacts:
+  save-workspace:
     steps:
       - persist_to_workspace:
           root: ./
           paths:
             - artifacts/
-  load-artifacts:
+            - .circleci/scripts/
+            - CIRCLE_PARENT_BUILD_NUM
+  load-workspace:
     steps:
       - attach_workspace:
           at: ./
@@ -16,16 +18,6 @@ commands:
       - store_artifacts:
           path: artifacts/
           destination: ./
-  save-scripts:
-    steps:
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - .circleci/scripts/
-  load-scripts:
-    steps:
-      - attach_workspace:
-          at: ./
   save-git-cache:
     steps:
       - save_cache:
@@ -54,20 +46,28 @@ commands:
             - m2-v1-{{ .Branch }}
             - m2-v1-
 
+executor-settings: &executor-settings
+  shell: /bin/bash -eux -o pipefail
+  working_directory: ~/workdir/
+  environment:
+    TZ: Asia/Tokyo
+
 executors:
   openjdk-executor:
     docker:
       - image: circleci/openjdk:8
+    <<: *executor-settings
   buildpack-deps-executor:
     docker:
       - image: circleci/buildpack-deps:latest
+    <<: *executor-settings
   github-release-executor:
     docker:
       - image: cibuilds/github:latest
+    <<: *executor-settings
 
 jobs:
   build:
-    working_directory: ~/workdir/
     executor: openjdk-executor
     steps:
       - load-git-cache
@@ -76,20 +76,17 @@ jobs:
       - load-m2-cache
       - run: .circleci/scripts/build.sh
       - save-m2-cache
-      - save-artifacts
-      - save-scripts
+      - run: .circleci/scripts/save-build-num.sh
+      - save-workspace
   deploy-circleci:
-    working_directory: ~/workdir/
     executor: buildpack-deps-executor
     steps:
-      - load-artifacts
+      - load-workspace
       - upload-artifacts
   deploy-github:
-    working_directory: ~/workdir/
     executor: github-release-executor
     steps:
-      - load-artifacts
-      - load-scripts
+      - load-workspace
       - run: .circleci/scripts/deploy-github.sh
 
 workflows:
