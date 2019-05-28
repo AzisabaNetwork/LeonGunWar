@@ -17,6 +17,9 @@ commands:
   match:
     usage: /match <entry/rejoin/leave> (player)
     permission: leongunwar.command.match
+  kiai:
+    usage: /kiai
+    permission: leongunwar.command.kiai
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -30,3 +33,5 @@ permissions:
     default: true
   leongunwar.command.match.other:
     default: op
+  leongunwar.command.kiai:
+    default: true

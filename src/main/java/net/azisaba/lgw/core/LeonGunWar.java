@@ -3,6 +3,7 @@ package net.azisaba.lgw.core;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
@@ -88,11 +89,13 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
 		Bukkit.getPluginCommand("uav").setExecutor(new UAVCommand());
 		Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
+		Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
 
 		// コマンドの権限がない時のメッセージの指定
 		Bukkit.getPluginCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
 		Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
 		Bukkit.getPluginCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
+		Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
 
 		// リスナーの登録
 		Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
