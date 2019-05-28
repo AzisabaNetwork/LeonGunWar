@@ -8,7 +8,7 @@ softdepend: ["Multiverse-Core", "CrackShot"]
 commands:
   leongunwaradmin:
     description: Nothing
-    permission: leongunwar.command.leongunwar
+    permission: leongunwar.command.leongunwaradmin
     aliases: ["lgwadmin"]
   uav:
     usage: /uav [Player]
@@ -20,7 +20,7 @@ commands:
 permissions:
   leongunwar.entrysign.changestate:
     default: op
-  leongunwar.command.leongunwar:
+  leongunwar.command.leongunwaradmin:
     default: op
   leongunwar.afkkick.exempt:
     default: op

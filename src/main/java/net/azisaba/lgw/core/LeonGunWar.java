@@ -11,6 +11,7 @@ import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.PlayerControlListener;
 import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
+import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
 import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
@@ -104,7 +105,7 @@ public class LeonGunWar extends JavaPlugin {
 
 		// リスナーの登録 (modes)
 		Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
-		//		Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
+		Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
 
 		// リスナーの登録 (others)

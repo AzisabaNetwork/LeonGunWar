@@ -23,7 +23,5 @@ public enum BattleTeam {
 	private final Color teamColor;
 	private final ChatColor chatColor;
 
-	public String getDisplayTeamName() {
-		return chatColor + teamName;
-	}
+	private final String displayTeamName = getChatColor() + getTeamName();
 }

@@ -120,7 +120,7 @@ public class MapLoader {
 			}
 
 			// GameMap作成
-			GameMap data = new GameMap(mapName, world, spawnMap);
+			GameMap data = new GameMap(mapName, world, spawnMap).initSpawns();
 			// リストに追加
 			gameMapList.add(data);
 

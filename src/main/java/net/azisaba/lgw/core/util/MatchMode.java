@@ -18,9 +18,8 @@ public enum MatchMode {
 	private final String shortModeName;
 	private final String description;
 
-	public static MatchMode getFromString(String msg) {
-		String msgNoSpace = msg.replace(" ", "");
-		switch (msgNoSpace.toLowerCase()) {
+	public static MatchMode getFromString(String text) {
+		switch (text.replace(" ", "").toLowerCase()) {
 		case "ldm":
 		case "leaderdeathmatch":
 		case "leader":
