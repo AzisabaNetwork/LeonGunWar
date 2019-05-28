@@ -72,6 +72,12 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
 			target = (Player) sender;
 		}
 
+		// 自分自身でありプレイヤーではない場合はreturn
+		if (self && !(target instanceof Player)) {
+			sender.sendMessage(Chat.f("&cあなたはプレイヤーではありません。", prefix));
+			return true;
+		}
+
 		// 1つ目の引数がentryの場合
 		if (Args.check(args, 0, "entry")) {
 			boolean success = LeonGunWar.getPlugin().getManager().addEntryPlayer(target);
@@ -86,7 +92,7 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
 			} else { // すでにエントリーしている場合
 				if (self) {
 					sender.sendMessage(
-							Chat.f("{0}&cあなたは既に参加しています。", prefix, target.getDisplayName()));
+							Chat.f("{0}&cあなたは既に参加しています。", prefix));
 				} else {
 					sender.sendMessage(
 							Chat.f("{0}&r{1} &cは既に参加しています。", prefix, target.getDisplayName()));
@@ -110,7 +116,7 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
 			} else { // エントリーしていない場合
 				if (self) {
 					sender.sendMessage(
-							Chat.f("{0}&7あなたはエントリーしていません。", prefix, target.getDisplayName()));
+							Chat.f("{0}&7あなたはエントリーしていません。", prefix));
 				} else {
 					sender.sendMessage(
 							Chat.f("{0}&r{1} &cは、エントリーしていません。", prefix, target.getDisplayName()));
@@ -142,7 +148,7 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
 			} else { // すでに試合に参加している場合
 				if (self) {
 					sender.sendMessage(
-							Chat.f("{0}&cあなたはすでに試合に参加しています。", prefix, target.getDisplayName()));
+							Chat.f("{0}&cあなたはすでに試合に参加しています。", prefix));
 				} else {
 					sender.sendMessage(
 							Chat.f("{0}&r{1} &cはすでに試合に参加しています。", prefix, target.getDisplayName()));
@@ -158,11 +164,6 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if (args.length == 1) {
 			return Args.complete(args, 0, "entry", "leave", "rejoin");
-		}
-		if (args.length == 2) {
-			return Args.complete(args, 1, Bukkit.getOnlinePlayers().stream()
-					.map(Player::getName)
-					.toArray(String[]::new));
 		}
 		return null;
 	}

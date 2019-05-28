@@ -2,7 +2,6 @@ package net.azisaba.lgw.core.utils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.experimental.UtilityClass;
@@ -17,23 +16,23 @@ import lombok.experimental.UtilityClass;
 public class Args {
 
 	public boolean isEmpty(String[] args) {
-		return !get(args, 0).isPresent();
+		return args.length == 0;
 	}
 
-	public Optional<String> get(String[] args, int index) {
-		return Optional.ofNullable(args.length > index ? args[index] : null);
+	public String get(String[] args, int index) {
+		return args.length > index ? args[index] : null;
 	}
 
 	public boolean check(String[] args, int index, String... checks) {
-		Optional<String> input = get(args, index);
-		return input.isPresent() && (checks.length <= 0 || Arrays.stream(checks)
-				.anyMatch(input.get()::equalsIgnoreCase));
+		String input = get(args, index);
+		return input != null && (checks.length == 0 || Arrays.stream(checks)
+				.anyMatch(input::equalsIgnoreCase));
 	}
 
 	public List<String> complete(String[] args, int index, String... suggestions) {
-		Optional<String> input = get(args, index);
-		return input.isPresent() && suggestions.length > 0 ? Arrays.stream(suggestions)
-				.filter(suggestion -> suggestion.startsWith(input.get()))
+		String input = get(args, index);
+		return input != null ? Arrays.stream(suggestions)
+				.filter(suggestion -> suggestion.startsWith(input))
 				.collect(Collectors.toList()) : null;
 	}
 }
