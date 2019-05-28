@@ -1,15 +1,18 @@
 package net.azisaba.lgw.core.commands;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.utils.Args;
 import net.azisaba.lgw.core.utils.Chat;
 
 /**
@@ -17,7 +20,7 @@ import net.azisaba.lgw.core.utils.Chat;
  * @author siloneco
  *
  */
-public class MatchCommand implements CommandExecutor {
+public class MatchCommand implements CommandExecutor, TabCompleter {
 
 	// 連打防止のクールダウン
 	private final HashMap<UUID, Long> cooldown = new HashMap<>();
@@ -38,7 +41,7 @@ public class MatchCommand implements CommandExecutor {
 		}
 
 		// 引数がない場合は使用方法を表示してreturn
-		if (args.length <= 0) {
+		if (Args.isEmpty(args)) {
 			sender.sendMessage(Chat.f("&c使用方法: {0}", cmd.getUsage()));
 			return true;
 		}
@@ -49,7 +52,7 @@ public class MatchCommand implements CommandExecutor {
 		Player target = null;
 
 		// 引数にプレイヤーが指定されている & 権限持ちならばそのプレイヤーを設定する
-		if (args.length >= 2 && sender.hasPermission("")) {
+		if (Args.check(args, 1) && sender.hasPermission("")) {
 			target = Bukkit.getPlayerExact(args[1]);
 
 			// targetが存在しない場合はメッセージを表示してreturn
@@ -70,7 +73,7 @@ public class MatchCommand implements CommandExecutor {
 		}
 
 		// 1つ目の引数がentryの場合
-		if (args[0].equalsIgnoreCase("entry")) {
+		if (Args.check(args, 0, "entry")) {
 			boolean success = LeonGunWar.getPlugin().getManager().addEntryPlayer(target);
 
 			if (success) { // エントリーした場合
@@ -94,7 +97,7 @@ public class MatchCommand implements CommandExecutor {
 		}
 
 		// 1つ目の引数がleaveの場合
-		if (args[0].equalsIgnoreCase("leave")) {
+		if (Args.check(args, 0, "leave")) {
 			boolean success = LeonGunWar.getPlugin().getManager().removeEntryPlayer(target);
 
 			if (success) { // エントリー解除した場合
@@ -118,7 +121,7 @@ public class MatchCommand implements CommandExecutor {
 		}
 
 		// 1つ目の引数がrejoinの場合
-		if (args[0].equalsIgnoreCase("rejoin")) {
+		if (Args.check(args, 0, "rejoin")) {
 
 			// 試合中ではない場合return
 			if (!LeonGunWar.getPlugin().getManager().isMatching()) {
@@ -149,5 +152,18 @@ public class MatchCommand implements CommandExecutor {
 		}
 
 		return true;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		if (args.length == 1) {
+			return Args.complete(args, 0, "entry", "leave", "rejoin");
+		}
+		if (args.length == 2) {
+			return Args.complete(args, 1, Bukkit.getOnlinePlayers().stream()
+					.map(Player::getName)
+					.toArray(String[]::new));
+		}
+		return null;
 	}
 }

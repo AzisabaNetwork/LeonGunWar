@@ -8,17 +8,19 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.Args;
 import net.azisaba.lgw.core.utils.Chat;
 
 import me.rayzr522.jsonmessage.JSONMessage;
 
-public class LgwAdminCommand implements CommandExecutor {
+public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
 	// ミスって本家で実行してしまうとまずいので/lgw debug_startにロックをかけれるように
 	private final boolean allowDebug = false;
@@ -26,12 +28,12 @@ public class LgwAdminCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// TODO helpメッセージ実装
-		if (args.length <= 0) {
+		if (Args.isEmpty(args)) {
 			return true;
 		}
 
 		// debug_startなら
-		if (args[0].equalsIgnoreCase("debug_start")) {
+		if (Args.check(args, 0, "debug_start")) {
 
 			// allowDebugがfalseならreturn
 			if (!allowDebug) {
@@ -62,7 +64,7 @@ public class LgwAdminCommand implements CommandExecutor {
 		}
 
 		// teleportかtpなら
-		if (args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp")) {
+		if (Args.check(args, 0, "teleport", "tp")) {
 
 			// senderがプレイヤーではない場合はreturn
 			if (!(sender instanceof Player)) {
@@ -118,5 +120,18 @@ public class LgwAdminCommand implements CommandExecutor {
 		}
 
 		return true;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		if (args.length == 1) {
+			return Args.complete(args, 0, "debug_start", "teleport", "tp");
+		}
+		if (args.length == 2 && Args.check(args, 0, "teleport", "tp")) {
+			return Args.complete(args, 1, LeonGunWar.getPlugin().getMapContainer().getAllGameMap().stream()
+					.map(GameMap::getMapName)
+					.toArray(String[]::new));
+		}
+		return null;
 	}
 }

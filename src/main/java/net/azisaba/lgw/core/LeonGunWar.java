@@ -91,6 +91,10 @@ public class LeonGunWar extends JavaPlugin {
 		Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
 		Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
 
+		// タブ補完の登録
+		Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
+		Bukkit.getPluginCommand("match").setTabCompleter(new MatchCommand());
+
 		// コマンドの権限がない時のメッセージの指定
 		Bukkit.getPluginCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
 		Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
