@@ -550,6 +550,7 @@ public class MatchManager {
 	 */
 	public boolean isSameBattleTeam(Player... players) {
 		return isMatching() && Arrays.stream(players)
+				.filter(Objects::nonNull)
 				.map(this::getBattleTeam)
 				.filter(Objects::nonNull)
 				.distinct()
