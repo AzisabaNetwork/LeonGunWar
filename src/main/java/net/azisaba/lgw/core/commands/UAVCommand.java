@@ -20,7 +20,7 @@ import net.azisaba.lgw.core.utils.Chat;
 public class UAVCommand implements CommandExecutor {
 
 	private final double uavRadius = 60d;
-	private final double uavSeconds = 10d;
+	private final double uavSeconds = 2d;
 
 	private final Map<Player, Long> lastExecuted = new HashMap<>();
 
