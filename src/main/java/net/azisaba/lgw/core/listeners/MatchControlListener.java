@@ -89,7 +89,7 @@ public class MatchControlListener implements Listener {
 					p.getInventory().addItem(CustomItem.getWonItem());
 
 					// 勝利タイトルを表示
-					p.sendTitle(Chat.f("&6&lVictory!"), "", 0, 20 * 3, 10);
+					p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
 					// 勝利メッセージを送信
 					p.sendMessage(Chat.f("{0} &7あなたのチームは &6勝利 &7しました！", LeonGunWar.GAME_PREFIX));
 				}
