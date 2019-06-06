@@ -87,6 +87,11 @@ public class MatchControlListener implements Listener {
 				for (Player p : winnerPlayers) {
 					// 勝者の証を付与
 					p.getInventory().addItem(CustomItem.getWonItem());
+
+					// 勝利タイトルを表示
+					p.sendTitle(Chat.f("&6&lVictory!"), "", 0, 20 * 3, 10);
+					// 勝利メッセージを送信
+					p.sendMessage(Chat.f("{0} &7あなたのチームは &6勝利 &7しました！", LeonGunWar.GAME_PREFIX));
 				}
 			});
 		}
