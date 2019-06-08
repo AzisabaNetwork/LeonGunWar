@@ -20,6 +20,10 @@ commands:
   kiai:
     usage: /kiai
     permission: leongunwar.command.kiai
+  resourcepack:
+    usage: /resourcepack
+    aliases: ["pack", "texture"]
+    permission: leongunwar.command.resourcepack
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -34,4 +38,6 @@ permissions:
   leongunwar.command.match.other:
     default: op
   leongunwar.command.kiai:
+    default: true
+  leongunwar.command.resourcepack:
     default: true
