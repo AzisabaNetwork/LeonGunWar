@@ -308,7 +308,7 @@ public class MatchManager {
 		// エントリー追加
 		entryPlayers.add(p);
 		// 名前がデフォルトの場合
-		if (p.getPlayerListName().equals(p.getName())) {
+		if (!isPlayerMatching(p)) {
 			// 名前の色を変更
 			p.setPlayerListName(Chat.f("&a{0}", p.getName()));
 		}
@@ -334,7 +334,7 @@ public class MatchManager {
 		entryPlayers.remove(p);
 
 		// DisplayNameが緑で始まっていたら元に戻す
-		if (p.getPlayerListName().startsWith(Chat.f("&a"))) {
+		if (!isPlayerMatching(p)) {
 			// 名前リセット
 			p.setPlayerListName(p.getName());
 		}
@@ -425,7 +425,8 @@ public class MatchManager {
 		String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
 		Bukkit.broadcastMessage(msg);
 
-		// displayName初期化
+		// DisplayNameとPlayerListName初期化
+		p.setDisplayName(p.getName());
 		p.setPlayerListName(p.getName());
 
 		// イベント呼び出し
