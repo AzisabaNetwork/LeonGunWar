@@ -23,7 +23,6 @@ import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
-import net.azisaba.lgw.core.listeners.others.EasyMigrateListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.KillStreaksListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
@@ -82,9 +81,6 @@ public class LeonGunWar extends JavaPlugin {
 		mapContainer.loadMaps();
 		manager.initialize();
 		tradeBoardManager.init();
-
-		// 移行を簡単にする [DEBUG]
-		Bukkit.getPluginManager().registerEvents(new EasyMigrateListener(), this);
 
 		// コマンドの登録
 		Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
