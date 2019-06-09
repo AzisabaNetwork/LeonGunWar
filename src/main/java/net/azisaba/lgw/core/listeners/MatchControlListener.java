@@ -91,7 +91,8 @@ public class MatchControlListener implements Listener {
 					// 勝利タイトルを表示
 					p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
 					// 勝利メッセージを送信
-					p.sendMessage(Chat.f("{0} &7あなたのチームは &6勝利 &7しました！", LeonGunWar.GAME_PREFIX));
+					Bukkit.broadcastMessage(
+							Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX, wonTeam.getDisplayTeamName()));
 				}
 			});
 		}
