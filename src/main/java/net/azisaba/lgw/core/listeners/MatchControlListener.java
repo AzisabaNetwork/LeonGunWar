@@ -76,27 +76,6 @@ public class MatchControlListener implements Listener {
 	 */
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
-		// 勝ったチームがあれば勝者の証を付与
-		if (e.getWinners().size() >= 1) {
-
-			// 各チームに勝者の証を付与
-			e.getWinners().forEach(wonTeam -> {
-				// チームメンバーを取得
-				List<Player> winnerPlayers = e.getTeamPlayers(wonTeam);
-
-				for (Player p : winnerPlayers) {
-					// 勝者の証を付与
-					p.getInventory().addItem(CustomItem.getWonItem());
-
-					// 勝利タイトルを表示
-					p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
-					// 勝利メッセージを送信
-					Bukkit.broadcastMessage(
-							Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX, wonTeam.getDisplayTeamName()));
-				}
-			});
-		}
-
 		// 試合に参加した全プレイヤーを取得
 		List<Player> allPlayers = e.getAllTeamPlayers();
 
@@ -142,6 +121,27 @@ public class MatchControlListener implements Listener {
 			// プレイヤーの戦績を表示
 			p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
 					deaths, assists));
+		}
+
+		// 勝ったチームがあれば勝者の証を付与
+		if (e.getWinners().size() >= 1) {
+
+			// 各チームに勝者の証を付与
+			e.getWinners().forEach(wonTeam -> {
+				// チームメンバーを取得
+				List<Player> winnerPlayers = e.getTeamPlayers(wonTeam);
+
+				for (Player p : winnerPlayers) {
+					// 勝者の証を付与
+					p.getInventory().addItem(CustomItem.getWonItem());
+
+					// 勝利タイトルを表示
+					p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
+					// 勝利メッセージを送信
+					Bukkit.broadcastMessage(
+							Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX, wonTeam.getDisplayTeamName()));
+				}
+			});
 		}
 	}
 
