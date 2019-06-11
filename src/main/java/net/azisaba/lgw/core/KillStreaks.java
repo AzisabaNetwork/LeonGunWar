@@ -124,8 +124,4 @@ public class KillStreaks {
 				.map(message -> message.apply(player))
 				.forEach(Bukkit::broadcastMessage);
 	}
-
-	public Map<Integer, KillReward> getRewards() {
-		return rewards;
-	}
 }

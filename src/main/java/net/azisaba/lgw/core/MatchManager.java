@@ -47,12 +47,15 @@ import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.LocationLoader;
 
+import lombok.Data;
+
 /**
  *
  * ゲームを司るコアクラス
  * @author siloneco
  *
  */
+@Data
 public class MatchManager {
 
 	private boolean initialized = false;
@@ -61,18 +64,18 @@ public class MatchManager {
 	private TeamDistributor teamDistributor;
 
 	// ロビーのスポーン地点
-	private Location lobbySpawnPoint;
+	private Location lobbySpawnLocation;
 
 	// ゲーム中かどうかの判定
 	private boolean isMatching = false;
 	// 現在のマップ
-	private GameMap currentMap = null;
+	private GameMap currentGameMap = null;
 	// 試合の残り時間
 	private final AtomicInteger timeLeft = new AtomicInteger(0);
 	// 試合を動かすタスク
 	private BukkitTask matchTask;
 	// KDカウンター
-	private KillDeathCounter kdCounter;
+	private KillDeathCounter killDeathCounter;
 
 	// マッチで使用するスコアボード
 	private Scoreboard scoreboard;
@@ -92,7 +95,7 @@ public class MatchManager {
 	private final Map<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
 
 	// 試合時間を表示するボスバー
-	private BossBar bar = null;
+	private BossBar bossBar = null;
 
 	/**
 	 * 初期化メソッド
@@ -104,8 +107,8 @@ public class MatchManager {
 			return;
 		}
 
-		// kdCounterを新規作成
-		kdCounter = new KillDeathCounter();
+		// killDeathCounterを新規作成
+		killDeathCounter = new KillDeathCounter();
 
 		// デフォルトのTeamDistributorを指定
 		teamDistributor = new DefaultTeamDistributor();
@@ -149,12 +152,13 @@ public class MatchManager {
 		timeLeft.set(600);
 
 		// ボスバー作成
-		bar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
+		bossBar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
 
 		// マップを抽選
-		currentMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
+		currentGameMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
 		// マップ名を表示
-		Bukkit.broadcastMessage(Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentMap.getMapName()));
+		Bukkit.broadcastMessage(
+				Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
 
 		// 参加プレイヤーを取得
 		List<Player> entryPlayers = getEntryPlayers();
@@ -238,7 +242,7 @@ public class MatchManager {
 		isMatching = true;
 
 		// 全プレイヤーにQuickメッセージを送信
-		LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
+		LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));
 	}
 
 	/**
@@ -265,8 +269,8 @@ public class MatchManager {
 		// チームのポイントを0に
 		pointMap.clear();
 
-		// KillDeathCounterを初期化
-		kdCounter = new KillDeathCounter();
+		// killDeathCounterを初期化
+		killDeathCounter = new KillDeathCounter();
 
 		// サイドバーを削除
 		LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
@@ -357,27 +361,6 @@ public class MatchManager {
 	}
 
 	/**
-	 * 試合に参加するプレイヤーのリストを取得します
-	 * @return entryスコアボードチームに参加しているプレイヤー
-	 */
-	public List<Player> getEntryPlayers() {
-		return entryPlayers;
-	}
-
-	/**
-	 * プレイヤーのKDを保存するクラスを取得します
-	 * キル数デス数の追加もここから行います
-	 * @return 現在のKillDeathCounter
-	 *
-	 * @exception IllegalStateException まだ初期化されていないときにメソッドが呼ばれた場合
-	 */
-	public KillDeathCounter getKillDeathCounter() {
-		Preconditions.checkState(initialized, "\"" + MatchManager.class.getName() + "\" is not initialized yet.");
-
-		return kdCounter;
-	}
-
-	/**
 	 * ゲームの残り時間を操作するタイマータスクを起動します
 	 * 基本はMatchTimeChangedEventを利用して、イベントからゲームを操作するため
 	 * このタスクでは基本他の動作を行いません
@@ -399,7 +382,7 @@ public class MatchManager {
 		leavePlayer(p);
 
 		// スポーンにTP
-		p.teleport(getLobbySpawnLocation());
+		p.teleport(lobbySpawnLocation);
 	}
 
 	public void leavePlayer(Player p) {
@@ -542,7 +525,7 @@ public class MatchManager {
 	 * @return 対象のプレイヤーが試合中かどうか
 	 */
 	public boolean isPlayerMatching(Player player) {
-		return isMatching() && getBattleTeam(player) != null;
+		return isMatching && getBattleTeam(player) != null;
 	}
 
 	/**
@@ -551,23 +534,13 @@ public class MatchManager {
 	 * @return 対象の複数のプレイヤーが同じチームどうか
 	 */
 	public boolean isSameBattleTeam(Player... players) {
-		return isMatching() && Arrays.stream(players)
+		return isMatching && Arrays.stream(players)
 				.filter(Objects::nonNull)
 				.map(this::getBattleTeam)
 				.filter(Objects::nonNull)
 				.distinct()
 				.limit(2)
 				.count() < 2;
-	}
-
-	/**
-	 * 現在のマップを取得します
-	 * 試合が行われていない場合はnullを返します
-	 *
-	 * @return 試合中のマップ
-	 */
-	public GameMap getCurrentGameMap() {
-		return currentMap;
 	}
 
 	public Team getScoreboardTeam(BattleTeam team) {
@@ -578,30 +551,6 @@ public class MatchManager {
 		} else {
 			return null;
 		}
-	}
-
-	/**
-	 * 現在試合を行っているかどうかをbooleanで返します
-	 * @return 現在試合を行っているかどうか
-	 */
-	public boolean isMatching() {
-		return isMatching;
-	}
-
-	/**
-	 * 現在試合中かどうか指定します
-	 * @param value trueで試合中、falseで試合をしていない状態に設定
-	 */
-	public void setMatching(boolean value) {
-		isMatching = value;
-	}
-
-	/**
-	 * 試合の残り秒数を返します
-	 * @return 試合の残り秒数
-	 */
-	public AtomicInteger getTimeLeft() {
-		return timeLeft;
 	}
 
 	/**
@@ -661,14 +610,6 @@ public class MatchManager {
 		Bukkit.getPluginManager().callEvent(event);
 	}
 
-	/**
-	 * チーム分けを行うクラスを変更します
-	 * @param distributor 変更するTeamDistributorを実装したクラスのコンストラクタ
-	 */
-	public void setTeamDistributor(TeamDistributor distributor) {
-		teamDistributor = distributor;
-	}
-
 	public boolean addPlayerIntoBattle(Player p) {
 		// すでに参加している場合はreturn
 		if (getAllTeamPlayers().contains(p)) {
@@ -690,51 +631,6 @@ public class MatchManager {
 		Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
 		return true;
-	}
-
-	/**
-	 * ロビーのスポーン地点を取得します
-	 * 初期化前に呼び出された場合はIllegalStateExceptionを投げます
-	 *
-	 * @return ロビーのスポーン地点
-	 * @exception IllegalStateException 初期化前にメソッドが呼び出された場合
-	 */
-	public Location getLobbySpawnLocation() {
-		// 初期化前なら IllegalStateException
-		Preconditions.checkState(initialized, "\"" + MatchManager.class.getName() + "\" is not initialized yet.");
-
-		return lobbySpawnPoint;
-	}
-
-	/**
-	 * 試合時に使用されるスコアボードを取得します
-	 * @return 試合で使用されるスコアボード
-	 */
-	public Scoreboard getScoreboard() {
-		return scoreboard;
-	}
-
-	/**
-	 * 現在指定されている試合の種類を取得します
-	 * @return 試合の種類
-	 */
-	public MatchMode getMatchMode() {
-		return matchMode;
-	}
-
-	/**
-	 * 試合時間を表示するボスバーを取得します
-	 * @return 試合に使用するボスバー
-	 */
-	public BossBar getBossBar() {
-		return bar;
-	}
-
-	/**
-	 * 試合時間を表示するボスバーを設定します
-	 */
-	public void setBossBar(BossBar bar) {
-		this.bar = bar;
 	}
 
 	/**
@@ -788,7 +684,7 @@ public class MatchManager {
 		List<Player> plist = getAllTeamPlayers();
 
 		// 全員をロビーにTP
-		new LazyTeleportingTask(getLobbySpawnLocation(), plist).runTaskTimer(LeonGunWar.getPlugin(), 0, 4);
+		new LazyTeleportingTask(lobbySpawnLocation, plist).runTaskTimer(LeonGunWar.getPlugin(), 0, 4);
 
 		plist.forEach(p -> {
 			// メッセージを表示
@@ -798,9 +694,9 @@ public class MatchManager {
 			p.getInventory().setChestplate(null);
 
 			// 各記録を取得
-			int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
-			int deaths = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDeaths(p);
-			int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
+			int kills = killDeathCounter.getKills(p);
+			int deaths = killDeathCounter.getDeaths(p);
+			int assists = killDeathCounter.getAssists(p);
 
 			// プレイヤーの戦績を表示
 			p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
@@ -808,7 +704,7 @@ public class MatchManager {
 		});
 
 		// ボスバーを非表示
-		bar.removeAll();
+		bossBar.removeAll();
 	}
 
 	private void setUpPlayer(Player p, BattleTeam team) {
@@ -819,7 +715,7 @@ public class MatchManager {
 		p.setDisplayName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
 		p.setPlayerListName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
 		// テレポート
-		p.teleport(currentMap.getSpawnPoint(team));
+		p.teleport(currentGameMap.getSpawnPoint(team));
 
 		// 防具を装備
 		if (team == BattleTeam.RED) {
@@ -883,18 +779,18 @@ public class MatchManager {
 		YamlConfiguration spawnLoader = YamlConfiguration.loadConfiguration(lobbySpawnFile);
 
 		// 座標をロード
-		lobbySpawnPoint = LocationLoader.getLocation(spawnLoader, "lobby");
+		lobbySpawnLocation = LocationLoader.getLocation(spawnLoader, "lobby");
 
 		// ロードできなかった場合はworldのスポーン地点を取得
-		if (lobbySpawnPoint == null) {
-			lobbySpawnPoint = Bukkit.getWorld("world").getSpawnLocation();
+		if (lobbySpawnLocation == null) {
+			lobbySpawnLocation = Bukkit.getWorld("world").getSpawnLocation();
 		}
 
 		// 設定されていない場合はデフォルト値を設定
 		if (spawnLoader.getConfigurationSection("lobby") == null) {
-			lobbySpawnPoint = new Location(Bukkit.getWorld("world"), 616.5, 10, 70.5, 0, 0);
+			lobbySpawnLocation = new Location(Bukkit.getWorld("world"), 616.5, 10, 70.5, 0, 0);
 			// 設定
-			LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnPoint, "lobby");
+			LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnLocation, "lobby");
 			// セーブ
 			try {
 				spawnLoader.save(lobbySpawnFile);
@@ -917,12 +813,12 @@ public class MatchManager {
 
 		// チームがnullではないならそのチームのスポーン地点にTPする
 		if (playerTeam != null) {
-			spawnPoint = getCurrentGameMap().getSpawnPoint(playerTeam);
+			spawnPoint = currentGameMap.getSpawnPoint(playerTeam);
 		}
 
 		// それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
 		if (spawnPoint == null) {
-			spawnPoint = getLobbySpawnLocation();
+			spawnPoint = lobbySpawnLocation;
 		}
 
 		return spawnPoint;

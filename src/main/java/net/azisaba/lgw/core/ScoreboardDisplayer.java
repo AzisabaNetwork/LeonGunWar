@@ -17,6 +17,9 @@ import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 
+import lombok.Data;
+
+@Data
 public class ScoreboardDisplayer {
 
 	/**
@@ -83,22 +86,14 @@ public class ScoreboardDisplayer {
 	}
 
 	// Objectiveを作成したいスコアボード
-	private Scoreboard board;
-
-	/**
-	 * 使用したいScoreboardを指定
-	 * @param board 使用したいScoreboard
-	 */
-	public void setScoreBoard(Scoreboard board) {
-		this.board = board;
-	}
+	private Scoreboard scoreBoard;
 
 	/**
 	 * プレイヤーにスコアボードを表示します
 	 * @param plist スコアボードを表示させたいプレイヤーのリスト
 	 */
 	public void updateScoreboard(List<Player> plist) {
-		Preconditions.checkNotNull(board, "A scoreboard is not initialized yet.");
+		Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
 		if (Bukkit.getOnlinePlayers().size() <= 0) {
 			return;
@@ -108,11 +103,11 @@ public class ScoreboardDisplayer {
 		clearEntries();
 
 		// Objectiveを取得
-		Objective obj = board.getObjective("side");
+		Objective obj = scoreBoard.getObjective("side");
 
 		// Objectiveが存在しなかった場合は作成
 		if (obj == null) {
-			obj = board.registerNewObjective("side", "dummy");
+			obj = scoreBoard.registerNewObjective("side", "dummy");
 		}
 
 		// Slotを設定
@@ -124,7 +119,7 @@ public class ScoreboardDisplayer {
 
 		// nullが返ってきた場合は非表示にしてreturn
 		if (lines == null) {
-			board.clearSlot(DisplaySlot.SIDEBAR);
+			scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
 			return;
 		}
 
@@ -150,22 +145,22 @@ public class ScoreboardDisplayer {
 		}
 
 		// スコアボードを設定する
-		Bukkit.getOnlinePlayers().forEach(p -> p.setScoreboard(board));
+		Bukkit.getOnlinePlayers().forEach(p -> p.setScoreboard(scoreBoard));
 	}
 
 	/**
 	 * 現在設定されているEntryを全てリセットする
 	 */
 	private void clearEntries() {
-		Preconditions.checkNotNull(board, "A scoreboard is not initialized yet.");
+		Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
-		board.getEntries().forEach(board::resetScores);
+		scoreBoard.getEntries().forEach(scoreBoard::resetScores);
 	}
 
 	public void clearSideBar() {
-		Preconditions.checkNotNull(board, "A scoreboard is not initialized yet.");
+		Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
 		// boardがnullでなければSIDEBARを削除
-		board.clearSlot(DisplaySlot.SIDEBAR);
+		scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
 	}
 }
