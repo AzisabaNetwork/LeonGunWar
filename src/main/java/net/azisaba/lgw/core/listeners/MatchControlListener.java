@@ -24,6 +24,7 @@ import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
+import net.azisaba.lgw.core.tasks.LazyTeleportingTask;
 import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.KDPlayerData;
@@ -106,10 +107,11 @@ public class MatchControlListener implements Listener {
 			}
 		});
 
-		for (Player p : allPlayers) {
-			// スポーンにTP
-			p.teleport(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation());
+		// スポーンにTP
+		new LazyTeleportingTask(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation(), allPlayers)
+				.runTaskTimer(LeonGunWar.getPlugin(), 0, 4);
 
+		for (Player p : allPlayers) {
 			// アーマー削除
 			p.getInventory().setChestplate(null);
 
