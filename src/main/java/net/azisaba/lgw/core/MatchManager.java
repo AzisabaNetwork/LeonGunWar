@@ -37,7 +37,6 @@ import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
-import net.azisaba.lgw.core.tasks.LazyTeleportingTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
@@ -684,11 +683,12 @@ public class MatchManager {
 		List<Player> plist = getAllTeamPlayers();
 
 		// 全員をロビーにTP
-		new LazyTeleportingTask(lobbySpawnLocation, plist).runTaskTimer(LeonGunWar.getPlugin(), 0, 4);
-
 		plist.forEach(p -> {
+
 			// メッセージを表示
 			p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
+			// スポーンにTP
+			p.teleport(lobbySpawnLocation);
 
 			// アーマー削除
 			p.getInventory().setChestplate(null);
