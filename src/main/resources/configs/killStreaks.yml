@@ -1,0 +1,94 @@
+# メッセージの設定 (messages)
+#
+# {0} = プラグインのプレフィックス
+# {1} = キルストリークを達成したプレイヤーの表示名
+
+# 報酬の設定 (commands)
+#
+# {0} = キルストリークを達成したプレイヤーの名前
+
+# キルストリークの設定
+streaks:
+  3:
+    messages:
+      - "{0}&r{1} &7が 3人 &7連続キル！"
+    commands: []
+  5:
+    messages:
+      - "{0}&r{1} &7が 5人 &7連続キル！"
+    commands: []
+  10:
+    messages:
+      - "{0}&r{1} &7が &210人 &7連続キル！"
+    commands: []
+  15:
+    messages:
+      - "{0}&r{1} &7が &215人 &7連続キル！"
+    commands: []
+  20:
+    messages:
+      - "{0}&r{1} &7が &e20人 &7連続キル！"
+    commands: []
+  25:
+    messages:
+      - "{0}&r{1} &7が &e25人 &7連続キル！"
+    commands: []
+  30:
+    messages:
+      - "{0}&r{1} &7が &b30人 &7連続キル！"
+    commands: []
+  35:
+    messages:
+      - "{0}&r{1} &7が &b35人 &7連続キル！"
+    commands: []
+  40:
+    messages:
+      - "{0}&r{1} &7が &c40人 &7連続キル！"
+    commands: []
+  45:
+    messages:
+      - "{0}&r{1} &7が &c45人 &7連続キル！"
+    commands: []
+  50:
+    messages:
+      - "{0}&r&7なんてこったい！ &r{1}&7 が &c50人 &7連続キル！ カンスト！"
+    commands: []
+
+# キルストリークの倍数の設定
+levels:
+  1:
+    messages: []
+    commands:
+      - "minecraft:give {0} minecraft:emerald 2"
+  5:
+    messages: []
+    commands:
+      - "minecraft:give {0} minecraft:diamond 1"
+      - "crackshot:shot give {0} storobo2"
+  10:
+    messages: []
+    commands:
+      - "minecraft:give {0} minecraft:diamond 1"
+      - "crackshot:shot give {0} uav"
+  15:
+    messages: []
+    commands:
+      - "minecraft:give {0} minecraft:diamond 1"
+      - "crackshot:shot give {0} deathmachine"
+  20:
+    messages: []
+    commands:
+      - "minecraft:give {0} minecraft:diamond 1"
+      - "crackshot:shot give {0} storobo"
+  50:
+    messages: []
+    commands:
+      - "minecraft:give {0} minecraft:diamond 64"
+      - "crackshot:shot give {0} kansuto"
+
+# 連続キルを阻止した際に表示されるメッセージ
+#
+# {0} = プラグインのプレフィックス
+# {1} = キルストリークを阻止したプレイヤーの表示名
+# {2} = キルストリークを阻止されたプレイヤーの表示名
+removed: "{0}&r{1} &7が &r{2} &7の連続キルを阻止！"

@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core;
 
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -8,6 +10,7 @@ import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
+import net.azisaba.lgw.core.configs.KillStreaksConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -57,6 +60,8 @@ public class LeonGunWar extends JavaPlugin {
 	@Getter
 	private static JSONMessage quickBar;
 
+	private KillStreaksConfig killStreaksConfig;
+
 	private final MatchStartCountdown countdown = new MatchStartCountdown();
 	private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
 	private final MapLoader mapLoader = new MapLoader();
@@ -79,6 +84,15 @@ public class LeonGunWar extends JavaPlugin {
 				.then(" ")
 				.then(Chat.f("&6[途中参加]"))
 				.runCommand("/leongunwar:match rejoin");
+
+		// 設定ファイルを読み込むクラスの初期化
+		killStreaksConfig = new KillStreaksConfig(this);
+		// 設定ファイルを読み込む
+		try {
+			killStreaksConfig.loadConfig();
+		} catch (Exception ex) {
+			getLogger().log(Level.WARNING, "設定ファイルの読み込みに失敗しました。", ex);
+		}
 
 		// 初期化が必要なファイルを初期化する
 		mapContainer.loadMaps();
