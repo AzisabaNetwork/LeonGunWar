@@ -638,7 +638,7 @@ public class MatchManager {
 			// メッセージを表示
 			p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
 			// スポーンにTP
-			LeonGunWar.getPlugin().getTeleporter().request(p, lobbySpawnLocation);
+			p.teleport(lobbySpawnLocation);
 
 			// アーマー削除
 			p.getInventory().setChestplate(null);
