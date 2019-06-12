@@ -1,8 +1,10 @@
 package net.azisaba.lgw.core.tasks;
 
-import java.util.Collection;
+import java.util.AbstractMap;
+import java.util.ArrayDeque;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,23 +15,24 @@ import lombok.NonNull;
 // たくさんのプレイヤーを順番にテレポートすることでラグを軽減する
 public class LazyTeleportingTask extends BukkitRunnable {
 
-	private final Location location;
-	private final Queue<Player> players;
+	private final Queue<Map.Entry<Player, Location>> requests = new ArrayDeque<>();
 
-	public LazyTeleportingTask(@NonNull Location location, @NonNull Collection<Player> players) {
-		this.location = location;
-		this.players = new ArrayBlockingQueue<>(players.size(), false, players);
+	public void request(@NonNull Player player, @NonNull Location location) {
+		Map.Entry<Player, Location> request = new AbstractMap.SimpleEntry<>(player, location);
+		requests.add(request);
+	}
+
+	public void requestAll(@NonNull List<Player> players, @NonNull Location location) {
+		players.forEach(player -> request(player, location));
 	}
 
 	@Override
 	public void run() {
-		if (players.isEmpty()) {
-			cancel();
-		} else {
-			Player player = players.poll();
-			if (player != null) {
-				player.teleport(location);
-			}
+		if (!requests.isEmpty()) {
+			Map.Entry<Player, Location> request = requests.poll();
+			Player player = request.getKey();
+			Location location = request.getValue();
+			player.teleport(location);
 		}
 	}
 }

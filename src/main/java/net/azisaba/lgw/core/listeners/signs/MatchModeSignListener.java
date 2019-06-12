@@ -92,8 +92,7 @@ public class MatchModeSignListener implements Listener {
 			});
 
 			// 全プレイヤーにQuickメッセージを送信
-			LeonGunWar.getQuickBar()
-					.send(Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]));
+			LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));
 		} catch (IllegalStateException ex) {
 			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
 		}

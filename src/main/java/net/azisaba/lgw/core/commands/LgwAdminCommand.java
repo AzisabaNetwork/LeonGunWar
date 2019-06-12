@@ -91,7 +91,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
 			// サイズが1ならテレポート
 			if (correctMapList.size() == 1) {
-				p.teleport(correctMapList.get(0).getSpawnPoint(BattleTeam.RED));
+				LeonGunWar.getPlugin().getTeleporter().request(p, correctMapList.get(0).getSpawnPoint(BattleTeam.RED));
 				p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", correctMapList.get(0).getMapName()));
 
 				// 1より多い場合

@@ -365,7 +365,7 @@ public class MatchManager {
 		leavePlayer(p);
 
 		// スポーンにTP
-		p.teleport(lobbySpawnLocation);
+		LeonGunWar.getPlugin().getTeleporter().request(p, lobbySpawnLocation);
 	}
 
 	public void leavePlayer(Player p) {
@@ -638,7 +638,7 @@ public class MatchManager {
 			// メッセージを表示
 			p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
 			// スポーンにTP
-			p.teleport(lobbySpawnLocation);
+			LeonGunWar.getPlugin().getTeleporter().request(p, lobbySpawnLocation);
 
 			// アーマー削除
 			p.getInventory().setChestplate(null);
@@ -665,7 +665,7 @@ public class MatchManager {
 		p.setDisplayName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
 		p.setPlayerListName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
 		// テレポート
-		p.teleport(currentGameMap.getSpawnPoint(team));
+		LeonGunWar.getPlugin().getTeleporter().request(p, currentGameMap.getSpawnPoint(team));
 
 		// 防具を装備
 		p.getInventory().setChestplate(chestplates.get(team));
