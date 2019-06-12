@@ -239,7 +239,7 @@ public class MatchManager {
 	public void finalizeMatch() {
 		// Entry削除
 		teams.values().stream()
-				.forEach(scoreboardTeam -> scoreboardTeam.getEntries().clear());
+				.forEach(team -> new ArrayList<>(team.getEntries()).forEach(team::removeEntry));
 
 		// タスクの終了
 		if (matchTask != null) {
