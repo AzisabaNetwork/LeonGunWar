@@ -59,7 +59,7 @@ public class DisableRecipeListener implements Listener {
 	 * CrackShotがignoreCancelled = trueにしていないため、こちらでキャンセルしても向こう側でResultアイテムの名前が変わってしまい、
 	 * 2回目のクリックでクラフトできてはいけないアイテムまでクラフトできてしまうため、MONITORでデフォルトアイテムを再セットするメソッド
 	 */
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void restoreDefaultItem(CraftItemEvent e) {
 		Player p = (Player) e.getWhoClicked();
 
