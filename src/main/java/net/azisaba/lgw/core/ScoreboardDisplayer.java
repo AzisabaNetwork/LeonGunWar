@@ -63,12 +63,14 @@ public class ScoreboardDisplayer {
 			List<String> messageList = new ArrayList<>();
 			messageList.add("");
 			messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
+			messageList.add("");
 
 			for (BattleTeam team : BattleTeam.values()) {
 				int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
 				messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getDisplayTeamName(), point));
 			}
 
+			messageList.add("");
 			messageList.add(Chat.f("&7現在のマップ&a: &c{0}", mapName));
 			messageList.add(Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()));
 			messageList.add("");
