@@ -3,7 +3,6 @@ package net.azisaba.lgw.core.configs;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import lombok.Cleanup;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -54,10 +52,7 @@ public class Config {
 
 	@SneakyThrows
 	public String loadResourceAsString() {
-		@Cleanup
-		Reader in = new InputStreamReader(getResource(), StandardCharsets.UTF_8);
-		@Cleanup
-		BufferedReader reader = new BufferedReader(in);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(getResource(), StandardCharsets.UTF_8));
 		return reader.lines().collect(Collectors.joining(System.lineSeparator()));
 	}
 
