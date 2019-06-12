@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,8 +42,7 @@ public class ScoreboardDisplayer {
 			 *
 			 * 残り時間: ?秒
 			 *
-			 * 赤チーム: ? Point(s)
-			 * 青チーム: ? Point(s)
+			 * 各チーム: ? Point(s)
 			 *
 			 * 現在のマップ: {マップ名}
 			 * 現在のモード: {モード}
@@ -54,10 +53,6 @@ public class ScoreboardDisplayer {
 			// マップ名を取得
 			String mapName = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getMapName();
 
-			// 赤、青チームの現在のポイントを取得
-			int redPoint = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(BattleTeam.RED);
-			int bluePoint = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(BattleTeam.BLUE);
-
 			// 残り時間
 			int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().get();
 
@@ -65,17 +60,19 @@ public class ScoreboardDisplayer {
 			MatchMode mode = LeonGunWar.getPlugin().getManager().getMatchMode();
 
 			// 表示するメッセージリストを作成
-			List<String> messageList = Arrays.asList(
-					"",
-					Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)),
-					"",
-					Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.RED.getDisplayTeamName(), redPoint),
-					Chat.f("{0}&a: &e{1} Point(s)", BattleTeam.BLUE.getDisplayTeamName(), bluePoint),
-					"",
-					Chat.f("&7現在のマップ&a: &c{0}", mapName),
-					Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()),
-					"",
-					Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net"));
+			List<String> messageList = new ArrayList<>();
+			messageList.add("");
+			messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
+
+			for (BattleTeam team : BattleTeam.values()) {
+				int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
+				messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getDisplayTeamName(), point));
+			}
+
+			messageList.add(Chat.f("&7現在のマップ&a: &c{0}", mapName));
+			messageList.add(Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()));
+			messageList.add("");
+			messageList.add(Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net"));
 
 			// return
 			return messageList;

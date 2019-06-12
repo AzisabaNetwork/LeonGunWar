@@ -78,12 +78,12 @@ public class MatchManager {
 
 	// マッチで使用するスコアボード
 	private Scoreboard scoreboard;
-	// 赤、青用のスコアボードチーム
-	private Team redTeam, blueTeam;
+	// スコアボードチーム
+	private final Map<BattleTeam, Team> teams = new HashMap<>();
 	// 試合に参加するプレイヤーのリスト
 	private final List<Player> entryPlayers = new ArrayList<>();
-	// 赤、青チームのチェストプレート
-	private ItemStack redChestplate, blueChestplate;
+	// チェストプレート
+	private final Map<BattleTeam, ItemStack> chestplates = new HashMap<>();
 
 	// ポイントを集計するHashMap
 	private final Map<BattleTeam, Integer> pointMap = new HashMap<>();
@@ -117,7 +117,7 @@ public class MatchManager {
 		// ScoreboardDisplayerにScoreboardを設定
 		LeonGunWar.getPlugin().getScoreboardDisplayer().setScoreBoard(scoreboard);
 
-		// 各スコアボードチームの取得 / 作成 (赤、青、試合参加エントリー用)
+		// 各スコアボードチームの取得 / 作成
 		initializeTeams();
 
 		// 全プレイヤーのスコアボードを変更
@@ -126,11 +126,8 @@ public class MatchManager {
 		});
 
 		// 各チームのチェストプレートを設定
-		// 赤チーム
-		redChestplate = CustomItem.getTeamChestplate(BattleTeam.RED);
-
-		// 青チーム
-		blueChestplate = CustomItem.getTeamChestplate(BattleTeam.BLUE);
+		Arrays.stream(BattleTeam.values())
+				.forEach(team -> chestplates.put(team, CustomItem.getTeamChestplate(team)));
 
 		// ロビーのスポーン地点をロード
 		loadLobbySpawnLocation();
@@ -162,36 +159,28 @@ public class MatchManager {
 		// 参加プレイヤーを取得
 		List<Player> entryPlayers = getEntryPlayers();
 		// プレイヤーを振り分け
-		teamDistributor.distributePlayers(entryPlayers, Arrays.asList(redTeam, blueTeam));
+		teamDistributor.distributePlayers(entryPlayers, new ArrayList<>(teams.values()));
 
 		// 各プレイヤーにチームに沿った処理を行う
 		// エントリー削除したときにgetEntries()の中身が変わってエラーを起こさないように新しいリストを作成してfor文を使用する
-		// 赤チームの処理
-		for (String redEntry : new ArrayList<>(redTeam.getEntries())) {
-			Player p = Bukkit.getPlayerExact(redEntry);
-
-			// プレイヤーが見つからない場合はエントリーから削除してcontinue
-			if (p == null) {
-				redTeam.removeEntry(redEntry);
+		for (BattleTeam team : BattleTeam.values()) {
+			Team scoreboardTeam = getScoreboardTeam(team);
+			if (scoreboardTeam == null) {
 				continue;
 			}
 
-			// セットアップ
-			setUpPlayer(p, BattleTeam.RED);
-		}
+			for (String entry : new ArrayList<>(scoreboardTeam.getEntries())) {
+				Player player = Bukkit.getPlayerExact(entry);
 
-		// 青チームの処理
-		for (String blueEntry : new ArrayList<>(blueTeam.getEntries())) {
-			Player p = Bukkit.getPlayerExact(blueEntry);
+				// プレイヤーが見つからない場合はエントリーから削除してcontinue
+				if (player == null) {
+					scoreboardTeam.removeEntry(entry);
+					continue;
+				}
 
-			// プレイヤーが見つからない場合はエントリーから削除してcontinue
-			if (p == null) {
-				blueTeam.removeEntry(blueEntry);
-				continue;
+				// セットアップ
+				setUpPlayer(player, team);
 			}
-
-			// セットアップ
-			setUpPlayer(p, BattleTeam.BLUE);
 		}
 
 		// LDMならリーダーを抽選
@@ -248,14 +237,9 @@ public class MatchManager {
 	 * ゲーム終了時に行う処理を書きます
 	 */
 	public void finalizeMatch() {
-		// 赤チームのEntry削除
-		for (String redEntry : new ArrayList<>(redTeam.getEntries())) {
-			redTeam.removeEntry(redEntry);
-		}
-		// 青チームのEntry削除
-		for (String blueEntry : new ArrayList<>(blueTeam.getEntries())) {
-			blueTeam.removeEntry(blueEntry);
-		}
+		// Entry削除
+		teams.values().stream()
+				.forEach(scoreboardTeam -> scoreboardTeam.getEntries().clear());
 
 		// タスクの終了
 		if (matchTask != null) {
@@ -392,11 +376,9 @@ public class MatchManager {
 		}
 
 		// チームに含まれていれば退出させる
-		if (redTeam.hasEntry(p.getName())) {
-			redTeam.removeEntry(p.getName());
-		} else if (blueTeam.hasEntry(p.getName())) {
-			blueTeam.removeEntry(p.getName());
-		}
+		teams.values().stream()
+				.filter(scoreboardTeam -> scoreboardTeam.hasEntry(p.getName()))
+				.forEach(scoreboardTeam -> scoreboardTeam.removeEntry(p.getName()));
 
 		// 回復
 		p.setHealth(20);
@@ -445,34 +427,11 @@ public class MatchManager {
 		// teamがnullならIllegalArgumentException
 		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
 
-		// リスト作成
-		List<Player> players = new ArrayList<>();
-		// 名前のリストを作成
-		List<String> entryList = null;
-
-		// 赤チームの場合
-		if (team == BattleTeam.RED) {
-			entryList = new ArrayList<>(redTeam.getEntries());
-		} else if (team == BattleTeam.BLUE) {
-			entryList = new ArrayList<>(blueTeam.getEntries());
-		}
-
-		// Entryしている名前からプレイヤー検索
-		for (String entryName : entryList) {
-			// プレイヤーを取得
-			Player player = Bukkit.getPlayerExact(entryName);
-
-			// プレイヤーがいない場合はcontinue
-			if (player == null) {
-				continue;
-			}
-
-			// リストに追加
-			players.add(player);
-		}
-
 		// 取得したプレイヤーリストを返す
-		return players;
+		return getScoreboardTeam(team).getEntries().stream()
+				.map(Bukkit::getPlayerExact)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -543,13 +502,7 @@ public class MatchManager {
 	}
 
 	public Team getScoreboardTeam(BattleTeam team) {
-		if (team == BattleTeam.RED) {
-			return redTeam;
-		} else if (team == BattleTeam.BLUE) {
-			return blueTeam;
-		} else {
-			return null;
-		}
+		return teams.getOrDefault(team, null);
 	}
 
 	/**
@@ -616,16 +569,13 @@ public class MatchManager {
 		}
 
 		// チーム分けする
-		teamDistributor.distributePlayer(p, Arrays.asList(redTeam, blueTeam));
+		teamDistributor.distributePlayer(p, new ArrayList<>(teams.values()));
 
 		// セットアップする
-		if (redTeam.getEntries().contains(p.getName())) {
-			// セットアップ
-			setUpPlayer(p, BattleTeam.RED);
-		} else if (blueTeam.getEntries().contains(p.getName())) {
-			// セットアップ
-			setUpPlayer(p, BattleTeam.BLUE);
-		}
+		teams.entrySet().stream()
+				.filter(entry -> entry.getValue().getEntries().contains(p.getName()))
+				.findFirst()
+				.ifPresent(entry -> setUpPlayer(p, entry.getKey()));
 
 		Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
@@ -718,11 +668,7 @@ public class MatchManager {
 		p.teleport(currentGameMap.getSpawnPoint(team));
 
 		// 防具を装備
-		if (team == BattleTeam.RED) {
-			p.getInventory().setChestplate(redChestplate);
-		} else if (team == BattleTeam.BLUE) {
-			p.getInventory().setChestplate(blueChestplate);
-		}
+		p.getInventory().setChestplate(chestplates.get(team));
 	}
 
 	/**
@@ -734,38 +680,28 @@ public class MatchManager {
 			return;
 		}
 
-		// 赤チーム取得(なかったら作成)
-		redTeam = scoreboard.getTeam("Red");
-		if (redTeam == null) {
-			// チーム作成
-			redTeam = scoreboard.registerNewTeam("Red");
-			// チームの色を指定
-			redTeam.setColor(BattleTeam.RED.getChatColor());
-			// フレンドリーファイアーを無効化
-			redTeam.setAllowFriendlyFire(false);
-			// 他チームからネームタグが見えるのを無効化
-			redTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
-			// 押し合いをなくす
-			redTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
-			// Prefixを設定
-			redTeam.setPrefix(BattleTeam.RED.getChatColor() + "");
-		}
+		for (BattleTeam team : BattleTeam.values()) {
+			String teamName = team.getScoreboardTeamName();
 
-		// 青チーム取得(なかったら作成)
-		blueTeam = scoreboard.getTeam("Blue");
-		if (blueTeam == null) {
-			// チーム作成
-			blueTeam = scoreboard.registerNewTeam("Blue");
-			// チームの色を指定
-			blueTeam.setColor(BattleTeam.BLUE.getChatColor());
-			// フレンドリーファイアーを無効化
-			blueTeam.setAllowFriendlyFire(false);
-			// 他チームからネームタグが見えるのを無効化
-			blueTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
-			// 押し合いをなくす
-			blueTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
-			// Prefixを設定
-			blueTeam.setPrefix(BattleTeam.BLUE.getChatColor() + "");
+			// チーム取得(なかったら作成)
+			Team scoreboardTeam = scoreboard.getTeam(teamName);
+			if (scoreboardTeam == null) {
+				// チーム作成
+				scoreboardTeam = scoreboard.registerNewTeam(teamName);
+				// チームの色を指定
+				scoreboardTeam.setColor(team.getChatColor());
+				// フレンドリーファイアーを無効化
+				scoreboardTeam.setAllowFriendlyFire(false);
+				// 他チームからネームタグが見えるのを無効化
+				scoreboardTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
+				// 押し合いをなくす
+				scoreboardTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+				// Prefixを設定
+				scoreboardTeam.setPrefix(team.getChatColor() + "");
+			}
+
+			// チームを保存
+			teams.putIfAbsent(team, scoreboardTeam);
 		}
 	}
 
