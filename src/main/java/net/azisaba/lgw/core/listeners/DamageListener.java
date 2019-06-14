@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -237,6 +238,22 @@ public class DamageListener implements Listener {
 
 		// キャンセル
 		e.setCancelled(true);
+	}
+
+	/**
+	 * 試合をしていない時はダメージを無効化
+	 */
+	@EventHandler(priority = EventPriority.LOW)
+	public void disableDamageNotMatching(EntityDamageByEntityEvent e) {
+		// プレイヤーのみ
+		if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) {
+			return;
+		}
+
+		// 試合をしていなければキャンセル
+		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
+			e.setCancelled(true);
+		}
 	}
 
 	/**
