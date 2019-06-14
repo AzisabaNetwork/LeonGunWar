@@ -38,7 +38,6 @@ import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
 import net.azisaba.lgw.core.map.MapContainer;
 import net.azisaba.lgw.core.map.MapLoader;
-import net.azisaba.lgw.core.tasks.LazyTeleportingTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
 
@@ -69,8 +68,6 @@ public class LeonGunWar extends JavaPlugin {
 	private final MatchManager manager = new MatchManager();
 	private final KillStreaks killStreaks = new KillStreaks();
 	private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
-
-	private final LazyTeleportingTask teleporter = new LazyTeleportingTask();
 
 	@Override
 	public void onEnable() {
@@ -151,8 +148,6 @@ public class LeonGunWar extends JavaPlugin {
 		// SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
 		new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
 
-		teleporter.runTaskTimer(this, 0, 8);
-
 		Bukkit.getLogger().info(Chat.f("{0} が有効化されました。", getName()));
 	}
 
@@ -160,9 +155,6 @@ public class LeonGunWar extends JavaPlugin {
 	public void onDisable() {
 		// Plugin終了時の処理を呼び出す
 		manager.onDisablePlugin();
-
-		// Teleportキュー中のプレイヤーを全員TP
-		getTeleporter().teleportAll();
 
 		// DisplayNameを戻す
 		Bukkit.getOnlinePlayers().forEach(p -> {
