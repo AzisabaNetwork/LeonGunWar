@@ -659,8 +659,7 @@ public class MatchManager {
 
 	private void setUpPlayer(Player p, BattleTeam team) {
 		// メッセージを表示する
-		p.sendMessage(
-				Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, team.getDisplayTeamName()));
+		p.sendMessage(Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, team.getTeamName()));
 		// DisplayNameとPlayerListNameを指定
 		p.setDisplayName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
 		p.setPlayerListName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
@@ -681,7 +680,7 @@ public class MatchManager {
 		}
 
 		for (BattleTeam team : BattleTeam.values()) {
-			String teamName = team.getScoreboardTeamName();
+			String teamName = team.getTeamName();
 
 			// チーム取得(なかったら作成)
 			Team scoreboardTeam = scoreboard.getTeam(teamName);

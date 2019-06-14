@@ -30,8 +30,8 @@ public class CustomItem {
 	public ItemStack getTeamChestplate(BattleTeam team) {
 		ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setDisplayName(team.getDisplayTeamName());
-		meta.setColor(team.getTeamColor());
+		meta.setDisplayName(team.getTeamName());
+		meta.setColor(team.getColor());
 		meta.setUnbreakable(true);
 		item.setItemMeta(meta);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);

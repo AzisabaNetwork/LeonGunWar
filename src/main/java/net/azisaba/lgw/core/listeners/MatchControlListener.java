@@ -89,7 +89,7 @@ public class MatchControlListener implements Listener {
 		// 各チームのポイントを表示
 		for (BattleTeam team : BattleTeam.values()) {
 			int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
-			resultMessages.add(Chat.f("{0} &c{1} Point(s)", team.getDisplayTeamName(), point));
+			resultMessages.add(Chat.f("{0} &c{1} Point(s)", team.getTeamName(), point));
 		}
 
 		// MVPを表示 (ない場合は何も表示しない)
@@ -149,7 +149,7 @@ public class MatchControlListener implements Listener {
 
 				// 勝利メッセージを送信
 				Bukkit.broadcastMessage(
-						Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX, wonTeam.getDisplayTeamName()));
+						Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX, wonTeam.getTeamName()));
 			});
 		}
 	}

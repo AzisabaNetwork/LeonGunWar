@@ -67,7 +67,7 @@ public class ScoreboardDisplayer {
 
 			for (BattleTeam team : BattleTeam.values()) {
 				int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
-				messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getDisplayTeamName(), point));
+				messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getTeamName(), point));
 			}
 
 			messageList.add("");

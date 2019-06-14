@@ -16,15 +16,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum BattleTeam {
 
-	RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED, "Red"),
-	BLUE("青チーム", Color.fromRGB(0x0000A0), ChatColor.BLUE, "Blue");
+	RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED),
+	BLUE("青チーム", Color.fromRGB(0x0000A0), ChatColor.BLUE);
 
-	private final String teamName;
-	private final Color teamColor;
+	private final String name;
+	private final Color color;
 	private final ChatColor chatColor;
-	private final String scoreboardTeamName;
 
-	public String getDisplayTeamName() {
-		return chatColor + teamName;
+	public String getTeamName() {
+		return chatColor + name;
 	}
 }
