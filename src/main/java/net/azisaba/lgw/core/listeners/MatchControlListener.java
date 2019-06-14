@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -124,8 +125,8 @@ public class MatchControlListener implements Listener {
 					deaths, assists));
 
 			// 回復
-			p.setHealth(p.getHealthScale());
-			p.setFoodLevel(20);
+			p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
+			p.setFoodLevel(40);
 		}
 
 		// 勝ったチームがあれば勝者の証を付与
