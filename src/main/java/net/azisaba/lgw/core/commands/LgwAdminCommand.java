@@ -91,7 +91,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
 			// サイズが1ならテレポート
 			if (correctMapList.size() == 1) {
-				p.teleport(correctMapList.get(0).getSpawnPoint(BattleTeam.RED));
+				p.teleport(correctMapList.get(0).getSpawnPoint(BattleTeam.values()[0]));
 				p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", correctMapList.get(0).getMapName()));
 
 				// 1より多い場合
@@ -100,7 +100,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
 				// 各マップのJSONMessageを表示
 				correctMapList.forEach(map -> {
-					Location spawn = map.getSpawnPoint(BattleTeam.RED);
+					Location spawn = map.getSpawnPoint(BattleTeam.values()[0]);
 					JSONMessage msg = JSONMessage.create(Chat.f("&7 - &e{0}: &7{1}, {2}, {3} &7({4})", map.getMapName(),
 							spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getWorld().getName()));
 					msg.tooltip(Chat.f("&eクリックでテレポート"));
