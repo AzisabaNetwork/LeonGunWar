@@ -26,13 +26,27 @@ public class LazyTeleportingTask extends BukkitRunnable {
 		players.forEach(player -> request(player, location));
 	}
 
+	/**
+	 * Pluginの終了時に呼び出し
+	 */
+	public void teleportAll() {
+		while (!requests.isEmpty()) {
+			Map.Entry<Player, Location> request = requests.poll();
+			teleport(request);
+		}
+	}
+
 	@Override
 	public void run() {
 		if (!requests.isEmpty()) {
 			Map.Entry<Player, Location> request = requests.poll();
-			Player player = request.getKey();
-			Location location = request.getValue();
-			player.teleport(location);
+			teleport(request);
 		}
+	}
+
+	private void teleport(Map.Entry<Player, Location> request) {
+		Player player = request.getKey();
+		Location location = request.getValue();
+		player.teleport(location);
 	}
 }

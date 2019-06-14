@@ -161,6 +161,9 @@ public class LeonGunWar extends JavaPlugin {
 		// Plugin終了時の処理を呼び出す
 		manager.onDisablePlugin();
 
+		// Teleportキュー中のプレイヤーを全員TP
+		getTeleporter().teleportAll();
+
 		// DisplayNameを戻す
 		Bukkit.getOnlinePlayers().forEach(p -> {
 			p.setDisplayName(p.getName());
