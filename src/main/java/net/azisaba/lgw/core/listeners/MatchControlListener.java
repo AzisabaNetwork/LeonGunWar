@@ -107,10 +107,10 @@ public class MatchControlListener implements Listener {
 			}
 		});
 
-		// スポーンにTP
-		allPlayers.forEach(p -> p.teleport(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation()));
-
 		for (Player p : allPlayers) {
+			// スポーンにTP
+			p.teleport(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation());
+
 			// アーマー削除
 			p.getInventory().setChestplate(null);
 
