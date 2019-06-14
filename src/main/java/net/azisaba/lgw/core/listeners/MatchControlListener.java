@@ -122,6 +122,10 @@ public class MatchControlListener implements Listener {
 			// プレイヤーの戦績を表示
 			p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
 					deaths, assists));
+
+			// 回復
+			p.setHealth(p.getHealthScale());
+			p.setFoodLevel(20);
 		}
 
 		// 勝ったチームがあれば勝者の証を付与
