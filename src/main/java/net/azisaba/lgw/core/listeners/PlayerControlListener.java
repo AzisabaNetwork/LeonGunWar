@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.listeners;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -54,8 +54,7 @@ public class PlayerControlListener implements Listener {
 
 		// どれかのチームの人数が0人の場合はキャンセル (他のListenerが対応するため)
 		if (manager.getTeamPlayers().values().stream()
-				.filter(list -> list.size() <= 0)
-				.collect(Collectors.toList()).size() > 0) {
+				.anyMatch(List::isEmpty)) {
 			return;
 		}
 
