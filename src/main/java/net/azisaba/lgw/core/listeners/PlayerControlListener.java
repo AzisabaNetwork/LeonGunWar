@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.listeners;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -52,18 +52,22 @@ public class PlayerControlListener implements Listener {
 			return;
 		}
 
-		// 試合中のプレイヤー取得
-		Map<BattleTeam, List<Player>> playerMap = manager.getTeamPlayers();
+		// どれかのチームの人数が0人の場合はキャンセル (他のListenerが対応するため)
+		if (manager.getTeamPlayers().values().stream()
+				.filter(list -> list.size() <= 0)
+				.collect(Collectors.toList()).size() > 0) {
+			return;
+		}
+
+		// 全チームのリーダーを取得
+		Map<BattleTeam, Player> leaderMap = manager.getLDMLeaderMap();
 
 		// プレイヤーがリーダーだった場合、勝者は無しで試合を終了させる
-		for (List<Player> plist : playerMap.values()) {
-			if (plist.contains(p)) {
-				// イベント作成、呼び出し
-				MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(),
-						manager.getTeamPlayers());
-				Bukkit.getPluginManager().callEvent(event);
-				break;
-			}
+		if (leaderMap.values().contains(p)) {
+			// イベント作成、呼び出し
+			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(),
+					manager.getTeamPlayers());
+			Bukkit.getPluginManager().callEvent(event);
 		}
 	}
 
@@ -71,7 +75,7 @@ public class PlayerControlListener implements Listener {
 	 * プレイヤーが退出したときにエントリーを解除するリスナー
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerQUit(PlayerQuitEvent e) {
+	public void removeEntryWhenPlayerLeaveServer(PlayerQuitEvent e) {
 		LeonGunWar.getPlugin().getManager().removeEntryPlayer(e.getPlayer());
 	}
 
