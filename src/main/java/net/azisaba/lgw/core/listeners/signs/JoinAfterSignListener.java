@@ -133,6 +133,11 @@ public class JoinAfterSignListener implements Listener {
 
 	@EventHandler
 	public void onMatchFinishedEvent(MatchFinishedEvent e) {
+
+		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
+			return;
+		}
+
 		lastClicked.clear();
 	}
 }

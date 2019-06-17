@@ -77,6 +77,7 @@ public class MatchControlListener implements Listener {
 	 */
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
+
 		// 試合に参加した全プレイヤーを取得
 		List<Player> allPlayers = e.getAllTeamPlayers();
 
@@ -160,6 +161,7 @@ public class MatchControlListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void matchFinalizer(MatchFinishedEvent e) {
+
 		LeonGunWar.getPlugin().getManager().finalizeMatch();
 
 		// 全プレイヤーにQuickメッセージを送信

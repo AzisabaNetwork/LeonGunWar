@@ -244,6 +244,8 @@ public class DamageListener implements Listener {
 	 */
 	@EventHandler
 	public void onMatchFinished(MatchFinishedEvent e) {
-		lastDamaged.clear();
+
+		if (LeonGunWar.getPlugin().getManager().isMatching())
+			lastDamaged.clear();
 	}
 }
