@@ -73,7 +73,7 @@ public class DamageListener implements Listener {
 	}
 
 	/**
-	 * 試合中のプレイヤーが死亡した場合、死亡カウントを増加させ、即時リスポーンさせます
+	 * 試合中のプレイヤーが死亡した場合、死亡カウントを増加させます
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onDeath(PlayerDeathEvent e) {
