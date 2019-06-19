@@ -46,4 +46,16 @@ public class MapContainer {
 		// リストから取得してreturn
 		return allGameMap.isEmpty() ? null : allGameMap.get(new Random().nextInt(allGameMap.size()));
 	}
+
+	/**
+	 * マップをファイルからリロードします
+	 */
+	public void reloadMapsFromFile() {
+		// allGameMapの初期化
+		allGameMap.clear();
+
+		// 保存されているマップデータを収集
+		allGameMap.addAll(LeonGunWar.getPlugin().getMapLoader().loadMapData());
+		LeonGunWar.getPlugin().getLogger().info(allGameMap.size() + " 個のマップをロードしました。");
+	}
 }

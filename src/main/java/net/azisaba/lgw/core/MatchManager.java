@@ -623,6 +623,37 @@ public class MatchManager {
 		}
 	}
 
+	/**
+	 * ロビーのスポーン地点をロードします
+	 * 設定されていない場合はデフォルト値を設定します
+	 */
+	public void loadLobbySpawnLocation() {
+		// ファイル
+		File lobbySpawnFile = new File(LeonGunWar.getPlugin().getDataFolder(), "spawn.yml");
+		YamlConfiguration spawnLoader = YamlConfiguration.loadConfiguration(lobbySpawnFile);
+
+		// 座標をロード
+		lobbySpawnLocation = LocationLoader.getLocation(spawnLoader, "lobby");
+
+		// ロードできなかった場合はworldのスポーン地点を取得
+		if (lobbySpawnLocation == null) {
+			lobbySpawnLocation = Bukkit.getWorld("world").getSpawnLocation();
+		}
+
+		// 設定されていない場合はデフォルト値を設定
+		if (spawnLoader.getConfigurationSection("lobby") == null) {
+			lobbySpawnLocation = new Location(Bukkit.getWorld("world"), 616.5, 10, 70.5, 0, 0);
+			// 設定
+			LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnLocation, "lobby");
+			// セーブ
+			try {
+				spawnLoader.save(lobbySpawnFile);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 	protected void onDisablePlugin() {
 		// 試合をしていなければreturn
 		if (!isMatching) {
@@ -701,37 +732,6 @@ public class MatchManager {
 
 			// チームを保存
 			teams.putIfAbsent(team, scoreboardTeam);
-		}
-	}
-
-	/**
-	 * ロビーのスポーン地点をロードします
-	 * 設定されていない場合はデフォルト値を設定します
-	 */
-	private void loadLobbySpawnLocation() {
-		// ファイル
-		File lobbySpawnFile = new File(LeonGunWar.getPlugin().getDataFolder(), "spawn.yml");
-		YamlConfiguration spawnLoader = YamlConfiguration.loadConfiguration(lobbySpawnFile);
-
-		// 座標をロード
-		lobbySpawnLocation = LocationLoader.getLocation(spawnLoader, "lobby");
-
-		// ロードできなかった場合はworldのスポーン地点を取得
-		if (lobbySpawnLocation == null) {
-			lobbySpawnLocation = Bukkit.getWorld("world").getSpawnLocation();
-		}
-
-		// 設定されていない場合はデフォルト値を設定
-		if (spawnLoader.getConfigurationSection("lobby") == null) {
-			lobbySpawnLocation = new Location(Bukkit.getWorld("world"), 616.5, 10, 70.5, 0, 0);
-			// 設定
-			LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnLocation, "lobby");
-			// セーブ
-			try {
-				spawnLoader.save(lobbySpawnFile);
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
 		}
 	}
 

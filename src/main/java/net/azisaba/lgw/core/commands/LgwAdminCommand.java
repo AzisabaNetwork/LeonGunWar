@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.commands;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -116,6 +117,27 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 				p.sendMessage(Chat.f("&c指定したマップが見つかりませんでした。"));
 			}
 
+			return true;
+		}
+
+		// reloadなら
+		if (Args.check(args, 0, "reload", "rl")) {
+			// マップの再読み込み
+			LeonGunWar.getPlugin().getMapContainer().reloadMapsFromFile();
+
+			// Lobby Spawnの読み込み
+			LeonGunWar.getPlugin().getManager().loadLobbySpawnLocation();
+
+			// 設定ファイルの読み込み
+			try {
+				LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
+			} catch (Exception ex) {
+				LeonGunWar.getPlugin().getLogger().log(Level.WARNING, "設定ファイルの読み込みに失敗しました。", ex);
+				sender.sendMessage(Chat.f("{0}&cKillStreaks.ymlの読み込みに失敗しました。", LeonGunWar.GAME_PREFIX));
+				return true;
+			}
+
+			sender.sendMessage(Chat.f("{0}&a設定とマップのリロードが完了しました。", LeonGunWar.GAME_PREFIX));
 			return true;
 		}
 
