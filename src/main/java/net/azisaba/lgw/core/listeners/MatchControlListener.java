@@ -109,6 +109,11 @@ public class MatchControlListener implements Listener {
 		});
 
 		for (Player p : allPlayers) {
+
+			if (p.isDead()) {
+				p.spigot().respawn();
+			}
+
 			// スポーンにTP
 			p.teleport(LeonGunWar.getPlugin().getManager().getLobbySpawnLocation());
 

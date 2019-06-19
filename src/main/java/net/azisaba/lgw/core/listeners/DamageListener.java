@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -37,7 +38,7 @@ public class DamageListener implements Listener {
 	 * プレイヤーを殺したことを検知するリスナー
 	 * 死亡したプレイヤーの処理は他のリスナーで行います
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onKill(PlayerDeathEvent e) {
 		// 試合中でなければreturn
 		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
@@ -74,7 +75,7 @@ public class DamageListener implements Listener {
 	/**
 	 * 試合中のプレイヤーが死亡した場合、死亡カウントを増加させ、即時リスポーンさせます
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onDeath(PlayerDeathEvent e) {
 		Player deader = e.getEntity();
 
