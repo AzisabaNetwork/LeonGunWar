@@ -1,7 +1,5 @@
 package net.azisaba.lgw.core;
 
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -85,11 +83,7 @@ public class LeonGunWar extends JavaPlugin {
 		// 設定ファイルを読み込むクラスの初期化
 		killStreaksConfig = new KillStreaksConfig(this);
 		// 設定ファイルを読み込む
-		try {
-			killStreaksConfig.loadConfig();
-		} catch (Exception ex) {
-			getLogger().log(Level.WARNING, "設定ファイルの読み込みに失敗しました。", ex);
-		}
+		killStreaksConfig.loadConfig();
 
 		// 初期化が必要なファイルを初期化する
 		mapContainer.loadMaps();

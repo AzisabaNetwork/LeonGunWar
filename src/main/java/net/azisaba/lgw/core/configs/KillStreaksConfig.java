@@ -13,6 +13,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 
 @Getter
 public class KillStreaksConfig extends Config {
@@ -27,6 +28,7 @@ public class KillStreaksConfig extends Config {
 		super(plugin, Paths.get("configs/killStreaks.yml"), Paths.get("killStreaks.yml"));
 	}
 
+	@SneakyThrows
 	@Override
 	public void loadConfig() {
 		super.loadConfig();

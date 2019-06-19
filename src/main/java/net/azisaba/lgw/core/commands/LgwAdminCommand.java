@@ -1,7 +1,6 @@
 package net.azisaba.lgw.core.commands;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -129,13 +128,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 			LeonGunWar.getPlugin().getManager().loadLobbySpawnLocation();
 
 			// 設定ファイルの読み込み
-			try {
-				LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
-			} catch (Exception ex) {
-				LeonGunWar.getPlugin().getLogger().log(Level.WARNING, "設定ファイルの読み込みに失敗しました。", ex);
-				sender.sendMessage(Chat.f("{0}&cKillStreaks.ymlの読み込みに失敗しました。", LeonGunWar.GAME_PREFIX));
-				return true;
-			}
+			LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
 
 			sender.sendMessage(Chat.f("{0}&a設定とマップのリロードが完了しました。", LeonGunWar.GAME_PREFIX));
 			return true;
@@ -147,7 +140,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if (args.length == 1) {
-			return Args.complete(args, 0, "debug_start", "teleport", "tp");
+			return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
 		}
 		if (args.length == 2 && Args.check(args, 0, "teleport", "tp")) {
 			return Args.complete(args, 1, LeonGunWar.getPlugin().getMapContainer().getAllGameMap().stream()

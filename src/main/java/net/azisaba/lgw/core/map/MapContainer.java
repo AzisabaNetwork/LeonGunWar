@@ -55,7 +55,7 @@ public class MapContainer {
 		allGameMap.clear();
 
 		// 保存されているマップデータを収集
-		allGameMap.addAll(LeonGunWar.getPlugin().getMapLoader().loadMapData());
-		LeonGunWar.getPlugin().getLogger().info(allGameMap.size() + " 個のマップをロードしました。");
+		loaded = false;
+		loadMaps();
 	}
 }
