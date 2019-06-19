@@ -741,6 +741,12 @@ public class MatchManager {
 	 * @return 対象のプレイヤーがリスポーンするべき場所
 	 */
 	public Location getRespawnLocation(Player p) {
+
+		// 試合をしていなければlobbySpawnを返す
+		if (!isMatching) {
+			return lobbySpawnLocation;
+		}
+
 		// チームを取得
 		BattleTeam playerTeam = getBattleTeam(p);
 		// スポーン地点
