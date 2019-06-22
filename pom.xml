@@ -70,6 +70,10 @@
 			<id>sk89q-repo</id>
 			<url>https://maven.sk89q.com/repo/</url>
 		</repository>
+		<repository>
+			<id>azisaba-repo</id>
+			<url>https://repo.azisaba.net/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -101,6 +105,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.8</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.azisaba</groupId>
+			<artifactId>PlayerSettings</artifactId>
+			<version>1.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
