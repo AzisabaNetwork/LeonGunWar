@@ -22,6 +22,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -45,6 +46,8 @@ import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.LocationLoader;
+import net.azisaba.playersettings.PlayerSettings;
+import net.azisaba.playersettings.util.SettingsData;
 
 import lombok.Data;
 
@@ -578,6 +581,32 @@ public class MatchManager {
 				.ifPresent(entry -> setUpPlayer(p, entry.getKey()));
 
 		Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
+
+		// 設定でエントリーするようになっていればエントリーする
+		// Pluginが無効化されていたらreturn
+		Plugin playerSettingsPlugin = Bukkit.getPluginManager().getPlugin("PlayerSettings");
+		if (playerSettingsPlugin == null || !playerSettingsPlugin.isEnabled()) {
+			return true;
+		}
+
+		// 設定を取得
+		SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(p);
+		boolean enableEntry = data.isSet("LeonGunWar.EntryOnRejoin") && data.getBoolean("LeonGunWar.EntryOnRejoin");
+
+		// 有効ならエントリーする
+		if (enableEntry) {
+
+			if (!entryPlayers.contains(p)) {
+				// エントリー追加
+				entryPlayers.add(p);
+
+				// イベント呼び出し
+				PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
+				Bukkit.getPluginManager().callEvent(event);
+
+				p.sendMessage(Chat.f("{0}&7設定に基づいて試合にエントリーしました", LeonGunWar.GAME_PREFIX));
+			}
+		}
 
 		return true;
 	}
