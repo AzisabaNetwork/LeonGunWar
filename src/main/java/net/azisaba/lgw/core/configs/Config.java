@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.configs;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -45,18 +47,17 @@ public class Config {
 		return Files.isRegularFile(getPath());
 	}
 
-	@SneakyThrows
+	@SneakyThrows(value = { IOException.class })
 	public String loadAsString() {
 		return Files.lines(getPath()).collect(Collectors.joining(System.lineSeparator()));
 	}
 
-	@SneakyThrows
 	public String loadResourceAsString() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(getResource(), StandardCharsets.UTF_8));
 		return reader.lines().collect(Collectors.joining(System.lineSeparator()));
 	}
 
-	@SneakyThrows
+	@SneakyThrows(value = { InvalidConfigurationException.class })
 	public void loadConfig() {
 		if (exists()) {
 			config.loadFromString(loadAsString());
@@ -70,7 +71,7 @@ public class Config {
 		saveResource(true);
 	}
 
-	@SneakyThrows
+	@SneakyThrows(value = { IOException.class })
 	public void saveResource(boolean async) {
 		if (async) {
 			executor.execute(() -> saveResource(false));
@@ -84,7 +85,7 @@ public class Config {
 		saveConfig(true);
 	}
 
-	@SneakyThrows
+	@SneakyThrows(value = { IOException.class })
 	public void saveConfig(boolean async) {
 		if (async) {
 			executor.execute(() -> saveConfig(false));

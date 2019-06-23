@@ -28,7 +28,7 @@ public class KillStreaksConfig extends Config {
 		super(plugin, Paths.get("configs/killStreaks.yml"), Paths.get("killStreaks.yml"));
 	}
 
-	@SneakyThrows
+	@SneakyThrows(value = { Exception.class })
 	@Override
 	public void loadConfig() {
 		super.loadConfig();

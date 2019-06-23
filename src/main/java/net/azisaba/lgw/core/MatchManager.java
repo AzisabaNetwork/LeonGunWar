@@ -50,6 +50,7 @@ import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
 
 import lombok.Data;
+import lombok.NonNull;
 
 /**
  *
@@ -424,12 +425,9 @@ public class MatchManager {
 	 * @param team プレイヤーリストを取得したいチーム
 	 * @return チームのプレイヤーリスト
 	 *
-	 * @exception IllegalArgumentException teamがnullの場合
+	 * @exception NullPointerException teamがnullの場合
 	 */
-	public List<Player> getTeamPlayers(BattleTeam team) {
-		// teamがnullならIllegalArgumentException
-		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
-
+	public List<Player> getTeamPlayers(@NonNull BattleTeam team) {
 		// 取得したプレイヤーリストを返す
 		return getScoreboardTeam(team).getEntries().stream()
 				.map(Bukkit::getPlayerExact)
@@ -515,20 +513,14 @@ public class MatchManager {
 	 * @param team ポイントを取得したいチーム
 	 * @return 指定したチームの現在のポイント
 	 *
-	 * @exception IllegalArgumentException teamがnullの場合
+	 * @exception NullPointerException teamがnullの場合
 	 */
-	public int getCurrentTeamPoint(BattleTeam team) {
-		// teamがnullならIllegalArgumentException
-		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
-
+	public int getCurrentTeamPoint(@NonNull BattleTeam team) {
 		// ポイント取得、無ければ0
 		return pointMap.getOrDefault(team, 0);
 	}
 
-	public int getCurrentTeamPoint(Team team) {
-		// teamがnullならIllegalArgumentException
-		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
-
+	public int getCurrentTeamPoint(@NonNull Team team) {
 		// battleTeamに変換
 		BattleTeam battleTeam = getBattleTeam(team);
 
@@ -545,12 +537,9 @@ public class MatchManager {
 	 * 指定したチームに1ポイントを追加します。
 	 *
 	 * @param team ポイントを追加したいチーム
-	 * @exception IllegalArgumentException チームがRED, BLUE以外の場合
+	 * @exception NullPointerException teamがnullの場合
 	 */
-	public void addTeamPoint(BattleTeam team) {
-		// REDでもBLUEでもなければIllegalArgumentException
-		Preconditions.checkNotNull(team, "\"team\" mustn't be null.");
-
+	public void addTeamPoint(@NonNull BattleTeam team) {
 		// 現在のポイント取得、無ければ0
 		int currentPoint = pointMap.getOrDefault(team, 0);
 

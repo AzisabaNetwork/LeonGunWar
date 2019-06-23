@@ -79,23 +79,24 @@ public class MatchModeSignListener implements Listener {
 		}
 
 		// モードを指定
-		try {
-			LeonGunWar.getPlugin().getManager().setMatchMode(mode);
-			Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-			Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
-			Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
-			Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-
-			// 音を鳴らす
-			Bukkit.getOnlinePlayers().forEach(player -> {
-				player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
-			});
-
-			// 全プレイヤーにQuickメッセージを送信
-			LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));
-		} catch (IllegalStateException ex) {
+		if (LeonGunWar.getPlugin().getManager().getMatchMode() != null) {
 			p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
+			return;
 		}
+
+		LeonGunWar.getPlugin().getManager().setMatchMode(mode);
+		Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+		Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+		Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
+		Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+
+		// 音を鳴らす
+		Bukkit.getOnlinePlayers().forEach(player -> {
+			player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
+		});
+
+		// 全プレイヤーにQuickメッセージを送信
+		LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));
 	}
 
 	@EventHandler

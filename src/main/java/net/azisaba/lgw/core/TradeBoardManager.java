@@ -60,7 +60,7 @@ public class TradeBoardManager {
 					UUID uuid = null;
 					try {
 						uuid = UUID.fromString(uuidStr);
-					} catch (Exception e) {
+					} catch (Exception ex) {
 						// pass
 					}
 
@@ -171,9 +171,9 @@ public class TradeBoardManager {
 			// セーブ
 			try {
 				conf.save(file);
-			} catch (IOException e) {
+			} catch (IOException ex) {
 				// 失敗したらエラーを出力する
-				e.printStackTrace();
+				ex.printStackTrace();
 			}
 		});
 	}
@@ -190,7 +190,7 @@ public class TradeBoardManager {
 			World world = Bukkit.getWorld(split[0]);
 			loc = new Location(world, Integer.parseInt(split[1]), Integer.parseInt(split[2]),
 					Integer.parseInt(split[3]));
-		} catch (Exception e) {
+		} catch (Exception ex) {
 			return null;
 		}
 

@@ -31,8 +31,6 @@ public class MapLoader {
 	/**
 	 * 保存されているマップデータを読み込み、MapDataのリストを返します
 	 * @return 読み込まれたマップデータのリスト
-	 *
-	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
 	protected List<GameMap> loadMapData() {
 		// dataFolderがnullの場合はフォルダを指定
@@ -97,7 +95,7 @@ public class MapLoader {
 					// キーがBattleTeamに含まれていない場合はcontinue
 					try {
 						team = BattleTeam.valueOf(key.toUpperCase());
-					} catch (Exception ex) {
+					} catch (IllegalArgumentException ex) {
 						continue;
 					}
 
@@ -138,8 +136,6 @@ public class MapLoader {
 	 * @param 上書きを許可するかどうか
 	 *
 	 * @return データを保存したかどうか
-	 *
-	 * @exception IllegalStateException 初期化される前にメソッドが呼び出された場合
 	 */
 	public boolean saveGameMap(GameMap map, String fileName, boolean allowOverwrite) {
 		// dataFolderがnullの場合はフォルダを指定

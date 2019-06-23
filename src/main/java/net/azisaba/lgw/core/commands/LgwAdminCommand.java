@@ -122,7 +122,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 		// reloadなら
 		if (Args.check(args, 0, "reload", "rl")) {
 			// マップの再読み込み
-			LeonGunWar.getPlugin().getMapContainer().reloadMapsFromFile();
+			LeonGunWar.getPlugin().getMapContainer().loadMaps();
 
 			// Lobby Spawnの読み込み
 			LeonGunWar.getPlugin().getManager().loadLobbySpawnLocation();

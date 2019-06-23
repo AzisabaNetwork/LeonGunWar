@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
-import com.google.common.base.Preconditions;
+import lombok.NonNull;
 
 /**
  *
@@ -30,12 +30,9 @@ public class KillDeathCounter {
 	 * プレイヤーのキル数を1追加します
 	 * @param player キル数を追加したいプレイヤー
 	 *
-	 * @exception IllegalArgumentException playerがnullの場合
+	 * @exception NullPointerException playerがnullの場合
 	 */
-	public void addKill(Player player) {
-		// playerがnullの場合 IllegalArgumentException
-		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
-
+	public void addKill(@NonNull Player player) {
 		// プレイヤー情報を保存
 		updatePlayerName(player);
 
@@ -54,12 +51,9 @@ public class KillDeathCounter {
 	 * @param player キル数を取得したいプレイヤー
 	 * @return プレイヤーのキル数
 	 *
-	 * @exception IllegalArgumentException playerがnullの場合
+	 * @exception NullPointerException playerがnullの場合
 	 */
-	public int getKills(Player player) {
-		// playerがnullの場合 IllegalArgumentException
-		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
-
+	public int getKills(@NonNull Player player) {
 		// プレイヤー情報を保存
 		updatePlayerName(player);
 
@@ -71,12 +65,9 @@ public class KillDeathCounter {
 	 * プレイヤーのデス数を1追加します
 	 * @param player デス数を追加したいプレイヤー
 	 *
-	 * @exception IllegalArgumentException playerがnullの場合
+	 * @exception NullPointerException playerがnullの場合
 	 */
-	public void addDeath(Player player) {
-		// playerがnullの場合 IllegalArgumentException
-		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
-
+	public void addDeath(@NonNull Player player) {
 		// プレイヤー情報を保存
 		updatePlayerName(player);
 
@@ -95,12 +86,9 @@ public class KillDeathCounter {
 	 * @param player デス数を取得したいプレイヤー
 	 * @return プレイヤーのデス数
 	 *
-	 * @exception IllegalArgumentException playerがnullの場合
+	 * @exception NullPointerException playerがnullの場合
 	 */
-	public int getDeaths(Player player) {
-		// playerがnullの場合 IllegalArgumentException
-		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
-
+	public int getDeaths(@NonNull Player player) {
 		// プレイヤー情報を保存
 		updatePlayerName(player);
 
@@ -112,12 +100,9 @@ public class KillDeathCounter {
 	 * プレイヤーのアシスト数を1追加します
 	 * @param player アシスト数を追加したいプレイヤー
 	 *
-	 * @exception IllegalArgumentException playerがnullの場合
+	 * @exception NullPointerException playerがnullの場合
 	 */
-	public void addAssist(Player player) {
-		// playerがnullの場合 IllegalArgumentException
-		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
-
+	public void addAssist(@NonNull Player player) {
 		// プレイヤー情報を保存
 		updatePlayerName(player);
 
@@ -136,12 +121,9 @@ public class KillDeathCounter {
 	 * @param player アシスト数を取得したいプレイヤー
 	 * @return プレイヤーのアシスト数
 	 *
-	 * @exception IllegalArgumentException playerがnullの場合
+	 * @exception NullPointerException playerがnullの場合
 	 */
-	public int getAssists(Player player) {
-		// playerがnullの場合 IllegalArgumentException
-		Preconditions.checkNotNull(player, "\"player\" mustn't be null.");
-
+	public int getAssists(@NonNull Player player) {
 		// プレイヤー情報を保存
 		updatePlayerName(player);
 
