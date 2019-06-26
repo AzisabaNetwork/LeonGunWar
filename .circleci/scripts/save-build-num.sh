@@ -1,3 +1,0 @@
-#! /bin/bash
-
-printenv CIRCLE_BUILD_NUM > CIRCLE_PARENT_BUILD_NUM
