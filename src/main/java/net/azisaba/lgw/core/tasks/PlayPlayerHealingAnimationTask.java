@@ -11,24 +11,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlayPlayerHealingAnimationTask extends BukkitRunnable {
 
-	private final Player p;
+    private final Player p;
 
-	@Override
-	public void run() {
-		// 体力と空腹度を1にする
-		p.setHealth(1);
-		p.setFoodLevel(1);
+    @Override
+    public void run() {
+        // 体力と空腹度を1にする
+        p.setHealth(1);
+        p.setFoodLevel(1);
 
-		// 体力をカッコよく回復！
-		double maxHp = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
-		double diffHp = maxHp - p.getHealth();
-		PotionEffect healHpEffect = new PotionEffect(PotionEffectType.REGENERATION, (int) diffHp, 114514, false);
-		p.addPotionEffect(healHpEffect, true);
+        // 体力をカッコよく回復！
+        double maxHp = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
+        double diffHp = maxHp - p.getHealth();
+        PotionEffect healHpEffect = new PotionEffect(PotionEffectType.REGENERATION, (int) diffHp, 114514, false);
+        p.addPotionEffect(healHpEffect, true);
 
-		// 空腹度をカッコよく回復！
-		double maxFood = 40;
-		double diffFood = maxFood - p.getFoodLevel();
-		PotionEffect healFoodEffect = new PotionEffect(PotionEffectType.SATURATION, (int) diffFood, 1, false);
-		p.addPotionEffect(healFoodEffect, true);
-	}
+        // 空腹度をカッコよく回復！
+        double maxFood = 40;
+        double diffFood = maxFood - p.getFoodLevel();
+        PotionEffect healFoodEffect = new PotionEffect(PotionEffectType.SATURATION, (int) diffFood, 1, false);
+        p.addPotionEffect(healFoodEffect, true);
+    }
 }

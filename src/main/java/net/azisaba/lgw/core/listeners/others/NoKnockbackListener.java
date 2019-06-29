@@ -9,21 +9,22 @@ import org.bukkit.util.Vector;
 
 /**
  * ノックバックを無効化するためのクラス
+ * 
  * @author siloneco
  *
  */
 public class NoKnockbackListener implements Listener {
 
-	/**
-	 * プレイヤーがノックバックしたときにキャンセルするリスナー
-	 */
-	@EventHandler
-	public void onPlayerVelocity(PlayerVelocityEvent e) {
-		Player p = e.getPlayer();
-		if (p.getLastDamageCause() != null && p.getLastDamageCause().getCause() != DamageCause.PROJECTILE) {
-			e.setVelocity(new Vector());
-		} else {
-			e.setCancelled(true);
-		}
-	}
+    /**
+     * プレイヤーがノックバックしたときにキャンセルするリスナー
+     */
+    @EventHandler
+    public void onPlayerVelocity(PlayerVelocityEvent e) {
+        Player p = e.getPlayer();
+        if ( p.getLastDamageCause() != null && p.getLastDamageCause().getCause() != DamageCause.PROJECTILE ) {
+            e.setVelocity(new Vector());
+        } else {
+            e.setCancelled(true);
+        }
+    }
 }

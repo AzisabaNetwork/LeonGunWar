@@ -10,10 +10,10 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class SignWithColorListener implements Listener {
 
-	@EventHandler
-	public void onSignWithColor(SignChangeEvent event) {
-		String[] lines = event.getLines();
-		IntStream.range(0, lines.length)
-				.forEach(i -> event.setLine(i, Chat.f(lines[i])));
-	}
+    @EventHandler
+    public void onSignWithColor(SignChangeEvent event) {
+        String[] lines = event.getLines();
+        IntStream.range(0, lines.length)
+                .forEach(i -> event.setLine(i, Chat.f(lines[i])));
+    }
 }

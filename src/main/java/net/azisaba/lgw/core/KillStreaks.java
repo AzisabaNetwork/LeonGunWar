@@ -14,68 +14,68 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class KillStreaks {
 
-	private final Map<UUID, AtomicInteger> streaksMap = new HashMap<>();
+    private final Map<UUID, AtomicInteger> streaksMap = new HashMap<>();
 
-	public void clear() {
-		streaksMap.clear();
-	}
+    public void clear() {
+        streaksMap.clear();
+    }
 
-	public void removedBy(Player player, Player killer) {
-		int streaks = get(player).get();
-		int minStreaks = LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
-				.sorted(Comparator.comparing(Map.Entry::getKey))
-				.map(Map.Entry::getKey)
-				.findFirst()
-				.orElse(-1);
+    public void removedBy(Player player, Player killer) {
+        int streaks = get(player).get();
+        int minStreaks = LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(-1);
 
-		if (killer != null && streaks >= minStreaks) {
-			Bukkit.broadcastMessage(
-					Chat.f(LeonGunWar.getPlugin().getKillStreaksConfig().getRemoved(), LeonGunWar.GAME_PREFIX,
-							killer.getDisplayName(), player.getDisplayName()));
-		}
+        if ( killer != null && streaks >= minStreaks ) {
+            Bukkit.broadcastMessage(
+                    Chat.f(LeonGunWar.getPlugin().getKillStreaksConfig().getRemoved(), LeonGunWar.GAME_PREFIX,
+                            killer.getDisplayName(), player.getDisplayName()));
+        }
 
-		streaksMap.remove(player.getUniqueId());
-	}
+        streaksMap.remove(player.getUniqueId());
+    }
 
-	public AtomicInteger get(Player player) {
-		streaksMap.putIfAbsent(player.getUniqueId(), new AtomicInteger(0));
-		return streaksMap.get(player.getUniqueId());
-	}
+    public AtomicInteger get(Player player) {
+        streaksMap.putIfAbsent(player.getUniqueId(), new AtomicInteger(0));
+        return streaksMap.get(player.getUniqueId());
+    }
 
-	public void add(Player player) {
-		// カウントを追加
-		int streaks = get(player).incrementAndGet();
+    public void add(Player player) {
+        // カウントを追加
+        int streaks = get(player).incrementAndGet();
 
-		// 報酬を付与
-		LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
-				.filter(entry -> streaks == entry.getKey())
-				.map(Map.Entry::getValue)
-				.map(Map.Entry::getValue)
-				.flatMap(List::stream)
-				.map(command -> Chat.f(command, player.getName()))
-				.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
-		LeonGunWar.getPlugin().getKillStreaksConfig().getLevels().entrySet().stream()
-				.filter(entry -> streaks % entry.getKey() == 0)
-				.map(Map.Entry::getValue)
-				.map(Map.Entry::getValue)
-				.flatMap(List::stream)
-				.map(command -> Chat.f(command, player.getName()))
-				.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+        // 報酬を付与
+        LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
+                .filter(entry -> streaks == entry.getKey())
+                .map(Map.Entry::getValue)
+                .map(Map.Entry::getValue)
+                .flatMap(List::stream)
+                .map(command -> Chat.f(command, player.getName()))
+                .forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+        LeonGunWar.getPlugin().getKillStreaksConfig().getLevels().entrySet().stream()
+                .filter(entry -> streaks % entry.getKey() == 0)
+                .map(Map.Entry::getValue)
+                .map(Map.Entry::getValue)
+                .flatMap(List::stream)
+                .map(command -> Chat.f(command, player.getName()))
+                .forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
 
-		// キルストリークをお知らせ
-		LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
-				.filter(entry -> streaks == entry.getKey())
-				.map(Map.Entry::getValue)
-				.map(Map.Entry::getKey)
-				.flatMap(List::stream)
-				.map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
-				.forEach(Bukkit::broadcastMessage);
-		LeonGunWar.getPlugin().getKillStreaksConfig().getLevels().entrySet().stream()
-				.filter(entry -> streaks % entry.getKey() == 0)
-				.map(Map.Entry::getValue)
-				.map(Map.Entry::getKey)
-				.flatMap(List::stream)
-				.map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
-				.forEach(Bukkit::broadcastMessage);
-	}
+        // キルストリークをお知らせ
+        LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
+                .filter(entry -> streaks == entry.getKey())
+                .map(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .flatMap(List::stream)
+                .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
+                .forEach(Bukkit::broadcastMessage);
+        LeonGunWar.getPlugin().getKillStreaksConfig().getLevels().entrySet().stream()
+                .filter(entry -> streaks % entry.getKey() == 0)
+                .map(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .flatMap(List::stream)
+                .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
+                .forEach(Bukkit::broadcastMessage);
+    }
 }

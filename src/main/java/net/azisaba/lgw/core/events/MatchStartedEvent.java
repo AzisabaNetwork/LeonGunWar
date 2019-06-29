@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * マッチが開始されたときに呼び出されるイベント
+ * 
  * @author siloneco
  *
  */
@@ -23,27 +24,27 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class MatchStartedEvent extends Event {
 
-	// 試合を行うマップ
-	private final GameMap map;
-	// 各チームのプレイヤーリスト
-	private final Map<BattleTeam, List<Player>> teamPlayers;
+    // 試合を行うマップ
+    private final GameMap map;
+    // 各チームのプレイヤーリスト
+    private final Map<BattleTeam, List<Player>> teamPlayers;
 
-	private static final HandlerList HANDLERS_LIST = new HandlerList();
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-	public List<Player> getAllTeamPlayers() {
-		return teamPlayers.values().stream().flatMap(List::stream).collect(Collectors.toList());
-	}
+    public List<Player> getAllTeamPlayers() {
+        return teamPlayers.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
 
-	public List<Player> getTeamPlayers(BattleTeam team) {
-		return teamPlayers.get(team);
-	}
+    public List<Player> getTeamPlayers(BattleTeam team) {
+        return teamPlayers.get(team);
+    }
 
-	@Override
-	public HandlerList getHandlers() {
-		return HANDLERS_LIST;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLERS_LIST;
+    }
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS_LIST;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

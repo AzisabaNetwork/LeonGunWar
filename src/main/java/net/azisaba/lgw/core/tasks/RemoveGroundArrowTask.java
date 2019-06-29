@@ -9,14 +9,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RemoveGroundArrowTask extends BukkitRunnable {
 
-	private final Arrow arrow;
+    private final Arrow arrow;
 
-	@Override
-	public void run() {
-		// ブロックに刺さっているか確認
-		if (arrow != null && arrow.isOnGround()) {
-			// 矢を削除
-			arrow.remove();
-		}
-	}
+    @Override
+    public void run() {
+        // ブロックに刺さっているか確認
+        if ( arrow != null && arrow.isOnGround() ) {
+            // 矢を削除
+            arrow.remove();
+        }
+    }
 }

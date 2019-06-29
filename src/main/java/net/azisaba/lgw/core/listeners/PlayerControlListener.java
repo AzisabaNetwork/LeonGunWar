@@ -22,90 +22,90 @@ import net.azisaba.lgw.core.util.MatchMode;
 
 public class PlayerControlListener implements Listener {
 
-	/**
-	 * 試合中のプレイヤーがサーバーから退出した場合に試合から退出させるリスナー
-	 */
-	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent e) {
-		Player p = e.getPlayer();
+    /**
+     * 試合中のプレイヤーがサーバーから退出した場合に試合から退出させるリスナー
+     */
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
 
-		MatchManager manager = LeonGunWar.getPlugin().getManager();
-		// プレイヤーが試合中でなければreturn
-		if (!manager.isPlayerMatching(p)) {
-			return;
-		}
+        MatchManager manager = LeonGunWar.getPlugin().getManager();
+        // プレイヤーが試合中でなければreturn
+        if ( !manager.isPlayerMatching(p) ) {
+            return;
+        }
 
-		// 試合から退出
-		manager.kickPlayer(p);
-	}
+        // 試合から退出
+        manager.kickPlayer(p);
+    }
 
-	/**
-	 * LDMでリーダーが退出した際にゲームを終了させるリスナー
-	 */
-	@EventHandler
-	public void onPlayerKicked(PlayerKickMatchEvent e) {
-		Player p = e.getPlayer();
-		MatchManager manager = LeonGunWar.getPlugin().getManager();
+    /**
+     * LDMでリーダーが退出した際にゲームを終了させるリスナー
+     */
+    @EventHandler
+    public void onPlayerKicked(PlayerKickMatchEvent e) {
+        Player p = e.getPlayer();
+        MatchManager manager = LeonGunWar.getPlugin().getManager();
 
-		// LDMではなかった場合return
-		if (manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH) {
-			return;
-		}
+        // LDMではなかった場合return
+        if ( manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH ) {
+            return;
+        }
 
-		// どれかのチームの人数が0人の場合はキャンセル (他のListenerが対応するため)
-		if (manager.getTeamPlayers().values().stream()
-				.anyMatch(List::isEmpty)) {
-			return;
-		}
+        // どれかのチームの人数が0人の場合はキャンセル (他のListenerが対応するため)
+        if ( manager.getTeamPlayers().values().stream()
+                .anyMatch(List::isEmpty) ) {
+            return;
+        }
 
-		// 全チームのリーダーを取得
-		Map<BattleTeam, Player> leaderMap = manager.getLDMLeaderMap();
+        // 全チームのリーダーを取得
+        Map<BattleTeam, Player> leaderMap = manager.getLDMLeaderMap();
 
-		// プレイヤーがリーダーだった場合、勝者は無しで試合を終了させる
-		if (leaderMap.values().contains(p)) {
-			// イベント作成、呼び出し
-			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(),
-					manager.getTeamPlayers());
-			Bukkit.getPluginManager().callEvent(event);
-		}
-	}
+        // プレイヤーがリーダーだった場合、勝者は無しで試合を終了させる
+        if ( leaderMap.values().contains(p) ) {
+            // イベント作成、呼び出し
+            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(),
+                    manager.getTeamPlayers());
+            Bukkit.getPluginManager().callEvent(event);
+        }
+    }
 
-	/**
-	 * プレイヤーが退出したときにエントリーを解除するリスナー
-	 */
-	@EventHandler(priority = EventPriority.HIGH)
-	public void removeEntryWhenPlayerLeaveServer(PlayerQuitEvent e) {
-		LeonGunWar.getPlugin().getManager().removeEntryPlayer(e.getPlayer());
-	}
+    /**
+     * プレイヤーが退出したときにエントリーを解除するリスナー
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void removeEntryWhenPlayerLeaveServer(PlayerQuitEvent e) {
+        LeonGunWar.getPlugin().getManager().removeEntryPlayer(e.getPlayer());
+    }
 
-	@EventHandler
-	public void onChangeWorld(PlayerChangedWorldEvent e) {
-		Player p = e.getPlayer();
+    @EventHandler
+    public void onChangeWorld(PlayerChangedWorldEvent e) {
+        Player p = e.getPlayer();
 
-		// 試合中ではなかったらreturn
-		if (!LeonGunWar.getPlugin().getManager().isMatching()) {
-			return;
-		}
+        // 試合中ではなかったらreturn
+        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+            return;
+        }
 
-		// プレイヤーが試合をしていなかったらreturn
-		if (!LeonGunWar.getPlugin().getManager().getAllTeamPlayers().contains(p)) {
-			return;
-		}
+        // プレイヤーが試合をしていなかったらreturn
+        if ( !LeonGunWar.getPlugin().getManager().getAllTeamPlayers().contains(p) ) {
+            return;
+        }
 
-		// Fromが試合のワールドではなかったらreturn
-		if (e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
-			return;
-		}
+        // Fromが試合のワールドではなかったらreturn
+        if ( e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld() ) {
+            return;
+        }
 
-		// 退出
-		LeonGunWar.getPlugin().getManager().leavePlayer(p);
-	}
+        // 退出
+        LeonGunWar.getPlugin().getManager().leavePlayer(p);
+    }
 
-	/**
-	 * 参加時にQuickメッセージを表示します
-	 */
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void sendQuickMessage(PlayerJoinEvent e) {
-		LeonGunWar.getQuickBar().send(e.getPlayer());
-	}
+    /**
+     * 参加時にQuickメッセージを表示します
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void sendQuickMessage(PlayerJoinEvent e) {
+        LeonGunWar.getQuickBar().send(e.getPlayer());
+    }
 }

@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 試合の残り秒数が変化したときに呼び出されるイベント
+ * 
  * @author siloneco
  *
  */
@@ -15,17 +16,17 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class MatchTimeChangedEvent extends Event {
 
-	// 現在の残り秒数
-	private final int timeLeft;
+    // 現在の残り秒数
+    private final int timeLeft;
 
-	private static final HandlerList HANDLERS_LIST = new HandlerList();
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-	@Override
-	public HandlerList getHandlers() {
-		return HANDLERS_LIST;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLERS_LIST;
+    }
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS_LIST;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

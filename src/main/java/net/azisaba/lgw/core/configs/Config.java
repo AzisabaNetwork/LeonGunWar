@@ -22,76 +22,76 @@ import lombok.SneakyThrows;
 @RequiredArgsConstructor
 public class Config {
 
-	private static final ExecutorService executor = Executors.newCachedThreadPool();
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
 
-	@NonNull
-	protected final Plugin plugin;
+    @NonNull
+    protected final Plugin plugin;
 
-	protected final YamlConfiguration config = new YamlConfiguration();
+    protected final YamlConfiguration config = new YamlConfiguration();
 
-	@NonNull
-	private final Path resourcePath;
+    @NonNull
+    private final Path resourcePath;
 
-	@NonNull
-	private final Path relativePath;
+    @NonNull
+    private final Path relativePath;
 
-	public InputStream getResource() {
-		return plugin.getClass().getClassLoader().getResourceAsStream(resourcePath.toString());
-	}
+    public InputStream getResource() {
+        return plugin.getClass().getClassLoader().getResourceAsStream(resourcePath.toString());
+    }
 
-	public Path getPath() {
-		return plugin.getDataFolder().toPath().resolve(relativePath);
-	}
+    public Path getPath() {
+        return plugin.getDataFolder().toPath().resolve(relativePath);
+    }
 
-	public boolean exists() {
-		return Files.isRegularFile(getPath());
-	}
+    public boolean exists() {
+        return Files.isRegularFile(getPath());
+    }
 
-	@SneakyThrows(value = { IOException.class })
-	public String loadAsString() {
-		return Files.lines(getPath()).collect(Collectors.joining(System.lineSeparator()));
-	}
+    @SneakyThrows(value = { IOException.class })
+    public String loadAsString() {
+        return Files.lines(getPath()).collect(Collectors.joining(System.lineSeparator()));
+    }
 
-	public String loadResourceAsString() {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(getResource(), StandardCharsets.UTF_8));
-		return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-	}
+    public String loadResourceAsString() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(getResource(), StandardCharsets.UTF_8));
+        return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+    }
 
-	@SneakyThrows(value = { InvalidConfigurationException.class })
-	public void loadConfig() {
-		if (exists()) {
-			config.loadFromString(loadAsString());
-		} else {
-			config.loadFromString(loadResourceAsString());
-			saveResource();
-		}
-	}
+    @SneakyThrows(value = { InvalidConfigurationException.class })
+    public void loadConfig() {
+        if ( exists() ) {
+            config.loadFromString(loadAsString());
+        } else {
+            config.loadFromString(loadResourceAsString());
+            saveResource();
+        }
+    }
 
-	public void saveResource() {
-		saveResource(true);
-	}
+    public void saveResource() {
+        saveResource(true);
+    }
 
-	@SneakyThrows(value = { IOException.class })
-	public void saveResource(boolean async) {
-		if (async) {
-			executor.execute(() -> saveResource(false));
-		} else {
-			Files.createDirectories(getPath().getParent());
-			Files.copy(getResource(), getPath());
-		}
-	}
+    @SneakyThrows(value = { IOException.class })
+    public void saveResource(boolean async) {
+        if ( async ) {
+            executor.execute(() -> saveResource(false));
+        } else {
+            Files.createDirectories(getPath().getParent());
+            Files.copy(getResource(), getPath());
+        }
+    }
 
-	public void saveConfig() {
-		saveConfig(true);
-	}
+    public void saveConfig() {
+        saveConfig(true);
+    }
 
-	@SneakyThrows(value = { IOException.class })
-	public void saveConfig(boolean async) {
-		if (async) {
-			executor.execute(() -> saveConfig(false));
-		} else {
-			Files.createDirectories(getPath().getParent());
-			Files.write(getPath(), config.saveToString().getBytes(StandardCharsets.UTF_8));
-		}
-	}
+    @SneakyThrows(value = { IOException.class })
+    public void saveConfig(boolean async) {
+        if ( async ) {
+            executor.execute(() -> saveConfig(false));
+        } else {
+            Files.createDirectories(getPath().getParent());
+            Files.write(getPath(), config.saveToString().getBytes(StandardCharsets.UTF_8));
+        }
+    }
 }

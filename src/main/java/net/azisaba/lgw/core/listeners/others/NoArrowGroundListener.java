@@ -10,24 +10,26 @@ import net.azisaba.lgw.core.tasks.RemoveGroundArrowTask;
 
 /**
  * 地面に当たった矢を削除するリスナーです。
+ * 
  * @author siloneco
  *
  */
 public class NoArrowGroundListener implements Listener {
 
-	/**
-	 * 矢がブロックに当たったことを検知し削除します
-	 * @param e
-	 */
-	@EventHandler
-	public void onProjectileHit(ProjectileHitEvent e) {
-		// 当たった飛び道具が矢でなければreturn
-		if (!(e.getEntity() instanceof Arrow)) {
-			return;
-		}
+    /**
+     * 矢がブロックに当たったことを検知し削除します
+     * 
+     * @param e
+     */
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent e) {
+        // 当たった飛び道具が矢でなければreturn
+        if ( !(e.getEntity() instanceof Arrow) ) {
+            return;
+        }
 
-		Arrow arrow = (Arrow) e.getEntity();
+        Arrow arrow = (Arrow) e.getEntity();
 
-		new RemoveGroundArrowTask(arrow).runTaskLater(LeonGunWar.getPlugin(), 0);
-	}
+        new RemoveGroundArrowTask(arrow).runTaskLater(LeonGunWar.getPlugin(), 0);
+    }
 }

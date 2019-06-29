@@ -10,17 +10,17 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 public class KillStreaksListener implements Listener {
 
-	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerDeath(PlayerDeathEvent e) {
-		Player deader = e.getEntity();
-		Player killer = deader.getKiller();
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        Player deader = e.getEntity();
+        Player killer = deader.getKiller();
 
-		// 自滅は無視
-		if (killer == null || killer == deader) {
-			return;
-		}
+        // 自滅は無視
+        if ( killer == null || killer == deader ) {
+            return;
+        }
 
-		// カウントを追加
-		LeonGunWar.getPlugin().getKillStreaks().add(killer);
-	}
+        // カウントを追加
+        LeonGunWar.getPlugin().getKillStreaks().add(killer);
+    }
 }

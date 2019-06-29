@@ -17,30 +17,31 @@ import net.azisaba.lgw.core.utils.Chat;
 /**
  *
  * TDMの処理をするリスナー
+ * 
  * @author siloneco
  *
  */
 public class TeamDeathMatchListener implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onTeamPointAdded(TeamPointIncreasedEvent e) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTeamPointAdded(TeamPointIncreasedEvent e) {
 
-		// TDMではない場合return
-		if (LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.TEAM_DEATH_MATCH) {
-			return;
-		}
+        // TDMではない場合return
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.TEAM_DEATH_MATCH ) {
+            return;
+        }
 
-		// 40か45ならメッセージを表示
-		if (e.getCurrentPoint() == 40 || e.getCurrentPoint() == 45) {
-			Bukkit.broadcastMessage(Chat.f("{0}&7残り &e{1}キル &7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX,
-					50 - e.getCurrentPoint(), e.getTeam().getTeamName()));
-		} else if (e.getCurrentPoint() == 50) {
-			MatchManager manager = LeonGunWar.getPlugin().getManager();
+        // 40か45ならメッセージを表示
+        if ( e.getCurrentPoint() == 40 || e.getCurrentPoint() == 45 ) {
+            Bukkit.broadcastMessage(Chat.f("{0}&7残り &e{1}キル &7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX,
+                    50 - e.getCurrentPoint(), e.getTeam().getTeamName()));
+        } else if ( e.getCurrentPoint() == 50 ) {
+            MatchManager manager = LeonGunWar.getPlugin().getManager();
 
-			// 試合終了
-			MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()),
-					manager.getTeamPlayers());
-			Bukkit.getPluginManager().callEvent(event);
-		}
-	}
+            // 試合終了
+            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()),
+                    manager.getTeamPlayers());
+            Bukkit.getPluginManager().callEvent(event);
+        }
+    }
 }

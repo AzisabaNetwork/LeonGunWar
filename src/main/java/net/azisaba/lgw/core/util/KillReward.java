@@ -10,6 +10,6 @@ import lombok.Data;
 @Data
 public class KillReward {
 
-	private final Function<Player, String> message;
-	private final Function<Player, List<String>> commands;
+    private final Function<Player, String> message;
+    private final Function<Player, List<String>> commands;
 }

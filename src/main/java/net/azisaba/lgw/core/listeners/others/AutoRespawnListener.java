@@ -12,20 +12,20 @@ import net.azisaba.lgw.core.tasks.PlayPlayerHealingAnimationTask;
 
 public class AutoRespawnListener implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onDeath(PlayerDeathEvent e) {
-		Player deader = e.getEntity();
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onDeath(PlayerDeathEvent e) {
+        Player deader = e.getEntity();
 
-		// リスポーン
-		deader.spigot().respawn();
-	}
+        // リスポーン
+        deader.spigot().respawn();
+    }
 
-	@EventHandler
-	public void onRespawn(PlayerRespawnEvent e) {
-		Player p = e.getPlayer();
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        Player p = e.getPlayer();
 
-		e.setRespawnLocation(LeonGunWar.getPlugin().getManager().getRespawnLocation(p));
+        e.setRespawnLocation(LeonGunWar.getPlugin().getManager().getRespawnLocation(p));
 
-		new PlayPlayerHealingAnimationTask(p).runTaskLater(LeonGunWar.getPlugin(), 0);
-	}
+        new PlayPlayerHealingAnimationTask(p).runTaskLater(LeonGunWar.getPlugin(), 0);
+    }
 }

@@ -19,77 +19,77 @@ import net.azisaba.lgw.core.utils.Chat;
 
 public class RespawnKillProtectionListener implements Listener {
 
-	private final long invincibleSeconds = 5;
+    private final long invincibleSeconds = 5;
 
-	private final Map<Player, Instant> remainTimes = new HashMap<>();
-	private final Map<Player, BukkitTask> taskMap = new HashMap<>();
+    private final Map<Player, Instant> remainTimes = new HashMap<>();
+    private final Map<Player, BukkitTask> taskMap = new HashMap<>();
 
-	@EventHandler
-	public void onDamageByEntity(EntityDamageByEntityEvent e) {
-		// ダメージを受けたEntityがプレイヤーでなければreturn
-		if (!(e.getEntity() instanceof Player)) {
-			return;
-		}
+    @EventHandler
+    public void onDamageByEntity(EntityDamageByEntityEvent e) {
+        // ダメージを受けたEntityがプレイヤーでなければreturn
+        if ( !(e.getEntity() instanceof Player) ) {
+            return;
+        }
 
-		Player victim = (Player) e.getEntity();
+        Player victim = (Player) e.getEntity();
 
-		// リスポーンから5秒以内ならキャンセル
-		if (Instant.now().isBefore(remainTimes.getOrDefault(victim, Instant.now()))) {
-			e.setCancelled(true);
+        // リスポーンから5秒以内ならキャンセル
+        if ( Instant.now().isBefore(remainTimes.getOrDefault(victim, Instant.now())) ) {
+            e.setCancelled(true);
 
-			Player attacker = null;
-			// 攻撃したEntityがプレイヤーならメッセージ送信対象に指定
-			if (e.getDamager() instanceof Player) {
-				attacker = (Player) e.getDamager();
-			} else if (e.getDamager() instanceof Projectile) {
-				// 攻撃したEntityが投げ物なら、投げたEntityを取得
-				ProjectileSource shooter = ((Projectile) e.getDamager()).getShooter();
+            Player attacker = null;
+            // 攻撃したEntityがプレイヤーならメッセージ送信対象に指定
+            if ( e.getDamager() instanceof Player ) {
+                attacker = (Player) e.getDamager();
+            } else if ( e.getDamager() instanceof Projectile ) {
+                // 攻撃したEntityが投げ物なら、投げたEntityを取得
+                ProjectileSource shooter = ((Projectile) e.getDamager()).getShooter();
 
-				// shooterがプレイヤーならメッセージ送信対象に指定
-				if (shooter instanceof Player) {
-					attacker = (Player) shooter;
-				}
-			}
+                // shooterがプレイヤーならメッセージ送信対象に指定
+                if ( shooter instanceof Player ) {
+                    attacker = (Player) shooter;
+                }
+            }
 
-			// attackerがnullではない場合、メッセージを送信
-			if (attacker != null) {
-				attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
-			}
-		}
-	}
+            // attackerがnullではない場合、メッセージを送信
+            if ( attacker != null ) {
+                attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
+            }
+        }
+    }
 
-	@EventHandler
-	public void onRespawn(PlayerRespawnEvent e) {
-		Player p = e.getPlayer();
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        Player p = e.getPlayer();
 
-		// リスポーン時間指定
-		remainTimes.put(p, Instant.now().plusSeconds(invincibleSeconds));
+        // リスポーン時間指定
+        remainTimes.put(p, Instant.now().plusSeconds(invincibleSeconds));
 
-		taskMap.compute(p, (key, task) -> {
-			// タスク終了
-			if (task != null) {
-				task.cancel();
-			}
+        taskMap.compute(p, (key, task) -> {
+            // タスク終了
+            if ( task != null ) {
+                task.cancel();
+            }
 
-			// タスク開始
-			return new RespawnKillProtectionTask(p, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
-		});
-	}
+            // タスク開始
+            return new RespawnKillProtectionTask(p, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+        });
+    }
 
-	@EventHandler
-	public void onDamage(EntityDamageByEntityEvent e) {
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent e) {
 
-		// プレイヤーではない場合はreturn
-		if (!(e.getDamager() instanceof Player)) {
-			return;
-		}
+        // プレイヤーではない場合はreturn
+        if ( !(e.getDamager() instanceof Player) ) {
+            return;
+        }
 
-		Player p = (Player) e.getDamager();
+        Player p = (Player) e.getDamager();
 
-		// プレイヤーが無敵時間の場合、攻撃をキャンセル
-		if (Instant.now().isBefore(remainTimes.getOrDefault(p, Instant.now()))) {
-			e.setCancelled(true);
-			p.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
-		}
-	}
+        // プレイヤーが無敵時間の場合、攻撃をキャンセル
+        if ( Instant.now().isBefore(remainTimes.getOrDefault(p, Instant.now())) ) {
+            e.setCancelled(true);
+            p.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
+        }
+    }
 }

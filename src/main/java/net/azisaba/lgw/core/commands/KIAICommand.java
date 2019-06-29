@@ -7,9 +7,9 @@ import org.bukkit.command.CommandSender;
 // Skriptにあった謎コマンドを追加する
 public class KIAICommand implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		sender.sendMessage("Screaaaam!!!");
-		return true;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        sender.sendMessage("Screaaaam!!!");
+        return true;
+    }
 }

@@ -6,9 +6,9 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class DisableTNTBlockDamageListener implements Listener {
 
-	@EventHandler
-	public void onGrenadeExplode(EntityExplodeEvent event) {
-		event.blockList().clear();
-		//        event.setCancelled(true);
-	}
+    @EventHandler
+    public void onGrenadeExplode(EntityExplodeEvent event) {
+        event.blockList().clear();
+        // event.setCancelled(true);
+    }
 }

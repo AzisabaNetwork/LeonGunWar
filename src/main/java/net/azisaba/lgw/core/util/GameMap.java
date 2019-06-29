@@ -9,28 +9,27 @@ import lombok.Data;
 
 /**
  *
- * @author siloneco
- * ゲームを行うマップの情報を格納するクラス
+ * @author siloneco ゲームを行うマップの情報を格納するクラス
  *
  */
 @Data
 public class GameMap {
 
-	// プレイヤーに表示するマップ名
-	private final String mapName;
-	// マップのワールド
-	private final World world;
-	// 各チームのスポーン地点
-	private final Map<BattleTeam, Location> spawnMap;
+    // プレイヤーに表示するマップ名
+    private final String mapName;
+    // マップのワールド
+    private final World world;
+    // 各チームのスポーン地点
+    private final Map<BattleTeam, Location> spawnMap;
 
-	public GameMap initSpawns() {
-		spawnMap.values().stream()
-				.forEach(loc -> loc.setWorld(world));
-		return this;
-	}
+    public GameMap initSpawns() {
+        spawnMap.values().stream()
+                .forEach(loc -> loc.setWorld(world));
+        return this;
+    }
 
-	public Location getSpawnPoint(BattleTeam team) {
-		// 指定されていない場合はreturn null
-		return spawnMap.getOrDefault(team, null);
-	}
+    public Location getSpawnPoint(BattleTeam team) {
+        // 指定されていない場合はreturn null
+        return spawnMap.getOrDefault(team, null);
+    }
 }

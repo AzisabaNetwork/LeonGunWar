@@ -14,161 +14,168 @@ import lombok.NonNull;
 /**
  *
  * KDを保存するクラスです
+ * 
  * @author siloneco
  *
  */
 public class KillDeathCounter {
 
-	// キル数とデス数とアシスト数をカウントするHashMap
-	private final Map<UUID, Integer> killCountMap = new HashMap<>();
-	private final Map<UUID, Integer> deathCountMap = new HashMap<>();
-	private final Map<UUID, Integer> assistCountMap = new HashMap<>();
-	// UUIDとプレイヤー名を紐付けるためのHashMap
-	private final Map<UUID, String> playerNameContainer = new HashMap<>();
+    // キル数とデス数とアシスト数をカウントするHashMap
+    private final Map<UUID, Integer> killCountMap = new HashMap<>();
+    private final Map<UUID, Integer> deathCountMap = new HashMap<>();
+    private final Map<UUID, Integer> assistCountMap = new HashMap<>();
+    // UUIDとプレイヤー名を紐付けるためのHashMap
+    private final Map<UUID, String> playerNameContainer = new HashMap<>();
 
-	/**
-	 * プレイヤーのキル数を1追加します
-	 * @param player キル数を追加したいプレイヤー
-	 *
-	 * @exception NullPointerException playerがnullの場合
-	 */
-	public void addKill(@NonNull Player player) {
-		// プレイヤー情報を保存
-		updatePlayerName(player);
+    /**
+     * プレイヤーのキル数を1追加します
+     * 
+     * @param player キル数を追加したいプレイヤー
+     *
+     * @exception NullPointerException playerがnullの場合
+     */
+    public void addKill(@NonNull Player player) {
+        // プレイヤー情報を保存
+        updatePlayerName(player);
 
-		// すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
-		int kill = killCountMap.getOrDefault(player.getUniqueId(), 0);
+        // すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
+        int kill = killCountMap.getOrDefault(player.getUniqueId(), 0);
 
-		// キル追加
-		kill++;
+        // キル追加
+        kill++;
 
-		// HashMapにセット
-		killCountMap.put(player.getUniqueId(), kill);
-	}
+        // HashMapにセット
+        killCountMap.put(player.getUniqueId(), kill);
+    }
 
-	/**
-	 * プレイヤーのキル数を取得します
-	 * @param player キル数を取得したいプレイヤー
-	 * @return プレイヤーのキル数
-	 *
-	 * @exception NullPointerException playerがnullの場合
-	 */
-	public int getKills(@NonNull Player player) {
-		// プレイヤー情報を保存
-		updatePlayerName(player);
+    /**
+     * プレイヤーのキル数を取得します
+     * 
+     * @param player キル数を取得したいプレイヤー
+     * @return プレイヤーのキル数
+     *
+     * @exception NullPointerException playerがnullの場合
+     */
+    public int getKills(@NonNull Player player) {
+        // プレイヤー情報を保存
+        updatePlayerName(player);
 
-		// プレイヤーのキル数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
-		return killCountMap.getOrDefault(player.getUniqueId(), 0);
-	}
+        // プレイヤーのキル数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
+        return killCountMap.getOrDefault(player.getUniqueId(), 0);
+    }
 
-	/**
-	 * プレイヤーのデス数を1追加します
-	 * @param player デス数を追加したいプレイヤー
-	 *
-	 * @exception NullPointerException playerがnullの場合
-	 */
-	public void addDeath(@NonNull Player player) {
-		// プレイヤー情報を保存
-		updatePlayerName(player);
+    /**
+     * プレイヤーのデス数を1追加します
+     * 
+     * @param player デス数を追加したいプレイヤー
+     *
+     * @exception NullPointerException playerがnullの場合
+     */
+    public void addDeath(@NonNull Player player) {
+        // プレイヤー情報を保存
+        updatePlayerName(player);
 
-		// すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
-		int death = deathCountMap.getOrDefault(player.getUniqueId(), 0);
+        // すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
+        int death = deathCountMap.getOrDefault(player.getUniqueId(), 0);
 
-		// デス追加
-		death++;
+        // デス追加
+        death++;
 
-		// HashMapにセット
-		deathCountMap.put(player.getUniqueId(), death);
-	}
+        // HashMapにセット
+        deathCountMap.put(player.getUniqueId(), death);
+    }
 
-	/**
-	 * プレイヤーのデス数を取得します
-	 * @param player デス数を取得したいプレイヤー
-	 * @return プレイヤーのデス数
-	 *
-	 * @exception NullPointerException playerがnullの場合
-	 */
-	public int getDeaths(@NonNull Player player) {
-		// プレイヤー情報を保存
-		updatePlayerName(player);
+    /**
+     * プレイヤーのデス数を取得します
+     * 
+     * @param player デス数を取得したいプレイヤー
+     * @return プレイヤーのデス数
+     *
+     * @exception NullPointerException playerがnullの場合
+     */
+    public int getDeaths(@NonNull Player player) {
+        // プレイヤー情報を保存
+        updatePlayerName(player);
 
-		// プレイヤーのデス数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
-		return deathCountMap.getOrDefault(player.getUniqueId(), 0);
-	}
+        // プレイヤーのデス数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
+        return deathCountMap.getOrDefault(player.getUniqueId(), 0);
+    }
 
-	/**
-	 * プレイヤーのアシスト数を1追加します
-	 * @param player アシスト数を追加したいプレイヤー
-	 *
-	 * @exception NullPointerException playerがnullの場合
-	 */
-	public void addAssist(@NonNull Player player) {
-		// プレイヤー情報を保存
-		updatePlayerName(player);
+    /**
+     * プレイヤーのアシスト数を1追加します
+     * 
+     * @param player アシスト数を追加したいプレイヤー
+     *
+     * @exception NullPointerException playerがnullの場合
+     */
+    public void addAssist(@NonNull Player player) {
+        // プレイヤー情報を保存
+        updatePlayerName(player);
 
-		// すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
-		int assist = assistCountMap.getOrDefault(player.getUniqueId(), 0);
+        // すでにカウントされている場合は取得、なければデフォルト値である 0 を設定
+        int assist = assistCountMap.getOrDefault(player.getUniqueId(), 0);
 
-		// アシスト追加
-		assist++;
+        // アシスト追加
+        assist++;
 
-		// HashMapにセット
-		assistCountMap.put(player.getUniqueId(), assist);
-	}
+        // HashMapにセット
+        assistCountMap.put(player.getUniqueId(), assist);
+    }
 
-	/**
-	 * プレイヤーのアシスト数を取得します
-	 * @param player アシスト数を取得したいプレイヤー
-	 * @return プレイヤーのアシスト数
-	 *
-	 * @exception NullPointerException playerがnullの場合
-	 */
-	public int getAssists(@NonNull Player player) {
-		// プレイヤー情報を保存
-		updatePlayerName(player);
+    /**
+     * プレイヤーのアシスト数を取得します
+     * 
+     * @param player アシスト数を取得したいプレイヤー
+     * @return プレイヤーのアシスト数
+     *
+     * @exception NullPointerException playerがnullの場合
+     */
+    public int getAssists(@NonNull Player player) {
+        // プレイヤー情報を保存
+        updatePlayerName(player);
 
-		// プレイヤーのアシスト数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
-		return assistCountMap.getOrDefault(player.getUniqueId(), 0);
-	}
+        // プレイヤーのアシスト数を返す。キーが含まれていない場合はデフォルト値である 0 を返す
+        return assistCountMap.getOrDefault(player.getUniqueId(), 0);
+    }
 
-	/**
-	 * もっとも試合に貢献したプレイヤーをリストで取得します (2人以上いることがあるため)
-	 * 存在しない場合は空のリストを返します
-	 * @return MVPのKDPlayerDataをList形式で
-	 */
-	public List<KDPlayerData> getMVPPlayer() {
-		// キルカウントMapから最大キル数を取得、ない場合は-1
-		int mvpKills = killCountMap.values().stream()
-				.max(Comparator.naturalOrder())
-				.orElse(-1);
+    /**
+     * もっとも試合に貢献したプレイヤーをリストで取得します (2人以上いることがあるため) 存在しない場合は空のリストを返します
+     * 
+     * @return MVPのKDPlayerDataをList形式で
+     */
+    public List<KDPlayerData> getMVPPlayer() {
+        // キルカウントMapから最大キル数を取得、ない場合は-1
+        int mvpKills = killCountMap.values().stream()
+                .max(Comparator.naturalOrder())
+                .orElse(-1);
 
-		// mvpKillsと同じキル数のプレイヤーだけ抽出して、KDPlayerDataに変換しList形式で取得
-		// mvpKillsが-1の場合は空のリストを返す
-		return killCountMap.entrySet().stream()
-				.filter(entry -> entry.getValue() == mvpKills)
-				.map(Map.Entry::getKey)
-				.map(mvp -> {
-					// プレイヤー名取得 (なければnull)
-					String playerName = playerNameContainer.getOrDefault(mvp, null);
-					// キル数取得 (なければ0)
-					int kills = killCountMap.getOrDefault(mvp, 0);
-					// デス数取得 (なければ0)
-					int deaths = deathCountMap.getOrDefault(mvp, 0);
-					// アシスト数取得 (なければ0)
-					int assists = assistCountMap.getOrDefault(mvp, 0);
+        // mvpKillsと同じキル数のプレイヤーだけ抽出して、KDPlayerDataに変換しList形式で取得
+        // mvpKillsが-1の場合は空のリストを返す
+        return killCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() == mvpKills)
+                .map(Map.Entry::getKey)
+                .map(mvp -> {
+                    // プレイヤー名取得 (なければnull)
+                    String playerName = playerNameContainer.getOrDefault(mvp, null);
+                    // キル数取得 (なければ0)
+                    int kills = killCountMap.getOrDefault(mvp, 0);
+                    // デス数取得 (なければ0)
+                    int deaths = deathCountMap.getOrDefault(mvp, 0);
+                    // アシスト数取得 (なければ0)
+                    int assists = assistCountMap.getOrDefault(mvp, 0);
 
-					// KDPlayerData作成
-					return new KDPlayerData(mvp, playerName, kills, deaths, assists);
-				})
-				.collect(Collectors.toList());
-	}
+                    // KDPlayerData作成
+                    return new KDPlayerData(mvp, playerName, kills, deaths, assists);
+                })
+                .collect(Collectors.toList());
+    }
 
-	/**
-	 * プレイヤーのUUIDと名前を紐づけます
-	 * プレイヤーがログアウトした後にプレイヤー名とキル数を紐づけるために使用されます
-	 * @param player 情報を更新したいプレイヤー
-	 */
-	private void updatePlayerName(Player player) {
-		playerNameContainer.put(player.getUniqueId(), player.getName());
-	}
+    /**
+     * プレイヤーのUUIDと名前を紐づけます プレイヤーがログアウトした後にプレイヤー名とキル数を紐づけるために使用されます
+     * 
+     * @param player 情報を更新したいプレイヤー
+     */
+    private void updatePlayerName(Player player) {
+        playerNameContainer.put(player.getUniqueId(), player.getName());
+    }
 }

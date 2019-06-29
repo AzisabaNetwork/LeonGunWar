@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * プレイヤーが試合からキックされたときに呼び出されるイベント
+ * 
  * @author siloneco
  *
  */
@@ -16,17 +17,17 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class PlayerKickMatchEvent extends Event {
 
-	// キックされたプレイヤー
-	private final Player player;
+    // キックされたプレイヤー
+    private final Player player;
 
-	private static final HandlerList HANDLERS_LIST = new HandlerList();
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-	@Override
-	public HandlerList getHandlers() {
-		return HANDLERS_LIST;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLERS_LIST;
+    }
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS_LIST;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }
