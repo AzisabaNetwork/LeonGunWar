@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * プレイヤーがエントリー解除したときに呼び出されるイベント
- * 
+ *
  * @author siloneco
  *
  */

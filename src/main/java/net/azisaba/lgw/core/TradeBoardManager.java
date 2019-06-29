@@ -87,7 +87,7 @@ public class TradeBoardManager {
 
     /**
      * 看板の情報を取得するメソッド
-     * 
+     *
      * @param loc 取得したい座標の看板
      * @return 看板の情報。なければnullを返す
      */
@@ -97,7 +97,7 @@ public class TradeBoardManager {
 
     /**
      * 登録されている看板を削除します
-     * 
+     *
      * @param loc 削除したい看板の座標
      */
     public void removeSignData(Location loc) {
@@ -131,7 +131,7 @@ public class TradeBoardManager {
 
     /**
      * 全ての登録済みの看板を取得します
-     * 
+     *
      * @return 登録済みの看板のList
      */
     public List<SignData> getAllSignData() {
@@ -182,7 +182,7 @@ public class TradeBoardManager {
 
     /**
      * String形式に変換された座標をLocaitonのインスタンスに戻します
-     * 
+     *
      * @param str 戻したいString
      * @return 変換されたLocation
      */
@@ -202,7 +202,7 @@ public class TradeBoardManager {
 
     /**
      * 座標をカンマ(,)で区切ってStringに変換し、その名前のファイルを取得します
-     * 
+     *
      * @param loc 変換したい座標
      * @return 変換されたFile
      */

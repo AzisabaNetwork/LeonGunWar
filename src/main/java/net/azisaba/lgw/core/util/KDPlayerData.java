@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  *
  * キル数とデス数、プレイヤーデータを格納したクラス
- * 
+ *
  * @author siloneco
  *
  */

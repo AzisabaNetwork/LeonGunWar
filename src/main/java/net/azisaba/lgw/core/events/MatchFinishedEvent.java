@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 // TODO MVPとかの情報も載せたい。
 /**
  * マッチが終了したときに呼び出されるイベント
- * 
+ *
  * @author siloneco
  *
  */

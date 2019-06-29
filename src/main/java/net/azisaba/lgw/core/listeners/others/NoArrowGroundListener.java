@@ -10,7 +10,7 @@ import net.azisaba.lgw.core.tasks.RemoveGroundArrowTask;
 
 /**
  * 地面に当たった矢を削除するリスナーです。
- * 
+ *
  * @author siloneco
  *
  */
@@ -18,7 +18,7 @@ public class NoArrowGroundListener implements Listener {
 
     /**
      * 矢がブロックに当たったことを検知し削除します
-     * 
+     *
      * @param e
      */
     @EventHandler

@@ -13,7 +13,7 @@ import net.azisaba.lgw.core.MatchManager;
 /**
  *
  * デフォルトのチーム振り分けクラス
- * 
+ *
  * @author siloneco
  *
  */

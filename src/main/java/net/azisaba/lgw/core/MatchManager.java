@@ -55,7 +55,7 @@ import lombok.NonNull;
 /**
  *
  * ゲームを司るコアクラス
- * 
+ *
  * @author siloneco
  *
  */
@@ -289,7 +289,7 @@ public class MatchManager {
 
     /**
      * プレイヤーをマッチ参加用のエントリーに参加させます
-     * 
+     *
      * @param p 参加させたいプレイヤー
      */
     public boolean addEntryPlayer(Player p) {
@@ -315,7 +315,7 @@ public class MatchManager {
 
     /**
      * プレイヤーをマッチ参加用のエントリーから退出させます
-     * 
+     *
      * @param p 退出させたいプレイヤー
      */
     public boolean removeEntryPlayer(Player p) {
@@ -342,7 +342,7 @@ public class MatchManager {
 
     /**
      * プレイヤーが次の試合に参加するエントリーをしているかどうかを確認します
-     * 
+     *
      * @param p 確認したいプレイヤー
      * @return エントリーに参加しているかどうか
      */
@@ -365,7 +365,7 @@ public class MatchManager {
 
     /**
      * プレイヤーを試合から退出させます
-     * 
+     *
      * @param p 退出させたいプレイヤー
      */
     public void kickPlayer(Player p) {
@@ -408,7 +408,7 @@ public class MatchManager {
 
     /**
      * 全チームのプレイヤーをMap+List形式で取得します
-     * 
+     *
      * @return チームごとのプレイヤーのMap
      */
     public Map<BattleTeam, List<Player>> getTeamPlayers() {
@@ -418,7 +418,7 @@ public class MatchManager {
 
     /**
      * 全チームの全プレイヤーを1つのList形式で取得します
-     * 
+     *
      * @return 全プレイヤーのList
      */
     public List<Player> getAllTeamPlayers() {
@@ -427,7 +427,7 @@ public class MatchManager {
 
     /**
      * 指定されたチームのプレイヤーリストを取得します
-     * 
+     *
      * @param team プレイヤーリストを取得したいチーム
      * @return チームのプレイヤーリスト
      *
@@ -443,7 +443,7 @@ public class MatchManager {
 
     /**
      * プレイヤーが所属しているチームを取得します
-     * 
+     *
      * @param p チームを取得したいプレイヤー
      * @return プレイヤーが参加しているチーム
      */
@@ -465,7 +465,7 @@ public class MatchManager {
 
     /**
      * スコアボードのチームに対応するBattleTeamを取得する
-     * 
+     *
      * @param team 取得したいスコアボードのチーム
      * @return teamに対応するBattleTeam (不明ならnull)
      */
@@ -488,7 +488,7 @@ public class MatchManager {
 
     /**
      * 対象のプレイヤーが試合中かどうかを取得します
-     * 
+     *
      * @param player 対象のプレイヤー
      * @return 対象のプレイヤーが試合中かどうか
      */
@@ -498,7 +498,7 @@ public class MatchManager {
 
     /**
      * 対象の複数のプレイヤーが同じチームどうかを取得します
-     * 
+     *
      * @param players 対象の複数のプレイヤー
      * @return 対象の複数のプレイヤーが同じチームどうか
      */
@@ -611,7 +611,7 @@ public class MatchManager {
 
     /**
      * LDMで使用されるメソッド。リーダーとなるプレイヤーを取得します
-     * 
+     *
      * @param team リーダーを取得したいチーム
      * @return そのチームのリーダー / LDMが指定されていない場合もしくは存在しなければnullを返す
      */
@@ -627,7 +627,7 @@ public class MatchManager {
 
     /**
      * LDMで使用されるメソッド。各チームのリーダーをMap形式で返します
-     * 
+     *
      * @return そのチームのリーダー / LDMでなければ空のMapを返す
      */
     public Map<BattleTeam, Player> getLDMLeaderMap() {
@@ -765,7 +765,7 @@ public class MatchManager {
 
     /**
      * プレイヤーのリスポーン地点を取得します
-     * 
+     *
      * @param p 対象のプレイヤー
      * @return 対象のプレイヤーがリスポーンするべき場所
      */

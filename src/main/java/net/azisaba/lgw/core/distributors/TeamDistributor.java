@@ -7,7 +7,7 @@ import org.bukkit.scoreboard.Team;
 
 /**
  * プレイヤーをチームに振り分けるクラスのためのインターフェース
- * 
+ *
  * @author siloneco
  *
  */

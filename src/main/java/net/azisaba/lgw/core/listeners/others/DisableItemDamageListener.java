@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * アイテムの耐久地が減ることを無効化します 釣り竿は釣りで使用されるため耐久値は減ります
- * 
+ *
  * @author siloneco
  *
  */
@@ -16,7 +16,7 @@ public class DisableItemDamageListener implements Listener {
 
     /**
      * アイテムの耐久値が減るのを無効化するリスナーです
-     * 
+     *
      * @param e プレイヤーのアイテムの耐久値が減少するイベント
      */
     @EventHandler

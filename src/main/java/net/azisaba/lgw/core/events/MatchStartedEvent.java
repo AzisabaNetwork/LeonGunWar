@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * マッチが開始されたときに呼び出されるイベント
- * 
+ *
  * @author siloneco
  *
  */

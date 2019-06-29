@@ -23,7 +23,7 @@ public class ScoreboardDisplayer {
 
     /**
      * プレイヤーに表示するスコアボードのタイトルを取得します
-     * 
+     *
      * @return スコアボードのタイトル
      */
     private String scoreBoardTitle() {
@@ -87,7 +87,7 @@ public class ScoreboardDisplayer {
 
     /**
      * プレイヤーにスコアボードを表示します
-     * 
+     *
      * @param plist スコアボードを表示させたいプレイヤーのリスト
      */
     public void updateScoreboard() {

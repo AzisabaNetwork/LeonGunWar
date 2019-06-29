@@ -208,7 +208,7 @@ public class TradeBoardListener implements Listener {
 
     /**
      * 看板の4行がすべて空白であるかどうかを確認します
-     * 
+     *
      * @param lines 確認したいStringの配列
      * @return 全て空白ならtrue、1文字でも入っていればfalse
      */
@@ -221,7 +221,7 @@ public class TradeBoardListener implements Listener {
 
     /**
      * 武器交換掲示板かどうか、WorldGuardから確認する
-     * 
+     *
      * @param loc 確認したい座標
      * @return 武器交換掲示板のエリアならtrue、そうでなければfalse
      */

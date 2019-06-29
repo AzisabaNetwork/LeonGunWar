@@ -120,7 +120,7 @@ public class DamageListener implements Listener {
 
     /**
      * プレイヤーが他のプレイヤーに攻撃したときにミリ秒を記録します この秒数はアシスト判定に使用されます
-     * 
+     *
      * @param e
      */
     @EventHandler

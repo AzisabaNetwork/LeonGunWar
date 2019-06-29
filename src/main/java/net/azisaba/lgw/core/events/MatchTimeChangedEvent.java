@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 試合の残り秒数が変化したときに呼び出されるイベント
- * 
+ *
  * @author siloneco
  *
  */

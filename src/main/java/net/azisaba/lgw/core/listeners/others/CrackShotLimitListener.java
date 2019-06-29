@@ -16,7 +16,7 @@ import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 
 /**
  * CrackShotのアイテムの連打を無効化するリスナー
- * 
+ *
  * @author siloneco
  *
  */
@@ -63,7 +63,7 @@ public class CrackShotLimitListener implements Listener {
 
     /**
      * ライトニングストライクが撃たれたときに、クールタイム中ならキャンセルするListener
-     * 
+     *
      * @param e
      */
     @EventHandler(priority = EventPriority.LOW)

@@ -17,7 +17,7 @@ import net.azisaba.lgw.core.utils.Chat;
 /**
  *
  * TDMの処理をするリスナー
- * 
+ *
  * @author siloneco
  *
  */

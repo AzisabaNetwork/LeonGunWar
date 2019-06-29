@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
 
 /**
  * ノックバックを無効化するためのクラス
- * 
+ *
  * @author siloneco
  *
  */

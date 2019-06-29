@@ -29,7 +29,7 @@ public class MatchStartCountdown {
 
     /**
      * 現在カウントダウンが行われているかどうかを返します
-     * 
+     *
      * @return カウントダウン中かどうか
      */
     public boolean isRunning() {

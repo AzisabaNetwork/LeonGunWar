@@ -20,7 +20,7 @@ import net.azisaba.lgw.core.utils.LocationLoader;
 /**
  *
  * セーブされたマップのデータの読み込みやセーブを行うためのクラス
- * 
+ *
  * @author siloneco
  *
  */
@@ -31,7 +31,7 @@ public class MapLoader {
 
     /**
      * 保存されているマップデータを読み込み、MapDataのリストを返します
-     * 
+     *
      * @return 読み込まれたマップデータのリスト
      */
     protected List<GameMap> loadMapData() {
@@ -133,7 +133,7 @@ public class MapLoader {
 
     /**
      * 作成されたGameMapをファイルに保存します。
-     * 
+     *
      * @param map          保存したいGameMap
      * @param 保存するファイルの名前
      * @param 上書きを許可するかどうか

@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * チームのポイントが増えたときに呼び出されるイベント
- * 
+ *
  * @author siloneco
  *
  */

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * チームを表現するためだけに作られたEnumクラス
- * 
+ *
  * @author siloneco
  *
  */

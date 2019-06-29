@@ -14,7 +14,7 @@ import lombok.NonNull;
 /**
  *
  * KDを保存するクラスです
- * 
+ *
  * @author siloneco
  *
  */
@@ -29,7 +29,7 @@ public class KillDeathCounter {
 
     /**
      * プレイヤーのキル数を1追加します
-     * 
+     *
      * @param player キル数を追加したいプレイヤー
      *
      * @exception NullPointerException playerがnullの場合
@@ -50,7 +50,7 @@ public class KillDeathCounter {
 
     /**
      * プレイヤーのキル数を取得します
-     * 
+     *
      * @param player キル数を取得したいプレイヤー
      * @return プレイヤーのキル数
      *
@@ -66,7 +66,7 @@ public class KillDeathCounter {
 
     /**
      * プレイヤーのデス数を1追加します
-     * 
+     *
      * @param player デス数を追加したいプレイヤー
      *
      * @exception NullPointerException playerがnullの場合
@@ -87,7 +87,7 @@ public class KillDeathCounter {
 
     /**
      * プレイヤーのデス数を取得します
-     * 
+     *
      * @param player デス数を取得したいプレイヤー
      * @return プレイヤーのデス数
      *
@@ -103,7 +103,7 @@ public class KillDeathCounter {
 
     /**
      * プレイヤーのアシスト数を1追加します
-     * 
+     *
      * @param player アシスト数を追加したいプレイヤー
      *
      * @exception NullPointerException playerがnullの場合
@@ -124,7 +124,7 @@ public class KillDeathCounter {
 
     /**
      * プレイヤーのアシスト数を取得します
-     * 
+     *
      * @param player アシスト数を取得したいプレイヤー
      * @return プレイヤーのアシスト数
      *
@@ -140,7 +140,7 @@ public class KillDeathCounter {
 
     /**
      * もっとも試合に貢献したプレイヤーをリストで取得します (2人以上いることがあるため) 存在しない場合は空のリストを返します
-     * 
+     *
      * @return MVPのKDPlayerDataをList形式で
      */
     public List<KDPlayerData> getMVPPlayer() {
@@ -172,7 +172,7 @@ public class KillDeathCounter {
 
     /**
      * プレイヤーのUUIDと名前を紐づけます プレイヤーがログアウトした後にプレイヤー名とキル数を紐づけるために使用されます
-     * 
+     *
      * @param player 情報を更新したいプレイヤー
      */
     private void updatePlayerName(Player player) {

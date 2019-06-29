@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * プレイヤーがエントリーしたときに呼び出されるイベント
- * 
+ *
  * @author siloneco
  *
  */

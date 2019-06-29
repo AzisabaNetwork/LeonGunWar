@@ -16,7 +16,7 @@ public class MapContainer {
 
     /**
      * ファイルに保存してあるマップデータをロードします このメソッドはPluginのロード時にのみ呼び出されることを想定しています
-     * 
+     *
      * @param plugin
      */
     public void loadMaps() {
@@ -30,7 +30,7 @@ public class MapContainer {
 
     /**
      * ロードされているすべてのマップから1つだけランダムで抽選します
-     * 
+     *
      * @return ランダムなマップ
      */
     public GameMap getRandomMap() {
