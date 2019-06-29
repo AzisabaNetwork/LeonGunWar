@@ -96,9 +96,6 @@ public class ScoreboardDisplayer {
 			return;
 		}
 
-		// 現在指定されているEntryを全て解除
-		clearEntries();
-
 		// Objectiveを取得
 		Objective obj = scoreBoard.getObjective("side");
 
@@ -113,6 +110,8 @@ public class ScoreboardDisplayer {
 
 		// 行を取得
 		List<String> lines = boardLines();
+		// リスト反転
+		Collections.reverse(lines);
 
 		// nullが返ってきた場合は非表示にしてreturn
 		if (lines == null) {
@@ -120,8 +119,8 @@ public class ScoreboardDisplayer {
 			return;
 		}
 
-		// reverseして0から設定していく
-		Collections.reverse(lines);
+		// 現在指定されているEntryを全て解除
+		clearEntries();
 
 		int currentValue = 0;
 		for (String msg : lines) {
