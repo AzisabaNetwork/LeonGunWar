@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -32,7 +31,6 @@ public class ScoreboardDisplayer {
 
 	/**
 	 * スコアボードに表示したい文章をListで指定する (上から)
-	 * @return The lines that you want to display in your scoreboard. (from above)
 	 */
 	private List<String> boardLines() {
 		// 試合中の場合
@@ -91,7 +89,7 @@ public class ScoreboardDisplayer {
 	 * プレイヤーにスコアボードを表示します
 	 * @param plist スコアボードを表示させたいプレイヤーのリスト
 	 */
-	public void updateScoreboard(List<Player> plist) {
+	public void updateScoreboard() {
 		Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
 		if (Bukkit.getOnlinePlayers().size() <= 0) {
@@ -144,7 +142,11 @@ public class ScoreboardDisplayer {
 		}
 
 		// スコアボードを設定する
-		Bukkit.getOnlinePlayers().forEach(p -> p.setScoreboard(scoreBoard));
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			if (p.getScoreboard() != scoreBoard) {
+				p.setScoreboard(scoreBoard);
+			}
+		});
 	}
 
 	/**

@@ -178,11 +178,8 @@ public class MatchControlListener implements Listener {
 	 */
 	@EventHandler
 	public void scoreboardUpdater(MatchTimeChangedEvent e) {
-		// 試合中のプレイヤーを取得
-		List<Player> players = LeonGunWar.getPlugin().getManager().getAllTeamPlayers();
-
 		// スコアボードをアップデート
-		LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(players);
+		LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard();
 	}
 
 	/**
