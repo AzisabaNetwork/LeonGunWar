@@ -22,12 +22,6 @@ public class GameMap {
     // 各チームのスポーン地点
     private final Map<BattleTeam, Location> spawnMap;
 
-    public GameMap initSpawns() {
-        spawnMap.values().stream()
-                .forEach(loc -> loc.setWorld(world));
-        return this;
-    }
-
     public Location getSpawnPoint(BattleTeam team) {
         // 指定されていない場合はreturn null
         return spawnMap.getOrDefault(team, null);

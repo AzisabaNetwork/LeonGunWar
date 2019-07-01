@@ -9,6 +9,8 @@ import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
+import net.azisaba.lgw.core.configs.MapsConfig;
+import net.azisaba.lgw.core.configs.SpawnsConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -35,8 +37,6 @@ import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
 import net.azisaba.lgw.core.listeners.weapons.LightningStrikeListener;
-import net.azisaba.lgw.core.map.MapContainer;
-import net.azisaba.lgw.core.map.MapLoader;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
 
@@ -59,11 +59,11 @@ public class LeonGunWar extends JavaPlugin {
     private static JSONMessage quickBar;
 
     private KillStreaksConfig killStreaksConfig;
+    private SpawnsConfig spawnsConfig;
+    private MapsConfig mapsConfig;
 
     private final MatchStartCountdown countdown = new MatchStartCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
-    private final MapLoader mapLoader = new MapLoader();
-    private final MapContainer mapContainer = new MapContainer();
     private final MatchManager manager = new MatchManager();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
@@ -83,11 +83,14 @@ public class LeonGunWar extends JavaPlugin {
 
         // 設定ファイルを読み込むクラスの初期化
         killStreaksConfig = new KillStreaksConfig(this);
+        spawnsConfig = new SpawnsConfig(this);
+        mapsConfig = new MapsConfig(this);
         // 設定ファイルを読み込む
         killStreaksConfig.loadConfig();
+        spawnsConfig.loadConfig();
+        mapsConfig.loadConfig();
 
         // 初期化が必要なファイルを初期化する
-        mapContainer.loadMaps();
         manager.initialize();
         tradeBoardManager.init();
 

@@ -47,6 +47,10 @@ public class Config {
         return Files.isRegularFile(getPath());
     }
 
+    public boolean existsResource() {
+        return getResource() != null;
+    }
+
     @SneakyThrows(value = { IOException.class })
     public String loadAsString() {
         return Files.lines(getPath()).collect(Collectors.joining(System.lineSeparator()));
@@ -61,7 +65,7 @@ public class Config {
     public void loadConfig() {
         if ( exists() ) {
             config.loadFromString(loadAsString());
-        } else {
+        } else if ( existsResource() ) {
             config.loadFromString(loadResourceAsString());
             saveResource();
         }

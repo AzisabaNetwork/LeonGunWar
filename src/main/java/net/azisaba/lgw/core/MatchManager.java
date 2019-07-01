@@ -1,7 +1,5 @@
 package net.azisaba.lgw.core;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +17,6 @@ import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -45,7 +42,6 @@ import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
-import net.azisaba.lgw.core.utils.LocationLoader;
 import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
 
@@ -66,9 +62,6 @@ public class MatchManager {
 
     // チーム分けを行うクラス
     private TeamDistributor teamDistributor;
-
-    // ロビーのスポーン地点
-    private Location lobbySpawnLocation;
 
     // ゲーム中かどうかの判定
     private boolean isMatching = false;
@@ -133,9 +126,6 @@ public class MatchManager {
         Arrays.stream(BattleTeam.values())
                 .forEach(team -> chestplates.put(team, CustomItem.getTeamChestplate(team)));
 
-        // ロビーのスポーン地点をロード
-        loadLobbySpawnLocation();
-
         initialized = true;
     }
 
@@ -155,7 +145,7 @@ public class MatchManager {
         bossBar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
 
         // マップを抽選
-        currentGameMap = LeonGunWar.getPlugin().getMapContainer().getRandomMap();
+        currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
         // マップ名を表示
         Bukkit.broadcastMessage(
                 Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
@@ -372,7 +362,7 @@ public class MatchManager {
         leavePlayer(p);
 
         // スポーンにTP
-        p.teleport(lobbySpawnLocation);
+        p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
     }
 
     public void leavePlayer(Player p) {
@@ -652,36 +642,6 @@ public class MatchManager {
         }
     }
 
-    /**
-     * ロビーのスポーン地点をロードします 設定されていない場合はデフォルト値を設定します
-     */
-    public void loadLobbySpawnLocation() {
-        // ファイル
-        File lobbySpawnFile = new File(LeonGunWar.getPlugin().getDataFolder(), "spawn.yml");
-        YamlConfiguration spawnLoader = YamlConfiguration.loadConfiguration(lobbySpawnFile);
-
-        // 座標をロード
-        lobbySpawnLocation = LocationLoader.getLocation(spawnLoader, "lobby");
-
-        // ロードできなかった場合はworldのスポーン地点を取得
-        if ( lobbySpawnLocation == null ) {
-            lobbySpawnLocation = Bukkit.getWorld("world").getSpawnLocation();
-        }
-
-        // 設定されていない場合はデフォルト値を設定
-        if ( spawnLoader.getConfigurationSection("lobby") == null ) {
-            lobbySpawnLocation = new Location(Bukkit.getWorld("world"), 616.5, 10, 70.5, 0, 0);
-            // 設定
-            LocationLoader.setLocationWithWorld(spawnLoader, lobbySpawnLocation, "lobby");
-            // セーブ
-            try {
-                spawnLoader.save(lobbySpawnFile);
-            } catch ( IOException ex ) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
     protected void onDisablePlugin() {
         // 試合をしていなければreturn
         if ( !isMatching ) {
@@ -697,7 +657,7 @@ public class MatchManager {
             // メッセージを表示
             p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
             // スポーンにTP
-            p.teleport(lobbySpawnLocation);
+            p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
 
             // アーマー削除
             p.getInventory().setChestplate(null);
@@ -773,7 +733,7 @@ public class MatchManager {
 
         // 試合をしていなければlobbySpawnを返す
         if ( !isMatching ) {
-            return lobbySpawnLocation;
+            return LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
         }
 
         // チームを取得
@@ -788,7 +748,7 @@ public class MatchManager {
 
         // それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
         if ( spawnPoint == null ) {
-            spawnPoint = lobbySpawnLocation;
+            spawnPoint = LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
         }
 
         return spawnPoint;
