@@ -35,7 +35,7 @@ public class MapsConfig extends Config {
     public void loadConfig() {
         super.loadConfig();
 
-        this.allGameMap = new ArrayList<>();
+        allGameMap = new ArrayList<>();
         for ( String mapName : config.getValues(false).keySet() ) {
             ConfigurationSection mapSection = config.getConfigurationSection(mapName);
 

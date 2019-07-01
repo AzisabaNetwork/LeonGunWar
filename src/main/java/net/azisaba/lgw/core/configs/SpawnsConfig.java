@@ -27,13 +27,13 @@ public class SpawnsConfig extends Config {
     public void loadConfig() {
         super.loadConfig();
 
-        this.spawns = new HashMap<>();
+        spawns = new HashMap<>();
         for ( String spawnName : config.getValues(false).keySet() ) {
             Location spawn = config.getSerializable(spawnName, Location.class);
             spawns.put(spawnName, spawn);
         }
-        this.spawns = Collections.unmodifiableMap(spawns);
+        spawns = Collections.unmodifiableMap(spawns);
 
-        this.lobby = spawns.get("lobby");
+        lobby = spawns.get("lobby");
     }
 }

@@ -45,7 +45,7 @@ public class LightningStrikeListener implements Listener {
     private final int TNT_AMOUNT = 5;
     private final int PHASE = 5;
 
-    private final HashMap<UUID, Long> cooldown = new HashMap<UUID, Long>();
+    private final HashMap<UUID, Long> cooldown = new HashMap<>();
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
@@ -87,8 +87,7 @@ public class LightningStrikeListener implements Listener {
         looksMeta.setDisplayName(System.currentTimeMillis() + "");
         looks.setItemMeta(looksMeta);
 
-        Item dropItem = (Item) p.getWorld().spawnEntity(p.getEyeLocation(), EntityType.DROPPED_ITEM);
-        dropItem.setItemStack(looks);
+        Item dropItem = p.getWorld().dropItemNaturally(p.getEyeLocation(), looks);
         dropItem.setVelocity(p.getLocation().getDirection().multiply(1));
         dropItem.setMetadata("UnpickableItem", new FixedMetadataValue(LeonGunWar.getPlugin(), true));
 
@@ -97,12 +96,12 @@ public class LightningStrikeListener implements Listener {
         new BukkitRunnable() {
 
             private int counter = 0;
-            private Item dropItemCache = dropItem;
+            private final Item dropItemCache = dropItem;
 
             @Override
             public void run() {
                 if ( counter >= 5 ) {
-                    this.cancel();
+                    cancel();
                     return;
                 }
 
@@ -121,7 +120,7 @@ public class LightningStrikeListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
 
-            private Item droppedItem = dropItem;
+            private final Item droppedItem = dropItem;
 
             @Override
             public void run() {
@@ -158,7 +157,7 @@ public class LightningStrikeListener implements Listener {
     private void spawnTNT(Location loc, Player p) {
         new BukkitRunnable() {
 
-            private Location middleLoc = loc.clone();
+            private final Location middleLoc = loc.clone();
             private int processed = 0;
 
             @SuppressWarnings("deprecation")
@@ -166,7 +165,7 @@ public class LightningStrikeListener implements Listener {
             public void run() {
 
                 if ( processed >= PHASE ) {
-                    this.cancel();
+                    cancel();
                     return;
                 }
 
