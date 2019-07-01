@@ -38,15 +38,22 @@ public class MapsConfig extends Config {
         allGameMap = new ArrayList<>();
         for ( String mapName : config.getValues(false).keySet() ) {
             ConfigurationSection mapSection = config.getConfigurationSection(mapName);
+            ConfigurationSection spawnsSection = mapSection.getConfigurationSection("spawns");
 
             World world = plugin.getServer().getWorld(mapSection.getString("world"));
 
             Map<BattleTeam, Location> spawnMap = new HashMap<>();
-            for ( String teamName : mapSection.getConfigurationSection("spawns").getValues(false).keySet() ) {
-                Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, mapName);
+            for ( String teamName : spawnsSection.getValues(false).keySet() ) {
+                Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase());
 
                 if ( battleTeam.isPresent() ) {
-                    Location spawn = config.getSerializable(teamName, Location.class);
+                    Location spawn = new Location(
+                            plugin.getServer().getWorld(spawnsSection.getString(teamName + ".world")),
+                            spawnsSection.getDouble(teamName + ".x"),
+                            spawnsSection.getDouble(teamName + ".y"),
+                            spawnsSection.getDouble(teamName + ".z"),
+                            (float) spawnsSection.getDouble(teamName + ".yaw"),
+                            (float) spawnsSection.getDouble(teamName + ".pitch"));
                     spawnMap.put(battleTeam.get(), spawn);
                 }
             }

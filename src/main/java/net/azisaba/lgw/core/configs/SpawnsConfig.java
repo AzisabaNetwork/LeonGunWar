@@ -29,7 +29,13 @@ public class SpawnsConfig extends Config {
 
         spawns = new HashMap<>();
         for ( String spawnName : config.getValues(false).keySet() ) {
-            Location spawn = config.getSerializable(spawnName, Location.class);
+            Location spawn = new Location(
+                    plugin.getServer().getWorld(config.getString(spawnName + ".world")),
+                    config.getDouble(spawnName + ".x"),
+                    config.getDouble(spawnName + ".y"),
+                    config.getDouble(spawnName + ".z"),
+                    (float) config.getDouble(spawnName + ".yaw"),
+                    (float) config.getDouble(spawnName + ".pitch"));
             spawns.put(spawnName, spawn);
         }
         spawns = Collections.unmodifiableMap(spawns);
