@@ -216,8 +216,7 @@ public class LightningStrikeListener implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
         Entity damager = e.getDamager();
         Entity damaged = e.getEntity();
