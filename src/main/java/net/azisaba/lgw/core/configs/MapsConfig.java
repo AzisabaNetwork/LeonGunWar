@@ -1,18 +1,17 @@
 package net.azisaba.lgw.core.configs;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 
 import com.google.common.base.Enums;
+import com.google.common.base.Optional;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.BattleTeam;
@@ -28,7 +27,7 @@ public class MapsConfig extends Config {
     private List<GameMap> allGameMap;
 
     public MapsConfig(@NonNull LeonGunWar plugin) {
-        super(plugin, Paths.get("configs/maps.yml"), Paths.get("maps.yml"));
+        super(plugin, "configs/maps.yml", "maps.yml");
     }
 
     @SneakyThrows(value = { Exception.class })
@@ -37,18 +36,26 @@ public class MapsConfig extends Config {
         super.loadConfig();
 
         this.allGameMap = new ArrayList<>();
-        config.getValues(false).keySet().stream()
-                .map(mapName -> {
-                    World world = plugin.getServer().getWorld(config.getString(mapName + ".world"));
-                    Map<BattleTeam, Location> spawnMap = config.getConfigurationSection(mapName + ".spawns").getValues(false).keySet().stream()
-                            .map(lowerTeamName -> Enums.getIfPresent(BattleTeam.class, lowerTeamName.toUpperCase()).orNull())
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toMap(Function.identity(), team -> config.getSerializable(team.name().toLowerCase(), Location.class)));
-                    GameMap gameMap = new GameMap(mapName, world, spawnMap);
-                    plugin.getLogger().fine("マップ " + gameMap.getMapName() + " をロードしました。");
-                    return gameMap;
-                })
-                .forEach(allGameMap::add);
+        for ( String mapName : config.getValues(false).keySet() ) {
+            ConfigurationSection mapSection = config.getConfigurationSection(mapName);
+
+            World world = plugin.getServer().getWorld(mapSection.getString("world"));
+
+            Map<BattleTeam, Location> spawnMap = new HashMap<>();
+            for ( String teamName : mapSection.getConfigurationSection("spawns").getValues(false).keySet() ) {
+                Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, mapName);
+
+                if ( battleTeam.isPresent() ) {
+                    Location spawn = config.getSerializable(teamName, Location.class);
+                    spawnMap.put(battleTeam.get(), spawn);
+                }
+            }
+
+            GameMap gameMap = new GameMap(mapName, world, spawnMap);
+            allGameMap.add(gameMap);
+
+            plugin.getLogger().info("マップ " + mapName + " をロードしました。");
+        }
         plugin.getLogger().info(allGameMap.size() + " 個のマップをロードしました。");
     }
 

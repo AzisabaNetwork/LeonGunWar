@@ -30,13 +30,13 @@ public class Config {
     protected final YamlConfiguration config = new YamlConfiguration();
 
     @NonNull
-    private final Path resourcePath;
+    private final String resourcePath;
 
     @NonNull
-    private final Path relativePath;
+    private final String relativePath;
 
     public InputStream getResource() {
-        return plugin.getClass().getClassLoader().getResourceAsStream(resourcePath.toString());
+        return plugin.getClass().getClassLoader().getResourceAsStream(resourcePath);
     }
 
     public Path getPath() {
