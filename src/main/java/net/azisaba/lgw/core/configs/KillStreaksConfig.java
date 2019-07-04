@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.configs;
 
-import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class KillStreaksConfig extends Config {
     private String removed;
 
     public KillStreaksConfig(@NonNull LeonGunWar plugin) {
-        super(plugin, Paths.get("configs/killStreaks.yml"), Paths.get("killStreaks.yml"));
+        super(plugin, "configs/killStreaks.yml", "killStreaks.yml");
     }
 
     @SneakyThrows(value = { Exception.class })

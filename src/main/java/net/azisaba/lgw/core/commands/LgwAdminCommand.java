@@ -84,7 +84,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             String mapName = String.join(" ", args).substring(args[0].length() + 1);
 
             // 指定されたマップがない場合はreturn
-            List<GameMap> correctMapList = LeonGunWar.getPlugin().getMapContainer().getAllGameMap().stream()
+            List<GameMap> correctMapList = LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
                     .filter(map -> map.getMapName().equalsIgnoreCase(mapName)
                             || map.getMapName().equalsIgnoreCase(mapName.replace(" ", "_")))
                     .collect(Collectors.toList());
@@ -122,10 +122,10 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         // reloadなら
         if ( Args.check(args, 0, "reload", "rl") ) {
             // マップの再読み込み
-            LeonGunWar.getPlugin().getMapContainer().loadMaps();
+            LeonGunWar.getPlugin().getMapsConfig().loadConfig();
 
             // Lobby Spawnの読み込み
-            LeonGunWar.getPlugin().getManager().loadLobbySpawnLocation();
+            LeonGunWar.getPlugin().getSpawnsConfig().loadConfig();
 
             // 設定ファイルの読み込み
             LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
@@ -143,7 +143,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
         }
         if ( args.length == 2 && Args.check(args, 0, "teleport", "tp") ) {
-            return Args.complete(args, 1, LeonGunWar.getPlugin().getMapContainer().getAllGameMap().stream()
+            return Args.complete(args, 1, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
                     .map(GameMap::getMapName)
                     .toArray(String[]::new));
         }

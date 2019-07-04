@@ -30,13 +30,13 @@ public class Config {
     protected final YamlConfiguration config = new YamlConfiguration();
 
     @NonNull
-    private final Path resourcePath;
+    private final String resourcePath;
 
     @NonNull
-    private final Path relativePath;
+    private final String relativePath;
 
     public InputStream getResource() {
-        return plugin.getClass().getClassLoader().getResourceAsStream(resourcePath.toString());
+        return plugin.getClass().getClassLoader().getResourceAsStream(resourcePath);
     }
 
     public Path getPath() {
@@ -45,6 +45,10 @@ public class Config {
 
     public boolean exists() {
         return Files.isRegularFile(getPath());
+    }
+
+    public boolean existsResource() {
+        return getResource() != null;
     }
 
     @SneakyThrows(value = { IOException.class })
@@ -61,7 +65,7 @@ public class Config {
     public void loadConfig() {
         if ( exists() ) {
             config.loadFromString(loadAsString());
-        } else {
+        } else if ( existsResource() ) {
             config.loadFromString(loadResourceAsString());
             saveResource();
         }
