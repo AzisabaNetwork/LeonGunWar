@@ -242,11 +242,6 @@ public class LightningStrikeListener implements Listener {
         damaged.setVelocity(new Vector());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void test(EntityDamageByEntityEvent e) {
-        Bukkit.getLogger().info(e.getDamager().toString() + " -> " + e.getEntity().toString());
-    }
-
     private ItemStack lightningStrike = null;
 
     private boolean isLightningStrikeItem(ItemStack item) {
