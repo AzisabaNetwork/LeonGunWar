@@ -1,6 +1,6 @@
 # LeonGunWar plugin
 
-[![Build Status](https://travis-ci.com/AzisabaNetwork/LeonGunWar.svg?branch=master)](https://travis-ci.com/AzisabaNetwork/LeonGunWar)
+[![CircleCI](https://circleci.com/gh/AzisabaNetwork/LeonGunWar.svg?style=svg)](https://circleci.com/gh/AzisabaNetwork/LeonGunWar)
 [![Discord](https://discordapp.com/api/guilds/357134045328572418/widget.png)](https://discord.gg/seheC2W)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
