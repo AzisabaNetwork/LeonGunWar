@@ -38,7 +38,7 @@ executors:
       TZ: Asia/Tokyo
 
 jobs:
-  install:
+  execute:
     executor: openjdk-executor
     steps:
       - load-git-cache
@@ -52,6 +52,6 @@ jobs:
 
 workflows:
   version: 2
-  build:
+  commit:
     jobs:
-      - install
+      - execute
