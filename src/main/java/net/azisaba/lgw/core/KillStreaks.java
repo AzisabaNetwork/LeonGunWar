@@ -16,10 +16,6 @@ public class KillStreaks {
 
     private final Map<UUID, AtomicInteger> streaksMap = new HashMap<>();
 
-    public void clear() {
-        streaksMap.clear();
-    }
-
     public void removedBy(Player player, Player killer) {
         int streaks = get(player).get();
         int minStreaks = LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()

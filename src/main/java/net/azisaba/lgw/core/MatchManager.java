@@ -268,8 +268,6 @@ public class MatchManager {
 
         // リーダーを削除
         ldmLeaderMap.clear();
-        // キルストリーク削除
-        LeonGunWar.getPlugin().getKillStreaks().clear();
         // モードをnullに設定
         matchMode = null;
 
