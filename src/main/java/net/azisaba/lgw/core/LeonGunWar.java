@@ -28,7 +28,7 @@ import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
-import net.azisaba.lgw.core.listeners.others.KillStreaksListener;
+import net.azisaba.lgw.core.listeners.others.StreaksListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
@@ -141,7 +141,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
-        Bukkit.getPluginManager().registerEvents(new KillStreaksListener(), this);
+        Bukkit.getPluginManager().registerEvents(new StreaksListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLimitListener(), this);
         Bukkit.getPluginManager().registerEvents(new TradeBoardListener(), this);

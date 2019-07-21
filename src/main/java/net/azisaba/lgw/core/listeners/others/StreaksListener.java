@@ -9,7 +9,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.PlayerAssistEvent;
 
-public class KillStreaksListener implements Listener {
+public class StreaksListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerDeath(PlayerDeathEvent e) {
