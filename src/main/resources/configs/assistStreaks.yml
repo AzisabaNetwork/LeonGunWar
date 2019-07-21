@@ -1,0 +1,15 @@
+# メッセージの設定 (messages)
+#
+# {0} = プラグインのプレフィックス
+# {1} = アシストストリークを達成したプレイヤーの表示名
+
+# 報酬の設定 (commands)
+#
+# {0} = アシストストリークを達成したプレイヤーの名前
+
+# アシストストリークの倍数の設定
+levels:
+  1:
+    messages: []
+    commands:
+      - "minecraft:give {0} minecraft:emerald 1"

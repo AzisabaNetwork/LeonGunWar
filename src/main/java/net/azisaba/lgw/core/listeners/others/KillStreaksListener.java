@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.events.PlayerAssistEvent;
 
 public class KillStreaksListener implements Listener {
 
@@ -22,5 +23,13 @@ public class KillStreaksListener implements Listener {
 
         // カウントを追加
         LeonGunWar.getPlugin().getKillStreaks().add(killer);
+    }
+
+    @EventHandler
+    public void onPlayerAssist(PlayerAssistEvent e) {
+        Player p = e.getPlayer();
+
+        // カウントを追加
+        LeonGunWar.getPlugin().getAssistStreaks().add(p);
     }
 }

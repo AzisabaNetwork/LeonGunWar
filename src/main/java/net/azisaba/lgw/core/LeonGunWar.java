@@ -8,6 +8,7 @@ import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
+import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
 import net.azisaba.lgw.core.configs.SpawnsConfig;
@@ -59,12 +60,14 @@ public class LeonGunWar extends JavaPlugin {
     private static JSONMessage quickBar;
 
     private KillStreaksConfig killStreaksConfig;
+    private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
 
     private final MatchStartCountdown countdown = new MatchStartCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
     private final MatchManager manager = new MatchManager();
+    private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
@@ -83,10 +86,12 @@ public class LeonGunWar extends JavaPlugin {
 
         // 設定ファイルを読み込むクラスの初期化
         killStreaksConfig = new KillStreaksConfig(this);
+        assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
         // 設定ファイルを読み込む
         killStreaksConfig.loadConfig();
+        assistStreaksConfig.loadConfig();
         spawnsConfig.loadConfig();
         mapsConfig.loadConfig();
 
