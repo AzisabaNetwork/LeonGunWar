@@ -1,9 +1,12 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.util.Vector;
+
+import net.azisaba.lgw.core.LeonGunWar;
 
 /**
  * ノックバックを無効化するためのクラス
@@ -16,8 +19,8 @@ public class NoKnockbackListener implements Listener {
     /**
      * プレイヤーがノックバックしたときにキャンセルするリスナー
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onPlayerVelocity(PlayerVelocityEvent e) {
-        e.setCancelled(true);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> e.setVelocity(new Vector()), 0);
     }
 }
