@@ -2,10 +2,10 @@ package net.azisaba.lgw.core.listeners.others;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.util.Vector;
 
@@ -25,11 +25,18 @@ public class NoKnockbackListener implements Listener {
     @EventHandler
     public void onKnockback(PlayerVelocityEvent e) {
         e.setVelocity(new Vector());
+    }
 
-        Player p = e.getPlayer();
-        EntityDamageEvent damage = p.getLastDamageCause();
-        if ( damage != null && damage.getCause() == DamageCause.ENTITY_EXPLOSION ) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> p.setVelocity(new Vector()), 0);
+    /**
+     * プレイヤーが爆発でノックバックしたときにキャンセルするリスナー
+     */
+    @EventHandler
+    public void onExplosionKnockback(EntityDamageByEntityEvent e) {
+        if ( e.getEntity() instanceof Player ) {
+            Player p = (Player) e.getEntity();
+            if ( e.getDamager() instanceof TNTPrimed ) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> p.setVelocity(new Vector()), 0);
+            }
         }
     }
 }
