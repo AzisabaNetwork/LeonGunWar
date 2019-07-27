@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.util.Vector;
@@ -16,7 +17,7 @@ public class NoKnockbackListener implements Listener {
     /**
      * プレイヤーがノックバックしたときにキャンセルするリスナー
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerVelocity(PlayerVelocityEvent e) {
         e.setCancelled(true);
         e.setVelocity(new Vector());
