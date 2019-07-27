@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.util.Vector;
 
 import net.azisaba.lgw.core.LeonGunWar;
@@ -21,8 +21,10 @@ public class NoKnockbackListener implements Listener {
      * プレイヤーがノックバックしたときにキャンセルするリスナー
      */
     @EventHandler
-    public void onPlayerVelocity(PlayerVelocityEvent e) {
-        Player p = e.getPlayer();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> p.setVelocity(new Vector()), 0);
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
+        if ( e.getEntity() instanceof Player ) {
+            Player p = (Player) e.getEntity();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> p.setVelocity(new Vector()), 0);
+        }
     }
 }
