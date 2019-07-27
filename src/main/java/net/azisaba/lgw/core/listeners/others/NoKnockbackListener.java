@@ -18,7 +18,7 @@ public class NoKnockbackListener implements Listener {
      */
     @EventHandler
     public void onPlayerVelocity(PlayerVelocityEvent e) {
-        Player p = e.getPlayer();
-        e.setVelocity(p.getLocation().getDirection());
+        Player p =e.getPlayer();
+        p.sendMessage("Velocity: "+e.getVelocity().toString()+" / "+p.getVelocity()+"、Direction: "+p.getLocation().getDirection());
     }
 }
