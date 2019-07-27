@@ -45,7 +45,9 @@ public class NoKnockbackListener implements Listener {
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> {
                     p.setVelocity(new Vector());
-                    p.teleport(damagedLocation);
+                    if ( !p.isDead() ) {
+                        p.teleport(damagedLocation);
+                    }
                 });
             }
         }
