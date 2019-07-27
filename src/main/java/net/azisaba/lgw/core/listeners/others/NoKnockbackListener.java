@@ -16,7 +16,7 @@ public class NoKnockbackListener implements Listener {
     /**
      * プレイヤーがノックバックしたときにキャンセルするリスナー
      */
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerVelocity(PlayerVelocityEvent e) {
         e.setCancelled(true);
     }
