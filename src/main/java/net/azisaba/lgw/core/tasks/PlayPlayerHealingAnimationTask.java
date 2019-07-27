@@ -22,13 +22,13 @@ public class PlayPlayerHealingAnimationTask extends BukkitRunnable {
         // 体力をカッコよく回復！
         double maxHp = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
         double diffHp = maxHp - p.getHealth();
-        PotionEffect healHpEffect = new PotionEffect(PotionEffectType.REGENERATION, (int) diffHp, 114514, false);
+        PotionEffect healHpEffect = new PotionEffect(PotionEffectType.REGENERATION, (int) diffHp, 1);
         p.addPotionEffect(healHpEffect, true);
 
         // 空腹度をカッコよく回復！
         double maxFood = 40;
         double diffFood = maxFood - p.getFoodLevel();
-        PotionEffect healFoodEffect = new PotionEffect(PotionEffectType.SATURATION, (int) diffFood, 1, false);
+        PotionEffect healFoodEffect = new PotionEffect(PotionEffectType.SATURATION, (int) diffFood, 1);
         p.addPotionEffect(healFoodEffect, true);
     }
 }
