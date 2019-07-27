@@ -25,13 +25,16 @@ public class AutoRespawnListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
 
+        // 消火！！
+        p.setFireTicks(0);
+
         e.setRespawnLocation(LeonGunWar.getPlugin().getManager().getRespawnLocation(p));
 
         new PlayPlayerHealingAnimationTask(p).runTaskLater(LeonGunWar.getPlugin(), 0);
         new BukkitRunnable() {
             @Override
             public void run() {
-                p.sendMessage("あなたの満腹度: " + p.getFoodLevel()+" + "+p.getSaturation() + "、あなたのHP: " + p.getHealth());
+                p.sendMessage("あなたの満腹度: " + p.getFoodLevel() + " + " + p.getSaturation() + "、あなたのHP: " + p.getHealth());
             }
         }.runTaskLater(LeonGunWar.getPlugin(), 5 * 20);
     }
