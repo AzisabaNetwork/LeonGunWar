@@ -187,7 +187,7 @@ public class LightningStrikeListener implements Listener {
     }
 
     @EventHandler
-    public void onBreak(EntityChangeBlockEvent e) {
+    public void onTNTPlaced(EntityChangeBlockEvent e) {
         Entity ent = e.getEntity();
         if ( !(ent instanceof FallingBlock) ) {
             return;
@@ -195,6 +195,7 @@ public class LightningStrikeListener implements Listener {
 
         if ( ent.hasMetadata("CreateExplosion") ) {
             if ( ent.getMetadata("CreateExplosion").get(0).asBoolean() == true ) {
+                e.setCancelled(true);
 
                 Player p = Bukkit.getPlayerExact(ent.getMetadata("RequestedPlayer").get(0).asString());
 
