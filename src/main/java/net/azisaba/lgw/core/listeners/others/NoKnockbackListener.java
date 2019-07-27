@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
  */
 public class NoKnockbackListener implements Listener {
 
-    private final List<DamageCause> useCancel = Arrays.asList(DamageCause.BLOCK_EXPLOSION, DamageCause.PROJECTILE);
+    private final List<DamageCause> useCancel = Arrays.asList(DamageCause.ENTITY_EXPLOSION, DamageCause.PROJECTILE);
 
     /**
      * プレイヤーがノックバックしたときにキャンセルするリスナー
