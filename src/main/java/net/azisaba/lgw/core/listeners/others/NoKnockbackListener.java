@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -7,6 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.util.Vector;
+
+import net.azisaba.lgw.core.LeonGunWar;
 
 /**
  * ノックバックを無効化するためのクラス
@@ -36,7 +41,12 @@ public class NoKnockbackListener implements Listener {
         if ( e.getEntity() instanceof Player ) {
             Player p = (Player) e.getEntity();
             if ( e.getDamager() instanceof TNTPrimed ) {
-                p.teleport(p.getLocation());
+                Location damagedLocation = p.getLocation();
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> {
+                    p.setVelocity(new Vector());
+                    p.teleport(damagedLocation);
+                });
             }
         }
     }
