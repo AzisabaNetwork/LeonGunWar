@@ -4,7 +4,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerVelocityEvent;
-import org.bukkit.util.Vector;
 
 /**
  * ノックバックを無効化するためのクラス
@@ -17,8 +16,8 @@ public class NoKnockbackListener implements Listener {
     /**
      * プレイヤーがノックバックしたときにキャンセルするリスナー
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerVelocity(PlayerVelocityEvent e) {
-        e.setVelocity(new Vector());
+        e.setCancelled(true);
     }
 }
