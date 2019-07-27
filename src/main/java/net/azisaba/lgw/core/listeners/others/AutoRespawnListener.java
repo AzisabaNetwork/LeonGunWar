@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +27,7 @@ public class AutoRespawnListener implements Listener {
         Player p = e.getPlayer();
 
         // 消火！！
-        p.setFireTicks(0);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> p.setFireTicks(0), 0);
 
         e.setRespawnLocation(LeonGunWar.getPlugin().getManager().getRespawnLocation(p));
 
