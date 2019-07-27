@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.tasks.PlayPlayerHealingAnimationTask;
@@ -27,5 +28,11 @@ public class AutoRespawnListener implements Listener {
         e.setRespawnLocation(LeonGunWar.getPlugin().getManager().getRespawnLocation(p));
 
         new PlayPlayerHealingAnimationTask(p).runTaskLater(LeonGunWar.getPlugin(), 0);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                p.sendMessage("あなたの満腹度: " + p.getFoodLevel() + "、あなたのHP: " + p.getHealth());
+            }
+        }.runTaskLater(LeonGunWar.getPlugin(), 5 * 20);
     }
 }
