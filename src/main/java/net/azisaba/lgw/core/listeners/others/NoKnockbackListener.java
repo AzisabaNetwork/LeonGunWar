@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerVelocityEvent;
@@ -21,6 +22,7 @@ public class NoKnockbackListener implements Listener {
      */
     @EventHandler
     public void onPlayerVelocity(PlayerVelocityEvent e) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> e.setVelocity(new Vector()), 0);
+        Player p = e.getPlayer();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> p.setVelocity(new Vector()), 0);
     }
 }
