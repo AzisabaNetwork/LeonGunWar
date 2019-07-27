@@ -35,7 +35,7 @@ public class AutoRespawnListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                p.sendMessage("あなたの満腹度: " + p.getFoodLevel() + " + " + p.getSaturation() + "、あなたのHP: " + p.getHealth());
+                p.sendMessage("あなたの満腹度: " + p.getFoodLevel() + " + " + p.getSaturation() + " / " + p.getExhaustion() + "、あなたのHP: " + p.getHealth());
             }
         }.runTaskLater(LeonGunWar.getPlugin(), 5 * 20);
     }
