@@ -27,10 +27,9 @@ public class NoKnockbackListener implements Listener {
     @EventHandler
     public void onPlayerVelocity(PlayerVelocityEvent e) {
         Player p = e.getPlayer();
+        e.setVelocity(new Vector());
         EntityDamageEvent damage = p.getLastDamageCause();
-        if ( damage != null && !useCancel.contains(damage.getCause()) ) {
-            e.setVelocity(new Vector());
-        } else {
+        if ( damage != null && useCancel.contains(damage.getCause()) ) {
             e.setCancelled(true);
         }
     }
