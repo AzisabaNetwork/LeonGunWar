@@ -22,7 +22,7 @@ public class PlayPlayerHealingAnimationTask extends BukkitRunnable {
         // 体力をカッコよく回復！
         double maxHp = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
         double diffHp = maxHp - p.getHealth();
-        PotionEffect healHpEffect = new PotionEffect(PotionEffectType.REGENERATION, (int) diffHp, 4);
+        PotionEffect healHpEffect = new PotionEffect(PotionEffectType.REGENERATION, (int) diffHp, 7);
         p.addPotionEffect(healHpEffect, true);
 
         // 空腹度をカッコよく回復！
