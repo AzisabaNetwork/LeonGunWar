@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -34,8 +35,15 @@ public class NoKnockbackListener implements Listener {
             if ( e.getDamager() instanceof TNTPrimed ) {
                 e.setCancelled(true);
                 p.setVelocity(new Vector());
-                if ( p.isValid() ) {
-                    p.damage(e.getDamage(), e.getDamager());
+
+                TNTPrimed tnt = (TNTPrimed) e.getDamager();
+                if ( !tnt.hasMetadata("CS_pName") ) {
+                    return;
+                }
+                String shooterName = tnt.getMetadata("CS_pName").get(0).asString();
+                Player shooter = Bukkit.getPlayerExact(shooterName);
+                if ( shooter != null ) {
+                    p.damage(e.getDamage(), shooter);
                 }
             }
         }
