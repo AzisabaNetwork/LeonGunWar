@@ -34,7 +34,9 @@ public class NoKnockbackListener implements Listener {
             if ( e.getDamager() instanceof TNTPrimed ) {
                 e.setCancelled(true);
                 p.setVelocity(new Vector());
-                p.damage(e.getDamage(), e.getDamager());
+                if ( p.isValid() ) {
+                    p.damage(e.getDamage(), e.getDamager());
+                }
             }
         }
     }
