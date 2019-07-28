@@ -17,7 +17,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -28,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
@@ -216,7 +214,7 @@ public class LightningStrikeListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
         Entity damager = e.getDamager();
         Entity damaged = e.getEntity();
@@ -238,7 +236,6 @@ public class LightningStrikeListener implements Listener {
         e.setCancelled(true);
 
         ((LivingEntity) damaged).damage(e.getDamage(), p);
-        damaged.setVelocity(new Vector());
     }
 
     private ItemStack lightningStrike = null;
