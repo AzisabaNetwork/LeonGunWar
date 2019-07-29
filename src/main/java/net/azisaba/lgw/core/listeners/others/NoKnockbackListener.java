@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -50,7 +51,12 @@ public class NoKnockbackListener implements Listener {
                 String shooterName = tnt.getMetadata("CS_pName").get(0).asString();
                 Player shooter = Bukkit.getPlayerExact(shooterName);
                 if ( shooter != null ) {
-                    p.damage(e.getDamage(), shooter);
+                    double damage = e.getDamage();
+                    double toughness = p.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
+                    double defensePoints = p.getAttribute(Attribute.GENERIC_ARMOR).getValue();
+                    double health = p.getHealth();
+                    double naturalDamage = damage * (1 - Math.min(health, Math.max(defensePoints / 5, defensePoints - damage / (2 + toughness / 4))) / 25);
+                    p.damage(naturalDamage, p == shooter ? null : shooter);
                 }
             }
         }
