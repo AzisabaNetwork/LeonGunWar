@@ -54,8 +54,7 @@ public class NoKnockbackListener implements Listener {
                     double damage = e.getDamage();
                     double toughness = p.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
                     double defensePoints = p.getAttribute(Attribute.GENERIC_ARMOR).getValue();
-                    double health = p.getHealth();
-                    double naturalDamage = damage * (1 - Math.min(health, Math.max(defensePoints / 5, defensePoints - damage / (2 + toughness / 4))) / 25);
+                    double naturalDamage = damage * (1 - Math.min(20, Math.max(defensePoints / 5, defensePoints - damage / (2 + toughness / 4))) / 25);
                     p.damage(naturalDamage, p == shooter ? null : shooter);
                 }
             }
