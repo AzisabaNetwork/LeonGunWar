@@ -62,6 +62,7 @@ public class NoKnockbackListener implements Listener {
                     String shooterName = tnt.getMetadata("CS_pName").get(0).asString();
                     shooter = Bukkit.getPlayerExact(shooterName);
 
+                    // 自分にダメージが当たらないバグを直す
                     if ( shooter == p ) {
                         shooter = null;
                     }
@@ -72,6 +73,8 @@ public class NoKnockbackListener implements Listener {
                     // 銃の名前を取得
                     String weaponTitle = tnt.getMetadata("CS_potex").get(0).asString();
                     String multiString = cs.getString(weaponTitle + ".Explosions.Damage_Multiplier");
+
+                    // 銃の設定からパーセント計算
                     if ( multiString != null ) {
                         double multiplier = Double.valueOf(multiString) * 0.01;
                         damage *= multiplier;
