@@ -30,6 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.Damage;
 
 /**
  * ライトニングストライクをCrackShotで実装するとキャンセルできないのでこっちで実装
@@ -235,7 +236,7 @@ public class LightningStrikeListener implements Listener {
 
         e.setCancelled(true);
 
-        ((LivingEntity) damaged).damage(e.getDamage(), p);
+        Damage.damageNaturally((LivingEntity) damaged, e.getDamage(), p);
     }
 
     private ItemStack lightningStrike = null;
