@@ -1,15 +1,17 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.util.Vector;
+
+import com.shampaggon.crackshot.CSDirector;
 
 import net.azisaba.lgw.core.utils.Damage;
 
@@ -50,38 +52,36 @@ public class NoKnockbackListener implements Listener {
                 p.setVelocity(new Vector());
 
                 TNTPrimed tnt = (TNTPrimed) e.getDamager();
-                if ( !tnt.hasMetadata("CS_pName") ) {
-                    return;
+                double damage = e.getDamage();
+                Entity shooter = null;
+                CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+
+                // 攻撃者を設定
+                if ( tnt.hasMetadata("CS_pName") ) {
+                    // CrackShotからTNTの作成者を取得
+                    String shooterName = tnt.getMetadata("CS_pName").get(0).asString();
+                    shooter = Bukkit.getPlayerExact(shooterName);
+
+                    if ( shooter == p ) {
+                        shooter = null;
+                    }
                 }
 
-                // CrackShotからTNTの作成者を取得
-                String shooterName = tnt.getMetadata("CS_pName").get(0).asString();
-                Player shooter = Bukkit.getPlayerExact(shooterName);
-
-                // 作成者がいる場合
-                if ( shooter != null ) {
-                    // 作成者の攻撃としてダメージを与える
-                    // 作成者が自分の場合は強制的にダメージを与える
-                    Damage.damageNaturally(p, e.getDamage(), p == shooter ? null : shooter);
+                // ダメージを計算
+                if ( tnt.hasMetadata("CS_potex") ) {
+                    // 銃の名前を取得
+                    String weaponTitle = tnt.getMetadata("CS_potex").get(0).asString();
+                    String multiString = cs.getString(weaponTitle + ".Explosions.Damage_Multiplier");
+                    if ( multiString != null ) {
+                        double multiplier = Double.valueOf(multiString) * 0.01;
+                        damage *= multiplier;
+                    }
                 }
+
+                // 作成者の攻撃としてダメージを与える
+                // 作成者が自分の場合や、作成者がいない場合は強制的にダメージを与える
+                Damage.damageNaturally(p, damage, shooter);
             }
-        }
-    }
-
-    /**
-     * 近くの重複したTNTを削除
-     */
-    @EventHandler
-    public void onExplosion(EntityExplodeEvent e) {
-        if ( e.getEntity() instanceof TNTPrimed ) {
-            TNTPrimed tnt = (TNTPrimed) e.getEntity();
-
-            double range = e.getYield();
-            tnt.getNearbyEntities(range, range, range).stream()
-                    .filter(entity -> entity instanceof TNTPrimed)
-                    .map(entity -> (TNTPrimed) entity)
-                    .filter(duplicate -> duplicate.getFuseTicks() < 20)
-                    .forEach(TNTPrimed::remove);
         }
     }
 }
