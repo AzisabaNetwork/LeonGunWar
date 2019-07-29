@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.util.Vector;
 
@@ -62,16 +63,25 @@ public class NoKnockbackListener implements Listener {
                     // 作成者の攻撃としてダメージを与える
                     // 作成者が自分の場合は強制的にダメージを与える
                     Damage.damageNaturally(p, e.getDamage(), p == shooter ? null : shooter);
-
-                    // 近くの重複したTNTを削除
-                    double range = tnt.getYield();
-                    p.getNearbyEntities(range, range, range).stream()
-                            .filter(entity -> entity instanceof TNTPrimed)
-                            .map(entity -> (TNTPrimed) entity)
-                            .filter(duplicate -> duplicate.getFuseTicks() < 10)
-                            .forEach(TNTPrimed::remove);
                 }
             }
+        }
+    }
+
+    /**
+     * 近くの重複したTNTを削除
+     */
+    @EventHandler
+    public void onExplosion(EntityExplodeEvent e) {
+        if ( e.getEntity() instanceof TNTPrimed ) {
+            TNTPrimed tnt = (TNTPrimed) e.getEntity();
+
+            double range = e.getYield();
+            tnt.getNearbyEntities(range, range, range).stream()
+                    .filter(entity -> entity instanceof TNTPrimed)
+                    .map(entity -> (TNTPrimed) entity)
+                    .filter(duplicate -> duplicate.getFuseTicks() < 20)
+                    .forEach(TNTPrimed::remove);
         }
     }
 }
