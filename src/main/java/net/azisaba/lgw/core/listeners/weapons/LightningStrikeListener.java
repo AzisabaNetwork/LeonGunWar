@@ -13,13 +13,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -30,7 +28,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.lgw.core.utils.Damage;
 
 /**
  * ライトニングストライクをCrackShotで実装するとキャンセルできないのでこっちで実装
@@ -206,37 +203,13 @@ public class LightningStrikeListener implements Listener {
                 loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 3, false, false);
                 TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
                 tnt.setFuseTicks(0);
-                tnt.setMetadata("PrimedPlayer", new FixedMetadataValue(LeonGunWar.getPlugin(), p.getName()));
+                tnt.setMetadata("CS_pName", new FixedMetadataValue(LeonGunWar.getPlugin(), p.getName()));
 
                 Bukkit.getOnlinePlayers().forEach(online -> {
                     online.playSound(loc, Sound.ENTITY_ENDERDRAGON_HURT, 1, 1.5f);
                 });
             }
         }
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageByEntityEvent e) {
-        Entity damager = e.getDamager();
-        Entity damaged = e.getEntity();
-
-        if ( !(damaged instanceof LivingEntity) || !(damager instanceof TNTPrimed) ) {
-            return;
-        }
-
-        if ( !damager.hasMetadata("PrimedPlayer") ) {
-            return;
-        }
-
-        Player p = Bukkit.getPlayerExact(damager.getMetadata("PrimedPlayer").get(0).asString());
-
-        if ( p == null ) {
-            return;
-        }
-
-        e.setCancelled(true);
-
-        Damage.damageNaturally((LivingEntity) damaged, e.getDamage(), p);
     }
 
     private ItemStack lightningStrike = null;
