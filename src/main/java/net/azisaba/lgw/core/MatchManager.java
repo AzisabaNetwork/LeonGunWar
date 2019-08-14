@@ -560,11 +560,24 @@ public class MatchManager {
         // チーム分けする
         teamDistributor.distributePlayer(p, new ArrayList<>(teams.values()));
 
-        // セットアップする
-        teams.entrySet().stream()
-                .filter(entry -> entry.getValue().getEntries().contains(p.getName()))
+        // チームを取得する
+        Map.Entry<BattleTeam, Team> entry = teams.entrySet().stream()
+                .filter(e -> e.getValue().getEntries().contains(p.getName()))
                 .findFirst()
-                .ifPresent(entry -> setUpPlayer(p, entry.getKey()));
+                .orElse(null);
+        BattleTeam team = entry != null ? entry.getKey() : null;
+
+        if ( team == null ) {
+            return false;
+        }
+
+        // セットアップする
+        setUpPlayer(p, team);
+
+        Player leader = getLDMLeader(team);
+        if ( leader != null ) {
+            p.sendMessage(Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれています！", LeonGunWar.GAME_PREFIX, leader.getPlayerListName()));
+        }
 
         Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
