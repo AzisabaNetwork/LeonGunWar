@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
@@ -43,6 +44,10 @@ public class NoKnockbackListener implements Listener {
 
             Explosive explosive = (Explosive) e.getEntity();
             double power = explosive.getYield();
+
+            // パーティクルを表示
+            Particle explode = power >= 4 ? Particle.EXPLOSION_HUGE : Particle.EXPLOSION_LARGE;
+            e.getLocation().getWorld().spawnParticle(explode, e.getLocation(), 1);
 
             List<Damageable> targets = explosive.getNearbyEntities(power, power, power).stream()
                     .filter(target -> target instanceof Damageable)
