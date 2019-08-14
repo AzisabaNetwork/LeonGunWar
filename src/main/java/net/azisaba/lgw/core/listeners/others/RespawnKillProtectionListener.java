@@ -9,6 +9,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitTask;
@@ -24,6 +25,34 @@ public class RespawnKillProtectionListener implements Listener {
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
 
+    private boolean isProtected(Player victim) {
+        return Instant.now().isBefore(remainTimes.getOrDefault(victim, Instant.now()));
+    }
+
+    private void sendProtected(Player victim) {
+        victim.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
+    }
+
+    private void sendVictimProtected(Player attacker, Player victim) {
+        attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent e) {
+        // ダメージを受けたEntityがプレイヤーでなければreturn
+        if ( !(e.getEntity() instanceof Player) ) {
+            return;
+        }
+
+        Player victim = (Player) e.getEntity();
+
+        // リスポーンから5秒以内ならキャンセル
+        if ( isProtected(victim) ) {
+            e.setCancelled(true);
+            // sendProtected(victim);
+        }
+    }
+
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent e) {
         // ダメージを受けたEntityがプレイヤーでなければreturn
@@ -34,8 +63,9 @@ public class RespawnKillProtectionListener implements Listener {
         Player victim = (Player) e.getEntity();
 
         // リスポーンから5秒以内ならキャンセル
-        if ( Instant.now().isBefore(remainTimes.getOrDefault(victim, Instant.now())) ) {
+        if ( isProtected(victim) ) {
             e.setCancelled(true);
+            sendProtected(victim);
 
             Player attacker = null;
             // 攻撃したEntityがプレイヤーならメッセージ送信対象に指定
@@ -53,7 +83,7 @@ public class RespawnKillProtectionListener implements Listener {
 
             // attackerがnullではない場合、メッセージを送信
             if ( attacker != null ) {
-                attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
+                sendVictimProtected(attacker, victim);
             }
         }
     }
@@ -74,22 +104,5 @@ public class RespawnKillProtectionListener implements Listener {
             // タスク開始
             return new RespawnKillProtectionTask(p, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
         });
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageByEntityEvent e) {
-
-        // プレイヤーではない場合はreturn
-        if ( !(e.getDamager() instanceof Player) ) {
-            return;
-        }
-
-        Player p = (Player) e.getDamager();
-
-        // プレイヤーが無敵時間の場合、攻撃をキャンセル
-        if ( Instant.now().isBefore(remainTimes.getOrDefault(p, Instant.now())) ) {
-            e.setCancelled(true);
-            p.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
-        }
     }
 }
