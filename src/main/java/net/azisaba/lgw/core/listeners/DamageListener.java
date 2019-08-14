@@ -66,7 +66,9 @@ public class DamageListener implements Listener {
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 
         // タイトルを表示
-        killer.sendTitle("", Chat.f("&c+1 Kill"), 0, 20, 10);
+        killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);
+        int streaks = LeonGunWar.getPlugin().getKillStreaks().get(killer).get();
+        Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> killer.sendTitle("", Chat.f("&b{0} &7Kill Streaks", streaks), 0, 20, 20), 20);
         // 音を鳴らす
         killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
     }
@@ -104,7 +106,9 @@ public class DamageListener implements Listener {
                     LeonGunWar.getPlugin().getManager().getKillDeathCounter().addAssist(assist);
 
                     // タイトルを表示
-                    assist.sendTitle("", Chat.f("&7+1 Assist"), 0, 20, 10);
+                    assist.sendTitle("", Chat.f("&e+1 &7Assist"), 0, 10, 10);
+                    int streaks = LeonGunWar.getPlugin().getAssistStreaks().get(assist).get();
+                    Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> assist.sendTitle("", Chat.f("&a{0} &7Assist Streaks", streaks), 0, 20, 20), 20);
                     // 音を鳴らす
                     assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
                 });
