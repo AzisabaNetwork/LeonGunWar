@@ -7,9 +7,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
-import org.bukkit.util.Vector;
 
 import com.shampaggon.crackshot.CSDirector;
 
@@ -28,19 +26,13 @@ public class NoKnockbackListener implements Listener {
      */
     @EventHandler
     public void onKnockback(PlayerVelocityEvent e) {
-        Player p = e.getPlayer();
-        EntityDamageEvent damage = p.getLastDamageCause();
-        if ( damage != null && damage.getCause().toString().endsWith("_EXPLOSION") ) {
-            e.setVelocity(new Vector());
-        } else {
-            e.setCancelled(true);
-        }
+        e.setCancelled(true);
     }
 
     /**
      * プレイヤーが爆発でノックバックしたときにキャンセルするリスナー
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onExplosionKnockback(EntityDamageByEntityEvent e) {
         if ( e.getEntity() instanceof Player ) {
             Player p = (Player) e.getEntity();
@@ -48,8 +40,6 @@ public class NoKnockbackListener implements Listener {
             if ( e.getDamager() instanceof TNTPrimed ) {
                 // TNTを爆発させない
                 e.setCancelled(true);
-                // ノックバックを削除
-                p.setVelocity(new Vector());
 
                 TNTPrimed tnt = (TNTPrimed) e.getDamager();
                 double damage = e.getDamage();
