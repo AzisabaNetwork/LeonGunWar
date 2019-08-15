@@ -56,7 +56,7 @@ public class NoKnockbackListener implements Listener {
                     .collect(Collectors.toList());
 
             for ( Damageable target : targets ) {
-                double damage = 4.0f;
+                double damage = 20;
 
                 Entity shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");

@@ -201,7 +201,7 @@ public class LightningStrikeListener implements Listener {
 
                 Location loc = e.getEntity().getLocation();
                 TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
-                tnt.setYield(4.0f);
+                tnt.setYield(4);
                 tnt.setFuseTicks(0);
                 tnt.setMetadata("CS_pName", new FixedMetadataValue(LeonGunWar.getPlugin(), p.getName()));
 
