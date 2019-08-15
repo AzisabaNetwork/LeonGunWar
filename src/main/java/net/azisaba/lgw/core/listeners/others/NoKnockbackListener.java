@@ -45,12 +45,13 @@ public class NoKnockbackListener implements Listener {
 
             Explosive explosive = (Explosive) e.getEntity();
             double power = explosive.getYield();
+            double radius = 2 * power;
 
             // パーティクルを表示
             Particle explode = power >= 4 ? Particle.EXPLOSION_HUGE : Particle.EXPLOSION_LARGE;
             e.getLocation().getWorld().spawnParticle(explode, e.getLocation(), 1);
 
-            List<Damageable> targets = explosive.getNearbyEntities(power, power, power).stream()
+            List<Damageable> targets = explosive.getNearbyEntities(radius, radius, radius).stream()
                     .filter(target -> target instanceof Damageable)
                     .map(target -> (Damageable) target)
                     .collect(Collectors.toList());
@@ -59,7 +60,7 @@ public class NoKnockbackListener implements Listener {
                 double damage = 20;
                 double distance = explosive.getLocation().distance(target.getLocation());
 
-                damage *= (power - distance) / 4;
+                damage *= (radius - distance) / (2 * 4);
 
                 Entity shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
