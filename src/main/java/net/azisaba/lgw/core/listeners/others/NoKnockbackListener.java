@@ -57,6 +57,9 @@ public class NoKnockbackListener implements Listener {
 
             for ( Damageable target : targets ) {
                 double damage = 20;
+                double distance = explosive.getLocation().distance(target.getLocation());
+
+                damage *= (power - distance) / 4;
 
                 Entity shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
@@ -91,7 +94,7 @@ public class NoKnockbackListener implements Listener {
                     LivingEntity entity = (LivingEntity) target;
                     double toughness = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
                     double defensePoints = entity.getAttribute(Attribute.GENERIC_ARMOR).getValue();
-                    damage = damage * (1 - Math.min(20, Math.max(defensePoints / 5, defensePoints - damage / (2 + toughness / 4))) / 25);
+                    damage *= 1 - Math.min(20, Math.max(defensePoints / 5, defensePoints - damage / (2 + toughness / 4))) / 25;
                 }
 
                 // 作成者の攻撃としてダメージを与える
