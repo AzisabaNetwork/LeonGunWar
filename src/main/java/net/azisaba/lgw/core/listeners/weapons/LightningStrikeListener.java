@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -156,7 +157,6 @@ public class LightningStrikeListener implements Listener {
             private final Location middleLoc = loc.clone();
             private int processed = 0;
 
-            @SuppressWarnings("deprecation")
             @Override
             public void run() {
 
@@ -169,7 +169,7 @@ public class LightningStrikeListener implements Listener {
                     Location loc = getRandomLocation(middleLoc.clone());
                     loc.setY(middleLoc.getY() + 70);
 
-                    FallingBlock fall = loc.getWorld().spawnFallingBlock(loc, Material.TNT, (byte) 0);
+                    FallingBlock fall = loc.getWorld().spawnFallingBlock(loc, new MaterialData(Material.TNT));
                     fall.setHurtEntities(false);
                     fall.setDropItem(false);
                     fall.setMetadata("CreateExplosion", new FixedMetadataValue(LeonGunWar.getPlugin(), true));
@@ -200,8 +200,8 @@ public class LightningStrikeListener implements Listener {
                 }
 
                 Location loc = e.getEntity().getLocation();
-                loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 3, false, false);
                 TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
+                tnt.setYield(4.0f);
                 tnt.setFuseTicks(0);
                 tnt.setMetadata("CS_pName", new FixedMetadataValue(LeonGunWar.getPlugin(), p.getName()));
 

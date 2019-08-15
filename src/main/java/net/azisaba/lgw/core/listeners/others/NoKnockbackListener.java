@@ -12,6 +12,7 @@ import org.bukkit.entity.Explosive;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 
@@ -55,8 +56,8 @@ public class NoKnockbackListener implements Listener {
                     .collect(Collectors.toList());
 
             for ( Damageable target : targets ) {
-                double distance = explosive.getLocation().distance(target.getLocation());
-                double damage = power / distance;
+                double damage = 4.0f;
+
                 Entity shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
@@ -97,6 +98,13 @@ public class NoKnockbackListener implements Listener {
                 // 作成者が自分の場合や、作成者がいない場合は強制的にダメージを与える
                 target.damage(damage, shooter);
             }
+        }
+    }
+
+    @EventHandler
+    public void onExplosionDamage(EntityDamageByEntityEvent e) {
+        if ( e.getDamager() instanceof Explosive ) {
+            e.setCancelled(true);
         }
     }
 }
