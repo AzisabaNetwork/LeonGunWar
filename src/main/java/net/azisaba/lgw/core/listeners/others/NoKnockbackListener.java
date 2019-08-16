@@ -58,7 +58,7 @@ public class NoKnockbackListener implements Listener {
 
             for ( Damageable target : targets ) {
                 double damage = 20;
-                double distance = explosive.getLocation().distance(target.getLocation());
+                double distance = explosive.getLocation().toVector().distance(target.getLocation().toVector());
 
                 damage *= (radius - distance) / (2 * 4);
 
