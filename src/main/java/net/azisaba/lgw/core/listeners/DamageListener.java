@@ -162,6 +162,11 @@ public class DamageListener implements Listener {
     public void deathMessageChanger(PlayerDeathEvent e) {
         Player p = e.getEntity();
 
+        // 試合中のワールドではない場合はreturn
+        if ( p.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld() ) {
+            return;
+        }
+
         // 殺したEntityが居ない場合か、同じプレイヤーの場合自滅とする
         if ( p.getKiller() == null || p.getKiller() == p ) {
 
