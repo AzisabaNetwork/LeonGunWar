@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -14,11 +15,16 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.google.common.util.concurrent.RateLimiter;
+
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.tasks.RespawnKillProtectionTask;
 import net.azisaba.lgw.core.utils.Chat;
 
 public class RespawnKillProtectionListener implements Listener {
+
+    private final RateLimiter protectedThrottle = RateLimiter.create(1);
+    private final RateLimiter victimProtectedThrottle = RateLimiter.create(1);
 
     private final long invincibleSeconds = 5;
 
@@ -30,11 +36,19 @@ public class RespawnKillProtectionListener implements Listener {
     }
 
     private void sendProtected(Player victim) {
-        victim.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
+        Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), () -> {
+            if ( protectedThrottle.tryAcquire() ) {
+                victim.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
+            }
+        });
     }
 
     private void sendVictimProtected(Player attacker, Player victim) {
-        attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
+        Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), () -> {
+            if ( victimProtectedThrottle.tryAcquire() ) {
+                attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
+            }
+        });
     }
 
     @EventHandler
