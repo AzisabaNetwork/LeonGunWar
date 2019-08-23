@@ -110,5 +110,12 @@
       <version>1.0.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <artifactId>net.azisaba</artifactId>
+      <groupId>KDStatusReloaded</groupId>
+      <scope>system</scope>
+      <version>1.0.0</version>
+      <systemPath>${basedir}/libs/KDStatusReloaded.jar</systemPath>
+    </dependency>
   </dependencies>
 </project>
