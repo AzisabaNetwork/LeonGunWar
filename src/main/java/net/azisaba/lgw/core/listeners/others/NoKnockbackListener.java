@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import com.shampaggon.crackshot.CSDirector;
@@ -106,13 +107,16 @@ public class NoKnockbackListener implements Listener {
                 }
 
                 // 攻撃者とターゲットが同じチームかつ、フレンドリーファイヤーが許可されていない場合はダメージを無くす
-                for ( Team team : shooter.getScoreboard().getTeams() ) {
-                    if ( team.allowFriendlyFire() ) {
-                        continue;
-                    }
+                Scoreboard scoreboard = shooter.getScoreboard();
+                if ( scoreboard != null ) {
+                    for ( Team team : scoreboard.getTeams() ) {
+                        if ( team.allowFriendlyFire() ) {
+                            continue;
+                        }
 
-                    if ( team.hasEntry(shooter.getName()) && team.hasEntry(target.getName()) ) {
-                        damage = 0;
+                        if ( team.hasEntry(shooter.getName()) && team.hasEntry(target.getName()) ) {
+                            damage = 0;
+                        }
                     }
                 }
 
