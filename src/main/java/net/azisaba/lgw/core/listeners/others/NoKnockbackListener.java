@@ -7,15 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.scoreboard.Team;
 
 import com.shampaggon.crackshot.CSDirector;
 
@@ -63,7 +64,7 @@ public class NoKnockbackListener implements Listener {
 
                 damage *= (radius - distance) / (2 * 4);
 
-                Entity shooter = null;
+                Player shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
                 // 攻撃者を設定
@@ -97,6 +98,22 @@ public class NoKnockbackListener implements Listener {
                     double toughness = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
                     double defensePoints = entity.getAttribute(Attribute.GENERIC_ARMOR).getValue();
                     damage *= 1 - Math.min(20, Math.max(defensePoints / 5, defensePoints - damage / (2 + toughness / 4))) / 25;
+                }
+
+                // ターゲットが無敵の場合はダメージを無くす
+                if ( target.isInvulnerable() ) {
+                    damage = 0;
+                }
+
+                // 攻撃者とターゲットが同じチームかつ、フレンドリーファイヤーが許可されていない場合はダメージを無くす
+                for ( Team team : shooter.getScoreboard().getTeams() ) {
+                    if ( team.allowFriendlyFire() ) {
+                        continue;
+                    }
+
+                    if ( team.hasEntry(shooter.getName()) && team.hasEntry(target.getName()) ) {
+                        damage = 0;
+                    }
                 }
 
                 // 作成者の攻撃としてダメージを与える
