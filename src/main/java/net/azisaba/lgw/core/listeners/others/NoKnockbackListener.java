@@ -13,6 +13,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 
@@ -100,7 +101,11 @@ public class NoKnockbackListener implements Listener {
 
                 // 作成者の攻撃としてダメージを与える
                 // 作成者が自分の場合や、作成者がいない場合は強制的にダメージを与える
-                target.damage(damage, shooter);
+                target.damage(damage);
+
+                @SuppressWarnings("deprecation")
+                EntityDamageByEntityEvent cause = new EntityDamageByEntityEvent(shooter, target, DamageCause.ENTITY_EXPLOSION, damage);
+                target.setLastDamageCause(cause);
             }
         }
     }
