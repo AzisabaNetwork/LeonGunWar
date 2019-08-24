@@ -23,7 +23,7 @@ public class KDTeamDistributor_BETA implements TeamDistributor {
     /**
      * プレイヤーのパワーレベルを取得するメソッド
      *
-     * 計算式: KDx1000 + 一か月のキル数
+     * 計算式: KDx1000 + 一か月のキル数÷10
      *
      * 例外: 累計キル数が100未満の人は上記の「KDx1000」 を800に固定する
      */
@@ -39,7 +39,7 @@ public class KDTeamDistributor_BETA implements TeamDistributor {
         //代入
         pl = (int)(kd*1000);
         //今月のキル数を代入
-        pl = pl + pd.getMonthlyKills();
+        pl = pl + (pd.getMonthlyKills()/10);
         return pl;
     }
 
@@ -64,9 +64,9 @@ public class KDTeamDistributor_BETA implements TeamDistributor {
 
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
-        // エントリーが少ないチームにプレイヤーを追加 (同じ場合はチームレベルの少ない方、それも同じ場合はポイントが少ない方、それでも同じなら最初の要素)
+        // チームレベルの少ない方にプレイヤーを追加 (同じ場合はエントリーが少ないチームの方、それも同じ場合はポイントが少ない方、それでも同じなら最初の要素)
         teams.stream()
-                .sorted(Comparator.comparing(Team::getSize).thenComparing(manager::getTeamPowerLevel).thenComparing(manager::getCurrentTeamPoint))
+                .sorted(Comparator.comparing(manager::getTeamPowerLevel).thenComparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
                 .findFirst()
                 .ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
     }

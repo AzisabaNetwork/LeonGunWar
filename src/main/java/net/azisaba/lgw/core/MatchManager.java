@@ -769,6 +769,8 @@ public class MatchManager {
     /**
      * チームの戦力レベルを取得します
      *
+     * 全プレイヤーのパワーレベル合計 + 人数x1000
+     *
      * @param team 対象のチーム
      * @return レベル
      */
@@ -783,7 +785,7 @@ public class MatchManager {
                 continue;
             }
             //チームパワーレベルに代入
-            tpl = tpl + KDTeamDistributor_BETA.getPlayerPowerLevel(p);
+            tpl = tpl + KDTeamDistributor_BETA.getPlayerPowerLevel(p) + 1000;
         }
         return tpl;
     }
