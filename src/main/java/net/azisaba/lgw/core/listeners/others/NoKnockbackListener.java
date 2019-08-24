@@ -107,13 +107,18 @@ public class NoKnockbackListener implements Listener {
 
                 // 攻撃者とターゲットが同じチームかつ、フレンドリーファイヤーが許可されていない場合はダメージを無くす
                 if ( shooter != null ) {
-                    for ( Team team : shooter.getScoreboard().getTeams() ) {
-                        if ( team.allowFriendlyFire() ) {
-                            continue;
-                        }
 
-                        if ( team.hasEntry(shooter.getName()) && team.hasEntry(target.getName()) ) {
-                            damage = 0;
+                    if ( shooter.getScoreboard().getTeams() == null || shooter.getScoreboard().getTeams().isEmpty() ) {
+                        damage = 0;
+                    } else {
+                        for ( Team team : shooter.getScoreboard().getTeams() ) {
+                            if ( team.allowFriendlyFire() ) {
+                                continue;
+                            }
+
+                            if ( team.hasEntry(shooter.getName()) && team.hasEntry(target.getName()) ) {
+                                damage = 0;
+                            }
                         }
                     }
                 }
