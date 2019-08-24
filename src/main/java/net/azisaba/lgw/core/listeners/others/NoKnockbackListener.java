@@ -108,7 +108,8 @@ public class NoKnockbackListener implements Listener {
                 // 攻撃者とターゲットが同じチームかつ、フレンドリーファイヤーが許可されていない場合はダメージを無くす
                 if ( shooter != null ) {
 
-                    if ( shooter.getScoreboard().getTeams() == null || shooter.getScoreboard().getTeams().isEmpty() ) {
+                    // どこにも参加していない場合はダメージを無効化する
+                    if ( (target instanceof Player) && getJoiningTeam((Player) target).size() <= 0 ) {
                         damage = 0;
                     } else {
                         for ( Team team : shooter.getScoreboard().getTeams() ) {
@@ -139,5 +140,11 @@ public class NoKnockbackListener implements Listener {
         if ( e.getDamager() instanceof Explosive ) {
             e.setCancelled(true);
         }
+    }
+
+    private List<Team> getJoiningTeam(Player p) {
+        return p.getScoreboard().getTeams().stream()
+                .filter(team -> team.hasEntry(p.getName()))
+                .collect(Collectors.toList());
     }
 }
