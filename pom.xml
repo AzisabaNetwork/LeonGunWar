@@ -111,11 +111,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <artifactId>net.azisaba</artifactId>
-      <groupId>KDStatusReloaded</groupId>
-      <scope>system</scope>
+      <groupId>net.azisaba</groupId>
+      <artifactId>KDStatusReloaded</artifactId>
       <version>1.0.0</version>
-      <systemPath>${basedir}/libs/KDStatusReloaded.jar</systemPath>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
