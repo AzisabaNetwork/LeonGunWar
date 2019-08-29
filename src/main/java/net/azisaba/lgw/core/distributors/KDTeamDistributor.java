@@ -20,7 +20,7 @@ import jp.azisaba.lgw.kdstatus.KDUserData;
  * @author Mr_IK
  *
  */
-public class KDTeamDistributor_BETA implements TeamDistributor {
+public class KDTeamDistributor implements TeamDistributor {
 
     /**
      * プレイヤーのパワーレベルを取得するメソッド

@@ -30,7 +30,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
-import net.azisaba.lgw.core.distributors.KDTeamDistributor_BETA;
+import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
@@ -785,7 +785,7 @@ public class MatchManager {
                 continue;
             }
             // チームパワーレベルに代入
-            tpl = tpl + KDTeamDistributor_BETA.getPlayerPowerLevel(p) + 1000;
+            tpl = tpl + KDTeamDistributor.getPlayerPowerLevel(p) + 1000;
         }
         return tpl;
     }
