@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import net.azisaba.lgw.core.distributors.KDTeamDistributor_BETA;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -763,5 +764,29 @@ public class MatchManager {
         }
 
         return spawnPoint;
+    }
+
+    /**
+     * チームの戦力レベルを取得します
+     *
+     * 全プレイヤーのパワーレベル合計 + 人数x1000
+     *
+     * @param team 対象のチーム
+     * @return レベル
+     */
+    public int getTeamPowerLevel(Team team){
+        int tpl = 0;
+        //チームのエントリーリストを取得
+        for(String pn : team.getEntries()){
+            Player p = Bukkit.getPlayer(pn);
+            //(ないとは思うが)一応オンライン確認
+            if(p==null){
+                //オフラインの場合スキップ
+                continue;
+            }
+            //チームパワーレベルに代入
+            tpl = tpl + KDTeamDistributor_BETA.getPlayerPowerLevel(p) + 1000;
+        }
+        return tpl;
     }
 }
