@@ -33,8 +33,16 @@ public class KDTeamDistributor_BETA implements TeamDistributor {
         int pl = 0;
         // プレイヤーの戦績取得
         KDUserData pd = KDManager.getPlayerData(p, true);
+        int kills = pd.getKills();
+        int deaths = pd.getDeaths();
+
+        // デス数が0以下の場合は1に変更
+        if ( deaths <= 0 ) {
+            deaths = 1;
+        }
+
         // KD計算
-        double kd = (double) pd.getKills() / (double) pd.getDeaths();
+        double kd = (double) kills / (double) deaths;
         if ( pd.getKills() < 100 ) {
             kd = 0.8;
         }
