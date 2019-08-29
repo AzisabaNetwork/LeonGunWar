@@ -1,15 +1,17 @@
 package net.azisaba.lgw.core.distributors;
 
-import jp.azisaba.lgw.kdstatus.KDManager;
-import jp.azisaba.lgw.kdstatus.KDUserData;
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Team;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
+
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+
+import jp.azisaba.lgw.kdstatus.KDManager;
+import jp.azisaba.lgw.kdstatus.KDUserData;
 
 /**
  *
@@ -27,22 +29,21 @@ public class KDTeamDistributor_BETA implements TeamDistributor {
      *
      * 例外: 累計キル数が100未満の人は上記の「KDx1000」 を800に固定する
      */
-    public static int getPlayerPowerLevel(Player p){
+    public static int getPlayerPowerLevel(Player p) {
         int pl = 0;
-        //プレイヤーの戦績取得
-        KDUserData pd = KDManager.getPlayerData(p,true);
-        //KD計算
+        // プレイヤーの戦績取得
+        KDUserData pd = KDManager.getPlayerData(p, true);
+        // KD計算
         double kd = (double) pd.getKills() / (double) pd.getDeaths();
-        if(pd.getKills()<100){
+        if ( pd.getKills() < 100 ) {
             kd = 0.8;
         }
-        //代入
-        pl = (int)(kd*1000);
-        //今月のキル数を代入
-        pl = pl + (pd.getMonthlyKills()/10);
+        // 代入
+        pl = (int) (kd * 1000);
+        // 今月のキル数を代入
+        pl = pl + pd.getMonthlyKills() / 10;
         return pl;
     }
-
 
     /**
      * 戦績を参考にし、パワーバランスを同じにする振り分けを行います

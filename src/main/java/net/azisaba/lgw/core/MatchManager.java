@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import net.azisaba.lgw.core.distributors.KDTeamDistributor_BETA;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -31,6 +30,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
+import net.azisaba.lgw.core.distributors.KDTeamDistributor_BETA;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
@@ -774,17 +774,17 @@ public class MatchManager {
      * @param team 対象のチーム
      * @return レベル
      */
-    public int getTeamPowerLevel(Team team){
+    public int getTeamPowerLevel(Team team) {
         int tpl = 0;
-        //チームのエントリーリストを取得
-        for(String pn : team.getEntries()){
+        // チームのエントリーリストを取得
+        for ( String pn : team.getEntries() ) {
             Player p = Bukkit.getPlayer(pn);
-            //(ないとは思うが)一応オンライン確認
-            if(p==null){
-                //オフラインの場合スキップ
+            // (ないとは思うが)一応オンライン確認
+            if ( p == null ) {
+                // オフラインの場合スキップ
                 continue;
             }
-            //チームパワーレベルに代入
+            // チームパワーレベルに代入
             tpl = tpl + KDTeamDistributor_BETA.getPlayerPowerLevel(p) + 1000;
         }
         return tpl;

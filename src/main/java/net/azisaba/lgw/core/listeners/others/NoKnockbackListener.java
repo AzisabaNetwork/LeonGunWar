@@ -109,7 +109,7 @@ public class NoKnockbackListener implements Listener {
                 if ( shooter != null ) {
 
                     // どこにも参加していない場合はダメージを無効化する
-                    if ( (target instanceof Player) && getJoiningTeam((Player) target).size() <= 0 ) {
+                    if ( target instanceof Player && getJoiningTeam((Player) target).size() <= 0 ) {
                         damage = 0;
                     } else {
                         for ( Team team : shooter.getScoreboard().getTeams() ) {
