@@ -28,6 +28,7 @@ public enum MatchMode {
         case "teamdeathmatch":
         case "team":
             return TEAM_DEATH_MATCH;
+        case "tdmn":
         case "nolimit":
         case "no-limit":
         case "teamdeathmatchnolimit":

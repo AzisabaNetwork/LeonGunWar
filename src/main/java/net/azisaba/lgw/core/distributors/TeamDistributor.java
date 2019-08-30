@@ -28,4 +28,10 @@ public interface TeamDistributor {
      * @param teams チームのリスト
      */
     void distributePlayer(Player p, List<Team> teams);
+
+    /**
+     * スコアボードなどに表示する、振り分け方式の名前を指定します
+     * @return 振り分け方式の名前
+     */
+    String getDistributorName();
 }
