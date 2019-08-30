@@ -208,6 +208,14 @@ public class MatchManager {
             }
         }
 
+        // 全プレイヤーに音を鳴らす
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
+        });
+
+        // 開始メッセージ
+        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, "10分"));
         // CDMなら勝利条件を発表
         if( matchMode == MatchMode.CUSTOM_DEATH_MATCH ){
             // NO_LIMITがtrueなら
@@ -225,16 +233,6 @@ public class MatchManager {
                 });
             }
         }
-
-        // 全プレイヤーに音を鳴らす
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
-        });
-
-        // 開始メッセージ
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-        Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, "10分"));
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         // タスクスタート
@@ -596,8 +594,24 @@ public class MatchManager {
 
         Player leader = getLDMLeader(team);
         if ( leader != null ) {
-            p.sendMessage(Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれています！", LeonGunWar.GAME_PREFIX, leader.getPlayerListName()));
+            p.sendMessage(Chat.f("{0}&7所属チームのリーダーは &r{1} &7です！", LeonGunWar.GAME_PREFIX, leader.getPlayerListName()));
         }
+
+        //途中参加のプレイヤーに勝利条件を教える
+        // 開始メッセージ
+        p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        // CDMなら勝利条件を通達
+        if( matchMode == MatchMode.CUSTOM_DEATH_MATCH ){
+            // NO_LIMITがtrueなら
+            if(CustomTDMListener.isNo_limit()){
+                // 通知
+                p.sendMessage(Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利" , LeonGunWar.GAME_PREFIX));
+            }else{
+                // 勝利条件通知
+                p.sendMessage(Chat.f("{0}&7先に &a{1}キル &7で勝利" , LeonGunWar.GAME_PREFIX , CustomTDMListener.getMatchpoint()));
+            }
+        }
+        p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
