@@ -151,7 +151,7 @@ public class CustomMatchSignListener implements Listener {
     }
 
     @EventHandler
-    public void onSignPlace(SignChangeEvent e){
+    public void onSign(SignChangeEvent e){
         // プレイヤー / ブロック取得
         Player p = e.getPlayer();
 
@@ -244,6 +244,15 @@ public class CustomMatchSignListener implements Listener {
             }else if(Chat.r(itemname).equalsIgnoreCase("グレネード最大所持数 : x0")){
                 CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE,0);
             }
+            //最終確認 メイン・サブ・グレネード すべてが禁止の場合…
+            if(CustomTDMListener.customLimit.get(CustomTDMListener.MAIN_WEAPON)==0
+            &&CustomTDMListener.customLimit.get(CustomTDMListener.SUB_WEAPON)==0
+            &&CustomTDMListener.customLimit.get(CustomTDMListener.GRENADE)==0){
+                //申し訳ないがなにも使えないのでNG
+                p.sendMessage(Chat.f("&4すべて使用不可にすることはできません！1種類は残してください！"));
+                return;
+            }
+
             LeonGunWar.getPlugin().getManager().setMatchMode(mode);
             LeonGunWar.getPlugin().getManager().setTeamDistributor(distributor);
             Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
@@ -268,6 +277,8 @@ public class CustomMatchSignListener implements Listener {
 
         // プレイヤーのクリックしたインベントリチェック
         if( e.getClickedInventory().getType() != InventoryType.PLAYER ){
+            // クリック音
+            p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,1.0f,1.0f);
             // クリックした場所が…なら
             String itemname = clicked.getItemMeta().getDisplayName();
             if(e.getSlot() == 0){
