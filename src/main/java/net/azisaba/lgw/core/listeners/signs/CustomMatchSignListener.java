@@ -18,6 +18,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -118,7 +120,7 @@ public class CustomMatchSignListener implements Listener {
         Sign sign = (Sign) clickedBlock.getState();
 
         // 1行目が [entry] または [leave] でなければreturn
-        if ( !Chat.r(sign.getLine(0)).equalsIgnoreCase("[mode]") ) {
+        if ( !Chat.r(sign.getLine(0)).equalsIgnoreCase("[custom]") ) {
             return;
         }
 
@@ -147,6 +149,33 @@ public class CustomMatchSignListener implements Listener {
         // 更新
         sign.update();
     }
+
+    @EventHandler
+    public void onSignPlace(SignChangeEvent e){
+        // プレイヤー / ブロック取得
+        Player p = e.getPlayer();
+
+        // 1行目が [entry] または [leave] でなければreturn
+        if ( !Chat.r(e.getLine(0)).equalsIgnoreCase("[custom]") ) {
+            return;
+        }
+
+        // 権限がなければreturn
+        if ( !p.hasPermission("leongunwar.entrysign.changestate") ) {
+            return;
+        }
+
+        // イベントをキャンセル
+        e.setCancelled(true);
+
+        e.setLine(0,Chat.f("&b&l[&3&lCUSTOM&b&l]"));
+        e.setLine(1,Chat.f("&3&lCUSTOM &5&lDEATH"));
+        e.setLine(2,Chat.f("&4&lMATCH"));
+        e.setLine(3,Chat.f(LeonGunWar.SIGN_ACTIVE));
+
+        ((Sign)e.getBlock()).update();
+    }
+
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
