@@ -789,4 +789,33 @@ public class MatchManager {
         }
         return tpl;
     }
+
+    /**
+     * チームにいるAceの人数とパワーを取得します
+     *
+     * Aceプレイヤーのパワーレベル合計 + 人数x1000
+     *
+     * @param team 対象のチーム
+     * @return レベル
+     */
+    public int getTeamAcePowerLevel(Team team) {
+        int tpl = 0;
+        // チームのエントリーリストを取得
+        for ( String pn : team.getEntries() ) {
+            Player p = Bukkit.getPlayer(pn);
+            // (ないとは思うが)一応オンライン確認
+            if ( p == null ) {
+                // オフラインの場合スキップ
+                continue;
+            }
+            // Aceではないなら
+            if(KDTeamDistributor.isACE(p)){
+                continue;
+            }
+            // チームパワーレベルに代入
+            tpl = tpl + KDTeamDistributor.getPlayerPowerLevel(p) + 1000;
+        }
+        return tpl;
+    }
+
 }
