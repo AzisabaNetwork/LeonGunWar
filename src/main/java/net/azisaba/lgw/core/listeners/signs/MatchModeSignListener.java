@@ -230,8 +230,9 @@ public class MatchModeSignListener implements Listener {
         ItemStack item = new ItemStack(type);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(title);
-        if ( lore.length > 0 )
+        if ( lore.length > 0 ) {
             meta.setLore(Arrays.asList(lore));
+        }
         item.setItemMeta(meta);
         return item;
     }

@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -204,6 +205,24 @@ public class MatchManager {
 
                 // リーダーにタイトルを表示
                 target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
+            }
+        }
+
+        // CDMなら勝利条件を発表
+        if( matchMode == MatchMode.CUSTOM_DEATH_MATCH ){
+            // NO_LIMITがtrueなら
+            if(CustomTDMListener.isNo_limit()){
+                // 全プレイヤーに通知
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    p.sendMessage(
+                            Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利" , LeonGunWar.GAME_PREFIX));
+                });
+            }else{
+                // 勝利条件を全員に通知
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    p.sendMessage(
+                            Chat.f("{0}&7先に &a{1}キル &7で勝利" , LeonGunWar.GAME_PREFIX , CustomTDMListener.getMatchpoint()));
+                });
             }
         }
 
@@ -816,6 +835,34 @@ public class MatchManager {
             tpl = tpl + KDTeamDistributor.getPlayerPowerLevel(p) + 1000;
         }
         return tpl;
+    }
+
+    /**
+     * パワーレベルでどちらが大きいかを判断します
+     *
+     * @param team1,team2 チームのパワーレベル
+     * @return 1=チーム1が大きい 2=チーム2が大きい 0=等しい
+     */
+    public int getPowerLevelComparison(int team1, int team2) {
+        if(team1>team2){
+            return 1;
+        }else if(team1<team2){
+            return 2;
+        }else{
+            return 0;
+        }
+    }
+
+    /**
+     * パワーレベルでバランスがいいかを判断します
+     *
+     * team1からteam2が±1500ならtrue それ以外ならfalse
+     *
+     * @param team1,team2 チームのパワーレベル
+     * @return true = バランスがいい false = バランスが悪い
+     */
+    public boolean getPowerLevelBalance(int team1, int team2) {
+        return team1 + 1500 >= team2 && team1 - 1500 <= team2;
     }
 
 }
