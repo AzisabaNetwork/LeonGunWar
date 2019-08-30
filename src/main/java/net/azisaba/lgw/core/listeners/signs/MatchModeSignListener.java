@@ -197,8 +197,10 @@ public class MatchModeSignListener implements Listener {
         }
 
         LeonGunWar.getPlugin().getManager().setMatchMode(mode);
+        LeonGunWar.getPlugin().getManager().setTeamDistributor(distributor);
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+        Bukkit.broadcastMessage(Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX, distributor.getDistributorName()));
         Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
