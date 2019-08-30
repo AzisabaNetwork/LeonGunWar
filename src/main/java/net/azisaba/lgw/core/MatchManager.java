@@ -809,7 +809,7 @@ public class MatchManager {
                 continue;
             }
             // Aceではないなら
-            if ( KDTeamDistributor.isACE(p) ) {
+            if ( !KDTeamDistributor.isACE(p) ) {
                 continue;
             }
             // チームパワーレベルに代入

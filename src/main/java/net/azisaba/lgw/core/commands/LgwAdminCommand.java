@@ -168,7 +168,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 int matchpoint = manager.getCurrentTeamPoint(team);
 
                 // (もしリーダーデスマッチなら)リーダーの名前を取得
-                String leadername = "&4NOT_LEADER_DEATH_MATCH";
+                String leadername = Chat.f("&4NOT_LEADER_DEATH_MATCH");
 
                 if ( manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH ) {
 
