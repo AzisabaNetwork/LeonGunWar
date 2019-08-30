@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import net.azisaba.lgw.core.util.MatchMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,6 +19,11 @@ public class StreaksListener implements Listener {
 
         // 自滅は無視
         if ( killer == null || killer == deader ) {
+            return;
+        }
+
+        // カスタムマッチは無視
+        if(LeonGunWar.getPlugin().getManager().getMatchMode()== MatchMode.CUSTOM_DEATH_MATCH){
             return;
         }
 
