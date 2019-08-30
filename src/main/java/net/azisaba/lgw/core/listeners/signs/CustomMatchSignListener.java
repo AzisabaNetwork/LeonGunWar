@@ -165,15 +165,10 @@ public class CustomMatchSignListener implements Listener {
             return;
         }
 
-        // イベントをキャンセル
-        e.setCancelled(true);
-
         e.setLine(0,Chat.f("&b&l[&3&lCUSTOM&b&l]"));
         e.setLine(1,Chat.f("&3&lCUSTOM &5&lDEATH"));
         e.setLine(2,Chat.f("&4&lMATCH"));
         e.setLine(3,Chat.f(LeonGunWar.SIGN_ACTIVE));
-
-        ((Sign)e.getBlock()).update();
     }
 
 
@@ -283,27 +278,27 @@ public class CustomMatchSignListener implements Listener {
                 }
             }else if(e.getSlot() == 2){
                 if(Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 50P")){
-                    e.getClickedInventory().setItem(0,create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a100P")));
+                    e.getClickedInventory().setItem(2,create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a100P")));
                 }else if(Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 100P")){
-                    e.getClickedInventory().setItem(0,matchpoint);
+                    e.getClickedInventory().setItem(2,matchpoint);
                 }
             }else if(e.getSlot() == 4){
                 if(Chat.r(itemname).equalsIgnoreCase("メイン武器最大所持数 : x1")){
-                    e.getClickedInventory().setItem(0,create(Material.SUGAR_CANE, Chat.f("&eメイン武器最大所持数 : &ax0")));
+                    e.getClickedInventory().setItem(4,create(Material.SUGAR_CANE, Chat.f("&eメイン武器最大所持数 : &ax0")));
                 }else if(Chat.r(itemname).equalsIgnoreCase("メイン武器最大所持数 : x0")){
-                    e.getClickedInventory().setItem(0,main_limit);
+                    e.getClickedInventory().setItem(4,main_limit);
                 }
             }else if(e.getSlot() == 6){
                 if(Chat.r(itemname).equalsIgnoreCase("サブ武器最大所持数 : x2")){
-                    e.getClickedInventory().setItem(0,create(Material.SUGAR_CANE, Chat.f("&eサブ武器最大所持数 : &ax0")));
+                    e.getClickedInventory().setItem(6,create(Material.GOLD_HOE, Chat.f("&eサブ武器最大所持数 : &ax0")));
                 }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器最大所持数 : x0")){
-                    e.getClickedInventory().setItem(0,sub_limit);
+                    e.getClickedInventory().setItem(6,sub_limit);
                 }
             }else if(e.getSlot() == 8){
                 if(Chat.r(itemname).equalsIgnoreCase("グレネード最大所持数 : x1")){
-                    e.getClickedInventory().setItem(0,create(Material.SUGAR_CANE, Chat.f("&eグレネード最大所持数 : &ax0")));
+                    e.getClickedInventory().setItem(8,create(Material.SLIME_BALL, Chat.f("&eグレネード最大所持数 : &ax0")));
                 }else if(Chat.r(itemname).equalsIgnoreCase("グレネード最大所持数 : x0")){
-                    e.getClickedInventory().setItem(0,granade_limit);
+                    e.getClickedInventory().setItem(8,granade_limit);
                 }
             }
         }
