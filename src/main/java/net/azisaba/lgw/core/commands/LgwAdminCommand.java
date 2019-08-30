@@ -1,8 +1,10 @@
 package net.azisaba.lgw.core.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.azisaba.lgw.core.MatchManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -19,6 +21,7 @@ import net.azisaba.lgw.core.utils.Args;
 import net.azisaba.lgw.core.utils.Chat;
 
 import me.rayzr522.jsonmessage.JSONMessage;
+import org.bukkit.scoreboard.Team;
 
 public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
@@ -131,6 +134,64 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
 
             sender.sendMessage(Chat.f("{0}&a設定とマップのリロードが完了しました。", LeonGunWar.GAME_PREFIX));
+            return true;
+        }
+
+        // 1つ目の引数がshowdataの場合
+        if ( Args.check(args, 0, "showdata") ) {
+
+            // 試合中ではない場合return
+            if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+                sender.sendMessage(Chat.f("{0}&7現在試合をしていないためマッチデータの閲覧はできません。", LeonGunWar.GAME_PREFIX));
+                return true;
+            }
+
+            MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+
+            //マッチタイプを取得
+            MatchMode mode = manager.getMatchMode();
+
+            //マッチデータを表示 その1
+            sender.sendMessage(Chat.f("{0}&cMatch Data: {1}\n", LeonGunWar.GAME_PREFIX , mode.getModeName()));
+
+            //バトルチームのデータ取得
+            for ( BattleTeam team : manager.getTeamPlayers().keySet() ){
+
+                //プレイヤーの数を取得
+                int playerCount = manager.getTeamPlayers().get(team).size();
+
+                //チームパワーレベルを取得
+                int teampowerlevel = manager.getTeamPowerLevel(manager.getScoreboardTeam(team));
+
+                //チームエースパワーレベルを取得
+                int teamacepowerlevel = manager.getTeamAcePowerLevel(manager.getScoreboardTeam(team));
+
+                //マッチのポイントを取得
+                int matchpoint = manager.getCurrentTeamPoint(team);
+
+                //(もしリーダーデスマッチなら)リーダーの名前を取得
+                String leadername = "&4NOT_LEADER_DEATH_MATCH";
+
+                if( manager.getMatchMode()==MatchMode.LEADER_DEATH_MATCH ){
+
+                    //リーダーを取得
+                    Player leader = manager.getLDMLeader(team);
+
+                    //リーダーが存在するなら
+                    if( leader!=null ){
+                        leadername = leader.getDisplayName();
+                    }
+                }
+
+                sender.sendMessage(Chat.f("{0} {1}&e データ\n"+
+                        "{0}&eチーム人数: §6{2}人\n"+
+                        "{0}&eチームパワーレベル: §6{3}\n"+
+                        "{0}&eチームエースパワーレベル: §6{4}\n"+
+                        "{0}&e現在のポイント: §6{5}\n"+
+                        "{0}&eチームリーダー: §6{6}\n", LeonGunWar.GAME_PREFIX , team.getTeamName() , playerCount , teampowerlevel , teamacepowerlevel , matchpoint , leadername));
+            }
+            sender.sendMessage(Chat.f("{0}&cMatch Data: {1}", LeonGunWar.GAME_PREFIX , mode.getModeName()));
             return true;
         }
 
