@@ -48,7 +48,7 @@ public class KDTeamDistributor implements TeamDistributor {
             return false;
         }
 
-        //月のキル数が3000以上 or KD1.2以上ならtrue それ以外ならfalse
+        // 月のキル数が3000以上 or KD1.2以上ならtrue それ以外ならfalse
         return kd >= 1.2 || pd.getMonthlyKills() >= 3000;
     }
 
@@ -104,8 +104,9 @@ public class KDTeamDistributor implements TeamDistributor {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
         // もしAceなら
-        if(isACE(player)){
-            // チームエースパワーレベルの少ない方にAceプレイヤーを追加 (同じ場合はチームパワーレベルが少ないチームの方、それも同じ場合はエントリーが少ないチームの方、さらにそれも同じ場合はポイントが少ない方、それでも同じなら最初の要素)
+        if ( isACE(player) ) {
+            // チームエースパワーレベルの少ない方にAceプレイヤーを追加
+            // (同じ場合はチームパワーレベルが少ないチームの方、それも同じ場合はエントリーが少ないチームの方、さらにそれも同じ場合はポイントが少ない方、それでも同じなら最初の要素)
             teams.stream()
                     .sorted(Comparator.comparing(manager::getTeamAcePowerLevel).thenComparing(manager::getTeamPowerLevel).thenComparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
                     .findFirst()
@@ -122,6 +123,6 @@ public class KDTeamDistributor implements TeamDistributor {
 
     @Override
     public String getDistributorName() {
-        return "デフォルト振り分け";
+        return "K/D振り分け";
     }
 }
