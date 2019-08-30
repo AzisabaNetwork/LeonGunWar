@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.base.Preconditions;
 
+import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
@@ -43,7 +44,8 @@ public class ScoreboardDisplayer {
              *
              * 各チーム: ? Point(s)
              *
-             * 現在のマップ: {マップ名} 現在のモード: {モード}
+             * 現在のマップ: {マップ名}<br>
+             * 現在のモード: {モード} アルゴリズム: {振り分け方式}
              *
              * azisaba.net で今すぐ遊べ！
              */
@@ -56,6 +58,9 @@ public class ScoreboardDisplayer {
 
             // 試合のモード
             MatchMode mode = LeonGunWar.getPlugin().getManager().getMatchMode();
+
+            // 振り分け方式
+            TeamDistributor distributor = LeonGunWar.getPlugin().getManager().getTeamDistributor();
 
             // 表示するメッセージリストを作成
             List<String> messageList = new ArrayList<>();
@@ -71,6 +76,7 @@ public class ScoreboardDisplayer {
             messageList.add("");
             messageList.add(Chat.f("&7現在のマップ&a: &c{0}", mapName));
             messageList.add(Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()));
+            messageList.add(Chat.f("&7アルゴリズム&a: &c{0}", distributor.getDistributorName()));
             messageList.add("");
             messageList.add(Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net"));
 

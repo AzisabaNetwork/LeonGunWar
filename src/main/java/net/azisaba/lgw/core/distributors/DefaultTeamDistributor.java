@@ -45,4 +45,9 @@ public class DefaultTeamDistributor implements TeamDistributor {
                 .findFirst()
                 .ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
     }
+
+    @Override
+    public String getDistributorName() {
+        return "K/D振り分け";
+    }
 }

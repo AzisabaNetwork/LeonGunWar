@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core.listeners.signs;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,11 +12,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.google.common.base.Strings;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
+import net.azisaba.lgw.core.distributors.KDTeamDistributor;
+import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 
@@ -27,6 +36,13 @@ import net.azisaba.lgw.core.utils.Chat;
  *
  */
 public class MatchModeSignListener implements Listener {
+
+    private final ItemStack defaultItem, kdItem;
+
+    public MatchModeSignListener() {
+        defaultItem = create(Material.EMERALD_BLOCK, Chat.f("&e通常のチーム分け&aで開始！"));
+        kdItem = create(Material.DIAMOND_BLOCK, Chat.f("&cK/Dのチーム分け&aで開始！"));
+    }
 
     /**
      * エントリー看板をクリックしたことを検知し、プレイヤーを追加するリスナー
@@ -83,19 +99,7 @@ public class MatchModeSignListener implements Listener {
             return;
         }
 
-        LeonGunWar.getPlugin().getManager().setMatchMode(mode);
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-        Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
-        Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-
-        // 音を鳴らす
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
-        });
-
-        // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));
+        p.openInventory(getDistributeSelectInventory(mode));
     }
 
     @EventHandler
@@ -146,5 +150,87 @@ public class MatchModeSignListener implements Listener {
         sign.setLine(3, edit);
         // 更新
         sign.update();
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent e) {
+        if ( !(e.getWhoClicked() instanceof Player) ) {
+            return;
+        }
+
+        Player p = (Player) e.getWhoClicked();
+        Inventory openingInv = e.getInventory();
+
+        if ( !Chat.r(openingInv.getTitle()).startsWith("Distribute Selector - ") ) {
+            return;
+        }
+
+        e.setCancelled(true);
+
+        ItemStack clicked = e.getCurrentItem();
+        if ( clicked == null || clicked.getType() == Material.AIR ) {
+            return;
+        }
+
+        // モードを指定
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != null ) {
+            p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
+            p.closeInventory();
+            return;
+        }
+
+        MatchMode mode = MatchMode.getFromString(openingInv.getTitle().substring(openingInv.getTitle().indexOf(Chat.f("&e")) + 2));
+        if ( mode == null ) {
+            Bukkit.getLogger().info(openingInv.getTitle().substring(openingInv.getTitle().indexOf(Chat.f("&e")) + 2));
+            return;
+        }
+
+        TeamDistributor distributor = null;
+        if ( clicked.isSimilar(defaultItem) ) {
+            distributor = new DefaultTeamDistributor();
+        } else if ( clicked.isSimilar(kdItem) ) {
+            distributor = new KDTeamDistributor();
+        }
+
+        if ( distributor == null ) {
+            return;
+        }
+
+        LeonGunWar.getPlugin().getManager().setMatchMode(mode);
+        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+        Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
+        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+
+        // 音を鳴らす
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
+        });
+
+        // 全プレイヤーにQuickメッセージを送信
+        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));
+
+        p.closeInventory();
+    }
+
+    private Inventory getDistributeSelectInventory(MatchMode mode) {
+        String shortModeName = "";
+        for ( String s : mode.name().split("_") ) {
+            shortModeName += s.substring(0, 1);
+        }
+        Inventory inv = Bukkit.createInventory(null, 9, Chat.f("&cDistribute Selector - &e{0}", shortModeName));
+        inv.setItem(3, defaultItem);
+        inv.setItem(5, kdItem);
+        return inv;
+    }
+
+    private ItemStack create(Material type, String title, String... lore) {
+        ItemStack item = new ItemStack(type);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(title);
+        if ( lore.length > 0 )
+            meta.setLore(Arrays.asList(lore));
+        item.setItemMeta(meta);
+        return item;
     }
 }

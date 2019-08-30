@@ -49,7 +49,7 @@ public class KDTeamDistributor implements TeamDistributor {
         // 代入
         pl = (int) (kd * 1000);
         // 今月のキル数を代入
-        pl = pl + pd.getMonthlyKills() / 10;
+        pl += pd.getMonthlyKills() / 10;
         return pl;
     }
 
@@ -78,5 +78,10 @@ public class KDTeamDistributor implements TeamDistributor {
                 .sorted(Comparator.comparing(manager::getTeamPowerLevel).thenComparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
                 .findFirst()
                 .ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
+    }
+
+    @Override
+    public String getDistributorName() {
+        return "デフォルト振り分け";
     }
 }
