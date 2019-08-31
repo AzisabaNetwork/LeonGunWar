@@ -42,7 +42,7 @@ public class CustomMatchSignListener implements Listener {
     private final ItemStack no_limit, matchpoint, main_limit, sub_limit, granade_limit, defaultItem, kdItem;
 
     public CustomMatchSignListener() {
-        no_limit = create(Material.WATCH, Chat.f("&eNO LIMIT モード : &cOFF"));
+        no_limit = create(Material.WATCH, Chat.f("&eモード: &6NO LIMIT"));
         matchpoint = create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a50P"));
         main_limit = create(Material.SUGAR_CANE, Chat.f("&eメイン武器最大所持数 : &ax1"));
         sub_limit = create(Material.GOLD_HOE, Chat.f("&eサブ武器最大所持数 : &ax2"));
@@ -215,10 +215,12 @@ public class CustomMatchSignListener implements Listener {
 
         if ( distributor != null ) {
             String itemname = e.getClickedInventory().getItem(0).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("NO LIMIT モード : OFF")){
-                CustomTDMListener.setNo_limit(false);
-            }else if(Chat.r(itemname).equalsIgnoreCase("NO LIMIT モード : ON")){
-                CustomTDMListener.setNo_limit(true);
+            if(Chat.r(itemname).equalsIgnoreCase("モード: NO LIMIT")){
+                CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.no_limit);
+            }else if(Chat.r(itemname).equalsIgnoreCase("モード: POINT")){
+                CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.point);
+            }else if(Chat.r(itemname).equalsIgnoreCase("モード: LEADER")){
+                CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.leader);
             }
             itemname = e.getClickedInventory().getItem(2).getItemMeta().getDisplayName();
             if(Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 50P")){
@@ -261,6 +263,7 @@ public class CustomMatchSignListener implements Listener {
             Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件  {1}", LeonGunWar.GAME_PREFIX, CustomTDMListener.getWinCase()));
             Bukkit.broadcastMessage(Chat.f("{0}&7武器制限  {1}", LeonGunWar.GAME_PREFIX, CustomTDMListener.getExtra()));
             Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
+            Bukkit.broadcastMessage(Chat.f("{0}&c注意！カスタムデスマッチのため一切報酬はもらえません！", LeonGunWar.GAME_PREFIX));
             Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
             // 音を鳴らす
@@ -282,9 +285,11 @@ public class CustomMatchSignListener implements Listener {
             // クリックした場所が…なら
             String itemname = clicked.getItemMeta().getDisplayName();
             if(e.getSlot() == 0){
-                if(Chat.r(itemname).equalsIgnoreCase("NO LIMIT モード : OFF")){
-                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eNO LIMIT モード : &aON")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("NO LIMIT モード : ON")){
+                if(Chat.r(itemname).equalsIgnoreCase("モード: NO LIMIT")){
+                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード: &cLEADER")));
+                }else if(Chat.r(itemname).equalsIgnoreCase("モード: LEADER")){
+                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード: &aPOINT")));
+                }else if(Chat.r(itemname).equalsIgnoreCase("モード: POINT")){
                     e.getClickedInventory().setItem(0,no_limit);
                 }
             }else if(e.getSlot() == 2){

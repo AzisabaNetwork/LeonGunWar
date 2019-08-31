@@ -179,8 +179,8 @@ public class MatchManager {
             }
         }
 
-        // LDMならリーダーを抽選
-        if ( matchMode == MatchMode.LEADER_DEATH_MATCH ) {
+        // LDM/CDMのリーダーマッチならリーダーを抽選
+        if ( matchMode == MatchMode.LEADER_DEATH_MATCH || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
             // チームとそのプレイヤーを取得
             Map<BattleTeam, List<Player>> playerMap = getTeamPlayers();
 
@@ -219,11 +219,17 @@ public class MatchManager {
         // CDMなら勝利条件を発表
         if( matchMode == MatchMode.CUSTOM_DEATH_MATCH ){
             // NO_LIMITがtrueなら
-            if(CustomTDMListener.isNo_limit()){
+            if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.no_limit){
                 // 全プレイヤーに通知
                 Bukkit.getOnlinePlayers().forEach(p -> {
                     p.sendMessage(
                             Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利" , LeonGunWar.GAME_PREFIX));
+                });
+            }else if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.leader){
+                // 通知
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    p.sendMessage(
+                            Chat.f("{0}&7相手チームの &dリーダー &7を倒して勝利" , LeonGunWar.GAME_PREFIX));
                 });
             }else{
                 // 勝利条件を全員に通知
@@ -603,9 +609,12 @@ public class MatchManager {
         // CDMなら勝利条件を通達
         if( matchMode == MatchMode.CUSTOM_DEATH_MATCH ){
             // NO_LIMITがtrueなら
-            if(CustomTDMListener.isNo_limit()){
+            if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.no_limit) {
                 // 通知
-                p.sendMessage(Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利" , LeonGunWar.GAME_PREFIX));
+                p.sendMessage(Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利", LeonGunWar.GAME_PREFIX));
+            }else if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.leader){
+                // 通知
+                p.sendMessage(Chat.f("{0}&7相手チームの &dリーダー &7を倒して勝利" , LeonGunWar.GAME_PREFIX));
             }else{
                 // 勝利条件通知
                 p.sendMessage(Chat.f("{0}&7先に &a{1}キル &7で勝利" , LeonGunWar.GAME_PREFIX , CustomTDMListener.getMatchpoint()));

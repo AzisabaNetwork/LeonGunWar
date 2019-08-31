@@ -2,12 +2,15 @@ package net.azisaba.lgw.core.listeners.modes;
 
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
+import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
@@ -16,12 +19,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 
 /**
@@ -32,6 +35,19 @@ import java.util.HashMap;
  *
  */
 public class CustomTDMListener implements Listener {
+
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    public enum TDMType{
+        no_limit("&6上限なしチームデスマッチ"),point("&9チームデスマッチ"),leader("&dリーダーデスマッチ");
+
+        private final String name;
+
+        public String getName() {
+            return name;
+        }
+    }
+
 
     // プレイヤーが変更可能の設定
     private static int matchpoint = 50;
@@ -44,19 +60,21 @@ public class CustomTDMListener implements Listener {
         return matchpoint;
     }
 
-    private static boolean no_limit = false;
+    private static TDMType matchtype = TDMType.point;
 
-    public static boolean isNo_limit() {
-        return no_limit;
+    public static TDMType getMatchType() {
+        return matchtype;
     }
 
-    public static void setNo_limit(boolean no_limit) {
-        CustomTDMListener.no_limit = no_limit;
+    public static void setMatchtype(TDMType no_limit) {
+        CustomTDMListener.matchtype = no_limit;
     }
 
     public static String getWinCase(){
-        if (isNo_limit()) {
+        if (getMatchType()==TDMType.no_limit) {
             return Chat.f("&7終了時に &cキル数が多いチーム &7が勝利");
+        }else if (getMatchType()==TDMType.leader) {
+            return Chat.f("&7相手チームの &dリーダー &7を倒して勝利");
         }else{
             return Chat.f("&7先に &a{0}キル &7で勝利" , getMatchpoint());
         }
@@ -110,10 +128,11 @@ public class CustomTDMListener implements Listener {
             return;
         }
 
-        // NO_LIMITならreturn
-        if (isNo_limit()) {
+        // POINT制ではないならreturn
+        if (getMatchType()!=TDMType.point) {
             return;
         }
+
 
         // 50区切り/残り10/残り5ならメッセージを表示
         if ( e.getCurrentPoint()%50 == 0 || matchpoint - e.getCurrentPoint() == 10 || matchpoint - e.getCurrentPoint() == 5 ) {
@@ -126,6 +145,55 @@ public class CustomTDMListener implements Listener {
             MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()),
                     manager.getTeamPlayers());
             Bukkit.getPluginManager().callEvent(event);
+        }
+    }
+
+    @EventHandler
+    public void onLeaderKilledDetector(PlayerDeathEvent e) {
+        MatchManager manager = LeonGunWar.getPlugin().getManager();
+
+        // CDMではない場合return
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH) {
+            return;
+        }
+
+        // リーダー制ではないならreturn
+        if (getMatchType()!=TDMType.leader) {
+            return;
+        }
+
+        // 死んだプレイヤー
+        Player death = e.getEntity();
+
+        // 死んだプレイヤーと殺したプレイヤーが同じ (またはnull) ならreturn
+        if ( death.getKiller() == null || death == death.getKiller() ) {
+            return;
+        }
+
+        // 各チームのリーダーを取得
+        Map<BattleTeam, Player> leaders = manager.getLDMLeaderMap();
+
+        // 死んだプレイヤーがリーダーだった場合、試合を終了する
+        for ( BattleTeam team : leaders.keySet() ) {
+
+            // リーダーではない場合continue
+            if ( leaders.get(team) != death ) {
+                continue;
+            }
+
+            // その他のチームを取得
+            List<BattleTeam> teams = new ArrayList<>(leaders.keySet());
+            // 殺されたリーダーのチームを削除
+            teams.remove(team);
+
+            // このイベントの後にイベント作成、呼び出し
+            // 遅らせる理由は最後のキルが表示されないため
+            Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
+                MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
+                        manager.getTeamPlayers());
+                Bukkit.getPluginManager().callEvent(event);
+            }, 0L);
+            break;
         }
     }
 
