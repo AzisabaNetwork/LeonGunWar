@@ -44,9 +44,9 @@ public class CustomMatchSignListener implements Listener {
     public CustomMatchSignListener() {
         no_limit = create(Material.WATCH, Chat.f("&eモード: &6NO LIMIT"));
         matchpoint = create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a50P"));
-        main_limit = create(Material.SUGAR_CANE, Chat.f("&eメイン武器最大所持数 : &ax1"));
-        sub_limit = create(Material.GOLD_HOE, Chat.f("&eサブ武器最大所持数 : &ax2"));
-        granade_limit = create(Material.SLIME_BALL, Chat.f("&eグレネード最大所持数 : &ax1"));
+        main_limit = create(Material.SUGAR_CANE, Chat.f("&eメイン武器射撃 : &a可能"));
+        sub_limit = create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &a可能"));
+        granade_limit = create(Material.SLIME_BALL, Chat.f("&eグレネード投擲 : &a可能"));
         defaultItem = create(Material.EMERALD_BLOCK, Chat.f("&e通常のチーム分け&aで開始！"));
         kdItem = create(Material.DIAMOND_BLOCK, Chat.f("&cK/Dのチーム分け&aで開始！"));
     }
@@ -215,11 +215,11 @@ public class CustomMatchSignListener implements Listener {
 
         if ( distributor != null ) {
             String itemname = e.getClickedInventory().getItem(0).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("モード: NO LIMIT")){
+            if(Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT")){
                 CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.no_limit);
-            }else if(Chat.r(itemname).equalsIgnoreCase("モード: POINT")){
+            }else if(Chat.r(itemname).equalsIgnoreCase("モード : POINT")){
                 CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.point);
-            }else if(Chat.r(itemname).equalsIgnoreCase("モード: LEADER")){
+            }else if(Chat.r(itemname).equalsIgnoreCase("モード : LEADER")){
                 CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.leader);
             }
             itemname = e.getClickedInventory().getItem(2).getItemMeta().getDisplayName();
@@ -229,21 +229,21 @@ public class CustomMatchSignListener implements Listener {
                 CustomTDMListener.setMatchpoint(100);
             }
             itemname = e.getClickedInventory().getItem(4).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("メイン武器最大所持数 : x1")){
+            if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 可能")){
                 CustomTDMListener.customLimit.put(CustomTDMListener.MAIN_WEAPON,1);
-            }else if(Chat.r(itemname).equalsIgnoreCase("メイン武器最大所持数 : x0")){
+            }else if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 不可能")){
                 CustomTDMListener.customLimit.put(CustomTDMListener.MAIN_WEAPON,0);
             }
             itemname = e.getClickedInventory().getItem(6).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("サブ武器最大所持数 : x2")){
+            if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能")){
                 CustomTDMListener.customLimit.put(CustomTDMListener.SUB_WEAPON,2);
-            }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器最大所持数 : x0")){
+            }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 不可能")){
                 CustomTDMListener.customLimit.put(CustomTDMListener.SUB_WEAPON,0);
             }
             itemname = e.getClickedInventory().getItem(8).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("グレネード最大所持数 : x1")){
+            if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 可能")){
                 CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE,1);
-            }else if(Chat.r(itemname).equalsIgnoreCase("グレネード最大所持数 : x0")){
+            }else if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 不可能")){
                 CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE,0);
             }
             //最終確認 メイン・サブ・グレネード すべてが禁止の場合…
@@ -299,21 +299,21 @@ public class CustomMatchSignListener implements Listener {
                     e.getClickedInventory().setItem(2,matchpoint);
                 }
             }else if(e.getSlot() == 4){
-                if(Chat.r(itemname).equalsIgnoreCase("メイン武器最大所持数 : x1")){
-                    e.getClickedInventory().setItem(4,create(Material.SUGAR_CANE, Chat.f("&eメイン武器最大所持数 : &ax0")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("メイン武器最大所持数 : x0")){
+                if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 可能")){
+                    e.getClickedInventory().setItem(4,create(Material.SUGAR_CANE, Chat.f("&eメイン武器射撃 : &c不可能")));
+                }else if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 不可能")){
                     e.getClickedInventory().setItem(4,main_limit);
                 }
             }else if(e.getSlot() == 6){
-                if(Chat.r(itemname).equalsIgnoreCase("サブ武器最大所持数 : x2")){
-                    e.getClickedInventory().setItem(6,create(Material.GOLD_HOE, Chat.f("&eサブ武器最大所持数 : &ax0")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器最大所持数 : x0")){
+                if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能")){
+                    e.getClickedInventory().setItem(6,create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &c不可能")));
+                }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃: 不可能")){
                     e.getClickedInventory().setItem(6,sub_limit);
                 }
             }else if(e.getSlot() == 8){
-                if(Chat.r(itemname).equalsIgnoreCase("グレネード最大所持数 : x1")){
-                    e.getClickedInventory().setItem(8,create(Material.SLIME_BALL, Chat.f("&eグレネード最大所持数 : &ax0")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("グレネード最大所持数 : x0")){
+                if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲: 可能")){
+                    e.getClickedInventory().setItem(8,create(Material.SLIME_BALL, Chat.f("&eグレネード投擲 : &c不可能")));
+                }else if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲: 不可能")){
                     e.getClickedInventory().setItem(8,granade_limit);
                 }
             }
