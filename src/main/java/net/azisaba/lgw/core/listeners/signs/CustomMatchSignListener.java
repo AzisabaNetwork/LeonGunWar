@@ -42,7 +42,7 @@ public class CustomMatchSignListener implements Listener {
     private final ItemStack no_limit, matchpoint, main_limit, sub_limit, granade_limit, defaultItem, kdItem;
 
     public CustomMatchSignListener() {
-        no_limit = create(Material.WATCH, Chat.f("&eモード: &6NO LIMIT"));
+        no_limit = create(Material.WATCH, Chat.f("&eモード : &6NO LIMIT"));
         matchpoint = create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a50P"));
         main_limit = create(Material.SUGAR_CANE, Chat.f("&eメイン武器射撃 : &a可能"));
         sub_limit = create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &a可能"));
@@ -285,11 +285,11 @@ public class CustomMatchSignListener implements Listener {
             // クリックした場所が…なら
             String itemname = clicked.getItemMeta().getDisplayName();
             if(e.getSlot() == 0){
-                if(Chat.r(itemname).equalsIgnoreCase("モード: NO LIMIT")){
-                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード: &cLEADER")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("モード: LEADER")){
-                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード: &aPOINT")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("モード: POINT")){
+                if(Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT")){
+                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード : &cLEADER")));
+                }else if(Chat.r(itemname).equalsIgnoreCase("モード : LEADER")){
+                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード : &aPOINT")));
+                }else if(Chat.r(itemname).equalsIgnoreCase("モード : POINT")){
                     e.getClickedInventory().setItem(0,no_limit);
                 }
             }else if(e.getSlot() == 2){
@@ -307,13 +307,13 @@ public class CustomMatchSignListener implements Listener {
             }else if(e.getSlot() == 6){
                 if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能")){
                     e.getClickedInventory().setItem(6,create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &c不可能")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃: 不可能")){
+                }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 不可能")){
                     e.getClickedInventory().setItem(6,sub_limit);
                 }
             }else if(e.getSlot() == 8){
-                if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲: 可能")){
+                if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 可能")){
                     e.getClickedInventory().setItem(8,create(Material.SLIME_BALL, Chat.f("&eグレネード投擲 : &c不可能")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲: 不可能")){
+                }else if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 不可能")){
                     e.getClickedInventory().setItem(8,granade_limit);
                 }
             }
