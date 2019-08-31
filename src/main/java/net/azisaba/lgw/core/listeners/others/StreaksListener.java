@@ -35,6 +35,11 @@ public class StreaksListener implements Listener {
     public void onPlayerAssist(PlayerAssistEvent e) {
         Player p = e.getPlayer();
 
+        // カスタムマッチは無視
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() == MatchMode.CUSTOM_DEATH_MATCH ) {
+            return;
+        }
+
         // カウントを追加
         LeonGunWar.getPlugin().getAssistStreaks().add(p);
     }
