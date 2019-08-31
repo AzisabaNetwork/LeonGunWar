@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import net.azisaba.lgw.core.util.BattleTeam;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 

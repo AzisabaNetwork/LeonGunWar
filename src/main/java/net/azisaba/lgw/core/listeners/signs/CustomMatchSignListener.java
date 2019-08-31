@@ -1,13 +1,7 @@
 package net.azisaba.lgw.core.listeners.signs;
 
-import com.google.common.base.Strings;
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
-import net.azisaba.lgw.core.distributors.KDTeamDistributor;
-import net.azisaba.lgw.core.distributors.TeamDistributor;
-import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Chat;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -27,15 +20,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
+import com.google.common.base.Strings;
+
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
+import net.azisaba.lgw.core.distributors.KDTeamDistributor;
+import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.Chat;
 
 /**
  *
  * 次に実行するカスタム試合のあれこれを指定する看板&GUI ACTIVEとINACTIVEを切り替えるときはスニークをしながら右クリックで可能
  * 破壊するときはスニークしながら左クリックで可能
  *
- * @author Mr_IK
- * Thanks: siloneko
+ * @author Mr_IK Thanks: siloneko
  */
 public class CustomMatchSignListener implements Listener {
 
@@ -151,7 +151,7 @@ public class CustomMatchSignListener implements Listener {
     }
 
     @EventHandler
-    public void onSign(SignChangeEvent e){
+    public void onSign(SignChangeEvent e) {
         // プレイヤー / ブロック取得
         Player p = e.getPlayer();
 
@@ -165,12 +165,11 @@ public class CustomMatchSignListener implements Listener {
             return;
         }
 
-        e.setLine(0,Chat.f("&b&l[&3&lCUSTOM&b&l]"));
-        e.setLine(1,Chat.f("&3&lCUSTOM &5&lDEATH"));
-        e.setLine(2,Chat.f("&4&lMATCH"));
-        e.setLine(3,Chat.f(LeonGunWar.SIGN_ACTIVE));
+        e.setLine(0, Chat.f("&b&l[&3&lCUSTOM&b&l]"));
+        e.setLine(1, Chat.f("&3&lCUSTOM &5&lDEATH"));
+        e.setLine(2, Chat.f("&4&lMATCH"));
+        e.setLine(3, Chat.f(LeonGunWar.SIGN_ACTIVE));
     }
-
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
@@ -215,42 +214,42 @@ public class CustomMatchSignListener implements Listener {
 
         if ( distributor != null ) {
             String itemname = e.getClickedInventory().getItem(0).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT")){
+            if ( Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT") ) {
                 CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.no_limit);
-            }else if(Chat.r(itemname).equalsIgnoreCase("モード : POINT")){
+            } else if ( Chat.r(itemname).equalsIgnoreCase("モード : POINT") ) {
                 CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.point);
-            }else if(Chat.r(itemname).equalsIgnoreCase("モード : LEADER")){
+            } else if ( Chat.r(itemname).equalsIgnoreCase("モード : LEADER") ) {
                 CustomTDMListener.setMatchtype(CustomTDMListener.TDMType.leader);
             }
             itemname = e.getClickedInventory().getItem(2).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 50P")){
+            if ( Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 50P") ) {
                 CustomTDMListener.setMatchpoint(50);
-            }else if(Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 100P")){
+            } else if ( Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 100P") ) {
                 CustomTDMListener.setMatchpoint(100);
             }
             itemname = e.getClickedInventory().getItem(4).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 可能")){
-                CustomTDMListener.customLimit.put(CustomTDMListener.MAIN_WEAPON,1);
-            }else if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 不可能")){
-                CustomTDMListener.customLimit.put(CustomTDMListener.MAIN_WEAPON,0);
+            if ( Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 可能") ) {
+                CustomTDMListener.customLimit.put(CustomTDMListener.MAIN_WEAPON, 1);
+            } else if ( Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 不可能") ) {
+                CustomTDMListener.customLimit.put(CustomTDMListener.MAIN_WEAPON, 0);
             }
             itemname = e.getClickedInventory().getItem(6).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能")){
-                CustomTDMListener.customLimit.put(CustomTDMListener.SUB_WEAPON,2);
-            }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 不可能")){
-                CustomTDMListener.customLimit.put(CustomTDMListener.SUB_WEAPON,0);
+            if ( Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能") ) {
+                CustomTDMListener.customLimit.put(CustomTDMListener.SUB_WEAPON, 2);
+            } else if ( Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 不可能") ) {
+                CustomTDMListener.customLimit.put(CustomTDMListener.SUB_WEAPON, 0);
             }
             itemname = e.getClickedInventory().getItem(8).getItemMeta().getDisplayName();
-            if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 可能")){
-                CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE,1);
-            }else if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 不可能")){
-                CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE,0);
+            if ( Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 可能") ) {
+                CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE, 1);
+            } else if ( Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 不可能") ) {
+                CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE, 0);
             }
-            //最終確認 メイン・サブ・グレネード すべてが禁止の場合…
-            if(CustomTDMListener.customLimit.get(CustomTDMListener.MAIN_WEAPON)==0
-            &&CustomTDMListener.customLimit.get(CustomTDMListener.SUB_WEAPON)==0
-            &&CustomTDMListener.customLimit.get(CustomTDMListener.GRENADE)==0){
-                //申し訳ないがなにも使えないのでNG
+            // 最終確認 メイン・サブ・グレネード すべてが禁止の場合…
+            if ( CustomTDMListener.customLimit.get(CustomTDMListener.MAIN_WEAPON) == 0
+                    && CustomTDMListener.customLimit.get(CustomTDMListener.SUB_WEAPON) == 0
+                    && CustomTDMListener.customLimit.get(CustomTDMListener.GRENADE) == 0 ) {
+                // 申し訳ないがなにも使えないのでNG
                 p.sendMessage(Chat.f("&4すべて使用不可にすることはできません！1種類は残してください！"));
                 return;
             }
@@ -279,42 +278,42 @@ public class CustomMatchSignListener implements Listener {
         }
 
         // プレイヤーのクリックしたインベントリチェック
-        if( e.getClickedInventory().getType() != InventoryType.PLAYER ){
+        if ( e.getClickedInventory().getType() != InventoryType.PLAYER ) {
             // クリック音
-            p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,1.0f,1.0f);
+            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
             // クリックした場所が…なら
             String itemname = clicked.getItemMeta().getDisplayName();
-            if(e.getSlot() == 0){
-                if(Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT")){
-                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード : &cLEADER")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("モード : LEADER")){
-                    e.getClickedInventory().setItem(0,create(Material.WATCH, Chat.f("&eモード : &aPOINT")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("モード : POINT")){
-                    e.getClickedInventory().setItem(0,no_limit);
+            if ( e.getSlot() == 0 ) {
+                if ( Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT") ) {
+                    e.getClickedInventory().setItem(0, create(Material.WATCH, Chat.f("&eモード : &cLEADER")));
+                } else if ( Chat.r(itemname).equalsIgnoreCase("モード : LEADER") ) {
+                    e.getClickedInventory().setItem(0, create(Material.WATCH, Chat.f("&eモード : &aPOINT")));
+                } else if ( Chat.r(itemname).equalsIgnoreCase("モード : POINT") ) {
+                    e.getClickedInventory().setItem(0, no_limit);
                 }
-            }else if(e.getSlot() == 2){
-                if(Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 50P")){
-                    e.getClickedInventory().setItem(2,create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a100P")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 100P")){
-                    e.getClickedInventory().setItem(2,matchpoint);
+            } else if ( e.getSlot() == 2 ) {
+                if ( Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 50P") ) {
+                    e.getClickedInventory().setItem(2, create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a100P")));
+                } else if ( Chat.r(itemname).equalsIgnoreCase("マッチ終了ポイント : 100P") ) {
+                    e.getClickedInventory().setItem(2, matchpoint);
                 }
-            }else if(e.getSlot() == 4){
-                if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 可能")){
-                    e.getClickedInventory().setItem(4,create(Material.SUGAR_CANE, Chat.f("&eメイン武器射撃 : &c不可能")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 不可能")){
-                    e.getClickedInventory().setItem(4,main_limit);
+            } else if ( e.getSlot() == 4 ) {
+                if ( Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 可能") ) {
+                    e.getClickedInventory().setItem(4, create(Material.SUGAR_CANE, Chat.f("&eメイン武器射撃 : &c不可能")));
+                } else if ( Chat.r(itemname).equalsIgnoreCase("メイン武器射撃 : 不可能") ) {
+                    e.getClickedInventory().setItem(4, main_limit);
                 }
-            }else if(e.getSlot() == 6){
-                if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能")){
-                    e.getClickedInventory().setItem(6,create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &c不可能")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 不可能")){
-                    e.getClickedInventory().setItem(6,sub_limit);
+            } else if ( e.getSlot() == 6 ) {
+                if ( Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能") ) {
+                    e.getClickedInventory().setItem(6, create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &c不可能")));
+                } else if ( Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 不可能") ) {
+                    e.getClickedInventory().setItem(6, sub_limit);
                 }
-            }else if(e.getSlot() == 8){
-                if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 可能")){
-                    e.getClickedInventory().setItem(8,create(Material.SLIME_BALL, Chat.f("&eグレネード投擲 : &c不可能")));
-                }else if(Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 不可能")){
-                    e.getClickedInventory().setItem(8,granade_limit);
+            } else if ( e.getSlot() == 8 ) {
+                if ( Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 可能") ) {
+                    e.getClickedInventory().setItem(8, create(Material.SLIME_BALL, Chat.f("&eグレネード投擲 : &c不可能")));
+                } else if ( Chat.r(itemname).equalsIgnoreCase("グレネード投擲 : 不可能") ) {
+                    e.getClickedInventory().setItem(8, granade_limit);
                 }
             }
         }
@@ -327,7 +326,7 @@ public class CustomMatchSignListener implements Listener {
         inv.setItem(4, main_limit);
         inv.setItem(6, sub_limit);
         inv.setItem(8, granade_limit);
-        //2行目
+        // 2行目
         inv.setItem(12, defaultItem);
         inv.setItem(14, kdItem);
         return inv;

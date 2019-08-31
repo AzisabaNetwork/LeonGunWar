@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -37,6 +36,7 @@ import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
+import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
@@ -217,25 +217,25 @@ public class MatchManager {
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, "10分"));
         // CDMなら勝利条件を発表
-        if( matchMode == MatchMode.CUSTOM_DEATH_MATCH ){
+        if ( matchMode == MatchMode.CUSTOM_DEATH_MATCH ) {
             // NO_LIMITがtrueなら
-            if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.no_limit){
+            if ( CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit ) {
                 // 全プレイヤーに通知
                 Bukkit.getOnlinePlayers().forEach(p -> {
                     p.sendMessage(
-                            Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利" , LeonGunWar.GAME_PREFIX));
+                            Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利", LeonGunWar.GAME_PREFIX));
                 });
-            }else if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.leader){
+            } else if ( CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
                 // 通知
                 Bukkit.getOnlinePlayers().forEach(p -> {
                     p.sendMessage(
-                            Chat.f("{0}&7相手チームの &dリーダー &7を倒して勝利" , LeonGunWar.GAME_PREFIX));
+                            Chat.f("{0}&7相手チームの &dリーダー &7を倒して勝利", LeonGunWar.GAME_PREFIX));
                 });
-            }else{
+            } else {
                 // 勝利条件を全員に通知
                 Bukkit.getOnlinePlayers().forEach(p -> {
                     p.sendMessage(
-                            Chat.f("{0}&7先に &a{1}キル &7で勝利" , LeonGunWar.GAME_PREFIX , CustomTDMListener.getMatchpoint()));
+                            Chat.f("{0}&7先に &a{1}キル &7で勝利", LeonGunWar.GAME_PREFIX, CustomTDMListener.getMatchpoint()));
                 });
             }
         }
@@ -603,21 +603,21 @@ public class MatchManager {
             p.sendMessage(Chat.f("{0}&7所属チームのリーダーは &r{1} &7です！", LeonGunWar.GAME_PREFIX, leader.getPlayerListName()));
         }
 
-        //途中参加のプレイヤーに勝利条件を教える
+        // 途中参加のプレイヤーに勝利条件を教える
         // 開始メッセージ
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         // CDMなら勝利条件を通達
-        if( matchMode == MatchMode.CUSTOM_DEATH_MATCH ){
+        if ( matchMode == MatchMode.CUSTOM_DEATH_MATCH ) {
             // NO_LIMITがtrueなら
-            if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.no_limit) {
+            if ( CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit ) {
                 // 通知
                 p.sendMessage(Chat.f("{0}&7終了時に &cキル数が多いチーム &7が勝利", LeonGunWar.GAME_PREFIX));
-            }else if(CustomTDMListener.getMatchType()== CustomTDMListener.TDMType.leader){
+            } else if ( CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
                 // 通知
-                p.sendMessage(Chat.f("{0}&7相手チームの &dリーダー &7を倒して勝利" , LeonGunWar.GAME_PREFIX));
-            }else{
+                p.sendMessage(Chat.f("{0}&7相手チームの &dリーダー &7を倒して勝利", LeonGunWar.GAME_PREFIX));
+            } else {
                 // 勝利条件通知
-                p.sendMessage(Chat.f("{0}&7先に &a{1}キル &7で勝利" , LeonGunWar.GAME_PREFIX , CustomTDMListener.getMatchpoint()));
+                p.sendMessage(Chat.f("{0}&7先に &a{1}キル &7で勝利", LeonGunWar.GAME_PREFIX, CustomTDMListener.getMatchpoint()));
             }
         }
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
@@ -851,7 +851,7 @@ public class MatchManager {
                 continue;
             }
             // Aceではないなら
-            if( !KDTeamDistributor.isACE(p) ){
+            if ( !KDTeamDistributor.isACE(p) ) {
                 continue;
             }
             // チームパワーレベルに代入
@@ -867,11 +867,11 @@ public class MatchManager {
      * @return 1=チーム1が大きい 2=チーム2が大きい 0=等しい
      */
     public int getPowerLevelComparison(int team1, int team2) {
-        if(team1>team2){
+        if ( team1 > team2 ) {
             return 1;
-        }else if(team1<team2){
+        } else if ( team1 < team2 ) {
             return 2;
-        }else{
+        } else {
             return 0;
         }
     }

@@ -1,18 +1,11 @@
 package net.azisaba.lgw.core.listeners.modes;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
-import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Chat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,8 +17,20 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
+import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.Chat;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -38,8 +43,10 @@ public class CustomTDMListener implements Listener {
 
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    public enum TDMType{
-        no_limit("&6上限なしチームデスマッチ"),point("&9チームデスマッチ"),leader("&dリーダーデスマッチ");
+    public enum TDMType {
+        no_limit("&6上限なしチームデスマッチ"),
+        point("&9チームデスマッチ"),
+        leader("&dリーダーデスマッチ");
 
         private final String name;
 
@@ -47,7 +54,6 @@ public class CustomTDMListener implements Listener {
             return name;
         }
     }
-
 
     // プレイヤーが変更可能の設定
     private static int matchpoint = 50;
@@ -70,47 +76,46 @@ public class CustomTDMListener implements Listener {
         CustomTDMListener.matchtype = no_limit;
     }
 
-    public static String getWinCase(){
-        if (getMatchType()==TDMType.no_limit) {
+    public static String getWinCase() {
+        if ( getMatchType() == TDMType.no_limit ) {
             return Chat.f("&7終了時に &cキル数が多いチーム &7が勝利");
-        }else if (getMatchType()==TDMType.leader) {
+        } else if ( getMatchType() == TDMType.leader ) {
             return Chat.f("&7相手チームの &dリーダー &7を倒して勝利");
-        }else{
-            return Chat.f("&7先に &a{0}キル &7で勝利" , getMatchpoint());
+        } else {
+            return Chat.f("&7先に &a{0}キル &7で勝利", getMatchpoint());
         }
     }
 
-    public static String getExtra(){
-        if(customLimit.size()==0){
+    public static String getExtra() {
+        if ( customLimit.size() == 0 ) {
             return Chat.f("&7制限なし");
-        }else{
+        } else {
             int main = customLimit.get(MAIN_WEAPON);
             int sub = customLimit.get(SUB_WEAPON);
             int gre = customLimit.get(GRENADE);
 
-            if( main == 1 && sub == 2 && gre == 1 ){
+            if ( main == 1 && sub == 2 && gre == 1 ) {
                 return Chat.f("&7制限なし");
             }
 
             String mains = Chat.f("&7制限なし");
-            if(main!=1){
+            if ( main != 1 ) {
                 mains = Chat.f("&c発射不可");
             }
             String subs = Chat.f("&7制限なし");
-            if(sub!=2){
+            if ( sub != 2 ) {
                 subs = Chat.f("&c発射不可");
             }
             String gres = Chat.f("&7制限なし");
-            if(gre!=1){
+            if ( gre != 1 ) {
                 gres = Chat.f("&c投擲不可");
             }
 
-            return Chat.f("&6Main: {0} &6Sub: {1} &6Gre: {2}" , mains , subs , gres );
+            return Chat.f("&6Main: {0} &6Sub: {1} &6Gre: {2}", mains, subs, gres);
         }
     }
 
-
-    public final static HashMap<String,Integer> customLimit = new HashMap<>();
+    public final static HashMap<String, Integer> customLimit = new HashMap<>();
 
     // CrackShotAPI
     private final static CSDirector director = JavaPlugin.getPlugin(CSDirector.class);
@@ -124,18 +129,17 @@ public class CustomTDMListener implements Listener {
     public void onTeamPointAdded(TeamPointIncreasedEvent e) {
 
         // CDMではない場合return
-        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH) {
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH ) {
             return;
         }
 
         // POINT制ではないならreturn
-        if (getMatchType()!=TDMType.point) {
+        if ( getMatchType() != TDMType.point ) {
             return;
         }
 
-
         // 50区切り/残り10/残り5ならメッセージを表示
-        if ( e.getCurrentPoint()%50 == 0 || matchpoint - e.getCurrentPoint() == 10 || matchpoint - e.getCurrentPoint() == 5 ) {
+        if ( e.getCurrentPoint() % 50 == 0 || matchpoint - e.getCurrentPoint() == 10 || matchpoint - e.getCurrentPoint() == 5 ) {
             Bukkit.broadcastMessage(Chat.f("{0}&7残り &e{1}キル &7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX,
                     matchpoint - e.getCurrentPoint(), e.getTeam().getTeamName()));
         } else if ( e.getCurrentPoint() >= matchpoint ) {
@@ -153,12 +157,12 @@ public class CustomTDMListener implements Listener {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
         // CDMではない場合return
-        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH) {
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH ) {
             return;
         }
 
         // リーダー制ではないならreturn
-        if (getMatchType()!=TDMType.leader) {
+        if ( getMatchType() != TDMType.leader ) {
             return;
         }
 
@@ -197,53 +201,52 @@ public class CustomTDMListener implements Listener {
         }
     }
 
-
-    //銃の打てる制限
+    // 銃の打てる制限
     @EventHandler
-    public void onPreWeaponShoot(WeaponPrepareShootEvent e){
+    public void onPreWeaponShoot(WeaponPrepareShootEvent e) {
         Player p = e.getPlayer();
         String group = director.returnParentNode(p);
-        if(group==null){
+        if ( group == null ) {
             return;
         }
         String groups = director.getString(group + ".Item_Information.Inventory_Control");
-        if(!validHotbar(p,groups)){
+        if ( !validHotbar(p, groups) ) {
             e.setCancelled(true);
         }
     }
 
     // 本物のCSからコピって、少し改造したものなのでスペースやら説明はご愛敬
-    public static boolean validHotbar(Player shooter,String invCtrl) {
+    public static boolean validHotbar(Player shooter, String invCtrl) {
         boolean retVal = true;
         Inventory playerInv = shooter.getInventory();
         String[] groupList = invCtrl.replaceAll(" ", "").split(",");
         String[] var10 = groupList;
         int var9 = groupList.length;
 
-        for(int var8 = 0; var8 < var9; ++var8) {
+        for ( int var8 = 0; var8 < var9; ++var8 ) {
             String invGroup = var10[var8];
             int groupLimit = director.getInt(invGroup + ".Limit");
-            if(customLimit.containsKey(invGroup)){
+            if ( customLimit.containsKey(invGroup) ) {
                 groupLimit = customLimit.get(invGroup);
             }
             int groupCount = 0;
 
-            for(int i = 0; i < 9; ++i) {
+            for ( int i = 0; i < 9; ++i ) {
                 ItemStack checkItem = playerInv.getItem(i);
-                if (checkItem != null && director.itemIsSafe(checkItem)) {
+                if ( checkItem != null && director.itemIsSafe(checkItem) ) {
                     String[] checkParent = director.itemParentNode(checkItem, shooter);
-                    if (checkParent != null) {
+                    if ( checkParent != null ) {
                         String groupCheck = director.getString(checkParent[0] + ".Item_Information.Inventory_Control");
-                        if (groupCheck != null && groupCheck.contains(invGroup)) {
+                        if ( groupCheck != null && groupCheck.contains(invGroup) ) {
                             ++groupCount;
                         }
                     }
                 }
             }
 
-            if (groupCount > groupLimit) {
+            if ( groupCount > groupLimit ) {
                 director.sendPlayerMessage(shooter, invGroup, ".Message_Exceeded", "<shooter>", "<victim>", "<flight>", "<damage>");
-                director.playSoundEffects(shooter, invGroup, ".Sounds_Exceeded", false, (Location)null);
+                director.playSoundEffects(shooter, invGroup, ".Sounds_Exceeded", false, (Location) null);
                 retVal = false;
             }
         }

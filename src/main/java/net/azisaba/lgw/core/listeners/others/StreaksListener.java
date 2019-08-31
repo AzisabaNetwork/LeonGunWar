@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import net.azisaba.lgw.core.util.MatchMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +8,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.PlayerAssistEvent;
+import net.azisaba.lgw.core.util.MatchMode;
 
 public class StreaksListener implements Listener {
 
@@ -23,7 +23,7 @@ public class StreaksListener implements Listener {
         }
 
         // カスタムマッチは無視
-        if(LeonGunWar.getPlugin().getManager().getMatchMode()== MatchMode.CUSTOM_DEATH_MATCH){
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() == MatchMode.CUSTOM_DEATH_MATCH ) {
             return;
         }
 
