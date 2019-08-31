@@ -204,6 +204,12 @@ public class CustomTDMListener implements Listener {
     // 銃の打てる制限
     @EventHandler
     public void onPreWeaponShoot(WeaponPrepareShootEvent e) {
+
+        // CDMではない場合return
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH ) {
+            return;
+        }
+
         Player p = e.getPlayer();
         String group = director.returnParentNode(p);
         if ( group == null ) {
