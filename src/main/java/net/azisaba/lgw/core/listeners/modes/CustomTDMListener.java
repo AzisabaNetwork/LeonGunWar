@@ -209,8 +209,12 @@ public class CustomTDMListener implements Listener {
         if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH ) {
             return;
         }
-
         Player p = e.getPlayer();
+        // 試合に参加していない場合はreturn
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(p) ) {
+            return;
+        }
+
         String group = director.returnParentNode(p);
         if ( group == null ) {
             return;
