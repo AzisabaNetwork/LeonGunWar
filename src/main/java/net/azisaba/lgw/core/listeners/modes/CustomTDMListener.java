@@ -220,6 +220,9 @@ public class CustomTDMListener implements Listener {
             return;
         }
         String groups = director.getString(group + ".Item_Information.Inventory_Control");
+        if ( groups == null ) {
+            return;
+        }
         if ( !validHotbar(p, groups) ) {
             e.setCancelled(true);
         }
