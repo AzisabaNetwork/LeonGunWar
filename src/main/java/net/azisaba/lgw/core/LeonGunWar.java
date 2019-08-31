@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core;
 
+import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
+import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -122,6 +124,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CustomMatchSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
@@ -130,7 +133,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
         Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
         Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
-
+        Bukkit.getPluginManager().registerEvents(new CustomTDMListener(), this);
         // リスナーの登録 (others)
         Bukkit.getPluginManager().registerEvents(new NoArrowGroundListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoKnockbackListener(), this);
