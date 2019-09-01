@@ -218,10 +218,10 @@ public class MatchManager {
         Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, "10分"));
         // 勝利条件を発表
         // NO-LIMITの場合
-        if ( matchMode == MatchMode.TEAM_DEATH_MATCH_NOLIMIT || (matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit) ) {
+        if ( matchMode == MatchMode.TEAM_DEATH_MATCH_NOLIMIT || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit ) {
             Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 終了時に &cキル数が多いチーム &7が勝利", LeonGunWar.GAME_PREFIX));
             // LDMの場合
-        } else if ( matchMode == MatchMode.LEADER_DEATH_MATCH || (matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader) ) {
+        } else if ( matchMode == MatchMode.LEADER_DEATH_MATCH || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
             Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 相手チームの &dリーダー &7を倒して勝利", LeonGunWar.GAME_PREFIX));
             // CDMの場合 (上のifで引っかからなかったので、CDMでありTDMの場合)
         } else if ( matchMode == MatchMode.CUSTOM_DEATH_MATCH ) {
@@ -599,10 +599,10 @@ public class MatchManager {
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         // 勝利条件を発表
         // NO-LIMITの場合
-        if ( matchMode == MatchMode.TEAM_DEATH_MATCH_NOLIMIT || (matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit) ) {
+        if ( matchMode == MatchMode.TEAM_DEATH_MATCH_NOLIMIT || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit ) {
             p.sendMessage(Chat.f("{0}&7勝利条件 終了時に &cキル数が多いチーム &7が勝利", LeonGunWar.GAME_PREFIX));
             // LDMの場合
-        } else if ( matchMode == MatchMode.LEADER_DEATH_MATCH || (matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader) ) {
+        } else if ( matchMode == MatchMode.LEADER_DEATH_MATCH || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
             p.sendMessage(Chat.f("{0}&7勝利条件 相手チームの &dリーダー &7を倒して勝利", LeonGunWar.GAME_PREFIX));
             // CDMの場合 (上のifで引っかからなかったので、CDMでありTDMの場合)
         } else if ( matchMode == MatchMode.CUSTOM_DEATH_MATCH ) {
