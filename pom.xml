@@ -113,7 +113,7 @@
     <dependency>
       <groupId>net.azisaba</groupId>
       <artifactId>KDStatusReloaded</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
