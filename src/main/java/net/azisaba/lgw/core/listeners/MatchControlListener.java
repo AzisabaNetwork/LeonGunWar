@@ -18,8 +18,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import com.google.common.base.Strings;
-
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
@@ -191,36 +189,16 @@ public class MatchControlListener implements Listener {
 
         // アクションバーをアップデート
         for ( Player p : players ) {
-            // キル数取得
-            int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
-            // デス数取得
-            int deaths = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDeaths(p);
-            // アシスト数取得
-            int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
+            // 表示するメッセージを取得
+            String actionBar = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getActionBar(p);
 
-            String msg = "";
-
-            // 両方を足して0の場合は白く表示
-            if ( kills + deaths == 0 ) {
-                msg = Chat.f("&6&l{0} &rKill(s) &7[ &r{1} &7] &6&l{2} &rDeath(s)", 0, Strings.repeat("┃", 50), 0);
-            } else { // それ以外の場合はメーター作成
-                // キルのパーセンテージ
-                double killsPercentage = (double) kills / (double) (kills + deaths) * 100d;
-                // デスのパーセンテージ
-                double deathsPercentage = (double) deaths / (double) (kills + deaths) * 100d;
-
-                msg += Chat.f("&d{0}", Strings.repeat("┃", (int) killsPercentage / 2));
-                msg += Chat.f("&5{0}", Strings.repeat("┃", (int) deathsPercentage / 2));
-
-                // キル数とデス数を数字で表示
-                msg = Chat.f("&6&l{0} &rKill(s) &7[ &r{1} &7] &6&l{2} &rDeath(s)", kills, msg, deaths);
+            // nullの場合はデフォルトの内容を表示する
+            if ( actionBar == null ) {
+                actionBar = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDefaultActionBar();
             }
 
-            // アシスト数を表示
-            msg += Chat.f(" &7&l/ &6&l{0} &rAssist(s)", assists);
-
             // アクションバーに表示
-            JSONMessage.create(msg).actionbar(p);
+            JSONMessage.create(actionBar).actionbar(p);
         }
     }
 
