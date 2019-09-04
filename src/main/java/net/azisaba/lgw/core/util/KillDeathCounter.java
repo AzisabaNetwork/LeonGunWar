@@ -230,9 +230,9 @@ public class KillDeathCounter {
         int deaths = getDeaths(player);
         int assists = getAssists(player);
         // KDレート算出
-        double kdRaito = kills;
+        double kdRatio = kills;
         if ( deaths > 0 ) {
-            kdRaito = (double) kills / (double) deaths;
+            kdRatio = (double) kills / (double) deaths;
         }
 
         // kills + deathsが0より多い場合はバーを作成
@@ -253,7 +253,7 @@ public class KillDeathCounter {
         }
 
         // アシスト数とKDレートを表示
-        actionBar.append(Chat.f(" &7&l/ &6&l{0} &rAssist(s) &7&l/ &3&l{1} &rKD", assists, String.format("%.3f", kdRaito)));
+        actionBar.append(Chat.f(" &7&l/ &6&l{0} &rAssist(s) &7&l/ &3&l{1} &rKD", assists, String.format("%.3f", kdRatio)));
 
         // HashMapに設定
         actionBarMap.put(player.getUniqueId(), actionBar.toString());
