@@ -194,7 +194,7 @@ public class MatchControlListener implements Listener {
 
             // nullの場合はデフォルトの内容を表示する
             if ( actionBar == null ) {
-                actionBar = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDefaultActionBar();
+                actionBar = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDefaultActionBar(p);
             }
 
             // アクションバーに表示
