@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Damageable;
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 
 import com.shampaggon.crackshot.CSDirector;
 
@@ -63,6 +65,18 @@ public class NoKnockbackListener implements Listener {
                 double distance = explosive.getLocation().toVector().distance(target.getLocation().toVector());
 
                 damage *= (radius - distance) / (2 * 4);
+
+                // 障害物が間にある場合は軽減
+                Vector period = target.getLocation().toVector().subtract(explosive.getLocation().toVector()).normalize().multiply(0.1);
+                Location next = explosive.getLocation().clone();
+                int obstacle = 0;
+                for ( int i = 0; i < distance * 10; i++ ) {
+                    if ( next.getBlock().getType().isSolid() ) {
+                        obstacle++;
+                    }
+                    next.add(period);
+                }
+                damage = Math.max(1, damage * (1 - obstacle * 0.061));
 
                 Player shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
