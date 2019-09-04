@@ -38,7 +38,7 @@ public class KillDeathCounter {
 
     // 何もデータがない時のアクションバー
     @Getter
-    private final String defaultActionBar = Chat.f("&6&l0 &rKill(s) &7[ &r{0} &7] &6&l0 &rDeath(s) &7&l/ &6&l0 &rAssist(s) &7&l/ &2&l0.00 &6&lKD", Strings.repeat("┃", 50));
+    private final String defaultActionBar = Chat.f("&6&l0 &rKill(s) &7[ &r{0} &7] &6&l0 &rDeath(s) &7&l/ &6&l0 &rAssist(s) &7&l/ &3&l0.000 &rKD", Strings.repeat("┃", 50));
 
     /**
      * プレイヤーのキル数を1追加します
@@ -253,7 +253,7 @@ public class KillDeathCounter {
         }
 
         // アシスト数とKDレートを表示
-        actionBar.append(Chat.f(" &7&l/ &6&l{0} &rAssist(s) &7&l/ &2&l{1} &6&lKD", assists, String.format("%.2f", kdRaito)));
+        actionBar.append(Chat.f(" &7&l/ &6&l{0} &rAssist(s) &7&l/ &3&l{1} &rKD", assists, String.format("%.3f", kdRaito)));
 
         // HashMapに設定
         actionBarMap.put(player.getUniqueId(), actionBar.toString());
