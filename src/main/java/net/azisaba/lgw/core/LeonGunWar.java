@@ -151,7 +151,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TradeBoardListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableTNTBlockDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
 
         // リスナーの登録 (weapons)
         Bukkit.getPluginManager().registerEvents(new LightningStrikeListener(), this);
