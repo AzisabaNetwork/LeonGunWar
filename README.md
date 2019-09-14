@@ -29,10 +29,6 @@
 |[Docs] | ドキュメント(説明)系の編集|
 |[Debug] | デバッグコードに関する編集 |
 
-## Licence
-
-[GNU General Public License v3.0](LICENSE)
-
 ## 製作者
 
 * [siloneco](https://github.com/siloneco)
