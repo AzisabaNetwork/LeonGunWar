@@ -10,7 +10,12 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.google.common.base.Strings;
+
 import net.azisaba.lgw.core.events.PlayerAssistEvent;
+import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.playersettings.PlayerSettings;
+import net.azisaba.playersettings.util.SettingsData;
 
 import lombok.NonNull;
 
@@ -27,8 +32,14 @@ public class KillDeathCounter {
     private final Map<UUID, Integer> killCountMap = new HashMap<>();
     private final Map<UUID, Integer> deathCountMap = new HashMap<>();
     private final Map<UUID, Integer> assistCountMap = new HashMap<>();
+    // アクションバーのバーを保存するHashMap
+    private final Map<UUID, String> actionBarMap = new HashMap<>();
     // UUIDとプレイヤー名を紐付けるためのHashMap
     private final Map<UUID, String> playerNameContainer = new HashMap<>();
+
+    // 何もデータがない時のアクションバー
+    private final String defaultActionBar = Chat.f("&6&l0 &rKill(s) &7[ &r{0} &7] &6&l0 &rDeath(s) &7&l/ &6&l0 &rAssist(s)", Strings.repeat("┃", 50));
+    private final String defaultActionBarWithRatio = Chat.f("&6&l0 &rKill(s) &7[ &r{0} &7] &6&l0 &rDeath(s) &7&l/ &6&l0 &rAssist(s) &7&l/ &3&l0.000 &rKD", Strings.repeat("┃", 50));
 
     /**
      * プレイヤーのキル数を1追加します
@@ -49,6 +60,9 @@ public class KillDeathCounter {
 
         // HashMapにセット
         killCountMap.put(player.getUniqueId(), kill);
+
+        // アクションバーを更新する
+        updateActionbar(player);
     }
 
     /**
@@ -86,6 +100,9 @@ public class KillDeathCounter {
 
         // HashMapにセット
         deathCountMap.put(player.getUniqueId(), death);
+
+        // アクションバーを更新する
+        updateActionbar(player);
     }
 
     /**
@@ -123,6 +140,9 @@ public class KillDeathCounter {
 
         // HashMapにセット
         assistCountMap.put(player.getUniqueId(), assist);
+
+        // アクションバーを更新する
+        updateActionbar(player);
 
         // イベントの呼び出し
         PlayerAssistEvent event = new PlayerAssistEvent(player);
@@ -178,11 +198,90 @@ public class KillDeathCounter {
     }
 
     /**
+     * プレイヤーのアクションバーに表示する内容を取得します
+     *
+     * @param player 対象プレイヤー
+     * @return アクションバーに表示する内容。データがない場合はnull
+     */
+    public String getActionBar(@NonNull Player player) {
+        return actionBarMap.getOrDefault(player.getUniqueId(), null);
+    }
+
+    public String getDefaultActionBar(@NonNull Player player) {
+        // アクションバーにKDレートを表示するかどうかを個人設定から取得
+        SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
+        boolean displayKDRatio = data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
+
+        // 何度も個人設定を取得するのは非効率なので設定してからreturnする
+        if ( displayKDRatio ) {
+            actionBarMap.put(player.getUniqueId(), defaultActionBarWithRatio);
+            return defaultActionBarWithRatio;
+        } else {
+            actionBarMap.put(player.getUniqueId(), defaultActionBar);
+            return defaultActionBar;
+        }
+    }
+
+    /**
      * プレイヤーのUUIDと名前を紐づけます プレイヤーがログアウトした後にプレイヤー名とキル数を紐づけるために使用されます
      *
      * @param player 情報を更新したいプレイヤー
      */
     private void updatePlayerName(Player player) {
         playerNameContainer.put(player.getUniqueId(), player.getName());
+    }
+
+    /**
+     * プレイヤーのアクションバーに表示する内容を更新します。これはプレイヤーのアクションバーを更新するのではなく、{@link #actionBarMap}
+     * の内容を更新するメソッドです
+     *
+     * @param player 対象プレイヤー
+     */
+    private void updateActionbar(Player player) {
+
+        // アクションバーにKDレートを表示するかどうかを個人設定から取得
+        SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
+        boolean displayKDRatio = data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
+
+        StringBuilder barBuilder = new StringBuilder();
+        StringBuilder actionBar = new StringBuilder();
+
+        int kills = getKills(player);
+        int deaths = getDeaths(player);
+        int assists = getAssists(player);
+
+        // kills + deathsが0より多い場合はバーを作成
+        if ( kills + deaths > 0 ) {
+            // キルのパーセンテージ
+            double killsPercentage = (double) kills / (double) (kills + deaths) * 100d;
+            // デスのパーセンテージ
+            double deathsPercentage = (double) deaths / (double) (kills + deaths) * 100d;
+
+            barBuilder.append(Chat.f("&d{0}", Strings.repeat("┃", (int) killsPercentage / 2)));
+            barBuilder.append(Chat.f("&5{0}", Strings.repeat("┃", (int) deathsPercentage / 2)));
+
+            // キル数とデス数を数字で表示
+            actionBar.append(Chat.f("&6&l{0} &rKill(s) &7[ &r{1} &7] &6&l{2} &rDeath(s)", kills, barBuilder.toString(), deaths));
+        } else {
+            // それ以外なら白いバーを作成
+            actionBar.append(Chat.f("&6&l{0} &rKill(s) &7[ &r{1} &7] &6&l{2} &rDeath(s)", 0, Strings.repeat("┃", 50), 0));
+        }
+
+        // アシスト数とKDレートを表示
+        actionBar.append(Chat.f(" &7&l/ &6&l{0} &rAssist(s)", assists));
+
+        // displayKDRatioがtrueの場合はKDレートを計算して表示
+        if ( displayKDRatio ) {
+            // KDレート算出
+            double kdRatio = kills;
+            if ( deaths > 0 ) {
+                kdRatio = (double) kills / (double) deaths;
+            }
+
+            actionBar.append(Chat.f(" &7&l/ &3&l{0} &rKD", String.format("%.3f", kdRatio)));
+        }
+
+        // HashMapに設定
+        actionBarMap.put(player.getUniqueId(), actionBar.toString());
     }
 }

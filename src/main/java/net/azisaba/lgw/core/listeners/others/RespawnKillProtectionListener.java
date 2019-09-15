@@ -1,7 +1,9 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -11,6 +13,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitTask;
@@ -31,8 +36,10 @@ public class RespawnKillProtectionListener implements Listener {
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
 
+    private final List<Player> invincibleQueue = new ArrayList<>();
+
     private boolean isProtected(Player victim) {
-        return Instant.now().isBefore(remainTimes.getOrDefault(victim, Instant.now()));
+        return invincibleQueue.contains(victim) || Instant.now().isBefore(remainTimes.getOrDefault(victim, Instant.now()));
     }
 
     private void sendProtected(Player victim) {
@@ -48,6 +55,21 @@ public class RespawnKillProtectionListener implements Listener {
             if ( victimProtectedThrottle.tryAcquire() ) {
                 attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
             }
+        });
+    }
+
+    private void startCountdown(Player player) {
+        // リスポーン時間指定
+        remainTimes.put(player, Instant.now().plusSeconds(invincibleSeconds));
+
+        taskMap.compute(player, (key, task) -> {
+            // タスク終了
+            if ( task != null ) {
+                task.cancel();
+            }
+
+            // タスク開始
+            return new RespawnKillProtectionTask(player, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
         });
     }
 
@@ -106,17 +128,35 @@ public class RespawnKillProtectionListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
 
-        // リスポーン時間指定
-        remainTimes.put(p, Instant.now().plusSeconds(invincibleSeconds));
+        // 無敵時間カウントダウンのキューに追加
+        if ( !invincibleQueue.contains(p) ) {
+            invincibleQueue.add(p);
+        }
+    }
 
-        taskMap.compute(p, (key, task) -> {
-            // タスク終了
-            if ( task != null ) {
-                task.cancel();
-            }
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+        Player p = e.getPlayer();
+        if ( invincibleQueue.contains(p) ) {
+            startCountdown(p);
+            invincibleQueue.remove(p);
+        }
+    }
 
-            // タスク開始
-            return new RespawnKillProtectionTask(p, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
-        });
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        if ( invincibleQueue.contains(p) ) {
+            startCountdown(p);
+            invincibleQueue.remove(p);
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        if ( invincibleQueue.contains(p) ) {
+            invincibleQueue.remove(p);
+        }
     }
 }

@@ -138,17 +138,19 @@ public class CustomTDMListener implements Listener {
             return;
         }
 
-        // 50区切り/残り10/残り5ならメッセージを表示
-        if ( e.getCurrentPoint() % 50 == 0 || matchpoint - e.getCurrentPoint() == 10 || matchpoint - e.getCurrentPoint() == 5 ) {
+        // 試合終了チェック
+        if ( e.getCurrentPoint() >= matchpoint ) {
+
+            MatchManager manager = LeonGunWar.getPlugin().getManager();
+            // 試合終了
+            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()), manager.getTeamPlayers());
+            Bukkit.getPluginManager().callEvent(event);
+
+            // メッセージ表示
+        } else if ( e.getCurrentPoint() % 50 == 0 || matchpoint - e.getCurrentPoint() == 10 || matchpoint - e.getCurrentPoint() == 5 ) {
+            // 50区切り/残り10/残り5ならメッセージを表示
             Bukkit.broadcastMessage(Chat.f("{0}&7残り &e{1}キル &7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX,
                     matchpoint - e.getCurrentPoint(), e.getTeam().getTeamName()));
-        } else if ( e.getCurrentPoint() >= matchpoint ) {
-            MatchManager manager = LeonGunWar.getPlugin().getManager();
-
-            // 試合終了
-            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()),
-                    manager.getTeamPlayers());
-            Bukkit.getPluginManager().callEvent(event);
         }
     }
 
@@ -204,12 +206,25 @@ public class CustomTDMListener implements Listener {
     // 銃の打てる制限
     @EventHandler
     public void onPreWeaponShoot(WeaponPrepareShootEvent e) {
+
+        // CDMではない場合return
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.CUSTOM_DEATH_MATCH ) {
+            return;
+        }
         Player p = e.getPlayer();
+        // 試合に参加していない場合はreturn
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(p) ) {
+            return;
+        }
+
         String group = director.returnParentNode(p);
         if ( group == null ) {
             return;
         }
         String groups = director.getString(group + ".Item_Information.Inventory_Control");
+        if ( groups == null ) {
+            return;
+        }
         if ( !validHotbar(p, groups) ) {
             e.setCancelled(true);
         }

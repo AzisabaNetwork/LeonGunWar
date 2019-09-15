@@ -4,14 +4,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 
-import jp.azisaba.lgw.kdstatus.KDManager;
+import lombok.RequiredArgsConstructor;
+
+import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
 import jp.azisaba.lgw.kdstatus.KDUserData;
+import jp.azisaba.lgw.kdstatus.KillDeathDataContainer.TimeUnit;
 
 /**
  *
@@ -20,7 +25,10 @@ import jp.azisaba.lgw.kdstatus.KDUserData;
  * @author Mr_IK
  *
  */
+@RequiredArgsConstructor
 public class KDTeamDistributor implements TeamDistributor {
+
+    private static KDStatusReloaded kdsPlugin;
 
     /**
      * プレイヤーがAceか否かを判定します。
@@ -30,8 +38,16 @@ public class KDTeamDistributor implements TeamDistributor {
      * 例外: 累計キル数が1000未満の人は除外
      */
     public static boolean isACE(Player p) {
+        // KDStatusReloadedがない場合は取得
+        if ( kdsPlugin == null || !kdsPlugin.isEnabled() ) {
+            // 取得し、失敗したらエラー
+            if ( !getKDSPlugin() ) {
+                throw new IllegalStateException("Failed to get plugin \"KDStatusReloaded\"");
+            }
+        }
+
         // プレイヤーの戦績取得
-        KDUserData pd = KDManager.getPlayerData(p, true);
+        KDUserData pd = kdsPlugin.getKdDataContainer().getPlayerData(p, true);
         int kills = pd.getKills();
         int deaths = pd.getDeaths();
 
@@ -49,7 +65,7 @@ public class KDTeamDistributor implements TeamDistributor {
         }
 
         // 月のキル数が3000以上 or KD1.2以上ならtrue それ以外ならfalse
-        return kd >= 1.2 || pd.getMonthlyKills() >= 3000;
+        return kd >= 1.2 || pd.getKills(TimeUnit.MONTHLY) >= 3000;
     }
 
     /**
@@ -60,9 +76,17 @@ public class KDTeamDistributor implements TeamDistributor {
      * 例外: 累計キル数が100未満の人は上記の「KDx1000」 を800に固定する
      */
     public static int getPlayerPowerLevel(Player p) {
+        // KDStatusReloadedがない場合は取得
+        if ( kdsPlugin == null || !kdsPlugin.isEnabled() ) {
+            // 取得し、失敗したらエラー
+            if ( !getKDSPlugin() ) {
+                throw new IllegalStateException("Failed to get plugin \"KDStatusReloaded\"");
+            }
+        }
+
         int pl = 0;
         // プレイヤーの戦績取得
-        KDUserData pd = KDManager.getPlayerData(p, true);
+        KDUserData pd = kdsPlugin.getKdDataContainer().getPlayerData(p, true);
         int kills = pd.getKills();
         int deaths = pd.getDeaths();
 
@@ -79,7 +103,7 @@ public class KDTeamDistributor implements TeamDistributor {
         // 代入
         pl = (int) (kd * 1000);
         // 今月のキル数を代入
-        pl += pd.getMonthlyKills() / 10;
+        pl += pd.getKills(TimeUnit.MONTHLY) / 10;
         return pl;
     }
 
@@ -124,5 +148,21 @@ public class KDTeamDistributor implements TeamDistributor {
     @Override
     public String getDistributorName() {
         return "K/D振り分け";
+    }
+
+    private static boolean getKDSPlugin() {
+        // Pluginを取得
+        Plugin pl = Bukkit.getPluginManager().getPlugin("KDStatusReloaded");
+        // nullならreturn false
+        if ( pl == null ) {
+            return false;
+        }
+        // 代入
+        kdsPlugin = (KDStatusReloaded) pl;
+        // 無効化されていたらreturn false
+        if ( !kdsPlugin.isEnabled() ) {
+            return false;
+        }
+        return true;
     }
 }

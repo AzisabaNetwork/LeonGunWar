@@ -3,7 +3,7 @@
 
   <groupId>net.azisaba</groupId>
   <artifactId>LeonGunWar</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
 
   <name>${project.artifactId}</name>
   <description>A core plugin in Azisaba LeonGunWar</description>
@@ -70,7 +70,7 @@
     </repository>
     <repository>
       <id>azisaba-repo</id>
-      <url>https://repo.azisaba.net/</url>
+      <url>https://mvn-repo.azisaba.net/</url>
     </repository>
   </repositories>
 
@@ -113,7 +113,7 @@
     <dependency>
       <groupId>net.azisaba</groupId>
       <artifactId>KDStatusReloaded</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
