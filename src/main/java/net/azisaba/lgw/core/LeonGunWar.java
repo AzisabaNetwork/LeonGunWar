@@ -29,6 +29,7 @@ import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
+import net.azisaba.lgw.core.listeners.others.EnableCrackShotExactCooldownListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
@@ -40,7 +41,6 @@ import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
-import net.azisaba.lgw.core.listeners.weapons.LightningStrikeListener;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
 
@@ -135,6 +135,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
         Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomTDMListener(), this);
+
         // リスナーの登録 (others)
         Bukkit.getPluginManager().registerEvents(new NoArrowGroundListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoKnockbackListener(), this);
@@ -152,9 +153,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableTNTBlockDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
-
-        // リスナーの登録 (weapons)
-        Bukkit.getPluginManager().registerEvents(new LightningStrikeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EnableCrackShotExactCooldownListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);

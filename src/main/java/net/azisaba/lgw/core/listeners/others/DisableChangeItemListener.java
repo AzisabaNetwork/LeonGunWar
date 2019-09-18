@@ -41,7 +41,7 @@ public class DisableChangeItemListener implements Listener {
             return true;
         }
 
-        return (countdownQueue.contains(player) || Instant.now().isBefore(remainTimes.getOrDefault(player, Instant.now())));
+        return countdownQueue.contains(player) || Instant.now().isBefore(remainTimes.getOrDefault(player, Instant.now()));
     }
 
     private void startCountdown(Player player) {
