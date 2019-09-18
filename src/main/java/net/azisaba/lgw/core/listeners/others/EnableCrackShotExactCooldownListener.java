@@ -43,7 +43,7 @@ public class EnableCrackShotExactCooldownListener implements Listener {
         if ( cooldown.isNowInCooldown() ) {
             event.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&cこの武器はクールダウン中です！"), player);
-        } else {
+        } else if ( cooldown.isEnabled() ) {
             cooldown.setLastUsed(System.currentTimeMillis());
         }
     }
