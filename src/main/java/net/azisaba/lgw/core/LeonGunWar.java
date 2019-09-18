@@ -29,8 +29,8 @@ import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
 import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
 import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
-import net.azisaba.lgw.core.listeners.others.EnableCrackShotExactCooldownListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
+import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
@@ -153,7 +153,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableTNTBlockDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
-        Bukkit.getPluginManager().registerEvents(new EnableCrackShotExactCooldownListener(), this);
+        Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
