@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -132,6 +133,15 @@ public class MatchManager {
     }
 
     /**
+     * 空のボスバーを作成するメソッド
+     */
+    public BossBar createEmptyBossBar() {
+        BarColor barColor = BarColor.values()[new Random().nextInt(BarColor.values().length)];
+        BarStyle barStyle = BarStyle.SEGMENTED_10;
+        return Bukkit.createBossBar("", barColor, barStyle);
+    }
+
+    /**
      * マッチを開始するメソッド
      *
      * @exception IllegalStateException すでにゲームがスタートしている場合
@@ -144,7 +154,7 @@ public class MatchManager {
         timeLeft.set(600);
 
         // ボスバー作成
-        bossBar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
+        bossBar = createEmptyBossBar();
 
         // マップを抽選
         currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
