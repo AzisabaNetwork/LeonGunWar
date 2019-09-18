@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -248,7 +246,7 @@ public class MatchControlListener implements Listener {
         // progressBarがnullならバーを作成
         if ( LeonGunWar.getPlugin().getManager().getBossBar() == null ) {
             // 名前は後で設定するので空欄
-            progressBar = Bukkit.createBossBar("", BarColor.PINK, BarStyle.SOLID);
+            progressBar = LeonGunWar.getPlugin().getManager().createEmptyBossBar();
             // 設定
             LeonGunWar.getPlugin().getManager().setBossBar(progressBar);
         } else {
@@ -256,7 +254,7 @@ public class MatchControlListener implements Listener {
         }
 
         // 名前を変更
-        progressBar.setTitle(Chat.f("&6残り時間 - {0}", SecondOfDay.toString(e.getTimeLeft())));
+        progressBar.setTitle(Chat.f("&7残り時間 &a» &f{0}", SecondOfDay.toString(e.getTimeLeft())));
         // 進行度を設定
         progressBar.setProgress(e.getTimeLeft() / 600d);
 
