@@ -14,7 +14,7 @@ public class WeaponCooldown {
     private final String weaponTitle;
     private long lastUsed;
 
-    public int getWeaponCooldown() {
+    public int getWeaponCooldownTicks() {
         if ( Bukkit.getPluginManager().isPluginEnabled("CrackShot") ) {
             CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
             String cooldownNode = weaponTitle + ".Shooting.Delay_Between_Shots";
@@ -24,7 +24,11 @@ public class WeaponCooldown {
         }
     }
 
+    public boolean isEnabled() {
+        return getWeaponCooldownTicks() > 0;
+    }
+
     public boolean isNowInCooldown() {
-        return lastUsed != 0 && lastUsed + MILLIS_IN_TICK * getWeaponCooldown() >= System.currentTimeMillis();
+        return lastUsed > 0 && lastUsed + MILLIS_IN_TICK * getWeaponCooldownTicks() >= System.currentTimeMillis();
     }
 }
