@@ -36,6 +36,7 @@ import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
+import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
@@ -624,6 +625,9 @@ public class MatchManager {
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
+
+        // 途中参加イベントを呼び出し
+        Bukkit.getPluginManager().callEvent(new PlayerRejoinMatchEvent(p));
 
         // 設定でエントリーするようになっていればエントリーする
         // Pluginが無効化されていたらreturn
