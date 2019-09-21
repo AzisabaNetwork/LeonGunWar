@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.events.MatchStartedEvent;
+import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.tasks.AllowEditInventoryTask;
 import net.azisaba.lgw.core.utils.Chat;
 
@@ -77,7 +80,7 @@ public class DisableChangeItemListener implements Listener {
         if ( !isAllowEdit(p) ) {
             e.setCancelled(true);
             p.closeInventory();
-            p.sendMessage(Chat.f("{0}&7リスポーン後以外でアイテムを切り替えることはできません！", LeonGunWar.GAME_PREFIX));
+            p.sendMessage(Chat.f("{0}&7試合開始、途中参加、リスポーン時以外でアイテムを切り替えることはできません！", LeonGunWar.GAME_PREFIX));
             return;
         }
 
@@ -96,6 +99,24 @@ public class DisableChangeItemListener implements Listener {
         if ( !countdownQueue.contains(p) ) {
             countdownQueue.add(p);
         }
+    }
+
+    // 試合開始時にカウントダウンを開始
+    @EventHandler
+    public void onMatchStarted(MatchStartedEvent e) {
+        e.getAllTeamPlayers().stream()
+                .filter(p -> !countdownQueue.contains(p))
+                .filter(countdownQueue::add)
+                .forEach(this::startCountdown);
+    }
+
+    // 途中参加時にカウントダウンを開始
+    @EventHandler
+    public void onPlayerRejoinMatch(PlayerRejoinMatchEvent e) {
+        Optional.of(e.getPlayer())
+                .filter(p -> !countdownQueue.contains(p))
+                .filter(countdownQueue::add)
+                .ifPresent(this::startCountdown);
     }
 
     @EventHandler
