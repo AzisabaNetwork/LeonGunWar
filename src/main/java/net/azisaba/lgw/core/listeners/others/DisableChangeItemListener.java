@@ -129,7 +129,7 @@ public class DisableChangeItemListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-        if ( countdownQueue.contains(p) ) {
+        if ( !e.isCancelled() && countdownQueue.contains(p) ) {
             startCountdown(p);
             countdownQueue.remove(p);
         }
