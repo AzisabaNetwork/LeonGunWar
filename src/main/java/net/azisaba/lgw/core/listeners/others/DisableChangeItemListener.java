@@ -106,8 +106,7 @@ public class DisableChangeItemListener implements Listener {
     public void onMatchStarted(MatchStartedEvent e) {
         e.getAllTeamPlayers().stream()
                 .filter(p -> !countdownQueue.contains(p))
-                .filter(countdownQueue::add)
-                .forEach(this::startCountdown);
+                .forEach(countdownQueue::add);
     }
 
     // 途中参加時にカウントダウンを開始
@@ -115,8 +114,7 @@ public class DisableChangeItemListener implements Listener {
     public void onPlayerRejoinMatch(PlayerRejoinMatchEvent e) {
         Optional.of(e.getPlayer())
                 .filter(p -> !countdownQueue.contains(p))
-                .filter(countdownQueue::add)
-                .ifPresent(this::startCountdown);
+                .ifPresent(countdownQueue::add);
     }
 
     @EventHandler

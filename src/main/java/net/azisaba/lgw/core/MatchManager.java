@@ -33,6 +33,7 @@ import com.google.common.base.Strings;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.events.MatchStartedEvent;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
@@ -242,6 +243,8 @@ public class MatchManager {
             Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 先に &a{1}キル &7で勝利", LeonGunWar.GAME_PREFIX, 50));
         }
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+
+        Bukkit.getPluginManager().callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
         // タスクスタート
         runMatchTask();
