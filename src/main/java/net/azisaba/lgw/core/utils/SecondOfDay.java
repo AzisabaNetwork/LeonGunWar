@@ -22,6 +22,6 @@ public class SecondOfDay {
 
     // 1日のうちの秒として取得し、シンプルに文字列化
     public String toString(long secondOfDay) {
-        return LocalTime.ofSecondOfDay(secondOfDay).toString();
+        return LocalTime.ofSecondOfDay(secondOfDay).format(DateTimeFormatter.ISO_TIME);
     }
 }
