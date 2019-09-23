@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.util;
 
-import org.apache.commons.lang.time.DateUtils;
+import java.time.Duration;
+
 import org.bukkit.Bukkit;
 
 import com.shampaggon.crackshot.CSDirector;
@@ -13,21 +14,22 @@ public class StrikesCooldown {
     private final String weaponTitle;
     private long lastUsed;
 
-    public int getStrikesCooldownSeconds() {
+    public long getStrikesCooldown() {
         if ( Bukkit.getPluginManager().isPluginEnabled("CrackShot") ) {
             CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
             String cooldownNode = weaponTitle + ".Airstrikes.Multiple_Strikes.Delay_Between_Strikes";
-            return cs.getInt(cooldownNode);
+            int cooldown = cs.getInt(cooldownNode);
+            return Duration.ofSeconds(cooldown).toMillis();
         } else {
             return -1;
         }
     }
 
     public boolean isEnabled() {
-        return getStrikesCooldownSeconds() > 0;
+        return getStrikesCooldown() > 0;
     }
 
     public boolean isNowInCooldown() {
-        return lastUsed > 0 && lastUsed + DateUtils.MILLIS_PER_SECOND * getStrikesCooldownSeconds() >= System.currentTimeMillis();
+        return lastUsed > 0 && lastUsed + getStrikesCooldown() >= System.currentTimeMillis();
     }
 }
