@@ -7,10 +7,11 @@
 
   <name>${project.artifactId}</name>
   <description>A core plugin in Azisaba LeonGunWar</description>
+
   <url>https://azisaba.net</url>
   <organization>
-    <name>Azisaba Developer</name>
-    <url>https://github.com/${project.organization.name}/${project.name}</url>
+    <name>Azisaba Network</name>
+    <url>https://github.com/AzisabaNetwork</url>
   </organization>
 
   <properties>
