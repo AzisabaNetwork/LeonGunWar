@@ -1,1 +1,2 @@
 lobby: { world: Lobby, x: 852.5, y: 4.0, z: 709.5, yaw: 0.0, pitch: 0.0 }
+onsen: { world: Lobby, x: 905.5, y: 3.0, z: 739.5, yaw: 135.0, pitch: 0.0 }

@@ -17,6 +17,7 @@ public class SpawnsConfig extends Config {
 
     private Map<String, Location> spawns;
     private Location lobby;
+    private Location onsen;
 
     public SpawnsConfig(@NonNull LeonGunWar plugin) {
         super(plugin, "configs/spawns.yml", "spawns.yml");
@@ -41,5 +42,6 @@ public class SpawnsConfig extends Config {
         spawns = Collections.unmodifiableMap(spawns);
 
         lobby = spawns.get("lobby");
+        onsen = spawns.get("onsen");
     }
 }
