@@ -62,7 +62,7 @@
     </repository>
     <repository>
       <id>rayzr-repo</id>
-      <url>https://cdn.rawgit.com/Rayzr522/maven-repo/master/</url>
+      <url>https://rayzr.dev/repo/</url>
     </repository>
     <repository>
       <id>sk89q-repo</id>
@@ -84,7 +84,7 @@
     <dependency>
       <groupId>me.rayzr522</groupId>
       <artifactId>jsonmessage</artifactId>
-      <version>1.0.0</version>
+      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>com.sk89q</groupId>
@@ -101,7 +101,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.8</version>
+      <version>1.18.10</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
