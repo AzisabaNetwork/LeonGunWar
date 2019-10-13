@@ -120,6 +120,8 @@ public class DamageListener implements Listener {
 
         // 連続キルを停止
         LeonGunWar.getPlugin().getKillStreaks().removedBy(deader, killer);
+        // 連続アシストを停止
+        LeonGunWar.getPlugin().getAssistStreaks().removedBy(deader, killer);
     }
 
     /**
