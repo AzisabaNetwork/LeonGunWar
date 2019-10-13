@@ -256,7 +256,9 @@ public class MatchControlListener implements Listener {
         // 名前を変更
         progressBar.setTitle(Chat.f("&7残り時間 &a» &f{0}", SecondOfDay.toString(e.getTimeLeft())));
         // 進行度を設定
-        progressBar.setProgress(e.getTimeLeft() / 600d);
+        double left = e.getTimeLeft();
+        double duration = LeonGunWar.getPlugin().getManager().getMatchMode().getDuration().getSeconds();
+        progressBar.setProgress(left / duration);
 
         Bukkit.getOnlinePlayers().forEach(p -> {
 

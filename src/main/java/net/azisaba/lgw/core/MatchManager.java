@@ -47,6 +47,7 @@ import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
 
@@ -152,8 +153,8 @@ public class MatchManager {
         // すでにマッチ中の場合はIllegalStateException
         Preconditions.checkState(!isMatching, "A match is already started.");
 
-        // timeLeftを600に変更
-        timeLeft.set(600);
+        // timeLeftをdurationに変更
+        timeLeft.set((int) matchMode.getDuration().getSeconds());
 
         // ボスバー作成
         bossBar = createEmptyBossBar();
@@ -227,7 +228,7 @@ public class MatchManager {
 
         // 開始メッセージ
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-        Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, "10分"));
+        Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, SecondOfDay.f(matchMode.getDuration().getSeconds())));
         // 勝利条件を発表
         // NO-LIMITの場合
         if ( matchMode == MatchMode.TEAM_DEATH_MATCH_NOLIMIT || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit ) {
