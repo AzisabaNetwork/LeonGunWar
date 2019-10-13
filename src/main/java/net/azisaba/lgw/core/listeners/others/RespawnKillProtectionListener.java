@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,6 +24,8 @@ import org.bukkit.scheduler.BukkitTask;
 import com.google.common.util.concurrent.RateLimiter;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.events.MatchStartedEvent;
+import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.tasks.RespawnKillProtectionTask;
 import net.azisaba.lgw.core.utils.Chat;
 
@@ -146,7 +149,7 @@ public class RespawnKillProtectionListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-        if ( invincibleQueue.contains(p) ) {
+        if ( !e.isCancelled() && invincibleQueue.contains(p) ) {
             startCountdown(p);
             invincibleQueue.remove(p);
         }
@@ -158,5 +161,21 @@ public class RespawnKillProtectionListener implements Listener {
         if ( invincibleQueue.contains(p) ) {
             invincibleQueue.remove(p);
         }
+    }
+
+    // 試合開始時にカウントダウンを開始
+    @EventHandler
+    public void onMatchStarted(MatchStartedEvent e) {
+        e.getAllTeamPlayers().stream()
+                .filter(p -> !invincibleQueue.contains(p))
+                .forEach(invincibleQueue::add);
+    }
+
+    // 途中参加時にカウントダウンを開始
+    @EventHandler
+    public void onPlayerRejoinMatch(PlayerRejoinMatchEvent e) {
+        Optional.of(e.getPlayer())
+                .filter(p -> !invincibleQueue.contains(p))
+                .ifPresent(invincibleQueue::add);
     }
 }
