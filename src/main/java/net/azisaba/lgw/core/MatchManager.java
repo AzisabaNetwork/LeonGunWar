@@ -100,6 +100,9 @@ public class MatchManager {
     // 試合時間を表示するボスバー
     private BossBar bossBar = null;
 
+    // リーダーマッチかどうか
+    private boolean leaderMatch = false;
+
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
      */
@@ -193,31 +196,29 @@ public class MatchManager {
         }
 
         // LDM/CDMのリーダーマッチならリーダーを抽選
-        if ( matchMode == MatchMode.LEADER_DEATH_MATCH || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
+        root: switch (matchMode) {
+        case LEADER_DEATH_MATCH:
+        case LEADER_DEATH_MATCH_POINT:
+            leaderMatch = true;
+            break;
+        case CUSTOM_DEATH_MATCH:
+            switch (CustomTDMListener.getMatchType()) {
+            case leader:
+                leaderMatch = true;
+                break root;
+            default:
+            }
+        default:
+            leaderMatch = false;
+        }
+
+        if ( leaderMatch ) {
             // チームとそのプレイヤーを取得
             Map<BattleTeam, List<Player>> playerMap = getTeamPlayers();
 
             // 各チームからリーダーを抽選する
             for ( BattleTeam team : playerMap.keySet() ) {
-                List<Player> plist = playerMap.get(team);
-
-                // シャッフル
-                Collections.shuffle(plist);
-                // 先頭のプレイヤーを取得
-                Player target = plist.get(0);
-
-                // チームのリーダーに設定
-                ldmLeaderMap.put(team, target);
-
-                // メッセージを表示
-                plist.forEach(p -> {
-                    p.sendMessage(
-                            Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれました！", LeonGunWar.GAME_PREFIX,
-                                    target.getPlayerListName()));
-                });
-
-                // リーダーにタイトルを表示
-                target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
+                setLeaderAtRandom(team);
             }
         }
 
@@ -230,19 +231,7 @@ public class MatchManager {
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, SecondOfDay.f(matchMode.getDuration().getSeconds())));
         // 勝利条件を発表
-        // NO-LIMITの場合
-        if ( matchMode == MatchMode.TEAM_DEATH_MATCH_NOLIMIT || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit ) {
-            Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 終了時に &cキル数が多いチーム &7が勝利", LeonGunWar.GAME_PREFIX));
-            // LDMの場合
-        } else if ( matchMode == MatchMode.LEADER_DEATH_MATCH || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
-            Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 相手チームの &dリーダー &7を倒して勝利", LeonGunWar.GAME_PREFIX));
-            // CDMの場合 (上のifで引っかからなかったので、CDMでありTDMの場合)
-        } else if ( matchMode == MatchMode.CUSTOM_DEATH_MATCH ) {
-            Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 先に &a{1}キル &7で勝利", LeonGunWar.GAME_PREFIX, CustomTDMListener.getMatchpoint()));
-            // CDMではなく、通常のTDMの場合
-        } else if ( matchMode == MatchMode.TEAM_DEATH_MATCH ) {
-            Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 先に &a{1}キル &7で勝利", LeonGunWar.GAME_PREFIX, 50));
-        }
+        Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         Bukkit.getPluginManager().callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
@@ -581,6 +570,19 @@ public class MatchManager {
         Bukkit.getPluginManager().callEvent(event);
     }
 
+    /**
+     * 指定したチームにポイントを追加します。
+     *
+     * @param team   ポイントを追加したいチーム
+     * @param amount 追加したいポイントの量
+     * @exception NullPointerException teamがnullの場合
+     */
+    public void addTeamPoint(@NonNull BattleTeam team, int amount) {
+        for ( int i = 0; i < amount; i++ ) {
+            addTeamPoint(team);
+        }
+    }
+
     public boolean addPlayerIntoBattle(Player p) {
         // すでに参加している場合はreturn
         if ( getAllTeamPlayers().contains(p) ) {
@@ -613,19 +615,7 @@ public class MatchManager {
         // 開始メッセージ
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         // 勝利条件を発表
-        // NO-LIMITの場合
-        if ( matchMode == MatchMode.TEAM_DEATH_MATCH_NOLIMIT || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.no_limit ) {
-            p.sendMessage(Chat.f("{0}&7勝利条件 終了時に &cキル数が多いチーム &7が勝利", LeonGunWar.GAME_PREFIX));
-            // LDMの場合
-        } else if ( matchMode == MatchMode.LEADER_DEATH_MATCH || matchMode == MatchMode.CUSTOM_DEATH_MATCH && CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
-            p.sendMessage(Chat.f("{0}&7勝利条件 相手チームの &dリーダー &7を倒して勝利", LeonGunWar.GAME_PREFIX));
-            // CDMの場合 (上のifで引っかからなかったので、CDMでありTDMの場合)
-        } else if ( matchMode == MatchMode.CUSTOM_DEATH_MATCH ) {
-            p.sendMessage(Chat.f("{0}&7勝利条件 先に &a{1}キル &7で勝利", LeonGunWar.GAME_PREFIX, CustomTDMListener.getMatchpoint()));
-            // CDMではなく、通常のTDMの場合
-        } else if ( matchMode == MatchMode.TEAM_DEATH_MATCH ) {
-            p.sendMessage(Chat.f("{0}&7勝利条件 先に &a{1}キル &7で勝利", LeonGunWar.GAME_PREFIX, 50));
-        }
+        p.sendMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
@@ -670,7 +660,7 @@ public class MatchManager {
      */
     public Player getLDMLeader(BattleTeam team) {
         // 試合のモードがLDMでなければreturn null
-        if ( matchMode != MatchMode.LEADER_DEATH_MATCH ) {
+        if ( !leaderMatch ) {
             return null;
         }
 
@@ -685,11 +675,41 @@ public class MatchManager {
      */
     public Map<BattleTeam, Player> getLDMLeaderMap() {
         // 試合のモードがLDMでなければreturn null
-        if ( matchMode != MatchMode.LEADER_DEATH_MATCH ) {
+        if ( !leaderMatch ) {
             return new HashMap<>();
         }
 
         return ldmLeaderMap;
+    }
+
+    /**
+     * チームのリーダーを抽選して任命する。既に存在する場合は上書きされる。
+     *
+     * @param team 抽選したい対象のチーム
+     * @return リーダーに任命されたプレイヤー
+     */
+    public Player setLeaderAtRandom(BattleTeam team) {
+        List<Player> plist = getTeamPlayers(team);
+
+        // シャッフル
+        Collections.shuffle(plist);
+        // 先頭のプレイヤーを取得
+        Player target = plist.get(0);
+
+        // チームのリーダーに設定
+        ldmLeaderMap.put(team, target);
+        Bukkit.broadcastMessage(Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX, team.getTeamName()));
+
+        // メッセージを表示
+        plist.forEach(p -> {
+            p.sendMessage(
+                    Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれました！", LeonGunWar.GAME_PREFIX,
+                            target.getPlayerListName()));
+        });
+
+        // リーダーにタイトルを表示
+        target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
+        return target;
     }
 
     public void setMatchMode(MatchMode mode) {

@@ -35,7 +35,7 @@ import net.azisaba.lgw.core.utils.Chat;
  * 次に実行するカスタム試合のあれこれを指定する看板&GUI ACTIVEとINACTIVEを切り替えるときはスニークをしながら右クリックで可能
  * 破壊するときはスニークしながら左クリックで可能
  *
- * @author Mr_IK Thanks: siloneko
+ * @author Mr_IK Thanks: siloneco
  */
 public class CustomMatchSignListener implements Listener {
 
