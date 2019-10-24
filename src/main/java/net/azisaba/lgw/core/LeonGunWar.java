@@ -22,6 +22,7 @@ import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
 import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
+import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
 import net.azisaba.lgw.core.listeners.others.DisableChangeItemListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
@@ -156,6 +157,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
         Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
