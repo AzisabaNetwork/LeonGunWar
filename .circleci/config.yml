@@ -8,28 +8,28 @@ jobs:
     environment:
       - TZ: Asia/Tokyo
     steps:
-    - restore_cache:
-        keys:
-          - git-v1-{{ .Branch }}-{{ .Revision }}
-          - git-v1-{{ .Branch }}
-          - git-v1-
-    - checkout
-    - save_cache:
-        key: git-v1-{{ .Branch }}-{{ .Revision }}
-        paths:
-          - .git
-    - restore_cache:
-        keys:
-          - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
-          - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
-          - m2-v1-{{ .Branch }}
-          - m2-v1-
-    - run:
-        command: mvn -B -V clean install
-    - save_cache:
-        key: m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
-        paths:
-          - ~/.m2
+      - restore_cache:
+          keys:
+            - git-v1-{{ .Branch }}-{{ .Revision }}
+            - git-v1-{{ .Branch }}
+            - git-v1-
+      - checkout
+      - save_cache:
+          key: git-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .git
+      - restore_cache:
+          keys:
+            - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
+            - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - m2-v1-{{ .Branch }}
+            - m2-v1-
+      - run:
+          command: mvn -B -V clean install
+      - save_cache:
+          key: m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
+          paths:
+            - ~/.m2
 
 workflows:
   version: 2
