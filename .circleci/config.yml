@@ -25,7 +25,11 @@ jobs:
             - m2-v1-{{ .Branch }}
             - m2-v1-
       - run:
-          command: mvn -B -V clean install
+          command: java -version
+      - run:
+          command: mvn --version
+      - run:
+          command: mvn -B clean install
       - save_cache:
           key: m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
           paths:
