@@ -9,6 +9,8 @@ jobs:
       - TZ: Asia/Tokyo
     steps:
       - run:
+          command: sudo apt -y update
+      - run:
           command: sudo apt -y install rsync
       - restore_cache:
           keys:
