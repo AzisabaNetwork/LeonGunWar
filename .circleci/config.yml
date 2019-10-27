@@ -5,8 +5,6 @@ jobs:
     docker:
       - image: circleci/openjdk:8
     working_directory: ~/work
-    environment:
-      - TZ: Asia/Tokyo
     steps:
       - run: sudo apt -yq update
       - run: sudo apt -yq upgrade
