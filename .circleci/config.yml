@@ -8,6 +8,8 @@ jobs:
     environment:
       - TZ: Asia/Tokyo
     steps:
+      - run:
+          command: apt -y install rsync
       - restore_cache:
           keys:
             - git-v1-{{ .Branch }}-{{ .Revision }}
