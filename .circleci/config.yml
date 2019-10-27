@@ -38,7 +38,7 @@ jobs:
           fingerprints:
             - "da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a"
       - run:
-          command: ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR exit
+          command: ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR repo@$SSH_HOST exit
       - run:
           command: rsync -av ~/.m2/repository/net/azisaba/LeonGunWar/ repo@$SSH_HOST:~/net/azisaba/LeonGunWar/
 
