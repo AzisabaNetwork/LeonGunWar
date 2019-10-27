@@ -38,11 +38,11 @@ jobs:
           fingerprints:
             - "da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a"
       - run:
-          command: ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR repo@$SSH_HOST exit
+          command: ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR repo@$SSH_HOST "exit"
       - run:
-          command: ssh repo@$SSH_HOST mkdir -pv ~/net/azisaba/LeonGunWar
+          command: ssh repo@$SSH_HOST "mkdir -pv ~/net/azisaba/LeonGunWar"
       - run:
-          command: rsync -av ~/.m2/repository/net/azisaba/LeonGunWar/ repo@$SSH_HOST:~/net/azisaba/LeonGunWar/
+          command: rsync -av "$HOME/.m2/repository/net/azisaba/LeonGunWar/" repo@$SSH_HOST:"~/net/azisaba/LeonGunWar/"
 
 workflows:
   version: 2
