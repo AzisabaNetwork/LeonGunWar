@@ -40,7 +40,9 @@ jobs:
       - run:
           command: ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR repo@$SSH_HOST exit
       - run:
-          command: rsync -av --rsync-path='mkdir -pv ~/net/azisaba/LeonGunWar && rsync' ~/.m2/repository/net/azisaba/LeonGunWar/ repo@$SSH_HOST:~/net/azisaba/LeonGunWar/
+          command: ssh repo@$SSH_HOST mkdir -pv ~/net/azisaba/LeonGunWar
+      - run:
+          command: rsync -av ~/.m2/repository/net/azisaba/LeonGunWar/ repo@$SSH_HOST:~/net/azisaba/LeonGunWar/
 
 workflows:
   version: 2
