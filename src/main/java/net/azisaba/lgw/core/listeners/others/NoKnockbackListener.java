@@ -48,11 +48,11 @@ public class NoKnockbackListener implements Listener {
             e.setCancelled(true);
 
             Explosive explosive = (Explosive) e.getEntity();
-            double power = explosive.getYield();
+            float power = explosive.getYield();
             double radius = 2 * power;
 
             // パーティクルを表示
-            Particle explode = power >= 4 ? Particle.EXPLOSION_HUGE : Particle.EXPLOSION_LARGE;
+            Particle explode = power >= 1 ? power >= 2 ? Particle.EXPLOSION_HUGE : Particle.EXPLOSION_LARGE : Particle.EXPLOSION_NORMAL;
             e.getLocation().getWorld().spawnParticle(explode, e.getLocation(), 1);
 
             List<Damageable> targets = explosive.getNearbyEntities(radius, radius, radius).stream()
