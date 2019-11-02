@@ -3,6 +3,7 @@ package net.azisaba.lgw.core;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.lgw.core.commands.AdminChatCommand;
 import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
@@ -20,6 +21,7 @@ import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
 import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
 import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
+import net.azisaba.lgw.core.listeners.others.AdminChatListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
@@ -110,6 +112,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
+        Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -121,6 +124,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
+        Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -158,6 +162,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
         Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
