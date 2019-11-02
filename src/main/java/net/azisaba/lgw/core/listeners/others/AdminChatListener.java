@@ -30,6 +30,10 @@ public class AdminChatListener implements Listener {
         if ( !adminChatCommand.isAdminChat(p) ) {
             return;
         }
+        if ( !p.hasPermission("leongunwar.adminchat.send") ) {
+            adminChatCommand.setAdminChat(p, false);
+            return;
+        }
 
         e.setFormat(Chat.f("&b[&r%s&b] &d%s"));
         new ArrayList<Player>(e.getRecipients()).forEach(target -> {

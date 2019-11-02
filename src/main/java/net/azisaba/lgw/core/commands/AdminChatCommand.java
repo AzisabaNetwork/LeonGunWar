@@ -26,6 +26,14 @@ public class AdminChatCommand implements CommandExecutor {
         return adminChats.contains(p.getUniqueId());
     }
 
+    public void setAdminChat(Player p, boolean value) {
+        if ( value && !adminChats.contains(p.getUniqueId()) ) {
+            adminChats.add(p.getUniqueId());
+        } else if ( !value && adminChats.contains(p.getUniqueId()) ) {
+            adminChats.remove(p.getUniqueId());
+        }
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if ( args.length <= 0 ) {
