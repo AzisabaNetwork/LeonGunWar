@@ -21,7 +21,7 @@ public class AutoRespawnListener implements Listener {
         deader.spigot().respawn();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
 

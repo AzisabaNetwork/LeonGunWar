@@ -20,7 +20,7 @@ import net.azisaba.lgw.core.utils.Chat;
  */
 public class AdminChatCommand implements CommandExecutor {
 
-    private List<UUID> adminChats = new ArrayList<>();
+    private final List<UUID> adminChats = new ArrayList<>();
 
     public boolean isAdminChat(Player p) {
         return adminChats.contains(p.getUniqueId());

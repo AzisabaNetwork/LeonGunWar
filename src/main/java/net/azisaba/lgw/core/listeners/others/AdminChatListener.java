@@ -36,7 +36,7 @@ public class AdminChatListener implements Listener {
         }
 
         e.setFormat(Chat.f("&b[&r%s&b] &d%s"));
-        new ArrayList<Player>(e.getRecipients()).forEach(target -> {
+        new ArrayList<>(e.getRecipients()).forEach(target -> {
             if ( target.equals(p) ) {
                 return;
             }
