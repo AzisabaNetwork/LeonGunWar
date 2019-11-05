@@ -34,7 +34,7 @@ public class RespawnKillProtectionListener implements Listener {
     private final RateLimiter protectedThrottle = RateLimiter.create(1);
     private final RateLimiter victimProtectedThrottle = RateLimiter.create(1);
 
-    private final long invincibleSeconds = 5;
+    private final long duration = 5;
 
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
@@ -63,7 +63,7 @@ public class RespawnKillProtectionListener implements Listener {
 
     private void startCountdown(Player player) {
         // リスポーン時間指定
-        remainTimes.put(player, Instant.now().plusSeconds(invincibleSeconds));
+        remainTimes.put(player, Instant.now().plusSeconds(duration));
 
         taskMap.compute(player, (key, task) -> {
             // タスク終了
@@ -72,7 +72,7 @@ public class RespawnKillProtectionListener implements Listener {
             }
 
             // タスク開始
-            return new RespawnKillProtectionTask(player, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+            return new RespawnKillProtectionTask(player, remainTimes, duration).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
         });
     }
 
