@@ -53,4 +53,13 @@ public class AllowEditInventoryTask extends BukkitRunnable {
         bossBar.setProgress(remain * 1f / duration);
         bossBar.addPlayer(p);
     }
+
+    @Override
+    public synchronized void cancel() throws IllegalStateException {
+        bossBars.computeIfPresent(p, (k, bossBar) -> {
+            bossBar.removePlayer(p);
+            return null;
+        });
+        super.cancel();
+    }
 }

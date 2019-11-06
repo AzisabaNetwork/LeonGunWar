@@ -70,7 +70,7 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        if ( inventory.getType() != InventoryType.PLAYER ) {
+        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
             return;
         }
 
@@ -100,7 +100,7 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        if ( inventory.getType() != InventoryType.PLAYER ) {
+        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
             return;
         }
 
