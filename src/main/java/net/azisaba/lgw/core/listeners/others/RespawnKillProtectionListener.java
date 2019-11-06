@@ -64,8 +64,7 @@ public class RespawnKillProtectionListener implements Listener {
     private void startCountdown(Player player) {
         // リスポーン時間指定
         remainTimes.put(player, Instant.now().plusSeconds(duration));
-
-        taskMap.compute(player, (key, task) -> {
+        taskMap.compute(player, (k, task) -> {
             // タスク終了
             if ( task != null ) {
                 task.cancel();

@@ -35,7 +35,7 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
     @Override
     public void run() {
         // ボスバーを作成して取得
-        bossBars.computeIfAbsent(p, x -> Bukkit.createBossBar("", BarColor.YELLOW, BarStyle.SOLID));
+        bossBars.putIfAbsent(p, Bukkit.createBossBar("", BarColor.YELLOW, BarStyle.SOLID));
         BossBar bossBar = bossBars.get(p);
 
         // 残り時間 (秒) 取得
