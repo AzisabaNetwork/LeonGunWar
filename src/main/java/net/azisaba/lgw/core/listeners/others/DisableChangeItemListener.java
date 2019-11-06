@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,6 +54,7 @@ public class DisableChangeItemListener implements Listener {
 
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
+    private final Map<Player, BossBar> bossBars = new HashMap<>();
 
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
     private final CSUtility csUtil = new CSUtility();
@@ -148,11 +150,20 @@ public class DisableChangeItemListener implements Listener {
         int cooldown = changed * multipleSeconds;
 
         remainTimes.put(holder, Instant.now().plusSeconds(cooldown));
-        taskMap.compute(holder, (k, task) -> {
+        taskMap.compute(holder, (a, task) -> {
+            // タスク終了
             if ( task != null ) {
                 task.cancel();
             }
-            return new AllowEditInventoryTask(holder, remainTimes, cooldown).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+
+            // ボスバー初期化
+            bossBars.computeIfPresent(holder, (b, bossBar) -> {
+                bossBar.removePlayer(holder);
+                return null;
+            });
+
+            // タスク開始
+            return new AllowEditInventoryTask(holder, remainTimes, cooldown, bossBars).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
         });
 
         holder.sendMessage(Chat.f("{0}&a{1}個 &cのホットバーにあるアイテムの変更を検出しました。", LeonGunWar.GAME_PREFIX, changed));

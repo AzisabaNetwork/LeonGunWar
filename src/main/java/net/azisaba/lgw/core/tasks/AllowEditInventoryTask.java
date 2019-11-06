@@ -2,7 +2,6 @@ package net.azisaba.lgw.core.tasks;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -30,7 +29,7 @@ public class AllowEditInventoryTask extends BukkitRunnable {
     private final long duration;
 
     // ボスバー
-    private final Map<Player, BossBar> bossBars = new HashMap<>();
+    private final Map<Player, BossBar> bossBars;
 
     @Override
     public void run() {
@@ -52,14 +51,5 @@ public class AllowEditInventoryTask extends BukkitRunnable {
         bossBar.setTitle(Chat.f("&7アイテム整理まで &d» あと &f{0} ", SecondOfDay.f(remain)));
         bossBar.setProgress(remain * 1f / duration);
         bossBar.addPlayer(p);
-    }
-
-    @Override
-    public synchronized void cancel() throws IllegalStateException {
-        bossBars.computeIfPresent(p, (k, bossBar) -> {
-            bossBar.removePlayer(p);
-            return null;
-        });
-        super.cancel();
     }
 }
