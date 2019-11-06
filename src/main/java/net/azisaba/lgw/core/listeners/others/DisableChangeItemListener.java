@@ -16,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -61,18 +60,19 @@ public class DisableChangeItemListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getClickedInventory();
 
-        if ( player == null ) {
+        if ( !(event.getWhoClicked() instanceof Player) ) {
             return;
         }
+
+        Player player = (Player) event.getWhoClicked();
 
         if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(player) ) {
             return;
         }
 
-        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
+        if ( !(inventory instanceof PlayerInventory) ) {
             return;
         }
 
@@ -90,19 +90,19 @@ public class DisableChangeItemListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
-        Player holder = (Player) inventory.getHolder();
 
-        if ( holder == null ) {
+        if ( !(inventory.getHolder() instanceof Player) ) {
             return;
         }
 
+        Player holder = (Player) inventory.getHolder();
         inventory = holder.getInventory();
 
         if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(holder) ) {
             return;
         }
 
-        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
+        if ( !(inventory instanceof PlayerInventory) ) {
             return;
         }
 
