@@ -93,3 +93,8 @@
   spawns:
     red: { world: maps, x: -911.5, y: 161.0, z: -999.5, yaw: 90.0, pitch: 0.0 }
     blue: { world: maps, x: -1080.5, y: 160.0, z: -1008.5, yaw: -90.0, pitch: 0.0 }
+'resort':
+  world: maps
+  spawns:
+    red: { world: maps, x: -1419.5, y: 76.0, z: -1270.5, yaw: 90.0, pitch: 0.0 }
+    blue: { world: maps, x: -1546.5, y: 76.0, z: -1273.5, yaw: -90.0, pitch: 0.0 }
