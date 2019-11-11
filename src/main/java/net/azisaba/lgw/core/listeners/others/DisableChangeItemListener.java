@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -62,6 +63,10 @@ public class DisableChangeItemListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getClickedInventory();
 
+        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
+            return;
+        }
+
         if ( !(event.getWhoClicked() instanceof Player) ) {
             return;
         }
@@ -69,10 +74,6 @@ public class DisableChangeItemListener implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(player) ) {
-            return;
-        }
-
-        if ( !(inventory instanceof PlayerInventory) ) {
             return;
         }
 
@@ -91,6 +92,10 @@ public class DisableChangeItemListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
 
+        if ( inventory == null || inventory.getType() != InventoryType.CRAFTING ) {
+            return;
+        }
+
         if ( !(inventory.getHolder() instanceof Player) ) {
             return;
         }
@@ -98,11 +103,11 @@ public class DisableChangeItemListener implements Listener {
         Player holder = (Player) inventory.getHolder();
         inventory = holder.getInventory();
 
-        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(holder) ) {
+        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
             return;
         }
 
-        if ( !(inventory instanceof PlayerInventory) ) {
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(holder) ) {
             return;
         }
 
