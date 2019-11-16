@@ -108,7 +108,7 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        if ( !hotbars.containsKey(holder) ){
+        if ( !hotbars.containsKey(holder) ) {
             return;
         }
 
