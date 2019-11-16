@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -38,10 +39,6 @@ import net.azisaba.lgw.core.utils.SecondOfDay;
  *
  */
 public class DisableChangeItemListener implements Listener {
-
-    public static ItemStack[] emptyHotbar() {
-        return new ItemStack[9];
-    }
 
     public static ItemStack[] getHotbar(PlayerInventory inventory) {
         return IntStream.range(0, 9)
@@ -111,7 +108,11 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        ItemStack[] befores = hotbars.getOrDefault(holder, emptyHotbar());
+        if ( !hotbars.containsKey(holder) ){
+            return;
+        }
+
+        ItemStack[] befores = hotbars.get(holder);
         ItemStack[] afters = getHotbar((PlayerInventory) inventory);
 
         hotbars.remove(holder);
