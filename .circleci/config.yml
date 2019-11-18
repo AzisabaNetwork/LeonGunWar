@@ -35,7 +35,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a"
-      - run: rsync -aRv -e "ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET" ~/.m2/repository/./ repo@$SSH_HOST:.
+      - run: rsync -rlDczRv -e "ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET" --exclude={'*.lastUpdated','_remote.repositories','resolver-status.properties'} ~/.m2/repository/./ repo@$SSH_HOST:.
       - store_artifacts:
           path: dist
 
