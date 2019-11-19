@@ -16,6 +16,8 @@ public class CrackShotLagFixListener implements Listener {
     public void onChunkLoad(ChunkLoadEvent e) {
         // チャンク内の全エンティティ
         long removed = Arrays.stream(e.getChunk().getEntities())
+                // 制限を設ける
+                .limit(32)
                 // 並列化
                 .parallel()
                 // ラグエンティティ
