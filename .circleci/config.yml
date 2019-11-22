@@ -22,8 +22,8 @@ jobs:
       - run: cp -v target/*.jar dist
       - store_artifacts: { path: 'dist' }
 
-      - add_ssh_keys: { fingerprints: ["da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a"] }
-      - run: rsync -aczRv -e "ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET" --no-t --exclude={"*.lastUpdated","_remote.repositories","resolver-status.properties"} ~/.m2/repository/./ repo@$SSH_HOST:.
+      - add_ssh_keys: { fingerprints: ['da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a'] }
+      - run: rsync -aczRv -e 'ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET' --no-t --exclude={'*.lastUpdated','_remote.repositories','resolver-status.properties'} ~/.m2/repository/./ repo@$SSH_HOST:.
 
 workflows:
   version: 2
