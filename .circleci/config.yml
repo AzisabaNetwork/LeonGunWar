@@ -14,16 +14,18 @@ jobs:
       - checkout
       - save_cache: { key: 'git-v1-{{ .Branch }}-{{ .Revision }}', paths: ['.git'] }
 
+      - run: mvn --version
       - restore_cache: { keys: ['m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}', 'm2-v1-{{ .Branch }}', 'm2-v1-'] }
-      - run: mvn clean install -DcreateChecksum=true -V
+      - run: mvn dependency:go-offline -B
       - save_cache: { key: 'm2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}', paths: ['~/.m2'] }
+      - run: mvn install -DcreateChecksum=true -B
 
       - run: mkdir -pv dist
       - run: cp -v target/*.jar dist
       - store_artifacts: { path: 'dist' }
 
       - add_ssh_keys: { fingerprints: ['da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a'] }
-      - run: rsync -aczRv -e 'ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET' --no-t --exclude={'*.lastUpdated','_remote.repositories','resolver-status.properties'} ~/.m2/repository/./ repo@$SSH_HOST:.
+      - run: rsync -aczRv -e 'ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET' --no-t --exclude={'*'.lastUpdated,_remote.repositories,resolver-status.properties} ~/.m2/repository/./ repo@$SSH_HOST:.
 
 workflows:
   version: 2
