@@ -1,16 +1,12 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Explosive;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -20,7 +16,8 @@ import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-import com.shampaggon.crackshot.CSDirector;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ノックバックを無効化するためのクラス
@@ -153,6 +150,14 @@ public class NoKnockbackListener implements Listener {
     public void onExplosionDamage(EntityDamageByEntityEvent e) {
         if ( e.getDamager() instanceof Explosive ) {
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onWeaponArmorStandKnockback(WeaponDamageEntityEvent e) {
+        Entity victim=e.getVictim();
+        if (victim instanceof ArmorStand) {
+            victim.setVelocity(new Vector());
         }
     }
 
