@@ -9,38 +9,22 @@ jobs:
       - run: sudo apt -yq update
       - run: sudo apt -yq upgrade
       - run: sudo apt -yq install rsync
-      - restore_cache:
-          keys:
-            - git-v1-{{ .Branch }}-{{ .Revision }}
-            - git-v1-{{ .Branch }}
-            - git-v1-
+
+      - restore_cache: { keys: [git-v1-{{ .Branch }}-{{ .Revision }}, git-v1-{{ .Branch }}, git-v1-] }
       - checkout
-      - save_cache:
-          key: git-v1-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - .git
-      - restore_cache:
-          keys:
-            - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
-            - m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
-            - m2-v1-{{ .Branch }}
-            - m2-v1-
+      - save_cache: { key: git-v1-{{ .Branch }}-{{ .Revision }}, paths: [.git] }
+
+      - restore_cache: { keys: [m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}, m2-v1-{{ .Branch }}, m2-v1-] }
       - run: mvn clean install -DcreateChecksum=true -V
+      - save_cache: { key: m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}, paths: [~/.m2] }
+
       - run: mkdir -pv dist
       - run: cp -v target/*.jar dist
-      - save_cache:
-          key: m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}-{{ .Revision }}
-          paths:
-            - ~/.m2
-      - add_ssh_keys:
-          fingerprints:
-            - "da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a"
+      - store_artifacts: { path: dist }
+
+      - add_ssh_keys: { fingerprints: ["da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a"] }
       - run: rsync -aczRv -e "ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET" --no-t --exclude={"*.lastUpdated","_remote.repositories","resolver-status.properties"} ~/.m2/repository/./ repo@$SSH_HOST:.
-      - store_artifacts:
-          path: dist
 
 workflows:
   version: 2
-  commit:
-    jobs:
-      - run
+  commit: { jobs: [run] }
