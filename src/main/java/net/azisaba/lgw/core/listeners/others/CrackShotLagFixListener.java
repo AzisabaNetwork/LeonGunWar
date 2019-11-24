@@ -18,10 +18,10 @@ public class CrackShotLagFixListener implements Listener, Runnable {
     private final LinkedHashSet<Entity> queue = new LinkedHashSet<>();
 
     public CrackShotLagFixListener() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(LeonGunWar.getPlugin(), this, 0, 2);
+        //Bukkit.getScheduler().scheduleSyncRepeatingTask(LeonGunWar.getPlugin(), this, 0, 2);
     }
 
-    @Override
+    //@Override
     public void run() {
         Iterator<Entity> it = queue.iterator();
         if (!it.hasNext()) {
@@ -34,7 +34,7 @@ public class CrackShotLagFixListener implements Listener, Runnable {
         }
     }
 
-    @EventHandler
+    //@EventHandler
     public void onChunkLoad(ChunkLoadEvent e) {
         // チャンク内の全エンティティ
         long removed = Arrays.stream(e.getChunk().getEntities())
