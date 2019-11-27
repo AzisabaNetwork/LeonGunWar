@@ -3,7 +3,7 @@
 
   <groupId>net.azisaba</groupId>
   <artifactId>LeonGunWar</artifactId>
-  <version>1.2.4</version>
+  <version>1.3.4-p7</version>
 
   <name>${project.artifactId}</name>
   <description>A core plugin in Azisaba LeonGunWar</description>
@@ -63,7 +63,7 @@
     </repository>
     <repository>
       <id>rayzr-repo</id>
-      <url>https://raw.githubusercontent.com/Rayzr522/maven-repo/master/</url>
+      <url>https://cdn.jsdelivr.net/gh/Rayzr522/maven-repo@master/</url>
     </repository>
     <repository>
       <id>sk89q-repo</id>

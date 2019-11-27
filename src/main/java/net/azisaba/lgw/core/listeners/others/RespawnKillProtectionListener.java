@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -34,10 +35,11 @@ public class RespawnKillProtectionListener implements Listener {
     private final RateLimiter protectedThrottle = RateLimiter.create(1);
     private final RateLimiter victimProtectedThrottle = RateLimiter.create(1);
 
-    private final long invincibleSeconds = 5;
+    private final long duration = 5;
 
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
+    private final Map<Player, BossBar> bossBars = new HashMap<>();
 
     private final List<Player> invincibleQueue = new ArrayList<>();
 
@@ -63,16 +65,21 @@ public class RespawnKillProtectionListener implements Listener {
 
     private void startCountdown(Player player) {
         // リスポーン時間指定
-        remainTimes.put(player, Instant.now().plusSeconds(invincibleSeconds));
-
-        taskMap.compute(player, (key, task) -> {
+        remainTimes.put(player, Instant.now().plusSeconds(duration));
+        taskMap.compute(player, (a, task) -> {
             // タスク終了
             if ( task != null ) {
                 task.cancel();
             }
 
+            // ボスバー初期化
+            bossBars.computeIfPresent(player, (b, bossBar) -> {
+                bossBar.removePlayer(player);
+                return null;
+            });
+
             // タスク開始
-            return new RespawnKillProtectionTask(player, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+            return new RespawnKillProtectionTask(player, remainTimes, duration, bossBars).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
         });
     }
 

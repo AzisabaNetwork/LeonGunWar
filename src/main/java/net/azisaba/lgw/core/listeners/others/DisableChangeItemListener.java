@@ -1,158 +1,178 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.google.common.collect.Sets;
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.CSUtility;
+
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.events.MatchStartedEvent;
-import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.tasks.AllowEditInventoryTask;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 
 /**
- * プレイヤーリスポーン後、動いてから10秒間のみアイテム切り替えができる機能を追加
+ * ホットバーの変更した武器の数だけクールダウンを設ける
  *
- * @author siloneco
+ * @author siloneco, YukiLeafX
  *
  */
 public class DisableChangeItemListener implements Listener {
 
-    private final long allowEditSeconds = 10;
+    public static ItemStack[] getHotbar(PlayerInventory inventory) {
+        return IntStream.range(0, 9)
+                .mapToObj(inventory::getItem)
+                .toArray(ItemStack[]::new);
+    }
+
+    private final int multipleSeconds = 10;
+    private final Map<Player, ItemStack[]> hotbars = new HashMap<>();
 
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
+    private final Map<Player, BossBar> bossBars = new HashMap<>();
 
-    private final List<Player> countdownQueue = new ArrayList<>();
+    private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+    private final CSUtility csUtil = new CSUtility();
 
-    private boolean isAllowEdit(Player player) {
-        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(player) ) {
-            return true;
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Inventory inventory = event.getClickedInventory();
+
+        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
+            return;
         }
 
-        return countdownQueue.contains(player) || Instant.now().isBefore(remainTimes.getOrDefault(player, Instant.now()));
+        if ( !(event.getWhoClicked() instanceof Player) ) {
+            return;
+        }
+
+        Player player = (Player) event.getWhoClicked();
+
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(player) ) {
+            return;
+        }
+
+        if ( Instant.now().isBefore(remainTimes.getOrDefault(player, Instant.now())) ) {
+            event.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, .8f);
+            player.sendMessage(Chat.f("{0}&c現在アイテム整理はクールダウン中です！", LeonGunWar.GAME_PREFIX));
+            return;
+        }
+
+        ItemStack[] befores = getHotbar((PlayerInventory) inventory);
+        hotbars.putIfAbsent(player, befores);
     }
 
-    private void startCountdown(Player player) {
-        // 時間指定
-        remainTimes.put(player, Instant.now().plusSeconds(allowEditSeconds));
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Inventory inventory = event.getInventory();
 
-        taskMap.compute(player, (key, task) -> {
+        if ( inventory == null || inventory.getType() != InventoryType.CRAFTING ) {
+            return;
+        }
+
+        if ( !(inventory.getHolder() instanceof Player) ) {
+            return;
+        }
+
+        Player holder = (Player) inventory.getHolder();
+        inventory = holder.getInventory();
+
+        if ( inventory == null || inventory.getType() != InventoryType.PLAYER ) {
+            return;
+        }
+
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(holder) ) {
+            return;
+        }
+
+        if ( !hotbars.containsKey(holder) ) {
+            return;
+        }
+
+        ItemStack[] befores = hotbars.get(holder);
+        ItemStack[] afters = getHotbar((PlayerInventory) inventory);
+
+        hotbars.remove(holder);
+
+        int checked = 0;
+        boolean valid = true;
+
+        for ( ItemStack after : afters ) {
+            String weapon = csUtil.getWeaponTitle(after);
+            String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
+
+            if ( ctrl == null ) {
+                continue;
+            }
+
+            String[] groups = ctrl.replaceAll(" ", "").split(",");
+
+            Map<String, String> restore = Arrays.stream(groups)
+                    .flatMap(group -> Stream.of(group + ".Message_Exceeded", group + ".Sounds_Exceeded"))
+                    .collect(Collectors.toMap(group -> group, CSDirector.strings::remove));
+            valid &= cs.validHotbar(holder, weapon);
+            checked++;
+            CSDirector.strings.putAll(restore);
+        }
+
+        if ( checked == 0 ) {
+            return;
+        }
+
+        if ( !valid ) {
+            holder.sendMessage(Chat.f("{0}&eそんな装備で大丈夫か？", LeonGunWar.GAME_PREFIX));
+            return;
+        }
+
+        int changed = Sets.difference(Sets.newHashSet(befores), Sets.newHashSet(afters)).size();
+
+        if ( changed == 0 ) {
+            return;
+        }
+
+        int cooldown = changed * multipleSeconds;
+
+        remainTimes.put(holder, Instant.now().plusSeconds(cooldown));
+        taskMap.compute(holder, (a, task) -> {
             // タスク終了
             if ( task != null ) {
                 task.cancel();
             }
 
+            // ボスバー初期化
+            bossBars.computeIfPresent(holder, (b, bossBar) -> {
+                bossBar.removePlayer(holder);
+                return null;
+            });
+
             // タスク開始
-            return new AllowEditInventoryTask(player, remainTimes).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
+            return new AllowEditInventoryTask(holder, remainTimes, cooldown, bossBars).runTaskTimer(LeonGunWar.getPlugin(), 0, 20);
         });
-    }
 
-    @EventHandler
-    public void clickInventory(InventoryClickEvent e) {
-        if ( !(e.getWhoClicked() instanceof Player) ) {
-            return;
-        }
-        Player p = (Player) e.getWhoClicked();
-        Inventory clicked = e.getClickedInventory();
-
-        if ( clicked == null ) {
-            return;
-        }
-        if ( !clicked.equals(p.getInventory()) ) {
-            return;
-        }
-
-        if ( !isAllowEdit(p) ) {
-            e.setCancelled(true);
-            p.closeInventory();
-            p.sendMessage(Chat.f("{0}&7試合開始、途中参加、リスポーン時以外でアイテムを切り替えることはできません！", LeonGunWar.GAME_PREFIX));
-            return;
-        }
-
-    }
-
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
-        Player p = e.getPlayer();
-
-        // 試合中ではない場合return
-        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(p) ) {
-            return;
-        }
-
-        // カウントダウンのキューに追加
-        if ( !countdownQueue.contains(p) ) {
-            countdownQueue.add(p);
-        }
-    }
-
-    // 試合開始時にカウントダウンを開始
-    @EventHandler
-    public void onMatchStarted(MatchStartedEvent e) {
-        e.getAllTeamPlayers().stream()
-                .filter(p -> !countdownQueue.contains(p))
-                .forEach(countdownQueue::add);
-    }
-
-    // 途中参加時にカウントダウンを開始
-    @EventHandler
-    public void onPlayerRejoinMatch(PlayerRejoinMatchEvent e) {
-        Optional.of(e.getPlayer())
-                .filter(p -> !countdownQueue.contains(p))
-                .ifPresent(countdownQueue::add);
-    }
-
-    @EventHandler
-    public void onMove(PlayerMoveEvent e) {
-        Player p = e.getPlayer();
-        if ( countdownQueue.contains(p) ) {
-            startCountdown(p);
-            countdownQueue.remove(p);
-        }
-    }
-
-    @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        Player p = e.getPlayer();
-        if ( !e.isCancelled() && countdownQueue.contains(p) ) {
-            startCountdown(p);
-            countdownQueue.remove(p);
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClickEvent(InventoryClickEvent e) {
-        if ( !(e.getWhoClicked() instanceof Player) ) {
-            return;
-        }
-        Player p = (Player) e.getWhoClicked();
-
-        if ( countdownQueue.contains(p) ) {
-            startCountdown(p);
-            countdownQueue.remove(p);
-        }
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        if ( countdownQueue.contains(p) ) {
-            countdownQueue.remove(p);
-        }
+        holder.sendMessage(Chat.f("{0}&a{1}個 &cのホットバーにあるアイテムの変更を検出しました。", LeonGunWar.GAME_PREFIX, changed));
+        holder.sendMessage(Chat.f("{0}&b{1} &cのクールダウンを開始します。(ﾉ∀`)ｱﾁｬｰ", LeonGunWar.GAME_PREFIX, SecondOfDay.f(cooldown)));
     }
 }

@@ -24,6 +24,10 @@ commands:
     usage: /resourcepack
     aliases: ["pack", "texture"]
     permission: leongunwar.command.resourcepack
+  adminchat:
+    usage: /adminchat <msg>
+    aliases: ["c"]
+    permission: leongunwar.adminchat.send
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -41,3 +45,7 @@ permissions:
     default: true
   leongunwar.command.resourcepack:
     default: true
+  leongunwar.adminchat.send:
+    default: op
+  leongunwar.adminchat.receive:
+    default: op

@@ -1,10 +1,8 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,10 +13,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.MatchMode;
 
 public class PlayerControlListener implements Listener {
 
@@ -40,7 +36,7 @@ public class PlayerControlListener implements Listener {
     }
 
     /**
-     * LDMでリーダーが退出した際にゲームを終了させるリスナー
+     * LDMでリーダーが退出した際にリーダーを再抽選するリスナー
      */
     @EventHandler
     public void onPlayerKicked(PlayerKickMatchEvent e) {
@@ -48,7 +44,7 @@ public class PlayerControlListener implements Listener {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
         // LDMではなかった場合return
-        if ( manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH ) {
+        if ( !manager.isLeaderMatch() ) {
             return;
         }
 
@@ -61,12 +57,16 @@ public class PlayerControlListener implements Listener {
         // 全チームのリーダーを取得
         Map<BattleTeam, Player> leaderMap = manager.getLDMLeaderMap();
 
-        // プレイヤーがリーダーだった場合、勝者は無しで試合を終了させる
-        if ( leaderMap.values().contains(p) ) {
-            // イベント作成、呼び出し
-            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(),
-                    manager.getTeamPlayers());
-            Bukkit.getPluginManager().callEvent(event);
+        // 蹴られたプレイヤーが居たチームを取得
+        BattleTeam team = leaderMap.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(p))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
+
+        // プレイヤーがリーダーだった場合、リーダーの再抽選を行う
+        if ( team != null ) {
+            manager.setLeaderAtRandom(team);
         }
     }
 

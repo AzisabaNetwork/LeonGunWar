@@ -1,13 +1,8 @@
 package net.azisaba.lgw.core;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import net.azisaba.lgw.core.commands.KIAICommand;
-import net.azisaba.lgw.core.commands.LgwAdminCommand;
-import net.azisaba.lgw.core.commands.MatchCommand;
-import net.azisaba.lgw.core.commands.ResourcePackCommand;
-import net.azisaba.lgw.core.commands.UAVCommand;
+import lombok.Getter;
+import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
@@ -20,34 +15,16 @@ import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
 import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
 import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
-import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
-import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
-import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
-import net.azisaba.lgw.core.listeners.others.DisableChangeItemListener;
-import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
-import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
-import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
-import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
-import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
-import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
-import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
-import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
-import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
-import net.azisaba.lgw.core.listeners.others.OnsenListener;
-import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
-import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
-import net.azisaba.lgw.core.listeners.others.StreaksListener;
-import net.azisaba.lgw.core.listeners.others.TradeBoardListener;
+import net.azisaba.lgw.core.listeners.others.*;
 import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
+import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
-
-import lombok.Getter;
-
-import me.rayzr522.jsonmessage.JSONMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
 public class LeonGunWar extends JavaPlugin {
@@ -109,6 +86,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
+        Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -120,6 +98,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
+        Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -156,9 +135,12 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
         Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
+        Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
+        new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 5);
 
         Bukkit.getLogger().info(Chat.f("{0} が有効化されました。", getName()));
     }
