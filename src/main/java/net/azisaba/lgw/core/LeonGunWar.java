@@ -137,10 +137,11 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
-        new CrackShotLagFixTask().runTaskTimer(this, 20 * 60 * 2, 20 * 60 * 20);
+        new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
 
         Bukkit.getLogger().info(Chat.f("{0} が有効化されました。", getName()));
     }

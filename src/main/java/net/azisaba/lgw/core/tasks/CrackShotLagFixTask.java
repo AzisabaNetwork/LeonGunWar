@@ -24,7 +24,7 @@ public class CrackShotLagFixTask extends BukkitRunnable {
         // 削除したエンティティがいる場合
         if (removed > 0) {
             // ログに出力
-            LeonGunWar.getPlugin().getLogger().info("不要な " + removed + " 体のエンティティが削除されました。");
+            LeonGunWar.getPlugin().getLogger().info("定期 -> 不要な " + removed + " 体のエンティティが削除されました。");
         }
     }
 }
