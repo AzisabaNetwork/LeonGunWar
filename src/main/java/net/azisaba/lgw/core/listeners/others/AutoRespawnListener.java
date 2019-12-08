@@ -17,7 +17,7 @@ public class AutoRespawnListener implements Listener {
         Player deader = e.getEntity();
 
         // リスポーン
-        Bukkit.getScheduler().scheduleSyncDelayedTask(LeonGunWar.getPlugin(), () -> deader.spigot().respawn(), 0);
+        deader.spigot().respawn();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
