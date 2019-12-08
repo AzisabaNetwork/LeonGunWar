@@ -23,7 +23,7 @@ public class StreaksListener implements Listener {
         }
 
         // 試合中ではない場合は無視
-        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(killer) ) {
             return;
         }
 
@@ -41,7 +41,7 @@ public class StreaksListener implements Listener {
         Player p = e.getPlayer();
 
         // 試合中ではない場合は無視
-        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(p) ) {
             return;
         }
 
