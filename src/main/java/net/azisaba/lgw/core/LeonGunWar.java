@@ -151,12 +151,6 @@ public class LeonGunWar extends JavaPlugin {
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
 
-        // DisplayNameを戻す
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            p.setDisplayName(p.getName());
-            p.setPlayerListName(p.getName());
-        });
-
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();
 
