@@ -762,6 +762,13 @@ public class MatchManager {
             p.setPlayerListName(p.getName());
         });
 
+        // エントリーしているプレイヤーの表示名もリセットする
+        entryPlayers.forEach(p -> {
+            // DisplayNameを戻す
+            p.setDisplayName(p.getName());
+            p.setPlayerListName(p.getName());
+        });
+
         // ボスバーを非表示
         bossBar.removeAll();
     }
