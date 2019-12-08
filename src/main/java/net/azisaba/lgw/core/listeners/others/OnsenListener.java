@@ -18,7 +18,7 @@ public class OnsenListener implements Listener {
         boolean matching = LeonGunWar.getPlugin().getManager().isPlayerMatching(player);
         if ( afk && !matching ) {
             Location onsen = LeonGunWar.getPlugin().getSpawnsConfig().getOnsen();
-            if ( onsen != null ) {
+            if ( onsen != null && onsen.getWorld() == player.getWorld() ) {
                 player.teleport(onsen);
                 player.sendMessage(Chat.f("&c放置しているため温泉に強制送還されました(*^▽^*) ごゆっくり～( ^^) _旦~~"));
             }
