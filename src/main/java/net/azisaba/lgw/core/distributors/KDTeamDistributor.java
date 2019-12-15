@@ -15,8 +15,8 @@ import net.azisaba.lgw.core.MatchManager;
 import lombok.RequiredArgsConstructor;
 
 import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
-import jp.azisaba.lgw.kdstatus.KDUserData;
-import jp.azisaba.lgw.kdstatus.KillDeathDataContainer.TimeUnit;
+import jp.azisaba.lgw.kdstatus.sql.KDUserData;
+import jp.azisaba.lgw.kdstatus.utils.TimeUnit;
 
 /**
  *
@@ -48,7 +48,7 @@ public class KDTeamDistributor implements TeamDistributor {
 
         // プレイヤーの戦績取得
         KDUserData pd = kdsPlugin.getKdDataContainer().getPlayerData(p, true);
-        int kills = pd.getKills();
+        int kills = pd.getKills(TimeUnit.LIFETIME);
         int deaths = pd.getDeaths();
 
         // デス数が0以下の場合は1に変更
@@ -60,7 +60,7 @@ public class KDTeamDistributor implements TeamDistributor {
         double kd = (double) kills / (double) deaths;
 
         // 累計キル数が1000未満の人は除外
-        if ( pd.getKills() < 1000 ) {
+        if ( pd.getKills(TimeUnit.LIFETIME) < 1000 ) {
             return false;
         }
 
@@ -87,7 +87,7 @@ public class KDTeamDistributor implements TeamDistributor {
         int pl = 0;
         // プレイヤーの戦績取得
         KDUserData pd = kdsPlugin.getKdDataContainer().getPlayerData(p, true);
-        int kills = pd.getKills();
+        int kills = pd.getKills(TimeUnit.LIFETIME);
         int deaths = pd.getDeaths();
 
         // デス数が0以下の場合は1に変更
@@ -97,7 +97,7 @@ public class KDTeamDistributor implements TeamDistributor {
 
         // KD計算
         double kd = (double) kills / (double) deaths;
-        if ( pd.getKills() < 100 ) {
+        if ( pd.getKills(TimeUnit.LIFETIME) < 100 ) {
             kd = 0.8;
         }
         // 代入
