@@ -63,7 +63,7 @@
     </repository>
     <repository>
       <id>rayzr-repo</id>
-      <url>https://cdn.jsdelivr.net/gh/Rayzr522/maven-repo@master/</url>
+      <url>https://raw.githubusercontent.com/Rayzr522/maven-repo/master/</url>
     </repository>
     <repository>
       <id>sk89q-repo</id>
