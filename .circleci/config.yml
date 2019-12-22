@@ -1,32 +1,32 @@
-version: 2
+version: 2.1
 
-jobs:
-  run:
+executors:
+  jdk8:
     docker:
       - image: circleci/openjdk:8
     working_directory: ~/work
+    environment:
+      TZ: Asia/Tokyo
+
+jobs:
+  run:
+    executor: jdk8
     steps:
-      - run: sudo apt -yq update
-      - run: sudo apt -yq upgrade
-      - run: sudo apt -yq install rsync
-
-      - restore_cache: { keys: ['git-v1-{{ .Branch }}-{{ .Revision }}', 'git-v1-{{ .Branch }}', 'git-v1-'] }
       - checkout
-      - save_cache: { key: 'git-v1-{{ .Branch }}-{{ .Revision }}', paths: ['.git'] }
-
-      - run: mvn --version
-      - restore_cache: { keys: ['m2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}', 'm2-v1-{{ .Branch }}', 'm2-v1-'] }
-      - run: mvn dependency:go-offline -B
-      - save_cache: { key: 'm2-v1-{{ .Branch }}-{{ checksum "pom.xml" }}', paths: ['~/.m2'] }
-      - run: mvn install -DcreateChecksum=true -B
-
-      - run: mkdir -pv dist
-      - run: cp -v target/*.jar dist
+      - run: mvn package -V -B
+      - run: mkdir -pv dist && cp -v target/*.jar dist
       - store_artifacts: { path: 'dist' }
-
+  deploy:
+    executor: jdk8
+    steps:
+      - checkout
       - add_ssh_keys: { fingerprints: ['da:37:83:1c:a0:b4:5d:de:75:a7:64:c4:25:24:91:9a'] }
-      - run: rsync -aczRv -e 'ssh -o StrictHostKeyChecking=no -o LogLevel=QUIET' --no-t --exclude={'*'.lastUpdated,_remote.repositories,resolver-status.properties} ~/.m2/repository/./ repo@$SSH_HOST:.
+      - run: git clone git@github.com:AzisabaNetwork/mvn-repo.git
+      - run: mvn deploy -DaltDeploymentRepository=local::default::file://mvn-repo -V -B
+      - run: git config --global user.email 'null@azisaba.net'
+      - run: git config --global user.name mvn-repo
+      - run: cd mvn-repo && git add -A && git commit -m "Deploy @ $(date)" && git push origin master
 
 workflows:
   version: 2
-  commit: { jobs: ['run'] }
+  commit: { jobs: [run, deploy] }
