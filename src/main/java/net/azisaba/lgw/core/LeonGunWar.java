@@ -80,6 +80,9 @@ public class LeonGunWar extends JavaPlugin {
         manager.initialize();
         tradeBoardManager.init();
 
+        // コマンドのインスタンスに渡す必要があるListener
+        PreventItemDropListener preventItemDropListener = new PreventItemDropListener();
+
         // コマンドの登録
         Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
         Bukkit.getPluginCommand("uav").setExecutor(new UAVCommand());
@@ -87,6 +90,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
+        Bukkit.getPluginCommand("itemdrop").setExecutor(new ItemDropCommand(preventItemDropListener));
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -138,6 +142,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
+        Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
