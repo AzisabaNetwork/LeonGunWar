@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners.others;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,15 +15,16 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 import jp.azisaba.lgw.kdstatus.utils.Chat;
 
-public class DisableToysDuringMatchListener implements Listener {
+public class DisableNormalWeaponsInNewYearPVE implements Listener {
 
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
     @EventHandler
     public void onWeaponPrepareShoot(WeaponPrepareShootEvent event) {
         Player player = event.getPlayer();
+        World world = player.getWorld();
 
-        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(player) ) {
+        if ( world != null && world.getName().equals("NYPVE") ) {
             return;
         }
 
@@ -35,8 +37,8 @@ public class DisableToysDuringMatchListener implements Listener {
 
         String[] groups = ctrl.replaceAll(" ", "").split(",");
 
-        if ( Arrays.asList(groups).contains("toy") ) {
-            player.sendMessage(Chat.f("{0}&c試合中にこのアイテムは使用できません！", LeonGunWar.GAME_PREFIX));
+        if ( !Arrays.asList(groups).contains("PVE_Weapons") ) {
+            player.sendMessage(Chat.f("{0}&c正月PVEでは限定アイテムしか使用できません！", LeonGunWar.GAME_PREFIX));
             event.setCancelled(true);
         }
     }
