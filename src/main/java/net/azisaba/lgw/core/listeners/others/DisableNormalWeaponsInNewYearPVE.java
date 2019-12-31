@@ -24,7 +24,7 @@ public class DisableNormalWeaponsInNewYearPVE implements Listener {
         Player player = event.getPlayer();
         World world = player.getWorld();
 
-        if ( world != null && world.getName().equals("NYPVE") ) {
+        if ( world == null || !world.getName().equals("NYPVE") ) {
             return;
         }
 
