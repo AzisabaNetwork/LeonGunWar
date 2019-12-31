@@ -250,10 +250,6 @@ public class MatchManager {
      * ゲーム終了時に行う処理を書きます
      */
     public void finalizeMatch() {
-        // Entry削除
-        teams.values().stream()
-                .forEach(team -> new ArrayList<>(team.getEntries()).forEach(team::removeEntry));
-
         // タスクの終了
         if ( matchTask != null ) {
             matchTask.cancel();
@@ -273,17 +269,24 @@ public class MatchManager {
         // 全プレイヤーのdisplayNameを初期化
         Bukkit.getOnlinePlayers().forEach(p -> {
 
-            // DisplayNameをリセット
-            p.setDisplayName(p.getName());
-
             // PlayerListの色はエントリーしていたら緑色
             if ( entryPlayers.contains(p) ) {
                 p.setPlayerListName(Chat.f("&a{0}", p.getName()));
-            } else {
-                // その他はリセット
+            } else if ( getBattleTeam(p) != null ) {
+                // チームに参加していたプレイヤーはリセット
                 p.setPlayerListName(p.getName());
+            } else {
+                // その他は無視
+                return;
             }
+
+            // DisplayNameをリセット
+            p.setDisplayName(p.getName());
         });
+
+        // Entry削除
+        teams.values()
+                .forEach(team -> new ArrayList<>(team.getEntries()).forEach(team::removeEntry));
 
         // リーダーを削除
         ldmLeaderMap.clear();
@@ -753,6 +756,17 @@ public class MatchManager {
             // プレイヤーの戦績を表示
             p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
                     deaths, assists));
+
+            // DisplayNameを戻す
+            p.setDisplayName(p.getName());
+            p.setPlayerListName(p.getName());
+        });
+
+        // エントリーしているプレイヤーの表示名もリセットする
+        entryPlayers.forEach(p -> {
+            // DisplayNameを戻す
+            p.setDisplayName(p.getName());
+            p.setPlayerListName(p.getName());
         });
 
         // ボスバーを非表示

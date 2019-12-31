@@ -22,6 +22,11 @@ public class StreaksListener implements Listener {
             return;
         }
 
+        // 試合中ではない場合は無視
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(killer) ) {
+            return;
+        }
+
         // カスタムマッチは無視
         if ( LeonGunWar.getPlugin().getManager().getMatchMode() == MatchMode.CUSTOM_DEATH_MATCH ) {
             return;
@@ -34,6 +39,11 @@ public class StreaksListener implements Listener {
     @EventHandler
     public void onPlayerAssist(PlayerAssistEvent e) {
         Player p = e.getPlayer();
+
+        // 試合中ではない場合は無視
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(p) ) {
+            return;
+        }
 
         // カスタムマッチは無視
         if ( LeonGunWar.getPlugin().getManager().getMatchMode() == MatchMode.CUSTOM_DEATH_MATCH ) {

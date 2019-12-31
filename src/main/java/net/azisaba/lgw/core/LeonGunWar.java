@@ -80,6 +80,9 @@ public class LeonGunWar extends JavaPlugin {
         manager.initialize();
         tradeBoardManager.init();
 
+        // コマンドのインスタンスに渡す必要があるListener
+        PreventItemDropListener preventItemDropListener = new PreventItemDropListener();
+
         // コマンドの登録
         Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
         Bukkit.getPluginCommand("uav").setExecutor(new UAVCommand());
@@ -87,6 +90,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
+        Bukkit.getPluginCommand("itemdrop").setExecutor(new ItemDropCommand(preventItemDropListener));
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -137,10 +141,14 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
+        Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
+        Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvE(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
-        new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 5);
+        new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
 
         Bukkit.getLogger().info(Chat.f("{0} が有効化されました。", getName()));
     }
@@ -149,12 +157,6 @@ public class LeonGunWar extends JavaPlugin {
     public void onDisable() {
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
-
-        // DisplayNameを戻す
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            p.setDisplayName(p.getName());
-            p.setPlayerListName(p.getName());
-        });
 
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();
