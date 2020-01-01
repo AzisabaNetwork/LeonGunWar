@@ -37,7 +37,7 @@ public class LimitCommand implements CommandExecutor {
                 p.sendMessage(Chat.f("&cアイテムドロップが不可能になりました"));
             }
         } else if ( args[0].equalsIgnoreCase("build") ) {
-            boolean now = listener.toggleAllowDrop(p);
+            boolean now = listener.toggleAllowBuild(p);
             if ( now ) {
                 p.sendMessage(Chat.f("&a建築が可能になりました"));
             } else {
