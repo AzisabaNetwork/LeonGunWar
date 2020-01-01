@@ -79,15 +79,6 @@ public class LimitActionListener implements Listener {
         }
     }
 
-    public void setAllowDrop(Player player, boolean value) {
-        if ( value && !allowDropPlayers.contains(player.getUniqueId()) ) {
-            allowDropPlayers.add(player.getUniqueId());
-        }
-        if ( !value && allowDropPlayers.contains(player.getUniqueId()) ) {
-            allowDropPlayers.remove(player.getUniqueId());
-        }
-    }
-
     public boolean toggleAllowDrop(Player player) {
         if ( allowDropPlayers.contains(player.getUniqueId()) ) {
             allowDropPlayers.remove(player.getUniqueId());
