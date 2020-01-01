@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * @author siloneco
  *
  */
-public class PreventItemDropListener implements Listener {
+public class LimitActionListener implements Listener {
 
     private List<UUID> allowDropPlayers = new ArrayList<>();
 

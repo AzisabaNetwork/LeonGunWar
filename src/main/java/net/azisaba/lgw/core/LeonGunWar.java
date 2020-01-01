@@ -81,7 +81,7 @@ public class LeonGunWar extends JavaPlugin {
         tradeBoardManager.init();
 
         // コマンドのインスタンスに渡す必要があるListener
-        PreventItemDropListener preventItemDropListener = new PreventItemDropListener();
+        LimitActionListener preventItemDropListener = new LimitActionListener();
 
         // コマンドの登録
         Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
@@ -90,7 +90,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
-        Bukkit.getPluginCommand("itemdrop").setExecutor(new ItemDropCommand(preventItemDropListener));
+        Bukkit.getPluginCommand("itemdrop").setExecutor(new LimitCommand(preventItemDropListener));
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());

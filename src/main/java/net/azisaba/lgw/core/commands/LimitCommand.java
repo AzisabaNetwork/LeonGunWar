@@ -5,15 +5,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.azisaba.lgw.core.listeners.others.PreventItemDropListener;
+import net.azisaba.lgw.core.listeners.others.LimitActionListener;
 import net.azisaba.lgw.core.utils.Chat;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ItemDropCommand implements CommandExecutor {
+public class LimitCommand implements CommandExecutor {
 
-    private final PreventItemDropListener listener;
+    private final LimitActionListener listener;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
