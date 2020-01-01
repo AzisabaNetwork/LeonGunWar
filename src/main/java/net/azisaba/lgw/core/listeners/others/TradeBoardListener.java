@@ -131,7 +131,7 @@ public class TradeBoardListener implements Listener {
     /**
      * 看板を破壊したときに、自分の看板以外の看板であったらキャンセルし、自分の看板ならスルーするListener
      */
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBreakSign(BlockBreakEvent e) {
         Player p = e.getPlayer();
         Block b = e.getBlock();
