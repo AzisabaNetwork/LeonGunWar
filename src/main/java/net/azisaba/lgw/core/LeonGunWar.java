@@ -90,7 +90,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
-        Bukkit.getPluginCommand("itemdrop").setExecutor(new LimitCommand(preventItemDropListener));
+        Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
