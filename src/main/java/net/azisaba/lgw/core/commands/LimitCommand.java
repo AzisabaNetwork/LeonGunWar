@@ -18,16 +18,31 @@ public class LimitCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if ( !(sender instanceof Player) ) {
+            sender.sendMessage(Chat.f("&cこのコマンドはプレイヤーのみ実行可能です"));
             return true;
         }
 
         Player p = (Player) sender;
 
-        boolean now = listener.toggleAllowDrop(p);
-        if ( now ) {
-            p.sendMessage(Chat.f("&aアイテムドロップが可能になりました"));
-        } else {
-            p.sendMessage(Chat.f("&cアイテムドロップが不可能になりました"));
+        if ( args.length <= 0 ) {
+            p.sendMessage(Chat.f("&c使い方: /limit [&edrop&c/&ebuild&c]"));
+            return true;
+        }
+
+        if ( args[0].equalsIgnoreCase("drop") ) {
+            boolean now = listener.toggleAllowDrop(p);
+            if ( now ) {
+                p.sendMessage(Chat.f("&aアイテムドロップが可能になりました"));
+            } else {
+                p.sendMessage(Chat.f("&cアイテムドロップが不可能になりました"));
+            }
+        } else if ( args[0].equalsIgnoreCase("build") ) {
+            boolean now = listener.toggleAllowDrop(p);
+            if ( now ) {
+                p.sendMessage(Chat.f("&a建築が可能になりました"));
+            } else {
+                p.sendMessage(Chat.f("&c建築が不可能になりました"));
+            }
         }
         return true;
     }
