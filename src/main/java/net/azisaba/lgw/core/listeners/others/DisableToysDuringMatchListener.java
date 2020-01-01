@@ -19,7 +19,7 @@ public class DisableToysDuringMatchListener implements Listener {
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
     @EventHandler
-    public void onWeaponPreShoot(WeaponPrepareShootEvent event) {
+    public void onWeaponPrepareShoot(WeaponPrepareShootEvent event) {
         Player player = event.getPlayer();
 
         if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(player) ) {
@@ -35,7 +35,7 @@ public class DisableToysDuringMatchListener implements Listener {
 
         String[] groups = ctrl.replaceAll(" ", "").split(",");
 
-        if ( Arrays.stream(groups).anyMatch("toy"::equals) ) {
+        if ( Arrays.asList(groups).contains("toy") ) {
             player.sendMessage(Chat.f("{0}&c試合中にこのアイテムは使用できません！", LeonGunWar.GAME_PREFIX));
             event.setCancelled(true);
         }
