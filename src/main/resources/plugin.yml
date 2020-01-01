@@ -28,9 +28,9 @@ commands:
     usage: /adminchat <msg>
     aliases: ["c"]
     permission: leongunwar.adminchat.send
-  itemdrop:
-    usage: /itemdrop
-    permission: leongunwar.command.itemdrop
+  limit:
+    usage: /limit [drop/build]
+    permission: leongunwar.command.limit
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -52,5 +52,5 @@ permissions:
     default: op
   leongunwar.adminchat.receive:
     default: op
-  leongunwar.command.itemdrop:
+  leongunwar.command.limit:
     default: op
