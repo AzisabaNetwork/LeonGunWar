@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.listeners.others;
+package net.azisaba.lgw.core.listeners.weaponcontrols;
 
 import java.util.Arrays;
 
@@ -14,7 +14,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 import jp.azisaba.lgw.kdstatus.utils.Chat;
 
-public class DisableToysDuringMatchListener implements Listener {
+public class DisablePvEsDuringMatchListener implements Listener {
 
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
@@ -35,7 +35,7 @@ public class DisableToysDuringMatchListener implements Listener {
 
         String[] groups = ctrl.replaceAll(" ", "").split(",");
 
-        if ( Arrays.asList(groups).contains("toy") ) {
+        if ( Arrays.asList(groups).contains("PVE_Weapons") ) {
             player.sendMessage(Chat.f("{0}&c試合中にこのアイテムは使用できません！", LeonGunWar.GAME_PREFIX));
             event.setCancelled(true);
         }

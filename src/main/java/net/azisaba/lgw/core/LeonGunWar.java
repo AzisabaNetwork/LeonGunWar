@@ -1,7 +1,8 @@
 package net.azisaba.lgw.core;
 
-import lombok.Getter;
-import me.rayzr522.jsonmessage.JSONMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
@@ -20,11 +21,16 @@ import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
+import net.azisaba.lgw.core.listeners.weaponcontrols.DisableNormalWeaponsInNewYearPvEListener;
+import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsDuringMatchListener;
+import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListener;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
+
+import lombok.Getter;
+
+import me.rayzr522.jsonmessage.JSONMessage;
 
 @Getter
 public class LeonGunWar extends JavaPlugin {
@@ -140,11 +146,14 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
         Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
-        Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvE(), this);
+
+        // 武器コントロールリスナーの登録 (weaponcontrols)
+        Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisablePvEsDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvEListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);

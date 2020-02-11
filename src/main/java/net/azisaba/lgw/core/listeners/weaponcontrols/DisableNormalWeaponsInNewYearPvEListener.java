@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.listeners.others;
+package net.azisaba.lgw.core.listeners.weaponcontrols;
 
 import java.util.Arrays;
 
@@ -12,11 +12,9 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 
-import net.azisaba.lgw.core.LeonGunWar;
-
 import jp.azisaba.lgw.kdstatus.utils.Chat;
 
-public class DisableNormalWeaponsInNewYearPvE implements Listener {
+public class DisableNormalWeaponsInNewYearPvEListener implements Listener {
 
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
