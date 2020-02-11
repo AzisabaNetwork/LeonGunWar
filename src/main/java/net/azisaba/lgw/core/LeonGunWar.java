@@ -23,6 +23,7 @@ import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableNormalWeaponsInNewYearPvEListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsDuringMatchListener;
+import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsInLobbyListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListener;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
@@ -153,6 +154,7 @@ public class LeonGunWar extends JavaPlugin {
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisablePvEsDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisablePvEsInLobbyListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvEListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
