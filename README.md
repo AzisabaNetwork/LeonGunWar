@@ -1,9 +1,8 @@
+[![](https://badgen.net/github/status/AzisabaNetwork/LeonGunWar/?icon=github)](https://github.com/AzisabaNetwork/LeonGunWar/actions)
+[![](https://badgen.net/twitter/follow/AzisabaNetwork/?icon=twitter)](https://twitter.com/AzisabaNetwork)
+[![](https://discordapp.com/api/guilds/357134045328572418/widget.png)](https://discord.gg/seheC2W)
+
 # LeonGunWar plugin
-
-[![CircleCI](https://circleci.com/gh/AzisabaNetwork/LeonGunWar.svg?style=svg)](https://circleci.com/gh/AzisabaNetwork/LeonGunWar)
-[![Discord](https://discordapp.com/api/guilds/357134045328572418/widget.png)](https://discord.gg/seheC2W)
-[![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-
 このプラグインは [アジ鯖](https://azisaba.net) 内にあるLGWサーバーのコアとなるPluginです
 
 ## 説明
