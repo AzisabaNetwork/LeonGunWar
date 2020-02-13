@@ -26,13 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: webfactory/ssh-agent@v0.2.0
+      - uses: actions/setup-java@v1
         with:
-          ssh-private-key: ${{ secrets.MAVEN_REPO_KEY }}
-      - uses: actions/checkout@v2
-        with:
-          repository: AzisabaNetwork/mvn-repo
-          path: mvn-repo
+          java-version: 8
+      - run: java -version
+      - run: mvn --version
       - uses: actions/cache@v1
         with:
           path: ~/.m2/repository
@@ -40,11 +38,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-deploy-
       - run: mvn -B package
+
+      - uses: actions/checkout@v2
+        with:
+          repository: AzisabaNetwork/mvn-repo
+          path: mvn-repo
       - run: mvn -B -DaltDeploymentRepository=mvn-repo::default::file://mvn-repo deploy
+      - uses: webfactory/ssh-agent@v0.2.0
+        with:
+          ssh-private-key: ${{ secrets.MAVEN_REPO_KEY }}
+      - run: git config --global url.'ssh://git@github.com/'.insteadOf 'https://github.com/'
+      - run: git config --global user.email 'null@azisaba.net'
+      - run: git config --global user.name "$GITHUB_ACTOR"
       - run: |
-          git config --local url.'ssh://git@github.com/'.insteadOf 'https://github.com/'
-          git config --local user.email 'null@azisaba.net'
-          git config --local user.name "$GITHUB_ACTOR"
           git commit -a -m "Deploy @ $(date)"
           git push origin master
         working-directory: mvn-repo
