@@ -10,9 +10,15 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 8
       - run: java -version
       - run: mvn --version
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-build-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-build-
       - run: mvn -B package
 
   deploy:
@@ -20,22 +26,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: webfactory/ssh-agent@v0.2.0
         with:
-          java-version: 1.8
-      - run: java -version
-      - run: mvn --version
+          ssh-private-key: ${{ secrets.MAVEN_REPO_KEY }}
+      - uses: actions/checkout@v2
+        with:
+          repository: AzisabaNetwork/mvn-repo
+          path: mvn-repo
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-deploy-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-deploy-
+      - run: mvn -B package
+      - run: mvn -B -DaltDeploymentRepository=mvn-repo::default::file://mvn-repo deploy
       - run: |
-          mkdir -pv ~/.ssh
-          touch ~/.ssh/id_rsa
-          chmod -c 600 ~/.ssh/id_rsa
-          echo "${{ secrets.MAVEN_REPO_KEY }}" > ~/.ssh/id_rsa
-          git config --global user.email "null@azisaba.net"
-          git config --global user.name "$GITHUB_ACTOR"
-      - run: git clone git@github.com:AzisabaNetwork/mvn-repo.git
-      - run: mvn -B -DaltDeploymentRepository=local::default::file://mvn-repo deploy
-      - run: |
-          cd mvn-repo
-          git add -A
-          git commit -m "Deploy @ $(date)"
+          git config --local url.'ssh://git@github.com/'.insteadOf 'https://github.com/'
+          git config --local user.email 'null@azisaba.net'
+          git config --local user.name "$GITHUB_ACTOR"
+          git commit -a -m "Deploy @ $(date)"
           git push origin master
+        working-directory: mvn-repo
