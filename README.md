@@ -1,4 +1,4 @@
-[![](https://github.com/AzisabaNetwork/LeonGunWar/workflows/Maven/badge.svg)](https://github.com/AzisabaNetwork/LeonGunWar/actions)
+[![](https://github.com/AzisabaNetwork/LeonGunWar/workflows/Maven/badge.svg)](https://github.com/AzisabaNetwork/LeonGunWar/actions?query=workflow%3AMaven)
 [![](https://badgen.net/twitter/follow/AzisabaNetwork/?icon=twitter)](https://twitter.com/AzisabaNetwork)
 [![](https://discordapp.com/api/guilds/357134045328572418/widget.png)](https://discord.gg/seheC2W)
 
