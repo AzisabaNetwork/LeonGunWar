@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -47,7 +51,7 @@ public class LimitActionListener implements Listener {
         if ( !p.hasPermission("leongunwar.command.limit") ) {
             return;
         }
-        // allowDropPlayersに含まれていない場合はキャンセル
+        // allowBuildPlayersに含まれていない場合はキャンセル
         if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
             e.setCancelled(true);
         }
@@ -62,7 +66,65 @@ public class LimitActionListener implements Listener {
         if ( !p.hasPermission("leongunwar.command.limit") ) {
             return;
         }
-        // allowDropPlayersに含まれていない場合はキャンセル
+        // allowBuildPlayersに含まれていない場合はキャンセル
+        if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
+            e.setCancelled(true);
+        }
+    }
+
+    // 額縁破壊時
+    @EventHandler
+    public void preventDestroyItemFrame(EntityDamageByEntityEvent e) {
+        // Entityが額縁ではない場合return
+        if ( !(e.getEntity() instanceof ItemFrame) ) {
+            return;
+        }
+
+        Player p = null;
+
+        // 攻撃者がプレイヤーの場合
+        if ( e.getDamager() instanceof Player ) {
+            p = (Player) e.getDamager();
+        }
+        // 攻撃者が発射物の場合
+        if ( e.getDamager() instanceof Projectile ) {
+            // ソースがプレイヤーの場合
+            if ( ((Projectile) e.getDamager()).getShooter() instanceof Player ) {
+                p = (Player) ((Projectile) e.getDamager()).getShooter();
+            }
+        }
+
+        // プレイヤーではない場合return
+        if ( p == null ) {
+            return;
+        }
+
+        // 権限がない場合return
+        if ( !p.hasPermission("leongunwar.command.limit") ) {
+            return;
+        }
+        // allowBuildPlayersに含まれていない場合はキャンセル
+        if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
+            e.setCancelled(true);
+        }
+    }
+
+    // 空の額縁破壊時
+    @EventHandler
+    public void preventDestroyEmptyFrame(HangingBreakByEntityEvent e) {
+        // 壊したのがプレイヤーではない場合return
+        if ( !(e.getRemover() instanceof Player) ) {
+            return;
+        }
+
+        // プレイヤーを取得
+        Player p = (Player) e.getRemover();
+
+        // 権限がない場合return
+        if ( !p.hasPermission("leongunwar.command.limit") ) {
+            return;
+        }
+        // allowBuildPlayersに含まれていない場合はキャンセル
         if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
             e.setCancelled(true);
         }
