@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 
 public class KillStreaks {
@@ -19,7 +19,7 @@ public class KillStreaks {
     public void removedBy(Player player, Player killer) {
         int streaks = get(player).get();
         int minStreaks = LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
-                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .sorted(Map.Entry.comparingByKey())
                 .map(Map.Entry::getKey)
                 .findFirst()
                 .orElse(-1);
@@ -38,11 +38,7 @@ public class KillStreaks {
         return streaksMap.get(player.getUniqueId());
     }
 
-    public void add(Player player) {
-        // カウントを追加
-        int streaks = get(player).incrementAndGet();
-
-        // 報酬を付与
+    private void giveRewards(int streaks, Player player) {
         LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
                 .filter(entry -> streaks == entry.getKey())
                 .map(Map.Entry::getValue)
@@ -57,6 +53,20 @@ public class KillStreaks {
                 .flatMap(List::stream)
                 .map(command -> Chat.f(command, player.getName()))
                 .forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+    }
+
+    public void add(Player player) {
+        // カウントを追加
+        int streaks = get(player).incrementAndGet();
+
+        // 報酬を付与
+        giveRewards(streaks, player);
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() == MatchMode.LEADER_DEATH_MATCH_POINT ) {
+            if ( LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(player) ) {
+                giveRewards(streaks, player);
+                player.sendMessage(Chat.f("{0}&7あなたはリーダーなので &e2倍 &7の報酬を受け取りました！", LeonGunWar.GAME_PREFIX));
+            }
+        }
 
         // キルストリークをお知らせ
         LeonGunWar.getPlugin().getKillStreaksConfig().getStreaks().entrySet().stream()
