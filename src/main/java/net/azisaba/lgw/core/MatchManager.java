@@ -1,13 +1,6 @@
 package net.azisaba.lgw.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -33,12 +26,7 @@ import com.google.common.base.Strings;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
-import net.azisaba.lgw.core.events.MatchStartedEvent;
-import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
-import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
-import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
-import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
+import net.azisaba.lgw.core.events.*;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BattleTeam;
@@ -55,11 +43,9 @@ import lombok.Data;
 import lombok.NonNull;
 
 /**
- *
  * ゲームを司るコアクラス
  *
  * @author siloneco
- *
  */
 @Data
 public class MatchManager {
@@ -150,7 +136,7 @@ public class MatchManager {
     /**
      * マッチを開始するメソッド
      *
-     * @exception IllegalStateException すでにゲームがスタートしている場合
+     * @throws IllegalStateException すでにゲームがスタートしている場合
      */
     public void startMatch() {
         // すでにマッチ中の場合はIllegalStateException
@@ -196,7 +182,8 @@ public class MatchManager {
         }
 
         // LDM/CDMのリーダーマッチならリーダーを抽選
-        root: switch (matchMode) {
+        root:
+        switch (matchMode) {
         case LEADER_DEATH_MATCH:
         case LEADER_DEATH_MATCH_POINT:
             leaderMatch = true;
@@ -440,8 +427,7 @@ public class MatchManager {
      *
      * @param team プレイヤーリストを取得したいチーム
      * @return チームのプレイヤーリスト
-     *
-     * @exception NullPointerException teamがnullの場合
+     * @throws NullPointerException teamがnullの場合
      */
     public List<Player> getTeamPlayers(@NonNull BattleTeam team) {
         // 取得したプレイヤーリストを返す
@@ -531,8 +517,7 @@ public class MatchManager {
      *
      * @param team ポイントを取得したいチーム
      * @return 指定したチームの現在のポイント
-     *
-     * @exception NullPointerException teamがnullの場合
+     * @throws NullPointerException teamがnullの場合
      */
     public int getCurrentTeamPoint(@NonNull BattleTeam team) {
         // ポイント取得、無ければ0
@@ -556,7 +541,7 @@ public class MatchManager {
      * 指定したチームに1ポイントを追加します。
      *
      * @param team ポイントを追加したいチーム
-     * @exception NullPointerException teamがnullの場合
+     * @throws NullPointerException teamがnullの場合
      */
     public void addTeamPoint(@NonNull BattleTeam team) {
         // 現在のポイント取得、無ければ0
@@ -578,7 +563,7 @@ public class MatchManager {
      *
      * @param team   ポイントを追加したいチーム
      * @param amount 追加したいポイントの量
-     * @exception NullPointerException teamがnullの場合
+     * @throws NullPointerException teamがnullの場合
      */
     public void addTeamPoint(@NonNull BattleTeam team, int amount) {
         for ( int i = 0; i < amount; i++ ) {
@@ -743,7 +728,10 @@ public class MatchManager {
             // メッセージを表示
             p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
             // スポーンにTP
-            p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
+            Location spawn = LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
+            if ( spawn != null && spawn.getWorld() != null ) {
+                p.teleport(spawn);
+            }
 
             // アーマー削除
             p.getInventory().setChestplate(null);
@@ -853,7 +841,7 @@ public class MatchManager {
 
     /**
      * チームの戦力レベルを取得します
-     *
+     * <p>
      * 全プレイヤーのパワーレベル合計 + 人数x1000
      *
      * @param team 対象のチーム
@@ -877,7 +865,7 @@ public class MatchManager {
 
     /**
      * チームにいるAceの人数とパワーを取得します
-     *
+     * <p>
      * Aceプレイヤーのパワーレベル合計 + 人数x1000
      *
      * @param team 対象のチーム
@@ -921,7 +909,7 @@ public class MatchManager {
 
     /**
      * パワーレベルでバランスがいいかを判断します
-     *
+     * <p>
      * team1からteam2が±1500ならtrue それ以外ならfalse
      *
      * @param team1,team2 チームのパワーレベル
