@@ -12,8 +12,7 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
-
-import jp.azisaba.lgw.kdstatus.utils.Chat;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class DisablePvEsInLobbyListener implements Listener {
 

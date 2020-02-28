@@ -1,10 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,8 +9,8 @@ import org.bukkit.event.Listener;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 
 import net.azisaba.lgw.core.util.StrikesCooldown;
+import net.azisaba.lgw.core.utils.Chat;
 
-import jp.azisaba.lgw.kdstatus.utils.Chat;
 import me.rayzr522.jsonmessage.JSONMessage;
 
 public class FixStrikesCooldownListener implements Listener {

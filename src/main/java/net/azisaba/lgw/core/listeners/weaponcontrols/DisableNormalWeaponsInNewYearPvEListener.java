@@ -12,7 +12,7 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 
-import jp.azisaba.lgw.kdstatus.utils.Chat;
+import net.azisaba.lgw.core.utils.Chat;
 
 public class DisableNormalWeaponsInNewYearPvEListener implements Listener {
 
