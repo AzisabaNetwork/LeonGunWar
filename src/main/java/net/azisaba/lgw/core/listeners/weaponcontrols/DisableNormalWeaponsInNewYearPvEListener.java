@@ -45,6 +45,11 @@ public class DisableNormalWeaponsInNewYearPvEListener implements Listener {
     @EventHandler
     public void onWeaponDamageEntity(WeaponDamageEntityEvent event) {
         Player player = event.getPlayer();
+
+        if ( player == null ) {
+            return;
+        }
+
         World world = player.getWorld();
 
         if ( world == null || !world.getName().equals("NYPVE") ) {
