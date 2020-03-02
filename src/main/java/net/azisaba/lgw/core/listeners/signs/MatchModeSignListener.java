@@ -218,7 +218,7 @@ public class MatchModeSignListener implements Listener {
     private Inventory getDistributeSelectInventory(MatchMode mode) {
         StringBuilder shortModeName = new StringBuilder();
         for ( String s : mode.name().split("_") ) {
-            shortModeName.append(s.substring(0, 1));
+            shortModeName.append(s, 0, 1);
         }
         Inventory inv = Bukkit.createInventory(null, 9, Chat.f("&cDistribute Selector - &e{0}", shortModeName.toString()));
         inv.setItem(3, defaultItem);
