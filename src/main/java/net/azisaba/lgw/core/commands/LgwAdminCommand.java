@@ -47,9 +47,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             // サーバー内のプレイヤーを試合に参加
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                LeonGunWar.getPlugin().getManager().addEntryPlayer(p);
-            });
+            Bukkit.getOnlinePlayers().forEach(p -> LeonGunWar.getPlugin().getManager().addEntryPlayer(p));
 
             // モード指定されてなければTDMに指定
             if ( LeonGunWar.getPlugin().getManager().getMatchMode() == null ) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import org.bukkit.Location;
@@ -11,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.google.common.base.Enums;
-import com.google.common.base.Optional;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.BattleTeam;
@@ -44,7 +44,7 @@ public class MapsConfig extends Config {
 
             Map<BattleTeam, Location> spawnMap = new HashMap<>();
             for ( String teamName : spawnsSection.getValues(false).keySet() ) {
-                Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase());
+                Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
 
                 if ( battleTeam.isPresent() ) {
                     Location spawn = new Location(

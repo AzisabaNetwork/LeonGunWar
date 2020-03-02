@@ -42,16 +42,12 @@ public class MatchStartCountdownTask extends BukkitRunnable {
 
         // titleがtrueの場合表示
         if ( title ) {
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                p.sendTitle(timeLeft + "", "", 0, 40, 10);
-            });
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendTitle(timeLeft + "", "", 0, 40, 10));
         }
 
         // soundがtrueの場合音を鳴らす
         if ( sound ) {
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1f, 1f);
-            });
+            Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1f, 1f));
         }
 
         // 1秒減らす

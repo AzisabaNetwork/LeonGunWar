@@ -181,9 +181,7 @@ public class DamageListener implements Listener {
             // メッセージを作成
             String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getDisplayName());
             // メッセージ送信
-            p.getWorld().getPlayers().forEach(player -> {
-                player.sendMessage(msg);
-            });
+            p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 
             // コンソールに出力
             Bukkit.getConsoleSender().sendMessage(msg);
@@ -224,9 +222,7 @@ public class DamageListener implements Listener {
                 p.getDisplayName());
 
         // メッセージ送信
-        p.getWorld().getPlayers().forEach(player -> {
-            player.sendMessage(msg);
-        });
+        p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 
         // コンソールに出力
         Bukkit.getConsoleSender().sendMessage(msg);

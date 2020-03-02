@@ -20,7 +20,6 @@ public class MatchCountdownTask extends BukkitRunnable {
         // 0になったらストップ
         if ( timeLeft == 0 ) {
             cancel();
-            return;
         }
     }
 }

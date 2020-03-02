@@ -234,11 +234,9 @@ public class CustomTDMListener implements Listener {
         boolean retVal = true;
         Inventory playerInv = shooter.getInventory();
         String[] groupList = invCtrl.replaceAll(" ", "").split(",");
-        String[] var10 = groupList;
         int var9 = groupList.length;
 
-        for ( int var8 = 0; var8 < var9; ++var8 ) {
-            String invGroup = var10[var8];
+        for ( String invGroup : groupList ) {
             int groupLimit = director.getInt(invGroup + ".Limit");
             if ( customLimit.containsKey(invGroup) ) {
                 groupLimit = customLimit.get(invGroup);

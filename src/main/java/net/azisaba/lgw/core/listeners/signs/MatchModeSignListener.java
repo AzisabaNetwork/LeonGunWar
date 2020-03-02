@@ -205,9 +205,7 @@ public class MatchModeSignListener implements Listener {
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         // 音を鳴らす
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
-        });
+        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
         // 全プレイヤーにQuickメッセージを送信
         LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));

@@ -24,9 +24,7 @@ public class AfkKickEntryListener implements Listener {
         new AfkKickMonitoringTask(lastMoved).runTaskTimer(LeonGunWar.getPlugin(), 0, 20 * 3);
 
         // 現在オンラインのプレイヤーを設定
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            lastMoved.put(p, System.currentTimeMillis());
-        });
+        Bukkit.getOnlinePlayers().forEach(p -> lastMoved.put(p, System.currentTimeMillis()));
     }
 
     @EventHandler
