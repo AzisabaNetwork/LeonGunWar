@@ -161,8 +161,8 @@ public class NoKnockbackListener implements Listener {
 
     @EventHandler
     public void onWeaponArmorStandKnockback(WeaponDamageEntityEvent e) {
-        Entity victim=e.getVictim();
-        if (victim instanceof ArmorStand) {
+        Entity victim = e.getVictim();
+        if ( victim instanceof ArmorStand ) {
             victim.setVelocity(new Vector());
         }
     }

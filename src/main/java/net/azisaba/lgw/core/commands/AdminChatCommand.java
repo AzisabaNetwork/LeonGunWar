@@ -29,7 +29,7 @@ public class AdminChatCommand implements CommandExecutor {
     public void setAdminChat(Player p, boolean value) {
         if ( value && !adminChats.contains(p.getUniqueId()) ) {
             adminChats.add(p.getUniqueId());
-        } else if (!value) {
+        } else if ( !value ) {
             adminChats.remove(p.getUniqueId());
         }
     }

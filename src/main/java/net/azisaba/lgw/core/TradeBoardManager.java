@@ -149,8 +149,8 @@ public class TradeBoardManager {
         // 現在存在している.ymlファイルもしくは.yamlファイルを削除
         Arrays.asList(dataFolder.listFiles()).stream()
                 .filter(file -> file.getName().endsWith(".yml") || file.getName().endsWith(".yaml")).forEach(file -> {
-                    file.delete();
-                });
+            file.delete();
+        });
 
         // 各看板データを保存
         signs.values().forEach(sign -> {

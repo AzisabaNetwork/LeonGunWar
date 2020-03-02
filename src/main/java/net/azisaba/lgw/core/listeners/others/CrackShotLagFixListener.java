@@ -29,7 +29,7 @@ public class CrackShotLagFixListener implements Listener {
         // 不要なラグエンティティを削除
         long removed = removeLagEntities(e.getChunk().getEntities());
         // 削除したエンティティがいる場合
-        if (removed > 0) {
+        if ( removed > 0 ) {
             // ログに出力
             LeonGunWar.getPlugin().getLogger().info("チャンクロード -> 不要な " + removed + " 体のエンティティが削除されました。");
         }
@@ -40,7 +40,7 @@ public class CrackShotLagFixListener implements Listener {
         // 不要なラグエンティティを削除
         long removed = removeLagEntities(e.getChunk().getEntities());
         // 削除したエンティティがいる場合
-        if (removed > 0) {
+        if ( removed > 0 ) {
             // ログに出力
             LeonGunWar.getPlugin().getLogger().info("チャンクアンロード -> 不要な " + removed + " 体のエンティティが削除されました。");
         }

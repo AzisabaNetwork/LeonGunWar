@@ -23,6 +23,16 @@
       </option>
       <option name="ENABLE_JAVADOC_FORMATTING" value="false" />
     </JavaCodeStyleSettings>
+    <codeStyleSettings language="JAVA">
+      <option name="SPACE_WITHIN_IF_PARENTHESES" value="true" />
+      <option name="SPACE_WITHIN_WHILE_PARENTHESES" value="true" />
+      <option name="SPACE_WITHIN_FOR_PARENTHESES" value="true" />
+      <option name="SPACE_WITHIN_TRY_PARENTHESES" value="true" />
+      <option name="SPACE_WITHIN_CATCH_PARENTHESES" value="true" />
+      <option name="SPACE_WITHIN_SWITCH_PARENTHESES" value="true" />
+      <option name="SPACE_WITHIN_SYNCHRONIZED_PARENTHESES" value="true" />
+      <option name="SPACE_WITHIN_EMPTY_ARRAY_INITIALIZER_BRACES" value="true" />
+    </codeStyleSettings>
     <codeStyleSettings language="XML">
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />

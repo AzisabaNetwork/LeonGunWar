@@ -192,13 +192,13 @@ public class MatchManager {
         }
 
         // LDM/CDMのリーダーマッチならリーダーを抽選
-        switch (matchMode) {
+        switch ( matchMode ) {
             case LEADER_DEATH_MATCH:
             case LEADER_DEATH_MATCH_POINT:
                 leaderMatch = true;
                 break;
             case CUSTOM_DEATH_MATCH:
-                if (CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader) {
+                if ( CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
                     leaderMatch = true;
                     break;
                 }
