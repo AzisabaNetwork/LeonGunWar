@@ -185,7 +185,7 @@ public class TradeBoardManager {
      */
     private Location locationFromString(String str) {
         String[] split = str.split(",");
-        Location loc = null;
+        Location loc;
         try {
             World world = Bukkit.getWorld(split[0]);
             loc = new Location(world, Integer.parseInt(split[1]), Integer.parseInt(split[2]),

@@ -24,8 +24,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class LimitActionListener implements Listener {
 
-    private List<UUID> allowDropPlayers = new ArrayList<>();
-    private List<UUID> allowBuildPlayers = new ArrayList<>();
+    private final List<UUID> allowDropPlayers = new ArrayList<>();
+    private final List<UUID> allowBuildPlayers = new ArrayList<>();
 
     // アイテムドロップ時
     @EventHandler

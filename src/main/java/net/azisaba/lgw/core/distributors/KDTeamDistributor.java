@@ -84,7 +84,7 @@ public class KDTeamDistributor implements TeamDistributor {
             }
         }
 
-        int pl = 0;
+        int pl;
         // プレイヤーの戦績取得
         KDUserData pd = kdsPlugin.getKdDataContainer().getPlayerData(p, true);
         int kills = pd.getKills(TimeUnit.LIFETIME);

@@ -65,7 +65,7 @@ public class DisableRecipeListener implements Listener {
         Player p = (Player) e.getWhoClicked();
 
         // mapにプレイヤーが含まれている場合アイテムをセット
-        if ( cancelPlayerMap.containsKey(e.getWhoClicked()) ) {
+        if ( cancelPlayerMap.containsKey(p) ) {
             e.getInventory().setResult(cancelPlayerMap.get(p));
 
             // 削除

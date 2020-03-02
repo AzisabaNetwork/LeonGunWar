@@ -24,7 +24,7 @@ import me.rayzr522.jsonmessage.JSONMessage;
 public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
     // ミスって本家で実行してしまうとまずいので/lgw debug_startにロックをかけれるように
-    private final boolean allowDebug = false;
+    private static final boolean ALLOW_DEBUG = false;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -37,7 +37,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         if ( Args.check(args, 0, "debug_start") ) {
 
             // allowDebugがfalseならreturn
-            if ( !allowDebug ) {
+            if ( !ALLOW_DEBUG ) {
                 sender.sendMessage(Chat.f("&cこの引数は現在無効化されているため実行できません！"));
                 return true;
             }
@@ -111,7 +111,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 });
 
                 // 1より少ない場合 (0以下の場合)
-            } else if ( correctMapList.size() < 1 ) {
+            } else {
                 p.sendMessage(Chat.f("&c指定したマップが見つかりませんでした。"));
             }
 

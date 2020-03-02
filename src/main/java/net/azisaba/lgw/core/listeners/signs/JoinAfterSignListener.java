@@ -28,7 +28,7 @@ public class JoinAfterSignListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClickJoinEntrySign(PlayerInteractEvent e) {
         // 最終クリックが10分より前ならreturn
-        if ( lastClicked.getOrDefault(e.getPlayer(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis() ) {
+        if ( lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis() ) {
             e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
             return;
         }
@@ -116,7 +116,7 @@ public class JoinAfterSignListener implements Listener {
         // 元メッセージ
         String line4 = sign.getLine(3);
         // 編集先メッセージ
-        String edit = "";
+        String edit;
 
         // 4行目の編集
         if ( line4.equals(LeonGunWar.SIGN_INACTIVE) ) { // [INACTIVE] の場合

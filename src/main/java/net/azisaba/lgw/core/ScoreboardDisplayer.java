@@ -115,14 +115,13 @@ public class ScoreboardDisplayer {
 
         // 行を取得
         List<String> lines = boardLines();
-        // リスト反転
-        Collections.reverse(lines);
-
         // nullが返ってきた場合は非表示にしてreturn
         if ( lines == null ) {
             scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
             return;
         }
+        // リスト反転
+        Collections.reverse(lines);
 
         // 現在指定されているEntryを全て解除
         clearEntries();

@@ -161,7 +161,7 @@ public class EntrySignListener implements Listener {
         // 元メッセージ
         String line4 = sign.getLine(3);
         // 編集先メッセージ
-        String edit = "";
+        String edit;
 
         // 4行目の編集
         if ( line4.equals(LeonGunWar.SIGN_INACTIVE) ) { // [INACTIVE] の場合

@@ -28,7 +28,7 @@ public class AfkKickMonitoringTask extends BukkitRunnable {
             }
 
             // 試合はしていないがエントリーはしているプレイヤーもreturn
-            if ( !matching && entrying ) {
+            if ( !matching ) {
                 return;
             }
 

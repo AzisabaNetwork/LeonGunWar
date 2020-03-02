@@ -73,7 +73,7 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
         }
 
         // 自分自身でありプレイヤーではない場合はreturn
-        if ( self && !(target instanceof Player) ) {
+        if ( self && target == null ) {
             sender.sendMessage(Chat.f("&cあなたはプレイヤーではありません。", prefix));
             return true;
         }

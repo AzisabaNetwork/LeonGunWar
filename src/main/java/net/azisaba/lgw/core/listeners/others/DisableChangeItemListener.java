@@ -45,7 +45,8 @@ public class DisableChangeItemListener implements Listener {
                 .toArray(ItemStack[]::new);
     }
 
-    private final int multipleSeconds = 10;
+    private static final int MULTIPLE_SECONDS = 10;
+
     private final Map<Player, ItemStack[]> hotbars = new HashMap<>();
 
     private final Map<Player, Instant> remainTimes = new HashMap<>();
@@ -152,7 +153,7 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        int cooldown = changed * multipleSeconds;
+        int cooldown = changed * MULTIPLE_SECONDS;
 
         remainTimes.put(holder, Instant.now().plusSeconds(cooldown));
         taskMap.compute(holder, (a, task) -> {

@@ -10,7 +10,7 @@ import net.azisaba.lgw.core.utils.Chat;
 public class ResourcePackCommand implements CommandExecutor {
 
     // server.propertiesの値を取得するメソッドが見つからなかったため
-    private final String url = "https://packs.azisaba.net/lgw.zip";
+    private static final String URL = "https://packs.azisaba.net/lgw.zip";
 
     private final String PREFIX = Chat.f("&7[&ePack&7] &r");
 
@@ -24,7 +24,7 @@ public class ResourcePackCommand implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        p.setResourcePack(url);
+        p.setResourcePack(URL);
 
         p.sendMessage(Chat.f("{0}&aテクスチャの読み込みを要求しました", PREFIX));
         p.sendMessage(Chat.f("{0}&b{1}&7確認画面が出ない場合&b{1}", PREFIX, "↓"));
