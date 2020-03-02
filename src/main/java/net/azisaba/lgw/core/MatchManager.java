@@ -125,9 +125,7 @@ public class MatchManager {
         initializeTeams();
 
         // 全プレイヤーのスコアボードを変更
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            p.setScoreboard(scoreboard);
-        });
+        Bukkit.getOnlinePlayers().forEach(p -> p.setScoreboard(scoreboard));
 
         // 各チームのチェストプレートを設定
         Arrays.stream(BattleTeam.values())
@@ -194,21 +192,18 @@ public class MatchManager {
         }
 
         // LDM/CDMのリーダーマッチならリーダーを抽選
-        root:
         switch (matchMode) {
-        case LEADER_DEATH_MATCH:
-        case LEADER_DEATH_MATCH_POINT:
-            leaderMatch = true;
-            break;
-        case CUSTOM_DEATH_MATCH:
-            switch (CustomTDMListener.getMatchType()) {
-            case leader:
+            case LEADER_DEATH_MATCH:
+            case LEADER_DEATH_MATCH_POINT:
                 leaderMatch = true;
-                break root;
+                break;
+            case CUSTOM_DEATH_MATCH:
+                if (CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader) {
+                    leaderMatch = true;
+                    break;
+                }
             default:
-            }
-        default:
-            leaderMatch = false;
+                leaderMatch = false;
         }
 
         if ( leaderMatch ) {
@@ -222,9 +217,7 @@ public class MatchManager {
         }
 
         // 全プレイヤーに音を鳴らす
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
-        });
+        Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
         // 開始メッセージ
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
@@ -242,7 +235,7 @@ public class MatchManager {
         isMatching = true;
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().stream().toArray(Player[]::new));
+        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
     }
 
     /**
@@ -701,11 +694,9 @@ public class MatchManager {
         Bukkit.broadcastMessage(Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX, team.getTeamName()));
 
         // メッセージを表示
-        plist.forEach(p -> {
-            p.sendMessage(
-                    Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれました！", LeonGunWar.GAME_PREFIX,
-                            target.getPlayerListName()));
-        });
+        plist.forEach(p -> p.sendMessage(
+                Chat.f("{0}&7チームのリーダーに &r{1} &7が選ばれました！", LeonGunWar.GAME_PREFIX,
+                        target.getPlayerListName())));
 
         // リーダーにタイトルを表示
         target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);

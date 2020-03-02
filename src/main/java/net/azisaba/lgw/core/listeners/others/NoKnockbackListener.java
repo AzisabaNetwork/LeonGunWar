@@ -104,7 +104,7 @@ public class NoKnockbackListener implements Listener {
 
                     // 銃の設定からパーセント計算
                     if ( multiString != null ) {
-                        double multiplier = Double.valueOf(multiString) * 0.01;
+                        double multiplier = Double.parseDouble(multiString) * 0.01;
                         damage *= multiplier;
                     }
                 }
