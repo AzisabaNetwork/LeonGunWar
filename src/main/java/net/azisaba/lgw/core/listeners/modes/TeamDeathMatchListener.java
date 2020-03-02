@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.listeners.modes;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -39,7 +39,7 @@ public class TeamDeathMatchListener implements Listener {
             MatchManager manager = LeonGunWar.getPlugin().getManager();
 
             // 試合終了
-            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()),
+            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Collections.singletonList(e.getTeam()),
                     manager.getTeamPlayers());
             Bukkit.getPluginManager().callEvent(event);
         }

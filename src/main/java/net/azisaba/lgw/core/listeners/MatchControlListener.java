@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,7 @@ public class MatchControlListener implements Listener {
         List<KDPlayerData> mvpPlayers = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getMVPPlayer();
         // MVPプレイヤーのメッセージ
         List<String> resultMessages = new ArrayList<>(
-                Arrays.asList(Chat.f("&d=== Team Point Information ===")));
+                Collections.singletonList(Chat.f("&d=== Team Point Information ===")));
 
         // 各チームのポイントを表示
         for ( BattleTeam team : BattleTeam.values() ) {

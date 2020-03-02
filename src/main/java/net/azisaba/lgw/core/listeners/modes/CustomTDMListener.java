@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.modes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +142,7 @@ public class CustomTDMListener implements Listener {
 
             MatchManager manager = LeonGunWar.getPlugin().getManager();
             // 試合終了
-            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(e.getTeam()), manager.getTeamPlayers());
+            MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Collections.singletonList(e.getTeam()), manager.getTeamPlayers());
             Bukkit.getPluginManager().callEvent(event);
 
             // メッセージ表示
