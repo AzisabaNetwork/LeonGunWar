@@ -41,8 +41,7 @@ public class DefaultTeamDistributor implements TeamDistributor {
 
         // エントリーが少ないチームにプレイヤーを追加 (同じ場合はポイントが少ない方、それでも同じなら最初の要素)
         teams.stream()
-                .sorted(Comparator.comparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
-                .findFirst()
+                .min(Comparator.comparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
                 .ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
     }
 

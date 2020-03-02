@@ -37,7 +37,7 @@ public class TradeBoardManager {
         }
 
         // ファイルであり最後が.ymlか.yamlで終わるファイルのみ読み込む
-        Arrays.asList(dataFolder.listFiles()).stream()
+        Arrays.stream(Objects.requireNonNull(dataFolder.listFiles()))
                 .filter(file -> file.isFile() && (file.getName().endsWith(".yml") || file.getName().endsWith(".yaml")))
                 .forEach(file -> {
 

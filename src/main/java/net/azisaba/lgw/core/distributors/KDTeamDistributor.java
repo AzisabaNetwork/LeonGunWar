@@ -132,16 +132,14 @@ public class KDTeamDistributor implements TeamDistributor {
             // チームエースパワーレベルの少ない方にAceプレイヤーを追加
             // (同じ場合はチームパワーレベルが少ないチームの方、それも同じ場合はエントリーが少ないチームの方、さらにそれも同じ場合はポイントが少ない方、それでも同じなら最初の要素)
             teams.stream()
-                    .sorted(Comparator.comparing(manager::getTeamAcePowerLevel).thenComparing(manager::getTeamPowerLevel).thenComparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
-                    .findFirst()
+                    .min(Comparator.comparing(manager::getTeamAcePowerLevel).thenComparing(manager::getTeamPowerLevel).thenComparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
                     .ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
             return;
         }
 
         // チームパワーレベルの少ない方にプレイヤーを追加 (同じ場合はエントリーが少ないチームの方、それも同じ場合はポイントが少ない方、それでも同じなら最初の要素)
         teams.stream()
-                .sorted(Comparator.comparing(manager::getTeamPowerLevel).thenComparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
-                .findFirst()
+                .min(Comparator.comparing(manager::getTeamPowerLevel).thenComparing(Team::getSize).thenComparing(manager::getCurrentTeamPoint))
                 .ifPresent(lowTeam -> lowTeam.addEntry(player.getName()));
     }
 

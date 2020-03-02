@@ -679,9 +679,8 @@ public class MatchManager {
      * チームのリーダーを抽選して任命する。既に存在する場合は上書きされる。
      *
      * @param team 抽選したい対象のチーム
-     * @return リーダーに任命されたプレイヤー
      */
-    public Player setLeaderAtRandom(BattleTeam team) {
+    public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
 
         // シャッフル
@@ -700,7 +699,6 @@ public class MatchManager {
 
         // リーダーにタイトルを表示
         target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
-        return target;
     }
 
     public void setMatchMode(MatchMode mode) {
