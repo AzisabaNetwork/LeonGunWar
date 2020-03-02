@@ -38,15 +38,15 @@ public class ScoreboardDisplayer {
         // 試合中の場合
         if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
 
-            /**
-             *
-             * 残り時間: ?秒
-             *
-             * 各チーム: ? Point(s)
-             *
-             * 現在のマップ: {マップ名} 現在のモード: {モード} アルゴリズム: {振り分け方式}
-             *
-             * azisaba.net で今すぐ遊べ！
+            /*
+
+              残り時間: ?秒
+
+              各チーム: ? Point(s)
+
+              現在のマップ: {マップ名} 現在のモード: {モード} アルゴリズム: {振り分け方式}
+
+              azisaba.net で今すぐ遊べ！
              */
 
             // マップ名を取得
@@ -93,7 +93,6 @@ public class ScoreboardDisplayer {
     /**
      * プレイヤーにスコアボードを表示します
      *
-     * @param plist スコアボードを表示させたいプレイヤーのリスト
      */
     public void updateScoreboard() {
         Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");

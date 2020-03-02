@@ -64,7 +64,7 @@ public class CrackShotLimitListener implements Listener {
     /**
      * ライトニングストライクが撃たれたときに、クールタイム中ならキャンセルするListener
      *
-     * @param e
+     * @param e 処理するイベント
      */
     @EventHandler(priority = EventPriority.LOW)
     public void onShoot(WeaponPreShootEvent e) {

@@ -19,7 +19,7 @@ public class NoArrowGroundListener implements Listener {
     /**
      * 矢がブロックに当たったことを検知し削除します
      *
-     * @param e
+     * @param e 処理するイベント
      */
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent e) {

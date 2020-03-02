@@ -11,8 +11,8 @@ import org.bukkit.event.Listener;
  */
 public class TDMNoLimitListener implements Listener {
 
-    /**
-     * 現在特になし (MatchControlListener#matchFinishDetectorで動作するため)
+    /*
+      現在特になし (MatchControlListener#matchFinishDetectorで動作するため)
      */
 
 }
