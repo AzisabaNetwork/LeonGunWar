@@ -1,11 +1,12 @@
 package net.azisaba.lgw.core.tasks;
 
-import net.azisaba.lgw.core.LeonGunWar;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import net.azisaba.lgw.core.LeonGunWar;
 
 public class CrackShotLagFixTask extends BukkitRunnable {
 

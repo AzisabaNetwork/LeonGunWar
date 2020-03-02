@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import net.azisaba.lgw.core.LeonGunWar;
+import java.util.Arrays;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Projectile;
@@ -9,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import java.util.Arrays;
+import net.azisaba.lgw.core.LeonGunWar;
 
 public class CrackShotLagFixListener implements Listener {
 

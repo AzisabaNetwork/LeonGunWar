@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
+
 import net.ess3.api.events.AfkStatusChangeEvent;
 
 public class OnsenListener implements Listener {
