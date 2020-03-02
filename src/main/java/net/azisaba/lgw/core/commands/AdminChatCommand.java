@@ -46,11 +46,10 @@ public class AdminChatCommand implements CommandExecutor {
                     adminChats.add(p.getUniqueId());
                     p.sendMessage(Chat.f("&dAdminChat を&a有効化&dしました"));
                 }
-                return true;
             } else {
                 sender.sendMessage(Chat.f("&cUsage: {0}", cmd.getUsage()));
-                return true;
             }
+            return true;
         }
 
         String msg = String.join(" ", args);
