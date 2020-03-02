@@ -133,12 +133,8 @@ public class LimitActionListener implements Listener {
     @EventHandler
     public void onLeft(PlayerQuitEvent e) {
         UUID id = e.getPlayer().getUniqueId();
-        if ( allowDropPlayers.contains(id) ) {
-            allowDropPlayers.remove(id);
-        }
-        if ( allowBuildPlayers.contains(id) ) {
-            allowBuildPlayers.remove(id);
-        }
+        allowDropPlayers.remove(id);
+        allowBuildPlayers.remove(id);
     }
 
     public boolean toggleAllowDrop(Player player) {

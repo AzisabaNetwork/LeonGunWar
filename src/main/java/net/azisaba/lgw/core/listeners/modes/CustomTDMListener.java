@@ -261,7 +261,7 @@ public class CustomTDMListener implements Listener {
 
             if ( groupCount > groupLimit ) {
                 director.sendPlayerMessage(shooter, invGroup, ".Message_Exceeded", "<shooter>", "<victim>", "<flight>", "<damage>");
-                director.playSoundEffects(shooter, invGroup, ".Sounds_Exceeded", false, (Location) null);
+                director.playSoundEffects(shooter, invGroup, ".Sounds_Exceeded", false, null);
                 retVal = false;
             }
         }

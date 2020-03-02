@@ -160,9 +160,6 @@ public class KDTeamDistributor implements TeamDistributor {
         // 代入
         kdsPlugin = (KDStatusReloaded) pl;
         // 無効化されていたらreturn false
-        if ( !kdsPlugin.isEnabled() ) {
-            return false;
-        }
-        return true;
+        return kdsPlugin.isEnabled();
     }
 }

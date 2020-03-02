@@ -165,9 +165,7 @@ public class RespawnKillProtectionListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        if ( invincibleQueue.contains(p) ) {
-            invincibleQueue.remove(p);
-        }
+        invincibleQueue.remove(p);
     }
 
     // 試合開始時にカウントダウンを開始

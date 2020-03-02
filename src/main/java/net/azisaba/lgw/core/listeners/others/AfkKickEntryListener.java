@@ -47,8 +47,6 @@ public class AfkKickEntryListener implements Listener {
      */
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        if ( lastMoved.containsKey(e.getPlayer()) ) {
-            lastMoved.remove(e.getPlayer());
-        }
+        lastMoved.remove(e.getPlayer());
     }
 }

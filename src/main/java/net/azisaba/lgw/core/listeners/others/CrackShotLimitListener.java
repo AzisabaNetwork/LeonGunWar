@@ -91,11 +91,7 @@ public class CrackShotLimitListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
 
-        if ( knifeMap.containsKey(p) ) {
-            knifeMap.remove(p);
-        }
-        if ( storoboMap.containsKey(p) ) {
-            storoboMap.remove(p);
-        }
+        knifeMap.remove(p);
+        storoboMap.remove(p);
     }
 }

@@ -114,9 +114,7 @@ public class DamageListener implements Listener {
                 });
 
         // lastDamagedを初期化
-        if ( lastDamaged.containsKey(deader) ) {
-            lastDamaged.remove(deader);
-        }
+        lastDamaged.remove(deader);
 
         // 連続キルを停止
         LeonGunWar.getPlugin().getKillStreaks().removedBy(deader, killer);

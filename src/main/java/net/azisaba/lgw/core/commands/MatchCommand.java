@@ -63,7 +63,7 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
             }
 
             // 自分以外のプレイヤーを指定していた場合はself = falseに変更
-            if ( !(sender instanceof Player) || (Player) sender != target ) {
+            if ( !(sender instanceof Player) || sender != target ) {
                 self = false;
             }
 

@@ -101,9 +101,7 @@ public class TradeBoardManager {
      * @param loc 削除したい看板の座標
      */
     public void removeSignData(Location loc) {
-        if ( signs.containsKey(loc) ) {
-            signs.remove(loc);
-        }
+        signs.remove(loc);
     }
 
     /**
