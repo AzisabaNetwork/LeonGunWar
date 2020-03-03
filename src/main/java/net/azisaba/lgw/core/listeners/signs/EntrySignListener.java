@@ -56,13 +56,13 @@ public class EntrySignListener implements Listener {
             return;
         }
 
-        // イベントをキャンセル
-        e.setCancelled(true);
-
-        // 4行目が[INACTIVE]ならキャンセル
-        if ( Chat.r(sign.getLine(3)).equals("[INACTIVE]") ) {
+        // 4行目が[ACTIVE]ではない場合キャンセル
+        if ( !sign.getLine(3).equals(LeonGunWar.SIGN_ACTIVE) ) {
             return;
         }
+
+        // イベントをキャンセル
+        e.setCancelled(true);
 
         // エントリー
         boolean success = LeonGunWar.getPlugin().getManager().addEntryPlayer(p);
