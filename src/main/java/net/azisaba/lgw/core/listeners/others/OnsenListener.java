@@ -10,6 +10,12 @@ import net.azisaba.lgw.core.utils.Chat;
 
 import net.ess3.api.events.AfkStatusChangeEvent;
 
+/**
+ * AFK状態が変化したときに温泉にテレポートするListener
+ *
+ * @author YukiLeafX
+ *
+ */
 public class OnsenListener implements Listener {
 
     @EventHandler
