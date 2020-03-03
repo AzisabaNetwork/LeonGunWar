@@ -27,12 +27,6 @@ public class JoinAfterSignListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClickJoinEntrySign(PlayerInteractEvent e) {
-        // 最終クリックが10分より前ならreturn
-        if ( lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis() ) {
-            e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
-            return;
-        }
-
         // ブロックをクリックしていなければreturn
         if ( e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK ) {
             return;
@@ -49,6 +43,12 @@ public class JoinAfterSignListener implements Listener {
 
         // ブロックが看板でなければreturn
         if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+            return;
+        }
+
+        // 最終クリックが10分より前ならreturn
+        if ( lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis() ) {
+            e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
             return;
         }
 
