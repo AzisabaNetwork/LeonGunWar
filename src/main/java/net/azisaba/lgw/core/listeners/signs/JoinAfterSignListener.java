@@ -1,9 +1,5 @@
 package net.azisaba.lgw.core.listeners.signs;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -15,12 +11,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.utils.Chat;
 
 public class JoinAfterSignListener implements Listener {
-
-    private final Map<UUID, Long> lastClicked = new HashMap<>();
 
     /**
      * 試合参加看板をクリックしたことを検知し、プレイヤーを試合に参加させるリスナー
@@ -46,11 +39,12 @@ public class JoinAfterSignListener implements Listener {
             return;
         }
 
-        // 最終クリックが10分より前ならreturn
-        if ( lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis() ) {
-            e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
+        // 現在進行中の試合に参加したことがあったら再参加を無効化
+        if ( LeonGunWar.getPlugin().getManager().getJoinedPlayers().contains(e.getPlayer().getUniqueId()) ) {
+            e.getPlayer().sendMessage(Chat.f("&cこの試合に再参加することはできません！"));
             return;
         }
+
 
         // Signにキャスト
         Sign sign = (Sign) clickedBlock.getState();
@@ -76,9 +70,6 @@ public class JoinAfterSignListener implements Listener {
 
         // プレイヤーを追加
         LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(p);
-
-        // lastClicked設定
-        lastClicked.put(p.getUniqueId(), System.currentTimeMillis());
     }
 
     @EventHandler
@@ -129,13 +120,5 @@ public class JoinAfterSignListener implements Listener {
         sign.setLine(3, edit);
         // 更新
         sign.update();
-    }
-
-    @EventHandler
-    public void onMatchFinishedEvent(MatchFinishedEvent e) {
-
-        if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
-            lastClicked.clear();
-        }
     }
 }
