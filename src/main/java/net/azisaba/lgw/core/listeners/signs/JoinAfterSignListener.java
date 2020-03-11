@@ -46,12 +46,6 @@ public class JoinAfterSignListener implements Listener {
             return;
         }
 
-        // 最終クリックが10分より前ならreturn
-        if ( lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L) + 1000 * 60 * 10 > System.currentTimeMillis() ) {
-            e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
-            return;
-        }
-
         // Signにキャスト
         Sign sign = (Sign) clickedBlock.getState();
 
@@ -62,6 +56,12 @@ public class JoinAfterSignListener implements Listener {
 
         // 4行目が[ACTIVE]ではない場合はreturn
         if ( !sign.getLine(3).equals(LeonGunWar.SIGN_ACTIVE) ) {
+            return;
+        }
+
+        // 最終クリックが1分より前ならreturn
+        if ( lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L) + 1000 * 60 > System.currentTimeMillis() ) {
+            e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
             return;
         }
 
