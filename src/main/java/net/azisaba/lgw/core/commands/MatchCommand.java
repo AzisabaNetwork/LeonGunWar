@@ -135,12 +135,6 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            // 現在進行中の試合に参加したことがあったら再参加を無効化
-            if ( LeonGunWar.getPlugin().getManager().getJoinedPlayers().contains(target.getUniqueId()) ) {
-                sender.sendMessage(Chat.f("&cこの試合に再参加することはできません！"));
-                return true;
-            }
-
             // プレイヤーを追加
             boolean success = LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(target);
 
