@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -101,9 +100,6 @@ public class MatchManager {
 
     // リーダーマッチかどうか
     private boolean leaderMatch = false;
-
-    // 試合に少しでも参加したプレイヤーを格納するList
-    private final List<UUID> joinedPlayers = new ArrayList<>();
 
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
@@ -235,11 +231,6 @@ public class MatchManager {
         // タスクスタート
         runMatchTask();
 
-        // 少しでも参加プレイヤーを追加
-        joinedPlayers.addAll(entryPlayers.stream()
-                .map(Player::getUniqueId)
-                .collect(Collectors.toList()));
-
         // isMatchingをtrueに変更
         isMatching = true;
 
@@ -293,8 +284,6 @@ public class MatchManager {
         ldmLeaderMap.clear();
         // モードをnullに設定
         matchMode = null;
-        // 参加プレイヤーを初期化
-        joinedPlayers.clear();
 
         // ゲーム終了
         isMatching = false;
@@ -652,9 +641,6 @@ public class MatchManager {
                 p.sendMessage(Chat.f("{0}&7設定に基づいて試合にエントリーしました", LeonGunWar.GAME_PREFIX));
             }
         }
-
-        // 参加プレイヤーを追加
-        joinedPlayers.add(p.getUniqueId());
 
         return true;
     }
