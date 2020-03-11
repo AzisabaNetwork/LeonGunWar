@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 
 public class JoinAfterSignListener implements Listener {
 
@@ -60,8 +61,10 @@ public class JoinAfterSignListener implements Listener {
         }
 
         // 最終クリックが1分より前ならreturn
-        if ( lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L) + 1000 * 60 > System.currentTimeMillis() ) {
-            e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！"));
+        long lastClickedMillis = lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L);
+        if ( lastClickedMillis + 1000 * 60 > System.currentTimeMillis() ) {
+            long remainSecs = (lastClickedMillis + 1000 * 60 - System.currentTimeMillis()) / 1000;
+            e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！ あと " + SecondOfDay.f(remainSecs)));
             return;
         }
 
