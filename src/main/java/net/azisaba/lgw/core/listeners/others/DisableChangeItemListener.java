@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
 import com.google.common.collect.Sets;
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
+import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.tasks.AllowEditInventoryTask;
@@ -83,6 +84,35 @@ public class DisableChangeItemListener implements Listener {
 
         ItemStack[] befores = getHotbar((PlayerInventory) inventory);
         hotbars.putIfAbsent(player, befores);
+    }
+
+    @EventHandler
+    public void disableShootOnInvalidHotbar(WeaponPreShootEvent e) {
+        Player p = e.getPlayer();
+
+        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(p) ) {
+            return;
+        }
+
+        Player holder = (Player) p.getInventory().getHolder();
+        ItemStack[] hotbar = getHotbar(p.getInventory());
+
+        boolean valid = true;
+
+        for ( ItemStack item : hotbar ) {
+            String weapon = csUtil.getWeaponTitle(item);
+            String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
+
+            if ( ctrl == null ) {
+                continue;
+            }
+            valid &= cs.validHotbar(holder, weapon);
+        }
+
+        if ( !valid ) {
+            e.setCancelled(true);
+            p.sendMessage(Chat.f("{0}&c無効なアイテム欄であるため銃を打てません！", LeonGunWar.GAME_PREFIX));
+        }
     }
 
     @EventHandler
