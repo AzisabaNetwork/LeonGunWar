@@ -27,7 +27,7 @@ public class CustomItem {
     }
 
     // チームの色付きチェストプレート！！
-    public ItemStack getTeamChestplate(BattleTeam team) {
+    public static ItemStack getTeamChestplate(BattleTeam team) {
         ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
         meta.setDisplayName(team.getTeamName());

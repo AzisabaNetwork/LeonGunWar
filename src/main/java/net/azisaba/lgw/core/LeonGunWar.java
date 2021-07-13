@@ -1,6 +1,9 @@
 package net.azisaba.lgw.core;
 
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.azisaba.lgw.core.commands.AdminChatCommand;
@@ -88,6 +91,8 @@ public class LeonGunWar extends JavaPlugin {
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
+    public static JSONMessage getQuickBar() { return quickBar; }
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -107,10 +112,14 @@ public class LeonGunWar extends JavaPlugin {
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
         // 設定ファイルを読み込む
-        killStreaksConfig.loadConfig();
-        assistStreaksConfig.loadConfig();
-        spawnsConfig.loadConfig();
-        mapsConfig.loadConfig();
+        try {
+            killStreaksConfig.loadConfig();
+            assistStreaksConfig.loadConfig();
+            spawnsConfig.loadConfig();
+            mapsConfig.loadConfig();
+        } catch ( IOException | InvalidConfigurationException exception ) {
+            exception.printStackTrace();
+        }
 
         // 初期化が必要なファイルを初期化する
         manager.initialize();
@@ -205,4 +214,40 @@ public class LeonGunWar extends JavaPlugin {
 
         Bukkit.getLogger().info(Chat.f("{0} が無効化されました。", getName()));
     }
+
+    public static LeonGunWar getPlugin(){ return plugin; }
+
+    public MatchManager getManager() { return manager; }
+
+    public MapsConfig getMapsConfig() { return mapsConfig; }
+
+    public SpawnsConfig getSpawnsConfig() {
+        return spawnsConfig;
+    }
+
+    public MatchStartCountdown getCountdown() {
+        return countdown;
+    }
+
+    public AssistStreaksConfig getAssistStreaksConfig() {
+        return assistStreaksConfig;
+    }
+
+    public AssistStreaks getAssistStreaks() {
+        return assistStreaks;
+    }
+
+    public KillStreaks getKillStreaks() {
+        return killStreaks;
+    }
+
+    public KillStreaksConfig getKillStreaksConfig() {
+        return killStreaksConfig;
+    }
+
+    public TradeBoardManager getTradeBoardManager() {
+        return tradeBoardManager;
+    }
+
+    public ScoreboardDisplayer getScoreboardDisplayer() { return scoreboardDisplayer; }
 }

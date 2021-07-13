@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.commands;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.LeonGunWar;
@@ -120,14 +122,19 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
         // reloadなら
         if ( Args.check(args, 0, "reload", "rl") ) {
-            // マップの再読み込み
-            LeonGunWar.getPlugin().getMapsConfig().loadConfig();
 
-            // Lobby Spawnの読み込み
-            LeonGunWar.getPlugin().getSpawnsConfig().loadConfig();
+            try {
+                // マップの再読み込み
+                LeonGunWar.getPlugin().getMapsConfig().loadConfig();
 
-            // 設定ファイルの読み込み
-            LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
+                // Lobby Spawnの読み込み
+                LeonGunWar.getPlugin().getSpawnsConfig().loadConfig();
+
+                // 設定ファイルの読み込み
+                LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
+            } catch ( IOException | InvalidConfigurationException exception ) {
+                exception.printStackTrace();
+            }
 
             sender.sendMessage(Chat.f("{0}&a設定とマップのリロードが完了しました。", LeonGunWar.GAME_PREFIX));
             return true;

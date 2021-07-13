@@ -167,4 +167,10 @@ public class ScoreboardDisplayer {
         // boardがnullでなければSIDEBARを削除
         scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
     }
+
+    public void setScoreBoard(Scoreboard scoreboard) {
+
+        this.scoreBoard = scoreboard;
+
+    }
 }

@@ -6,12 +6,8 @@ import java.util.List;
 
 import net.azisaba.lgw.core.utils.Chat;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+//@Getter
+//@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum MatchMode {
 
     TEAM_DEATH_MATCH(
@@ -49,11 +45,20 @@ public enum MatchMode {
             Duration.ofMinutes(10),
             Arrays.asList("cdm", "customdeathmatch", "custom"));
 
+
     private final String modeName;
     private final String shortModeName;
     private final String description;
     private final Duration duration;
     private final List<String> suggests;
+
+    MatchMode(String modeName,String shortModeName,String description,Duration duration,List<String> suggests) {
+        this.modeName = modeName;
+        this.shortModeName = shortModeName;
+        this.description = description;
+        this.duration = duration;
+        this.suggests = suggests;
+    }
 
     public static MatchMode getFromString(String text) {
         String suggest = text.replace(" ", "").toLowerCase();
@@ -61,5 +66,15 @@ public enum MatchMode {
                 .filter(mode -> mode.suggests.contains(suggest))
                 .findAny()
                 .orElse(null);
+    }
+
+    public Duration getDuration() { return duration; }
+
+    public Object getDescription() { return description; }
+
+    public String getShortModeName() { return shortModeName; }
+
+    public String getModeName() {
+        return modeName;
     }
 }

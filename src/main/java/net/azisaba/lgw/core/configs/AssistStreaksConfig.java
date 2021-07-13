@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.configs;
 
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.bukkit.configuration.InvalidConfigurationException;
 
 import net.azisaba.lgw.core.LeonGunWar;
 
@@ -25,7 +28,7 @@ public class AssistStreaksConfig extends Config {
 
     @SneakyThrows(value = { Exception.class })
     @Override
-    public void loadConfig() {
+    public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();
 
         levels = new HashMap<>();
@@ -38,5 +41,9 @@ public class AssistStreaksConfig extends Config {
                 }))
                 .forEach(levels::put);
         levels = Collections.unmodifiableMap(levels);
+    }
+
+    public Map<Integer, Map.Entry<List<String>, List<String>>> getLevels() {
+        return levels;
     }
 }

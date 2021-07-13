@@ -22,8 +22,16 @@ public class GameMap {
     // 各チームのスポーン地点
     private final Map<BattleTeam, Location> spawnMap;
 
+    public GameMap(String mapName, World world, Map<BattleTeam, Location> spawnMap) {
+        this.mapName = mapName;
+        this.world = world;
+        this.spawnMap = spawnMap;
+    }
+
     public Location getSpawnPoint(BattleTeam team) {
         // 指定されていない場合はreturn null
         return spawnMap.getOrDefault(team, null);
     }
+
+    public String getMapName() { return mapName; }
 }

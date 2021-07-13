@@ -22,6 +22,10 @@ public class PlayerAssistEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    public PlayerAssistEvent(Player player) {
+        this.player = player;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return HANDLERS_LIST;

@@ -25,11 +25,14 @@ import lombok.EqualsAndHashCode;
 public class MatchStartedEvent extends Event {
 
     // 試合を行うマップ
-    private final GameMap map;
+    private GameMap map;
     // 各チームのプレイヤーリスト
-    private final Map<BattleTeam, List<Player>> teamPlayers;
+    private Map<BattleTeam, List<Player>> teamPlayers;
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
+
+    public MatchStartedEvent(GameMap currentGameMap, Map<BattleTeam, List<Player>> teamPlayers) {
+    }
 
     public List<Player> getAllTeamPlayers() {
         return teamPlayers.values().stream().flatMap(List::stream).collect(Collectors.toList());

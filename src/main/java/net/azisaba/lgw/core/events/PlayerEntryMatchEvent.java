@@ -22,6 +22,10 @@ public class PlayerEntryMatchEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    public PlayerEntryMatchEvent(Player player) {
+        entryPlayer = player;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return HANDLERS_LIST;

@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 public class Chat {
 
     // メッセージをフォーマットして、&で色をつける
-    public String f(String text, Object... args) {
+    public static String f(String text, Object... args) {
         return MessageFormat.format(ChatColor.translateAlternateColorCodes('&', text), args);
     }
 

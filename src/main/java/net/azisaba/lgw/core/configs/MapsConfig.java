@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.configs;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 import com.google.common.base.Enums;
 
@@ -32,7 +34,7 @@ public class MapsConfig extends Config {
 
     @SneakyThrows(value = { Exception.class })
     @Override
-    public void loadConfig() {
+    public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();
 
         allGameMap = new ArrayList<>();
@@ -76,5 +78,9 @@ public class MapsConfig extends Config {
         // 0からmapListのサイズ -1 までの値でランダムな数字を生成
         // リストから取得してreturn
         return allGameMap.isEmpty() ? null : allGameMap.get(new Random().nextInt(allGameMap.size()));
+    }
+
+    public List<GameMap> getAllGameMap() {
+        return allGameMap;
     }
 }

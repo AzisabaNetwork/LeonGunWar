@@ -14,21 +14,21 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Args {
 
-    public boolean isEmpty(String[] args) {
+    public static boolean isEmpty(String[] args) {
         return args.length == 0;
     }
 
-    public String get(String[] args, int index) {
+    public static String get(String[] args, int index) {
         return args.length > index ? args[index] : null;
     }
 
-    public boolean check(String[] args, int index, String... checks) {
+    public static boolean check(String[] args, int index, String... checks) {
         String input = get(args, index);
         return input != null && (checks.length == 0 || Arrays.stream(checks)
                 .anyMatch(input::equalsIgnoreCase));
     }
 
-    public List<String> complete(String[] args, int index, String... suggestions) {
+    public static List<String> complete(String[] args, int index, String... suggestions) {
         String input = get(args, index);
         return input != null ? Arrays.stream(suggestions)
                 .filter(suggestion -> suggestion.startsWith(input))

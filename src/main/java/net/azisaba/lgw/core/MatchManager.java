@@ -238,6 +238,8 @@ public class MatchManager {
         LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
     }
 
+    public List<Player> getEntryPlayers() { return entryPlayers; }
+
     /**
      * ゲーム終了時に行う処理を書きます
      */
@@ -920,4 +922,21 @@ public class MatchManager {
         return team1 + 1500 >= team2 && team1 - 1500 <= team2;
     }
 
+    public boolean isMatching() {
+        return isMatching;
+    }
+
+    public GameMap getCurrentGameMap() { return currentGameMap; }
+
+    public AtomicInteger getTimeLeft() {
+        return timeLeft;
+    }
+
+    public MatchMode getMatchMode() {
+        return matchMode;
+    }
+
+    public TeamDistributor getTeamDistributor() {
+        return teamDistributor;
+    }
 }
