@@ -59,8 +59,14 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             // カウントダウン終了
             LeonGunWar.getPlugin().getCountdown().stopCountdown();
 
+            //matsu1213 start
+            LeonGunWar.getPlugin().getCountdown().startCountdown();
+
             // 試合開始
-            LeonGunWar.getPlugin().getManager().startMatch();
+            //LeonGunWar.getPlugin().getManager().startMatch();
+
+            //matsu1213 end
+
             return true;
         }
 

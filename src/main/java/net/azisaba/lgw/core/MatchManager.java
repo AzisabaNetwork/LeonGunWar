@@ -44,6 +44,7 @@ import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.KillDeathCounter;
+import net.azisaba.lgw.core.util.MapLoader;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
@@ -151,6 +152,7 @@ public class MatchManager {
     public void startMatch() {
         // すでにマッチ中の場合はIllegalStateException
         Preconditions.checkState(!isMatching, "A match is already started.");
+        Preconditions.checkState(currentGameMap != null,"GameMap is not loaded.");
 
         // timeLeftをdurationに変更
         timeLeft.set((int) matchMode.getDuration().getSeconds());
@@ -158,12 +160,20 @@ public class MatchManager {
         // ボスバー作成
         bossBar = createEmptyBossBar();
 
+        //matsu1213 start
         // マップを抽選
-        currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
-        // マップ名を表示
-        Bukkit.broadcastMessage(
-                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+        //currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
 
+        //マップを読み込み(SWM)
+        //MapLoader.loadMap(currentGameMap.getMapName());
+
+        //matsu1213 end
+
+        // マップ名を表示
+        //Bukkit.broadcastMessage(
+         //       Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+
+        //matsu1213 end
         // 参加プレイヤーを取得
         List<Player> entryPlayers = getEntryPlayers();
         // プレイヤーを振り分け
@@ -927,6 +937,10 @@ public class MatchManager {
     }
 
     public GameMap getCurrentGameMap() { return currentGameMap; }
+
+    public void setCurrentGameMap(GameMap currentGameMap) {
+        this.currentGameMap = currentGameMap;
+    }
 
     public AtomicInteger getTimeLeft() {
         return timeLeft;

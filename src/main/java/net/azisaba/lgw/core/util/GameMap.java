@@ -18,7 +18,7 @@ public class GameMap {
     // プレイヤーに表示するマップ名
     private final String mapName;
     // マップのワールド
-    private final World world;
+    private World world;
     // 各チームのスポーン地点
     private final Map<BattleTeam, Location> spawnMap;
 
@@ -34,4 +34,5 @@ public class GameMap {
     }
 
     public String getMapName() { return mapName; }
+    public void setWorld(World world){ this.world = world; }
 }
