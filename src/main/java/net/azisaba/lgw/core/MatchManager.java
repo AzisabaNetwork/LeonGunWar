@@ -29,6 +29,8 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.grinderwolf.swm.api.SlimePlugin;
+import com.grinderwolf.swm.api.loaders.SlimeLoader;
 
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
@@ -296,6 +298,12 @@ public class MatchManager {
         ldmLeaderMap.clear();
         // モードをnullに設定
         matchMode = null;
+
+        //matsu1213 start
+
+        Bukkit.unloadWorld(currentGameMap.getMapName(),true);
+
+        //matsu1213 end
 
         // ゲーム終了
         isMatching = false;
