@@ -961,4 +961,8 @@ public class MatchManager {
     public TeamDistributor getTeamDistributor() {
         return teamDistributor;
     }
+
+    public void setTeamDistributor(TeamDistributor distributor) {
+        this.teamDistributor = distributor;
+    }
 }

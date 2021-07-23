@@ -25,14 +25,12 @@ public class MatchStartCountdown {
 
         //matsu1213 start
 
-        GameMap currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
+        String currentGameMapName = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
         //マップを読み込み(SWM)
-        MapLoader.loadMap(currentGameMap.getMapName());
-
-        LeonGunWar.getPlugin().getManager().setCurrentGameMap(currentGameMap);
+        MapLoader.loadMap(currentGameMapName);
 
         Bukkit.broadcastMessage(
-                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMapName));
 
         //matsu1213 end
     }

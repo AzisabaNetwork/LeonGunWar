@@ -28,7 +28,7 @@ import lombok.SneakyThrows;
 @Getter
 public class MapsConfig extends Config {
 
-    private List<GameMap> allGameMap;
+    private List<String> allGameMap;
 
     public MapsConfig(@NonNull LeonGunWar plugin) {
         super(plugin, "configs/maps.yml", "maps.yml");
@@ -41,6 +41,7 @@ public class MapsConfig extends Config {
 
         allGameMap = new ArrayList<>();
         for ( String mapName : config.getValues(false).keySet() ) {
+            /*
             ConfigurationSection mapSection = config.getConfigurationSection(mapName);
             ConfigurationSection spawnsSection = mapSection.getConfigurationSection("spawns");
 
@@ -62,8 +63,10 @@ public class MapsConfig extends Config {
                 }
             }
 
-            GameMap gameMap = new GameMap(mapName, world, spawnMap);
-            allGameMap.add(gameMap);
+             */
+
+            //GameMap gameMap = new GameMap(mapName, world, spawnMap);
+            allGameMap.add(mapName);
 
             plugin.getLogger().info("マップ " + mapName + " をロードしました。");
         }
@@ -73,16 +76,43 @@ public class MapsConfig extends Config {
     /**
      * ロードされているすべてのマップから1つだけランダムで抽選します
      *
-     * @return ランダムなマップ
+     * @return ランダムなマップの名前
      */
-    public GameMap getRandomMap() {
+    public String getRandomMap() {
         // 登録されているマップが0この場合nullをreturn
         // 0からmapListのサイズ -1 までの値でランダムな数字を生成
         // リストから取得してreturn
         return allGameMap.isEmpty() ? null : allGameMap.get(new Random().nextInt(allGameMap.size()));
     }
 
-    public List<GameMap> getAllGameMap() {
+    public List<String> getAllGameMap() {
         return allGameMap;
+    }
+
+    public GameMap getGameMap(String mapName){
+
+        ConfigurationSection mapSection = config.getConfigurationSection(mapName);
+        ConfigurationSection spawnsSection = mapSection.getConfigurationSection("spawns");
+
+        World world = plugin.getServer().getWorld(mapSection.getString("world"));
+
+        Map<BattleTeam, Location> spawnMap = new HashMap<>();
+        for ( String teamName : spawnsSection.getValues(false).keySet() ) {
+            Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
+
+            if ( battleTeam.isPresent() ) {
+                Location spawn = new Location(
+                        plugin.getServer().getWorld(spawnsSection.getString(teamName + ".world")),
+                        spawnsSection.getDouble(teamName + ".x"),
+                        spawnsSection.getDouble(teamName + ".y"),
+                        spawnsSection.getDouble(teamName + ".z"),
+                        (float) spawnsSection.getDouble(teamName + ".yaw"),
+                        (float) spawnsSection.getDouble(teamName + ".pitch"));
+                spawnMap.put(battleTeam.get(), spawn);
+            }
+        }
+
+        return new GameMap(mapName, world, spawnMap);
+
     }
 }

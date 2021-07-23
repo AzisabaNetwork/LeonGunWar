@@ -17,6 +17,7 @@ import com.grinderwolf.swm.api.world.properties.SlimeProperty;
 import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.configs.MapsConfig;
 
 public class MapLoader {
 
@@ -39,6 +40,8 @@ public class MapLoader {
                 Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(),() -> {
 
                     swm.generateWorld(slimeWorld);
+
+                    LeonGunWar.getPlugin().getManager().setCurrentGameMap(LeonGunWar.getPlugin().getMapsConfig().getGameMap(mapName));
 
                 });
 

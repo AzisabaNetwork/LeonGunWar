@@ -15,7 +15,7 @@ public class Chat {
     }
 
     // 色を消す
-    public String r(String text) {
+    public static String r(String text) {
         return ChatColor.stripColor(text);
     }
 }

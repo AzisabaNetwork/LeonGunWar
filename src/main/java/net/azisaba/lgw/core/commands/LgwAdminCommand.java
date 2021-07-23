@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -79,6 +80,13 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+            if(true){
+            sender.sendMessage(ChatColor.RED + "This command is currently disabled. Sorry!");
+            return true;
+            }
+
+            /*
+
             Player p = (Player) sender;
 
             // マップ名が指定されていない場合はreturn
@@ -122,6 +130,8 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             } else {
                 p.sendMessage(Chat.f("&c指定したマップが見つかりませんでした。"));
             }
+
+            */
 
             return true;
         }
@@ -206,8 +216,10 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        /*
         if ( args.length == 1 ) {
             return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
         }
@@ -216,6 +228,8 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                     .map(GameMap::getMapName)
                     .toArray(String[]::new));
         }
+
+         */
         return null;
     }
 }

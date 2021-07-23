@@ -1,10 +1,13 @@
 package net.azisaba.lgw.core;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -28,7 +31,9 @@ public class ScoreboardDisplayer {
      * @return スコアボードのタイトル
      */
     private String scoreBoardTitle() {
-        return Chat.f("&6LeonGunWar&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
+
+        return Chat.f("&6LeonGunWar &c&lALPHA");
+        //return Chat.f("&6LeonGunWar&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
     }
 
     /**
@@ -39,6 +44,8 @@ public class ScoreboardDisplayer {
         if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
 
             /*
+
+              21/07/22  lgwsv1
 
               残り時間: ?秒
 
@@ -63,8 +70,9 @@ public class ScoreboardDisplayer {
 
             // 表示するメッセージリストを作成
             List<String> messageList = new ArrayList<>();
+            messageList.add(ChatColor.GRAY + new SimpleDateFormat("yy/MM/dd").format(new Date(System.currentTimeMillis())));
             messageList.add("");
-            messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
+            messageList.add(Chat.f("残り時間: &a{0}", SecondOfDay.f(timeLeft)));
             messageList.add("");
 
             for ( BattleTeam team : BattleTeam.values() ) {
