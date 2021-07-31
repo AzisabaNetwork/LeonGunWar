@@ -23,16 +23,6 @@ public class MatchStartCountdown {
         // Runnable取得してスタート
         task.compareAndSet(null, new MatchStartCountdownTask().runTaskTimer(LeonGunWar.getPlugin(), 0, 20));
 
-        //matsu1213 start
-
-        String currentGameMapName = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
-        //マップを読み込み(SWM)
-        MapLoader.loadMap(currentGameMapName);
-
-        Bukkit.broadcastMessage(
-                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMapName));
-
-        //matsu1213 end
     }
 
     /**

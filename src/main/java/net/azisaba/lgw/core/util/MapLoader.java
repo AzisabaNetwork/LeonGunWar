@@ -27,6 +27,9 @@ public class MapLoader {
 
         if (world != null) {
             Logging.warn(ChatColor.RED + "World " + mapName + " is already loaded!");
+            LeonGunWar.getPlugin().getMatchQueueManager().setWorld(world);
+
+            return;
         }
 
         SlimePlugin swm = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
@@ -41,7 +44,10 @@ public class MapLoader {
 
                     swm.generateWorld(slimeWorld);
 
-                    LeonGunWar.getPlugin().getManager().setCurrentGameMap(LeonGunWar.getPlugin().getMapsConfig().getGameMap(mapName));
+                    World loadedWorld = Bukkit.getWorld(mapName);
+
+                    LeonGunWar.getPlugin().getMatchQueueManager().setWorld(loadedWorld);
+                    LeonGunWar.getPlugin().getMatchQueueManager().setLoaded(true);
 
                 });
 

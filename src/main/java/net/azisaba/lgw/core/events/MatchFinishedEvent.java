@@ -57,4 +57,8 @@ public class MatchFinishedEvent extends Event {
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
+
+    public List<BattleTeam> getWinners() {
+        return winners;
+    }
 }

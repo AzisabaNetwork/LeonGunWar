@@ -27,4 +27,20 @@ public class KDPlayerData {
         this.deaths = deaths;
         this.assists = assists;
     }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getAssists() {
+        return assists;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
 }

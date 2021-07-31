@@ -13,6 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -146,6 +147,13 @@ public class MatchManager {
         return Bukkit.createBossBar("", barColor, barStyle);
     }
 
+    public void loadMatchData(MatchMode matchMode,GameMap gameMap){
+
+        setMatchMode(matchMode);
+        this.currentGameMap = gameMap;
+
+    }
+
     /**
      * マッチを開始するメソッド
      *
@@ -252,10 +260,26 @@ public class MatchManager {
 
     public List<Player> getEntryPlayers() { return entryPlayers; }
 
+    public void gameEnd(){
+
+        currentGameMap.getWorld().setPVP(false);
+
+        //Game end
+        isMatching = false;
+
+    }
+
     /**
      * ゲーム終了時に行う処理を書きます
      */
     public void finalizeMatch() {
+
+        if(LeonGunWar.getPlugin().getMatchQueueManager().hasQueue()){
+            getWorldPlayers().forEach(p -> LeonGunWar.getPlugin().getMatchQueueManager().addQueuePlayer(p));
+        }else {
+            getWorldPlayers().forEach(p -> p.sendMessage(ChatColor.RED + "エラーが発生しました。これがバグである場合は、管理者に報告して下さい。(ERROR: Queue not found)"));
+        }
+
         // タスクの終了
         if ( matchTask != null ) {
             matchTask.cancel();
@@ -301,12 +325,15 @@ public class MatchManager {
 
         //matsu1213 start
 
-        Bukkit.unloadWorld(currentGameMap.getMapName(),true);
+        Bukkit.unloadWorld(currentGameMap.getMapName(),false);
+
+        currentGameMap = null;
+        entryPlayers.clear();
 
         //matsu1213 end
 
         // ゲーム終了
-        isMatching = false;
+        //isMatching = false;
     }
 
     /**
@@ -322,15 +349,19 @@ public class MatchManager {
 
         // エントリー追加
         entryPlayers.add(p);
+
         // 名前がデフォルトの場合
         if ( !isPlayerMatching(p) ) {
             // 名前の色を変更
             p.setPlayerListName(Chat.f("&a{0}", p.getName()));
         }
 
+        /*
         // イベント呼び出し
         PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
         Bukkit.getPluginManager().callEvent(event);
+
+         */
 
         return true;
     }
@@ -355,11 +386,22 @@ public class MatchManager {
             p.setPlayerListName(p.getName());
         }
 
+        /*
         // イベント呼び出し
         PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
         Bukkit.getPluginManager().callEvent(event);
 
+         */
+
         return true;
+    }
+
+    public void addEntryPlayers(List<Player> players){
+        entryPlayers.addAll(players);
+    }
+
+    public void clearEntryPlayers(){
+        entryPlayers.clear();
     }
 
     /**
@@ -763,7 +805,7 @@ public class MatchManager {
             int assists = killDeathCounter.getAssists(p);
 
             // プレイヤーの戦績を表示
-            p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
+            p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kills, {2} Deaths, {3} Assists", p.getName(), kills,
                     deaths, assists));
 
             // DisplayNameを戻す
@@ -964,5 +1006,29 @@ public class MatchManager {
 
     public void setTeamDistributor(TeamDistributor distributor) {
         this.teamDistributor = distributor;
+    }
+
+    public KillDeathCounter getKillDeathCounter() {
+        return killDeathCounter;
+    }
+
+    public void setMatching(boolean b) {
+        isMatching = b;
+    }
+
+    public BossBar getBossBar() {
+        return bossBar;
+    }
+
+    public void setBossBar(BossBar progressBar) {
+        this.bossBar = bossBar;
+    }
+
+    public List<Player> getWorldPlayers(){
+        return currentGameMap.getWorld().getPlayers();
+    }
+
+    public boolean isLeaderMatch() {
+        return leaderMatch;
     }
 }

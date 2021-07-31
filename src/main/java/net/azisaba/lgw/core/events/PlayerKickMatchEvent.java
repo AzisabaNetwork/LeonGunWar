@@ -34,4 +34,8 @@ public class PlayerKickMatchEvent extends Event {
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
 }

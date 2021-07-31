@@ -33,4 +33,8 @@ public class MatchTimeChangedEvent extends Event {
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
+
+    public int getTimeLeft() {
+        return timeLeft;
+    }
 }

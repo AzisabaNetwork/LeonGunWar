@@ -18,7 +18,7 @@ public class MatchCountdownTask extends BukkitRunnable {
         Bukkit.getPluginManager().callEvent(event);
 
         // 0になったらストップ
-        if ( timeLeft == 0 ) {
+        if ( timeLeft == -15 ) {
             cancel();
         }
     }

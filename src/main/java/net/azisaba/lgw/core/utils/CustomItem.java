@@ -17,7 +17,7 @@ import lombok.experimental.UtilityClass;
 public class CustomItem {
 
     // 勝利したチームに配布するアイテム (卍勝者の証卍)
-    public ItemStack getWonItem() {
+    public static ItemStack getWonItem() {
         ItemStack item = new ItemStack(Material.END_CRYSTAL);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(Chat.f("&6勝者の証&6"));

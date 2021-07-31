@@ -1,10 +1,10 @@
 name: ${project.name}
 main: net.azisaba.lgw.core.LeonGunWar
 version: ${project.version}
-authors: ["siloneco", "YukiLeafX"]
+authors: ["siloneco", "YukiLeafX" , "matsu1213"]
 description: ${project.description}
 website: ${project.url}
-depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded"]
+depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "SlimeWorldManager"]
 softdepend: ["Multiverse-Core"]
 commands:
   leongunwaradmin:

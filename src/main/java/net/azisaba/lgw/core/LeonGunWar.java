@@ -44,6 +44,7 @@ import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.OnsenListener;
+import net.azisaba.lgw.core.listeners.others.QueueListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
 import net.azisaba.lgw.core.listeners.others.StreaksListener;
@@ -59,6 +60,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListe
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListener;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
+import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 
 import lombok.Getter;
@@ -90,6 +92,7 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
+    private final MatchQueueManager matchQueueManager = new MatchQueueManager(manager);
 
     public static JSONMessage getQuickBar() { return quickBar; }
 
@@ -105,6 +108,10 @@ public class LeonGunWar extends JavaPlugin {
                 .then(" ")
                 .then(Chat.f("&6[途中参加]"))
                 .runCommand("/leongunwar:match rejoin");
+
+        getConfig().addDefault("server-name","lgwsv");
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         // 設定ファイルを読み込むクラスの初期化
         killStreaksConfig = new KillStreaksConfig(this);
@@ -158,6 +165,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
+        Bukkit.getPluginManager().registerEvents(new QueueListener(),this);
 
         // リスナーの登録 (modes)
         Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
@@ -200,6 +208,9 @@ public class LeonGunWar extends JavaPlugin {
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
+
+        //キューを生成
+        LeonGunWar.getPlugin().getMatchQueueManager().createQueue(LeonGunWar.getPlugin().getMapsConfig().getRandomMap(), MatchMode.LEADER_DEATH_MATCH_POINT);
 
         Bukkit.getLogger().info(Chat.f("{0} が有効化されました。", getName()));
     }
@@ -250,4 +261,8 @@ public class LeonGunWar extends JavaPlugin {
     }
 
     public ScoreboardDisplayer getScoreboardDisplayer() { return scoreboardDisplayer; }
+
+    public MatchQueueManager getMatchQueueManager() {
+        return matchQueueManager;
+    }
 }

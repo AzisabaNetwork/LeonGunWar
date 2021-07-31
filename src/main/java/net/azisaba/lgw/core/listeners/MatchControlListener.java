@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BossBar;
@@ -39,7 +40,7 @@ public class MatchControlListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
         // 時間を取得して0じゃなかったらreturn
-        if ( e.getTimeLeft() > 0 ) {
+        if ( e.getTimeLeft() != 0 ) {
             return;
         }
 
@@ -59,6 +60,17 @@ public class MatchControlListener implements Listener {
                 winners,
                 LeonGunWar.getPlugin().getManager().getTeamPlayers());
         Bukkit.getPluginManager().callEvent(event);
+    }
+
+    @EventHandler
+    public void onMatchEnd(MatchTimeChangedEvent e){
+
+        if(e.getTimeLeft() == -15){
+
+            LeonGunWar.getPlugin().getManager().finalizeMatch();
+
+        }
+
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -87,13 +99,13 @@ public class MatchControlListener implements Listener {
         // 各チームのポイントを表示
         for ( BattleTeam team : BattleTeam.values() ) {
             int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
-            resultMessages.add(Chat.f("{0} &c{1} Point(s)", team.getTeamName(), point));
+            resultMessages.add(Chat.f("{0} &c{1} Points", team.getTeamName(), point));
         }
 
         // MVPを表示 (ない場合は何も表示しない)
         if ( !mvpPlayers.isEmpty() ) {
             for ( KDPlayerData data : mvpPlayers ) {
-                resultMessages.add(Chat.f("&c[MVP] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", data.getPlayerName(),
+                resultMessages.add(Chat.f("&c[MVP] {0} {1} Kills, {2} Deaths, {3} Assists", data.getPlayerName(),
                         data.getKills(), data.getDeaths(), data.getAssists()));
             }
         }
@@ -112,7 +124,10 @@ public class MatchControlListener implements Listener {
             }
 
             // スポーンにTP
-            p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
+            //p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
+
+            //PVPをオフにするだけ
+            LeonGunWar.getPlugin().getManager().gameEnd();
 
             // アーマー削除
             p.getInventory().setChestplate(null);
@@ -123,13 +138,15 @@ public class MatchControlListener implements Listener {
             int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
 
             // プレイヤーの戦績を表示
-            p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
+            p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kills, {2} Deaths, {3} Assists", p.getName(), kills,
                     deaths, assists));
 
             // 回復
             p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
             p.setFoodLevel(40);
         }
+
+        LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "GAME END",ChatColor.GRAY + "今回は勝利することができなかった",0,100,0));
 
         // 勝ったチームがあれば勝者の証を付与
         if ( e.getWinners().size() >= 1 ) {
@@ -144,7 +161,7 @@ public class MatchControlListener implements Listener {
                     p.getInventory().addItem(CustomItem.getWonItem());
 
                     // 勝利タイトルを表示
-                    p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
+                    p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 5, 0);
 
                     // 音を鳴らす
                     p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
@@ -163,7 +180,7 @@ public class MatchControlListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void matchFinalizer(MatchFinishedEvent e) {
 
-        LeonGunWar.getPlugin().getManager().finalizeMatch();
+        //LeonGunWar.getPlugin().getManager().finalizeMatch();
 
         // 全プレイヤーにQuickメッセージを送信
         LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
@@ -175,7 +192,12 @@ public class MatchControlListener implements Listener {
     @EventHandler
     public void scoreboardUpdater(MatchTimeChangedEvent e) {
         // スコアボードをアップデート
-        LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard();
+        LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p ->{
+
+            LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(p,LeonGunWar.getPlugin().getScoreboardDisplayer().matchBoardLines(p));
+
+        });
+
     }
 
     /**
@@ -229,6 +251,10 @@ public class MatchControlListener implements Listener {
         // 残り時間が指定された時間の場合チャット欄でお知らせ
         if ( Arrays.asList(60, 30, 10, 5, 4, 3, 2, 1).contains(timeLeft) ) {
             Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, SecondOfDay.f(timeLeft)));
+        }
+
+        if(timeLeft == 60){
+            LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle("", ChatColor.YELLOW + "残り" + ChatColor.GREEN + "1" + ChatColor.YELLOW + "分！"));
         }
 
         // 5秒以下なら音を鳴らす

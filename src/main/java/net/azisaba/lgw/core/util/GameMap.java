@@ -35,4 +35,8 @@ public class GameMap {
 
     public String getMapName() { return mapName; }
     public void setWorld(World world){ this.world = world; }
+
+    public World getWorld() {
+        return world;
+    }
 }
