@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BossBar;
@@ -110,6 +111,11 @@ public class MatchControlListener implements Listener {
             }
         }
 
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            p.getInventory().remove(Material.SHULKER_SHELL);
+        });
+
+
         // 結果を全プレイヤーに表示
         Bukkit.getOnlinePlayers().forEach(p -> {
             for ( String msg : resultMessages ) {
@@ -183,7 +189,7 @@ public class MatchControlListener implements Listener {
         //LeonGunWar.getPlugin().getManager().finalizeMatch();
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        //LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
     }
 
     /**
@@ -191,6 +197,10 @@ public class MatchControlListener implements Listener {
      */
     @EventHandler
     public void scoreboardUpdater(MatchTimeChangedEvent e) {
+
+        if(e.getTimeLeft() <= -5)
+            return;
+
         // スコアボードをアップデート
         LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p ->{
 
@@ -239,6 +249,7 @@ public class MatchControlListener implements Listener {
                         playerMap);
                 // 呼び出し
                 Bukkit.getPluginManager().callEvent(event);
+                LeonGunWar.getPlugin().getManager().getTimeLeft().set(-1);
                 break;
             }
         }
@@ -267,6 +278,9 @@ public class MatchControlListener implements Listener {
     public void remainTimeBossbar(MatchTimeChangedEvent e) {
 
         final BossBar progressBar;
+
+        if(e.getTimeLeft() <= 0)
+            return;
 
         // progressBarがnullならバーを作成
         if ( LeonGunWar.getPlugin().getManager().getBossBar() == null ) {

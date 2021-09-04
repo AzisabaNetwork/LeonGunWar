@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.swing.plaf.basic.BasicButtonUI;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -57,6 +59,8 @@ import net.azisaba.playersettings.util.SettingsData;
 
 import lombok.Data;
 import lombok.NonNull;
+
+import de.schlichtherle.io.util.LEDataOutputStream;
 
 /**
  * ゲームを司るコアクラス
@@ -264,38 +268,9 @@ public class MatchManager {
 
         currentGameMap.getWorld().setPVP(false);
 
-        //Game end
-        isMatching = false;
-
-    }
-
-    /**
-     * ゲーム終了時に行う処理を書きます
-     */
-    public void finalizeMatch() {
-
-        if(LeonGunWar.getPlugin().getMatchQueueManager().hasQueue()){
-            getWorldPlayers().forEach(p -> LeonGunWar.getPlugin().getMatchQueueManager().addQueuePlayer(p));
-        }else {
-            getWorldPlayers().forEach(p -> p.sendMessage(ChatColor.RED + "エラーが発生しました。これがバグである場合は、管理者に報告して下さい。(ERROR: Queue not found)"));
-        }
-
-        // タスクの終了
-        if ( matchTask != null ) {
-            matchTask.cancel();
-            matchTask = null;
-        }
-
-        // 残り時間を0に
-        timeLeft.set(0);
         // チームのポイントを0に
         pointMap.clear();
 
-        // killDeathCounterを初期化
-        killDeathCounter = new KillDeathCounter();
-
-        // サイドバーを削除
-        LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
         // 全プレイヤーのdisplayNameを初期化
         Bukkit.getOnlinePlayers().forEach(p -> {
 
@@ -322,6 +297,40 @@ public class MatchManager {
         ldmLeaderMap.clear();
         // モードをnullに設定
         matchMode = null;
+
+        //Game end
+        isMatching = false;
+
+    }
+
+    /**
+     * ゲーム終了時に行う処理を書きます
+     */
+    public void finalizeMatch() {
+
+        if(LeonGunWar.getPlugin().getMatchQueueManager().hasQueue()){
+            getWorldPlayers().forEach(p -> {
+                LeonGunWar.getPlugin().getMatchQueueManager().addQueuePlayer(p);
+                p.teleport(LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getSpawnLocation());
+            });
+
+        }else {
+            getWorldPlayers().forEach(p -> p.sendMessage(ChatColor.RED + "エラーが発生しました。これがバグである場合は、管理者に報告して下さい。(ERROR: Queue not found)"));
+        }
+
+        // タスクの終了
+        if ( matchTask != null ) {
+            matchTask.cancel();
+            matchTask = null;
+        }
+
+        killDeathCounter = new KillDeathCounter();
+
+        // 残り時間を0に
+        timeLeft.set(0);
+
+        // サイドバーを削除
+        LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
 
         //matsu1213 start
 
@@ -772,13 +781,14 @@ public class MatchManager {
 
         // すでに人数が集まっている場合はカウントダウンを開始
         if ( getEntryPlayers().size() >= 2 ) {
-            LeonGunWar.getPlugin().getCountdown().startCountdown();
+            //LeonGunWar.getPlugin().getCountdown().startCountdown();
         }
     }
 
     protected void onDisablePlugin() {
         // 試合をしていなければreturn
         if ( !isMatching ) {
+            LeonGunWar.getPlugin().getMatchQueueManager().onDisable();
             return;
         }
 
@@ -791,7 +801,7 @@ public class MatchManager {
             // メッセージを表示
             p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
             // スポーンにTP
-            Location spawn = LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
+            Location spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
             if ( spawn != null && spawn.getWorld() != null ) {
                 p.teleport(spawn);
             }
@@ -822,6 +832,8 @@ public class MatchManager {
 
         // ボスバーを非表示
         bossBar.removeAll();
+
+        LeonGunWar.getPlugin().getMatchQueueManager().onDisable();
     }
 
     private void setUpPlayer(Player p, BattleTeam team) {
@@ -881,7 +893,11 @@ public class MatchManager {
 
         // 試合をしていなければlobbySpawnを返す
         if ( !isMatching ) {
-            return LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
+            if(LeonGunWar.getPlugin().getMatchQueueManager().hasQueue() && LeonGunWar.getPlugin().getMatchQueueManager().isLoaded() ){
+                return LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getSpawnLocation();
+            }else {
+                return Bukkit.getWorld("world").getSpawnLocation();
+            }
         }
 
         // チームを取得

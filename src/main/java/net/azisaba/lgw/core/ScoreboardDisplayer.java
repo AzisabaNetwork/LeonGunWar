@@ -34,7 +34,7 @@ public class ScoreboardDisplayer {
      */
     private String scoreBoardTitle() {
 
-        return Chat.f("&6LeonGunWar &c&lALPHA");
+        return Chat.f("&6LeonGunWar &c&lBETA");
         //return Chat.f("&6LeonGunWar&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
     }
 
@@ -73,7 +73,7 @@ public class ScoreboardDisplayer {
             // 表示するメッセージリストを作成
             List<String> messageList = new ArrayList<>();
             messageList.add(ChatColor.GRAY + new SimpleDateFormat("yy/MM/dd").format(new Date(System.currentTimeMillis()))
-                    + " " + ChatColor.DARK_GRAY + LeonGunWar.getPlugin().getConfig().get("server-name","lgwsv"));
+                    + "  " + ChatColor.DARK_GRAY + LeonGunWar.getPlugin().getConfig().get("server-name","lgwsv"));
             messageList.add("");
 
             if(timeLeft > 0){
@@ -94,10 +94,13 @@ public class ScoreboardDisplayer {
             messageList.add("");
             messageList.add(ChatColor.GREEN + "キル: " + LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(player));
 
+            /*
             messageList.add("");
             messageList.add(Chat.f("マップ: &a{0}", mapName));
             messageList.add(Chat.f("モード: &a{0}", mode.getShortModeName()));
-            messageList.add(Chat.f("アルゴリズム: &a{0}", distributor.getDistributorName()));
+            messageList.add(Chat.f("振り分け: &a{0}", distributor.getDistributorName()));
+
+             */
             messageList.add("");
             messageList.add(ChatColor.YELLOW + "www.azisaba.net");
 
@@ -120,20 +123,20 @@ public class ScoreboardDisplayer {
         List<String> messages = new ArrayList<>();
 
         messages.add(ChatColor.GRAY + new SimpleDateFormat("yy/MM/dd").format(new Date(System.currentTimeMillis()))
-                + " " + ChatColor.DARK_GRAY + LeonGunWar.getPlugin().getConfig().get("server-name","lgwsv"));
+                + "  " + ChatColor.DARK_GRAY + LeonGunWar.getPlugin().getConfig().get("server-name","lgwsv"));
         messages.add("");
-        messages.add("Map: " + ChatColor.GREEN + mqm.getMapName());
-        messages.add("Players: " + ChatColor.GREEN + mqm.getQueueWorld().getPlayers().size());
+        messages.add("マップ: " + ChatColor.GREEN + mqm.getMapName());
+        messages.add("プレイヤー数: " + ChatColor.GREEN + mqm.getQueueSize());
         messages.add("");
 
         if(LeonGunWar.getPlugin().getCountdown().isRunning()){
-            messages.add("開始まであと " + ChatColor.GREEN + timeLeft + "秒");
+            messages.add("開始まであと: " + ChatColor.GREEN + timeLeft + "秒");
         }else {
-            messages.add(ChatColor.GREEN + "Waiting...");
+            messages.add("開始まであと: " + ChatColor.GREEN + "Waiting...");
         }
 
         messages.add("");
-        messages.add("Mode: " + mqm.getMatchMode().getShortModeName());
+        messages.add("モード: " + mqm.getMatchMode().getShortModeName());
         messages.add("");
         messages.add(ChatColor.YELLOW + "www.azisaba.net");
 
@@ -169,7 +172,7 @@ public class ScoreboardDisplayer {
 
         // nullが返ってきた場合は非表示にしてreturn
         if ( bordLines == null ) {
-            scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
+            //scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
             return;
         }
         // リスト反転

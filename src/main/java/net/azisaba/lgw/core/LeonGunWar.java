@@ -1,11 +1,14 @@
 package net.azisaba.lgw.core;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.lgw.core.MySQL.PlayerStats;
+import net.azisaba.lgw.core.MySQL.SQLConnection;
 import net.azisaba.lgw.core.commands.AdminChatCommand;
 import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
@@ -94,6 +97,9 @@ public class LeonGunWar extends JavaPlugin {
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
     private final MatchQueueManager matchQueueManager = new MatchQueueManager(manager);
 
+    public SQLConnection sql;
+    private PlayerStats stats = new PlayerStats(this);
+
     public static JSONMessage getQuickBar() { return quickBar; }
 
     @Override
@@ -110,8 +116,29 @@ public class LeonGunWar extends JavaPlugin {
                 .runCommand("/leongunwar:match rejoin");
 
         getConfig().addDefault("server-name","lgwsv");
+        getConfig().addDefault ("host","localhost");
+        getConfig().addDefault ("port","3306");
+        getConfig().addDefault ("database","status");
+        getConfig().addDefault ("username","root");
+        getConfig().addDefault ("password","password");
         getConfig().options().copyDefaults(true);
         saveConfig();
+
+        sql = new SQLConnection();
+
+        try {
+            sql.connect();
+        } catch ( SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            getLogger().warning("Failed to connect SQLDatabase.");
+        }
+        if(sql.isConnected()){
+            getLogger().info("Connected SQLDatabase!");
+
+            //ここでテーブル作るぞ
+            this.stats.createTable();
+
+        }
 
         // 設定ファイルを読み込むクラスの初期化
         killStreaksConfig = new KillStreaksConfig(this);

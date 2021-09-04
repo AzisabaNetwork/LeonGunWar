@@ -14,10 +14,16 @@ public class MatchCountdownTask extends BukkitRunnable {
         int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().decrementAndGet();
 
         // イベントを呼び出す
-        MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);
-        Bukkit.getPluginManager().callEvent(event);
 
-        // 0になったらストップ
+        Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);
+                Bukkit.getPluginManager().callEvent(event);
+            }
+        });
+
+        // -15になったらストップ
         if ( timeLeft == -15 ) {
             cancel();
         }
