@@ -12,14 +12,11 @@ import net.azisaba.lgw.core.LeonGunWar;
 
 import lombok.NonNull;
 
-public class PlayerStats {
+public class SQLPlayerStats {
 
-    private LeonGunWar plugin;
+    private final LeonGunWar plugin = LeonGunWar.getPlugin();
 
-    public PlayerStats(LeonGunWar plugin){
-
-        this.plugin = plugin;
-
+    public SQLPlayerStats(){
     }
 
     public void createTable(){

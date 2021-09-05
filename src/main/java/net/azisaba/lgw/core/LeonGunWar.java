@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.azisaba.lgw.core.MySQL.PlayerStats;
 import net.azisaba.lgw.core.MySQL.SQLConnection;
+import net.azisaba.lgw.core.MySQL.SQLPlayerStats;
 import net.azisaba.lgw.core.commands.AdminChatCommand;
 import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
@@ -98,7 +98,7 @@ public class LeonGunWar extends JavaPlugin {
     private final MatchQueueManager matchQueueManager = new MatchQueueManager(manager);
 
     public SQLConnection sql;
-    private PlayerStats stats = new PlayerStats(this);
+    private SQLPlayerStats stats = new SQLPlayerStats();
 
     public static JSONMessage getQuickBar() { return quickBar; }
 
