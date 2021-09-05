@@ -14,7 +14,7 @@
 .idea/**/shelf
 
 # ignore crackshot jar
-.idea/*.jar
+.idea/CrackShot.jar
 
 # Generated files
 .idea/**/contentModel.xml
