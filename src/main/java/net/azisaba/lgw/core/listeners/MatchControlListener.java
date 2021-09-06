@@ -21,6 +21,7 @@ import org.bukkit.event.Listener;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.MySQL.SQLPlayerStats;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
@@ -34,10 +35,14 @@ import net.azisaba.lgw.core.utils.SecondOfDay;
 import me.rayzr522.jsonmessage.JSONMessage;
 
 public class MatchControlListener implements Listener {
-
     /**
      * 制限時間が0秒になったときにMatchFinishedEventを呼び出すリスナー
      */
+    private final SQLPlayerStats stats;
+    public MatchControlListener(SQLPlayerStats stats) {
+        this.stats = stats;
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
         // 時間を取得して0じゃなかったらreturn
@@ -154,7 +159,7 @@ public class MatchControlListener implements Listener {
 
         LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "GAME END",ChatColor.GRAY + "今回は勝利することができなかった",0,100,0));
 
-        // 勝ったチームがあれば勝者の証を付与
+        // 勝ったチームがあれば勝者の証を付与 & 勝利XPを付与
         if ( e.getWinners().size() >= 1 ) {
 
             // 各チームに勝者の証を付与
@@ -171,6 +176,9 @@ public class MatchControlListener implements Listener {
 
                     // 音を鳴らす
                     p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+
+                    // XP付与
+                    stats.updateMatchWins(p.getUniqueId());
                 }
 
                 // 勝利メッセージを送信
