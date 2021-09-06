@@ -18,6 +18,7 @@ import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
+import net.azisaba.lgw.core.configs.LevelingConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
 import net.azisaba.lgw.core.configs.SpawnsConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
@@ -88,6 +89,7 @@ public class LeonGunWar extends JavaPlugin {
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
+    private LevelingConfig levelingConfig;
 
     private final MatchStartCountdown countdown = new MatchStartCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
@@ -145,6 +147,7 @@ public class LeonGunWar extends JavaPlugin {
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
+        levelingConfig = new LevelingConfig(this);
         // 設定ファイルを読み込む
         try {
             killStreaksConfig.loadConfig();
@@ -184,13 +187,13 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
-        Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MatchControlListener(stats), this);
         Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomMatchSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(stats), this);
         Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
         Bukkit.getPluginManager().registerEvents(new QueueListener(),this);
 
