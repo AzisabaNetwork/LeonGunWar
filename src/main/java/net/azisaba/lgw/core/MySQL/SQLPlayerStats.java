@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.configs.LevelingConfig;
+import net.azisaba.lgw.core.util.PlayerStats;
 
 import lombok.NonNull;
 
@@ -30,8 +31,10 @@ public class SQLPlayerStats {
                     + "(UUID VARCHAR(64) NOT NULL ,NAME VARCHAR(36) NOT NULL," +
                     "level INT DEFAULT 1, " +
                     "xps INT DEFAULT 0 ," +
-                    "win INT DEFAULT 0," +
-                    "lose INT DEFAULT 0," +
+                    "coins INT DEFAULT 0 ," +
+                    "wins INT DEFAULT 0," +
+                    "loses INT DEFAULT 0," +
+                    "angleOfDeathLevel INT DEFAULT 1, " +
                     ")");
 
             ps.executeUpdate();
@@ -40,11 +43,44 @@ public class SQLPlayerStats {
 
     }
 
+    public PlayerStats getStats(UUID uuid){
+
+        try {
+
+            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("SELECT * FROM PlayerStats WHERE UUID=?");
+            ps.setString(1,uuid.toString());
+
+            ResultSet result = ps.executeQuery();
+
+            if(result.next()){
+
+                UUID uuid1 = UUID.fromString(result.getString("UUID"));
+                String name = result.getString("NAME");
+                int level = result.getInt("level");
+                int xps = result.getInt("xps");
+                int coins = result.getInt("coins");
+                int wins = result.getInt("wins");
+                int loses = result.getInt("loses");
+                int angleOfDeathLevel = result.getInt("angleOfDeathLevel");
+
+                return new PlayerStats(uuid1,name,level,xps,coins,wins,loses,angleOfDeathLevel);
+            }
+
+            return null;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
     public boolean exist(UUID uuid){
 
         try {
 
-            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("SELECT * FROM PlayerStats WHERE NAME=?");
+            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("SELECT * FROM PlayerStats WHERE UUID=?");
             ps.setString(1,uuid.toString());
 
             ResultSet result = ps.executeQuery();

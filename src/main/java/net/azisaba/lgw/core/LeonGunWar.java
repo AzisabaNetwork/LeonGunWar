@@ -100,7 +100,7 @@ public class LeonGunWar extends JavaPlugin {
     private final MatchQueueManager matchQueueManager = new MatchQueueManager(manager);
 
     public SQLConnection sql;
-    private SQLPlayerStats stats = new SQLPlayerStats();
+    private final SQLPlayerStats stats = new SQLPlayerStats();
 
     public static JSONMessage getQuickBar() { return quickBar; }
 
@@ -295,4 +295,9 @@ public class LeonGunWar extends JavaPlugin {
     public MatchQueueManager getMatchQueueManager() {
         return matchQueueManager;
     }
+
+    public LevelingConfig getLevelingConfig() {
+        return levelingConfig;
+    }
+    public SQLPlayerStats getSQLPlayerStats(){ return stats; }
 }

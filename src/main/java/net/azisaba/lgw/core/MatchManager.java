@@ -109,6 +109,9 @@ public class MatchManager {
     // リーダーマッチかどうか
     private boolean leaderMatch = false;
 
+    // 倍増ゲームかどうか TODO これ関連の処理を追加
+    private boolean isCorrupted = false;
+
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
      */
