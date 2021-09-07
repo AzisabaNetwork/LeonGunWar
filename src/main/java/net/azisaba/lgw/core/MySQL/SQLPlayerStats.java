@@ -34,12 +34,39 @@ public class SQLPlayerStats {
                     "coins INT DEFAULT 0 ," +
                     "wins INT DEFAULT 0," +
                     "loses INT DEFAULT 0," +
-                    "angleOfDeathLevel INT DEFAULT 1, " +
+                    "angelOfDeathLevel INT DEFAULT 1, " +
                     ")");
 
             ps.executeUpdate();
 
         }catch ( SQLException e){e.printStackTrace();}
+
+    }
+
+    public void create(@NonNull PlayerStats stats){
+
+        if(exist(stats.getUUID()))
+            return;
+
+        try {
+
+            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("INSERT INTO PlayerStats SET (UUID ,NAME ,level ,xps ,coins ,wins ,loses,angelOfDeathLevel) VALUES (?,?,?,?,?,?,?,?)");
+            ps.setString(1,stats.getUUID().toString());
+            ps.setString(2,stats.getName());
+            ps.setInt(3,stats.getLevel());
+            ps.setInt(4,stats.getXps());
+            ps.setInt(5,stats.getCoins());
+            ps.setInt(6,stats.getWins());
+            ps.setInt(7,stats.getLoses());
+            ps.setInt(8,stats.getAngelOfDeathLevel());
+
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -61,9 +88,9 @@ public class SQLPlayerStats {
                 int coins = result.getInt("coins");
                 int wins = result.getInt("wins");
                 int loses = result.getInt("loses");
-                int angleOfDeathLevel = result.getInt("angleOfDeathLevel");
+                int angelOfDeathLevel = result.getInt("angelOfDeathLevel");
 
-                return new PlayerStats(uuid1,name,level,xps,coins,wins,loses,angleOfDeathLevel);
+                return new PlayerStats(uuid1,name,level,xps,coins,wins,loses,angelOfDeathLevel);
             }
 
             return null;
@@ -146,6 +173,31 @@ public class SQLPlayerStats {
         }
 
         return -1;
+
+    }
+
+    public boolean update(@NonNull PlayerStats stats){
+
+        try {
+
+            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("UPDATE PlayerStats SET NAME=? ,level=? ,xps=? ,coins=? ,wins=? ,loses=? ,angelOfDeathLevel=? WHERE UUID=?");
+            ps.setString(8,stats.getUUID().toString());
+            ps.setString(1,stats.getName());
+            ps.setInt(2,stats.getLevel());
+            ps.setInt(3,stats.getXps());
+            ps.setInt(4,stats.getCoins());
+            ps.setInt(5,stats.getWins());
+            ps.setInt(6,stats.getLoses());
+            ps.setInt(7,stats.getAngelOfDeathLevel());
+
+            ps.executeUpdate();
+            ps.close();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
 
     }
 

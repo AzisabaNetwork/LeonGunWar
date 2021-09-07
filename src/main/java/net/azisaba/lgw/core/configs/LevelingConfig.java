@@ -19,7 +19,7 @@ public class LevelingConfig extends Config{
         config.addDefault("killXP", 1);
         config.addDefault("winXP", 15);
         config.addDefault("feverBaseXP", 5);
-        config.addDefault("mvpXP", 30);
+        config.addDefault("mvpXP", 30); //TODO MVPってキルたくさんしてるわけだからいらないと思う
     }
     @SneakyThrows(value = { Exception.class })
     @Override

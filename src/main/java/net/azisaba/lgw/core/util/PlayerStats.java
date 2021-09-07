@@ -16,11 +16,11 @@ public class PlayerStats {
     private int coins;
     private int wins;
     private int loses;
-    private int angleOfDeathLevel;
+    private int angelOfDeathLevel;
 
     private static HashMap<UUID,PlayerStats> cached = new HashMap<>();
 
-    public PlayerStats(UUID uuid, String name, int level, int xps, int coins,int wins, int loses, int angleOfDeathLevel){
+    public PlayerStats(UUID uuid, String name, int level, int xps, int coins,int wins, int loses, int angelOfDeathLevel){
 
         this.uuid = uuid;
         this.name = name;
@@ -30,7 +30,7 @@ public class PlayerStats {
         this.wins = wins;
         this.loses = loses;
 
-        this.angleOfDeathLevel = angleOfDeathLevel;
+        this.angelOfDeathLevel = angelOfDeathLevel;
     }
 
     public static PlayerStats getStats(UUID uuid){
@@ -73,7 +73,7 @@ public class PlayerStats {
         return name;
     }
 
-    // TODO set〇〇にSQLの処理を追加する。
+    // TODO set〇〇にSQLの処理を追加する。→変更。試合終了時にまとめて更新
 
     public int getLevel() {
         return level;
@@ -99,12 +99,12 @@ public class PlayerStats {
         this.coins = this.coins + coins;
     }
 
-    public int getAngleOfDeathLevel() {
-        return angleOfDeathLevel;
+    public int getAngelOfDeathLevel() {
+        return angelOfDeathLevel;
     }
 
-    public void addAngleOfDeathLevel(int angleOfDeathLevel){
-        this.angleOfDeathLevel = this.angleOfDeathLevel + angleOfDeathLevel;
+    public void addAngelOfDeathLevel(int angelOfDeathLevel){
+        this.angelOfDeathLevel = this.angelOfDeathLevel + angelOfDeathLevel;
     }
 
     public int getWins() {
