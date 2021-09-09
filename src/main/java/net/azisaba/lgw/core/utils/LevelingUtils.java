@@ -31,6 +31,7 @@ public class LevelingUtils {
     ///////////////////////////////////////////////////////////////
     //LEVEL COLOR
     ///////////////////////////////////////////////////////////////
+
     private static final String PRESTIGE_COLOR_ONE_TO_FOUR = ChatColor.GRAY + "";
     private static final String PRESTIGE_COLOR_FIVE_TO_NINE = ChatColor.WHITE + "";
     private static final String PRESTIGE_COLOR_TEN_TO_FOURTEEN = ChatColor.GOLD + "";
@@ -43,8 +44,9 @@ public class LevelingUtils {
     private static final String PRESTIGE_COLOR_FORTY_FIVE_TO_FORTY_NINE = ChatColor.DARK_RED + "";
     private static final String PRESTIGE_COLOR_FIFTY_TO_FIFTY_FOUR = ChatColor.DARK_BLUE + "";
     private static final String PRESTIGE_COLOR_FIFTY_FIVE_TO_FIFTY_NINE = ChatColor.DARK_PURPLE + "";
-    private static final String PRESTIGE_COLOR_MORE = ChatColor.DARK_RED + "";
-    //TODO 続く...
+    private static final String PRESTIGE_COLOR_SIXTY_TO_NINETY_NINE = "[RAINBOW]";
+    private static final String PRESTIGE_COLOR_MORE = "[RAINBOW_BOLDED]";
+
     ///////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////
@@ -119,6 +121,74 @@ public class LevelingUtils {
             case 11: return REQUIRED_XPS_ELEVEN;
             case 12 : return REQUIRED_XPS_TWELVE;
             default: return 0;
+        }
+
+    }
+
+    public static String coloring(int level,String prefix){
+
+        int prestige = level / 5;
+
+        switch ( prestige ){
+            case 0: return PRESTIGE_COLOR_ONE_TO_FOUR;
+            case 1: return PRESTIGE_COLOR_FIVE_TO_NINE;
+            case 2: return PRESTIGE_COLOR_TEN_TO_FOURTEEN;
+            case 3: return PRESTIGE_COLOR_FIFTEEN_TO_NINETEEN;
+            case 4: return PRESTIGE_COLOR_TWENTY_TO_TWENTY_FOUR;
+            case 5: return PRESTIGE_COLOR_TWENTY_FIVE_TO_TWENTY_NINE;
+            case 6: return PRESTIGE_COLOR_THIRTY_TO_THIRTY_FOUR;
+            case 7: return PRESTIGE_COLOR_THIRTY_FIVE_TO_THIRTY_NINE;
+            case 8: return PRESTIGE_COLOR_FORTY_TO_FORTY_FOUR;
+            case 9: return PRESTIGE_COLOR_FORTY_FIVE_TO_FORTY_NINE;
+            case 10: return PRESTIGE_COLOR_FIFTY_TO_FIFTY_FOUR;
+            case 11: return PRESTIGE_COLOR_FIFTY_FIVE_TO_FIFTY_NINE;
+        }
+
+        if(level >= 60){
+            if(level < 100){
+
+                String colored = null;
+                int count = 0;
+
+                for ( char c : prefix.toCharArray() ) {
+                    colored = colored + getColor(count) + c;
+                    count++;
+                }
+
+                return colored;
+
+            }else {
+
+                String colored = null;
+                int count = 0;
+
+                for ( char c : prefix.toCharArray() ) {
+                    colored = colored + getColor(count) + "" + ChatColor.BOLD + c;
+                    count++;
+                }
+
+                return colored;
+
+            }
+        }
+
+        return null;
+
+    }
+
+    private static ChatColor getColor(int count){
+
+        count = count % 7;
+
+        switch ( count ){
+            case 0: return ChatColor.RED;
+            case 1: return ChatColor.GOLD;
+            case 2: return ChatColor.YELLOW;
+            case 3: return ChatColor.GREEN;
+            case 4: return ChatColor.AQUA;
+            case 5: return ChatColor.LIGHT_PURPLE;
+            case 6: return ChatColor.DARK_PURPLE;
+            default: return ChatColor.WHITE;
         }
 
     }
