@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 
@@ -31,6 +32,33 @@ public class PlayerStats {
         this.loses = loses;
 
         this.angelOfDeathLevel = angelOfDeathLevel;
+    }
+
+    public static void loadStats(Player player){
+
+        PlayerStats stats = LeonGunWar.getPlugin().getSQLPlayerStats().getStats(player.getUniqueId());
+
+        if(stats != null){
+            stats.name = player.getName();
+            cached.put(player.getUniqueId(),stats);
+        }else if(!LeonGunWar.getPlugin().getSQLPlayerStats().exist(player.getUniqueId())){
+
+            stats = new PlayerStats(player.getUniqueId(),player.getName(),1,0,0,0,0,0);
+
+            LeonGunWar.getPlugin().getSQLPlayerStats().create(stats);
+            cached.put(player.getUniqueId(),stats);
+
+        }
+
+    }
+
+    public static void unloadStats(UUID uuid){
+
+        if(cached.containsKey(uuid)){
+            LeonGunWar.getPlugin().getSQLPlayerStats().update(cached.get(uuid));
+            cached.remove(uuid);
+        }
+
     }
 
     public static PlayerStats getStats(UUID uuid){

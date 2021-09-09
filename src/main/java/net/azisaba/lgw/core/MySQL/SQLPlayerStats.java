@@ -34,7 +34,7 @@ public class SQLPlayerStats {
                     "coins INT DEFAULT 0 ," +
                     "wins INT DEFAULT 0," +
                     "loses INT DEFAULT 0," +
-                    "angelOfDeathLevel INT DEFAULT 1, " +
+                    "angelOfDeathLevel INT DEFAULT 0, " +
                     ")");
 
             ps.executeUpdate();
