@@ -29,6 +29,28 @@ public class LevelingUtils {
     ///////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////
+    //REQUIRED TOTAL XPS
+    ///////////////////////////////////////////////////////////////
+
+    /*
+    private static final int REQUIRED_TOTAL_XPS_ONE = 0;
+    private static final int REQUIRED_TOTAL_XPS_TWO = 20;
+    private static final int REQUIRED_TOTAL_XPS_THREE = 70;
+    private static final int REQUIRED_TOTAL_XPS_FOUR = 150;
+    private static final int REQUIRED_TOTAL_XPS_FIVE = 250;
+    private static final int REQUIRED_TOTAL_XPS_SIX = 500;
+    private static final int REQUIRED_TOTAL_XPS_SEVEN = 1000;
+    private static final int REQUIRED_TOTAL_XPS_EIGHT = 2000;
+    private static final int REQUIRED_TOTAL_XPS_NINE = 4500;
+    private static final int REQUIRED_TOTAL_XPS_TEN = 9500;
+    private static final int REQUIRED_TOTAL_XPS_ELEVEN = 19500;
+
+     */
+    private static final int REQUIRED_TOTAL_XPS_TWELVE = 34500;
+
+    ///////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////
     //LEVEL COLOR
     ///////////////////////////////////////////////////////////////
 
@@ -68,6 +90,27 @@ public class LevelingUtils {
     private static final double ANGEL_TEN = 10;
     private static final double ANGEL_ELEVEN = 11;
     private static final double ANGEL_TWELVE = 12;
+    ///////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////
+    //ANGEL OF DEATH PERCENTAGE
+    //////////////////////////////////////////////////////////////
+
+    //TODO ここはconfigから数値を持ってくるようにする。
+
+    private static final String ANGEL_ICON_NONE = "⭐";
+    private static final String ANGEL_ICON_ONE = "✧";
+    private static final String ANGEL_ICON_TWO = "✤";
+    private static final String ANGEL_ICON_THREE = "⚝";
+    private static final String ANGEL_ICON_FOUR = "❄";
+    private static final String ANGEL_ICON_FIVE = "✻";
+    private static final String ANGEL_ICON_SIX = "❂";
+    private static final String ANGEL_ICON_SEVEN = "✺";
+    private static final String ANGEL_ICON_EIGHT = "❤";
+    private static final String ANGEL_ICON_NINE = "✌";
+    private static final String ANGEL_ICON_TEN = "❀";
+    private static final String ANGEL_ICON_ELEVEN = "犬";
+    private static final String ANGEL_ICON_TWELVE = "ඞ";
     ///////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////
@@ -122,6 +165,31 @@ public class LevelingUtils {
             case 12 : return REQUIRED_XPS_TWELVE;
             default: return 0;
         }
+
+    }
+
+    public static int getLevelFromXp(int xps){
+
+        if( REQUIRED_TOTAL_XPS_TWELVE > xps ){
+
+            for(int i = 1; i <= 12; i++){
+
+                if(getRequiredXpsTotal(i) > xps){
+
+                    return i - 1;
+
+                }
+
+            }
+
+        }else{
+
+            return ((xps - REQUIRED_TOTAL_XPS_TWELVE) / REQUIRED_XPS_MORE ) + 12;
+
+        }
+
+
+        return 0;
 
     }
 

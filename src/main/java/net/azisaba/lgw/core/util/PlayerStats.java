@@ -3,10 +3,17 @@ package net.azisaba.lgw.core.util;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.LevelingUtils;
+
+import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
+import jp.azisaba.lgw.kdstatus.utils.TimeUnit;
 
 public class PlayerStats {
 
@@ -20,6 +27,8 @@ public class PlayerStats {
     private int angelOfDeathLevel;
 
     private static HashMap<UUID,PlayerStats> cached = new HashMap<>();
+
+    private final static String line = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "                                                           ";
 
     public PlayerStats(UUID uuid, String name, int level, int xps, int coins,int wins, int loses, int angelOfDeathLevel){
 
@@ -45,6 +54,9 @@ public class PlayerStats {
 
             stats = new PlayerStats(player.getUniqueId(),player.getName(),1,0,0,0,0,0);
 
+            //キル数に応じてXPを加算
+            stats.setXps(KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(player,true).getKills(TimeUnit.LIFETIME));
+
             LeonGunWar.getPlugin().getSQLPlayerStats().create(stats);
             cached.put(player.getUniqueId(),stats);
 
@@ -52,10 +64,12 @@ public class PlayerStats {
 
     }
 
-    public static void unloadStats(UUID uuid){
+    public static void unloadStats(UUID uuid,boolean save){
 
         if(cached.containsKey(uuid)){
-            LeonGunWar.getPlugin().getSQLPlayerStats().update(cached.get(uuid));
+            if(save){
+                LeonGunWar.getPlugin().getSQLPlayerStats().update(cached.get(uuid));
+            }
             cached.remove(uuid);
         }
 
@@ -93,6 +107,10 @@ public class PlayerStats {
 
     }
 
+    public void update(){
+        LeonGunWar.getPlugin().getSQLPlayerStats().update(this);
+    }
+
     public UUID getUUID() {
         return uuid;
     }
@@ -107,8 +125,12 @@ public class PlayerStats {
         return level;
     }
 
-    public void setLevel(int level){
+    public void addLevel(int level){
         this.level = this.level + level;
+    }
+
+    public void setLevel(int level){
+        this.level = level;
     }
 
     public int getXps() {
@@ -117,6 +139,29 @@ public class PlayerStats {
 
     public void addXps(int xps){
         this.xps = this.xps + xps;
+        int l = LevelingUtils.getLevelFromXp(this.xps);
+        if( l != this.level){
+
+            Player p = Bukkit.getPlayer(uuid);
+
+            if(p != null){
+                p.sendMessage(line);
+                p.sendMessage(" ");
+                p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "LeonGunWar Level UP!!! " + LevelingUtils.coloring(this.level,"[" + this.level + "]"));
+                p.sendMessage(" ");
+                p.sendMessage(line);
+            }
+
+            setLevel(l);
+        }
+    }
+
+    public void setXps(int xps){
+        this.xps = xps;
+        int l = LevelingUtils.getLevelFromXp(this.xps);
+        if( l != this.level){
+            setLevel(l);
+        }
     }
 
     public int getCoins() {
