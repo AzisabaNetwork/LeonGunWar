@@ -21,13 +21,14 @@ import org.bukkit.event.Listener;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.MySQL.SQLPlayerStats;
+import net.azisaba.lgw.core.configs.LevelingConfig;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.KDPlayerData;
+import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
@@ -38,10 +39,8 @@ public class MatchControlListener implements Listener {
     /**
      * 制限時間が0秒になったときにMatchFinishedEventを呼び出すリスナー
      */
-    private final SQLPlayerStats stats;
-    public MatchControlListener(SQLPlayerStats stats) {
-        this.stats = stats;
-    }
+    private final LevelingConfig config = LeonGunWar.getPlugin().getLevelingConfig();
+    private PlayerStats stats;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
@@ -178,7 +177,8 @@ public class MatchControlListener implements Listener {
                     p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
 
                     // XP付与
-                    stats.updateMatchWins(p.getUniqueId());
+                    stats = PlayerStats.getStats(p);
+                    stats.addXps(config.configmap.get("winXP"));
                 }
 
                 // 勝利メッセージを送信
