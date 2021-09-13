@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners;
 
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -22,11 +23,15 @@ import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.configs.LevelingConfig;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 
 public class DamageListener implements Listener {
+    private final LevelingConfig config = LeonGunWar.getPlugin().getLevelingConfig();
+    private PlayerStats stats;
 
     private final CSUtility crackShot = new CSUtility();
 
@@ -62,8 +67,12 @@ public class DamageListener implements Listener {
 
         // 個人キルを追加
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
-        // ポイントを追加
+        // ポイントを追
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+        // levelingデータベースにキルプロセスを実行させる
+        // XP付与
+        stats = PlayerStats.getStats(killer);
+        stats.addXps((Integer) config.configmap.get("killXP"));
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);

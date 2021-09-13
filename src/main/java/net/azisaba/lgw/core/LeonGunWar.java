@@ -1,11 +1,14 @@
 package net.azisaba.lgw.core;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.azisaba.lgw.core.MySQL.SQLConnection;
+import net.azisaba.lgw.core.MySQL.SQLPlayerStats;
 import net.azisaba.lgw.core.commands.AdminChatCommand;
 import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
@@ -15,6 +18,7 @@ import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
+import net.azisaba.lgw.core.configs.LevelingConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
 import net.azisaba.lgw.core.configs.SpawnsConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
@@ -44,6 +48,7 @@ import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.OnsenListener;
+import net.azisaba.lgw.core.listeners.others.PlayerStatsListener;
 import net.azisaba.lgw.core.listeners.others.QueueListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
@@ -85,6 +90,7 @@ public class LeonGunWar extends JavaPlugin {
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
+    private LevelingConfig levelingConfig;
 
     private final MatchStartCountdown countdown = new MatchStartCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
@@ -93,6 +99,9 @@ public class LeonGunWar extends JavaPlugin {
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
     private final MatchQueueManager matchQueueManager = new MatchQueueManager(manager);
+
+    public SQLConnection sql;
+    private final SQLPlayerStats stats = new SQLPlayerStats();
 
     public static JSONMessage getQuickBar() { return quickBar; }
 
@@ -110,14 +119,36 @@ public class LeonGunWar extends JavaPlugin {
                 .runCommand("/leongunwar:match rejoin");
 
         getConfig().addDefault("server-name","lgwsv");
+        getConfig().addDefault ("host","localhost");
+        getConfig().addDefault ("port","3306");
+        getConfig().addDefault ("database","status");
+        getConfig().addDefault ("username","root");
+        getConfig().addDefault ("password","password");
         getConfig().options().copyDefaults(true);
         saveConfig();
+
+        sql = new SQLConnection();
+
+        try {
+            sql.connect();
+        } catch ( SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            getLogger().warning("Failed to connect SQLDatabase.");
+        }
+        if(sql.isConnected()){
+            getLogger().info("Connected SQLDatabase!");
+
+            //ここでテーブル作るぞ
+            this.stats.createTable();
+
+        }
 
         // 設定ファイルを読み込むクラスの初期化
         killStreaksConfig = new KillStreaksConfig(this);
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
+        levelingConfig = new LevelingConfig(this);
         // 設定ファイルを読み込む
         try {
             killStreaksConfig.loadConfig();
@@ -163,7 +194,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomMatchSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(stats), this);
         Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
         Bukkit.getPluginManager().registerEvents(new QueueListener(),this);
 
@@ -197,6 +228,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
@@ -265,4 +297,9 @@ public class LeonGunWar extends JavaPlugin {
     public MatchQueueManager getMatchQueueManager() {
         return matchQueueManager;
     }
+
+    public LevelingConfig getLevelingConfig() {
+        return levelingConfig;
+    }
+    public SQLPlayerStats getSQLPlayerStats(){ return stats; }
 }

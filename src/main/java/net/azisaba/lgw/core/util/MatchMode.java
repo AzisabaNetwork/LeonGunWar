@@ -14,7 +14,7 @@ public enum MatchMode {
             Chat.f("&9チームデスマッチ"),
             Chat.f("&9TDM"),
             Chat.f("&7先に 50キル &7で勝利"),
-            Duration.ofMinutes(10),
+            Duration.ofMinutes(3),
             Arrays.asList("tdm", "teamdeathmatch", "team")),
 
     TEAM_DEATH_MATCH_NOLIMIT(
@@ -35,7 +35,7 @@ public enum MatchMode {
             Chat.f("&eポイント制リーダーデスマッチ"),
             Chat.f("&eLDM-POINT"),
             Chat.f("&7終了時に &cポイントが多いチーム &7が勝利"),
-            Duration.ofMinutes(10),
+            Duration.ofMinutes(3),
             Arrays.asList("ldmp", "ldm-point", "leaderdeathmatchpoint", "leader-point")),
 
     CUSTOM_DEATH_MATCH(

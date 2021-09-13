@@ -3,7 +3,9 @@ package net.azisaba.lgw.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -35,8 +37,8 @@ public class MatchQueueManager {
 
         hasQueue = true;
 
-        if(LeonGunWar.getPlugin().getManager().getCurrentGameMap().getMapName().equals(mapName)){
-            while ( LeonGunWar.getPlugin().getManager().getCurrentGameMap().getMapName().equals(mapName) ){
+        if(Bukkit.getWorld(mapName) != null){
+            while ( Bukkit.getWorld(mapName) != null ){
                 mapName = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
             }
         }
@@ -48,12 +50,26 @@ public class MatchQueueManager {
 
     }
 
+    public void onDisable(){
+
+        if(hasQueue){
+            inQueue.clear();
+
+            queueWorld.getPlayers().forEach(p -> p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation()));
+
+            Bukkit.unloadWorld(mapName,false);
+        }
+
+    }
+
     public void addQueuePlayer(Player player){
 
         if(hasQueue){
             inQueue.add(player);
 
-            LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(player,LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(0));
+            LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getPlayers().forEach(p -> {
+                LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(p,LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(0));
+            });
 
             if(!LeonGunWar.getPlugin().getManager().isMatching() && inQueue.size() >= 2 && !LeonGunWar.getPlugin().getCountdown().isRunning()){
 
@@ -70,6 +86,10 @@ public class MatchQueueManager {
         if(inQueue.contains(player))
             inQueue.remove(player);
 
+        LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getPlayers().forEach(p -> {
+            LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(p,LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(0));
+        });
+
         if(!LeonGunWar.getPlugin().getManager().isMatching()){
             if(inQueue.size() < 2){
                 LeonGunWar.getPlugin().getCountdown().stopCountdown();
@@ -85,6 +105,7 @@ public class MatchQueueManager {
             return;
 
         queueWorld.setPVP(true);
+        queueWorld.setDifficulty(Difficulty.EASY);
 
         LeonGunWar.getPlugin().getManager().addEntryPlayers(inQueue);
 
@@ -92,6 +113,14 @@ public class MatchQueueManager {
 
         LeonGunWar.getPlugin().getManager().startMatch();
 
+        inQueue.clear();
+        hasQueue = false;
+        isLoaded = false;
+
+    }
+
+    public int getQueueSize(){
+        return inQueue.size();
     }
 
     public boolean isInQueue(Player player){
@@ -122,6 +151,10 @@ public class MatchQueueManager {
         }
 
         queueWorld.setPVP(false);
+        queueWorld.setGameRuleValue("doWeatherCycle","false");
+        queueWorld.setGameRuleValue("doDaylightCycle","false");
+        queueWorld.setTime(6000L);
+        queueWorld.setDifficulty(Difficulty.PEACEFUL);
 
         isLoaded = loaded;
     }
