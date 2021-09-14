@@ -24,7 +24,7 @@ public class PlayerStatsListener implements Listener {
     public void onQuit(PlayerQuitEvent e){
 
         Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), () -> {
-            PlayerStats.unloadStats(e.getPlayer().getUniqueId());
+            PlayerStats.unloadStats(e.getPlayer().getUniqueId(),false);
         });
 
     }
