@@ -188,7 +188,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
-        Bukkit.getPluginManager().registerEvents(new MatchControlListener(stats), this);
+        Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
         Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);

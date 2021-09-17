@@ -12,7 +12,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 
 public class LevelingConfig extends Config{
-    public Map<String, Object> configmap = new HashMap<String, Object>();
+    public Map<String, Integer> configmap = new HashMap<String, Integer>();
 
     public LevelingConfig(@NonNull LeonGunWar plugin) {
         super(plugin, "configs/leveling.yml", "leveling.yml");
