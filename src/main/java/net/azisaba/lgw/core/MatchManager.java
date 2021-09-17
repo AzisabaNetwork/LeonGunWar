@@ -772,7 +772,7 @@ public class MatchManager {
                         target.getPlayerListName())));
 
         // リーダーにタイトルを表示
-        target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
+        target.sendTitle("",Chat.f("&cあなたがリーダーです！"), 0, 20 * 4, 10);
     }
 
     public void setMatchMode(MatchMode mode) {
