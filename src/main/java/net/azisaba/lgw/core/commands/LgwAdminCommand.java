@@ -213,6 +213,24 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // map なら
+        if ( Args.check(args, 0, "map") ) {
+            if ( Args.check(args, 1) ) {
+                Player p = Bukkit.getPlayer((args[2]));
+
+                if (p != null && p.isOnline()) {
+                    sender.sendMessage(Chat.f("&7{0}はワールド&8[&c{1}&&8]&7にいます。", p.getName(), p.getWorld().getName()));
+                    return true;
+                } else {
+                    sender.sendMessage(Chat.f("&l&7{0}&cはこのサーバーにいない、もしくは存在していません！", args[2]));
+                    return true;
+                }
+            } else {
+                sender.sendMessage(Chat.f("第二引数にプレイヤー名を指定してください！"));
+                return true;
+            }
+        }
+
         return true;
     }
 
