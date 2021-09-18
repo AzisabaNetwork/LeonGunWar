@@ -32,6 +32,9 @@ commands:
   limit:
     usage: /limit [drop/build]
     permission: leongunwar.command.limit
+  map:
+    usage: /map
+    permission: leongunwar.command.map
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -55,3 +58,5 @@ permissions:
     default: op
   leongunwar.command.limit:
     default: op
+  leongunwar.command.map:
+    default: true
