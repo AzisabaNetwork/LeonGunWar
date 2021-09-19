@@ -111,6 +111,7 @@ public class LevelingUtils {
     private static final String ANGEL_ICON_TEN = "❀";
     private static final String ANGEL_ICON_ELEVEN = "犬";
     private static final String ANGEL_ICON_TWELVE = "ඞ";
+
     ///////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////
@@ -301,6 +302,27 @@ public class LevelingUtils {
             case 11: return REQUIRED_ANGEL_ELEVEN;
             case 12 : return REQUIRED_ANGEL_TWELVE;
             default: return 0;
+        }
+
+    }
+
+    public static String getAngelIcon(int angelLevel){
+
+        switch ( angelLevel ){
+            case 0 : return ANGEL_ICON_NONE;
+            case 1 : return ANGEL_ICON_ONE;
+            case 2 : return ANGEL_ICON_TWO;
+            case 3 : return ANGEL_ICON_THREE;
+            case 4 : return ANGEL_ICON_FOUR;
+            case 5 : return ANGEL_ICON_FIVE;
+            case 6 : return ANGEL_ICON_SIX;
+            case 7 : return ANGEL_ICON_SEVEN;
+            case 8 : return ANGEL_ICON_EIGHT;
+            case 9 : return ANGEL_ICON_NINE;
+            case 10: return ANGEL_ICON_TEN;
+            case 11: return ANGEL_ICON_ELEVEN;
+            case 12 : return ANGEL_ICON_TWELVE;
+            default: return "";
         }
 
     }

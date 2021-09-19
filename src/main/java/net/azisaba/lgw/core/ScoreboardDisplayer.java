@@ -19,10 +19,15 @@ import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.LevelingUtils;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 
 import lombok.Data;
+
+import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
+import jp.azisaba.lgw.kdstatus.utils.TimeUnit;
 
 @Data
 public class ScoreboardDisplayer {
@@ -92,17 +97,16 @@ public class ScoreboardDisplayer {
             }
 
             messageList.add("");
-            messageList.add(ChatColor.GREEN + "キル: " + LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(player));
+            messageList.add(ChatColor.GREEN + "Kills: " + LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(player));
 
-            /*
+
             messageList.add("");
-            messageList.add(Chat.f("マップ: &a{0}", mapName));
+            //messageList.add(Chat.f("マップ: &a{0}", mapName));
             messageList.add(Chat.f("モード: &a{0}", mode.getShortModeName()));
-            messageList.add(Chat.f("振り分け: &a{0}", distributor.getDistributorName()));
+            //messageList.add(Chat.f("振り分け: &a{0}", distributor.getDistributorName()));
 
-             */
             messageList.add("");
-            messageList.add(ChatColor.YELLOW + "www.azisaba.net");
+            messageList.add(ChatColor.GOLD + "azisaba.net");
 
             // return
             return messageList;
@@ -132,13 +136,43 @@ public class ScoreboardDisplayer {
         if(LeonGunWar.getPlugin().getCountdown().isRunning()){
             messages.add("開始まであと: " + ChatColor.GREEN + timeLeft + "秒");
         }else {
-            messages.add("開始まであと: " + ChatColor.GREEN + "Waiting...");
+            messages.add("Waiting...");
         }
 
         messages.add("");
         messages.add("モード: " + mqm.getMatchMode().getShortModeName());
         messages.add("");
-        messages.add(ChatColor.YELLOW + "www.azisaba.net");
+        messages.add(ChatColor.GOLD + "azisaba.net");
+
+        return messages;
+
+    }
+
+    public List<String> lobbyBordLines(Player player){
+
+        PlayerStats stats = PlayerStats.getStats(player);
+
+        List<String> messages = new ArrayList<>();
+
+        messages.add(ChatColor.GRAY + new SimpleDateFormat("yy/MM/dd").format(new Date(System.currentTimeMillis()))
+                + "  " + ChatColor.DARK_GRAY + LeonGunWar.getPlugin().getConfig().get("server-name","lgwsv"));
+
+        messages.add("");
+
+        messages.add("Level: " + LevelingUtils.coloring(stats.getLevel(),stats.getLevel() + LevelingUtils.getAngelIcon(stats.getAngelOfDeathLevel())));
+
+        messages.add("");
+
+        messages.add("Total Kills: " + ChatColor.GREEN +  KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(player,true).getKills(TimeUnit.LIFETIME));
+        messages.add("Total Wins: " + ChatColor.GREEN + stats.getWins());
+
+        messages.add("");
+
+        messages.add("Coins: " + ChatColor.GOLD + stats.getCoins());
+
+        messages.add("");
+
+        messages.add(ChatColor.GOLD + "azisaba.net");
 
         return messages;
 

@@ -22,25 +22,30 @@ public class PlayerStats {
     private int level;
     private int xps;
     private int coins;
+    private int yobi1;
+    private int yobi2;
     private int wins;
     private int loses;
     private int angelOfDeathLevel;
+    private int yobi3;
 
     private static HashMap<UUID,PlayerStats> cached = new HashMap<>();
 
     private final static String line = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "                                                           ";
 
-    public PlayerStats(UUID uuid, String name, int level, int xps, int coins,int wins, int loses, int angelOfDeathLevel){
+    public PlayerStats(UUID uuid, String name, int level, int xps, int coins,int yobi1,int yobi2,int wins, int loses, int angelOfDeathLevel,int yobi3){
 
         this.uuid = uuid;
         this.name = name;
         this.level = level;
         this.xps = xps;
         this.coins = coins;
+        this.yobi1 = yobi1;
+        this.yobi2 = yobi2;
         this.wins = wins;
         this.loses = loses;
-
         this.angelOfDeathLevel = angelOfDeathLevel;
+        this.yobi3 = yobi3;
     }
 
     public static void loadStats(Player player){
@@ -52,7 +57,7 @@ public class PlayerStats {
             cached.put(player.getUniqueId(),stats);
         }else if(!LeonGunWar.getPlugin().getSQLPlayerStats().exist(player.getUniqueId())){
 
-            stats = new PlayerStats(player.getUniqueId(),player.getName(),1,0,0,0,0,0);
+            stats = new PlayerStats(player.getUniqueId(),player.getName(),1,0,0,0,0,0,0,0,0);
 
             //キル数に応じてXPを加算
             stats.setXps(KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(player,true).getKills(TimeUnit.LIFETIME));
@@ -194,5 +199,29 @@ public class PlayerStats {
 
     public void addLoses(int loses){
         this.loses = this.loses + loses;
+    }
+
+    public int getYobi1() {
+        return yobi1;
+    }
+
+    public void setYobi1(int yobi1) {
+        this.yobi1 = yobi1;
+    }
+
+    public int getYobi2() {
+        return yobi2;
+    }
+
+    public void setYobi2(int yobi2) {
+        this.yobi2 = yobi2;
+    }
+
+    public int getYobi3() {
+        return yobi3;
+    }
+
+    public void setYobi3(int yobi3) {
+        this.yobi3 = yobi3;
     }
 }

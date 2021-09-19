@@ -44,6 +44,7 @@ import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
 import net.azisaba.lgw.core.listeners.others.LimitActionListener;
+import net.azisaba.lgw.core.listeners.others.LobbyJoinListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
@@ -102,6 +103,7 @@ public class LeonGunWar extends JavaPlugin {
 
     public SQLConnection sql;
     private final SQLPlayerStats stats = new SQLPlayerStats();
+    private boolean isLobby = false;
 
     public static JSONMessage getQuickBar() { return quickBar; }
 
@@ -119,6 +121,7 @@ public class LeonGunWar extends JavaPlugin {
                 .runCommand("/leongunwar:match rejoin");
 
         getConfig().addDefault("server-name","lgwsv");
+        getConfig().addDefault("lobby",false);
         getConfig().addDefault ("host","localhost");
         getConfig().addDefault ("port","3306");
         getConfig().addDefault ("database","status");
@@ -126,6 +129,8 @@ public class LeonGunWar extends JavaPlugin {
         getConfig().addDefault ("password","password");
         getConfig().options().copyDefaults(true);
         saveConfig();
+
+        isLobby = getConfig().getBoolean("lobby");
 
         sql = new SQLConnection();
 
@@ -155,6 +160,7 @@ public class LeonGunWar extends JavaPlugin {
             assistStreaksConfig.loadConfig();
             spawnsConfig.loadConfig();
             mapsConfig.loadConfig();
+            levelingConfig.loadConfig();
         } catch ( IOException | InvalidConfigurationException exception ) {
             exception.printStackTrace();
         }
@@ -189,21 +195,25 @@ public class LeonGunWar extends JavaPlugin {
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
-        Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
-        Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
-        Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
-        Bukkit.getPluginManager().registerEvents(new CustomMatchSignListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new EntrySignListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new MatchModeSignListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new CustomMatchSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DamageListener(stats), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
-        Bukkit.getPluginManager().registerEvents(new QueueListener(),this);
 
-        // リスナーの登録 (modes)
-        Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
-        Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
-        Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
-        Bukkit.getPluginManager().registerEvents(new CustomTDMListener(), this);
+        if(!isLobby){
+            Bukkit.getPluginManager().registerEvents(new QueueListener(),this);
+        }
 
+        if(!isLobby) {
+            // リスナーの登録 (modes)
+            Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
+            Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
+            Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
+            Bukkit.getPluginManager().registerEvents(new CustomTDMListener(), this);
+        }
         // リスナーの登録 (others)
         Bukkit.getPluginManager().registerEvents(new NoArrowGroundListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoKnockbackListener(), this);
@@ -229,6 +239,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LobbyJoinListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
@@ -241,8 +252,10 @@ public class LeonGunWar extends JavaPlugin {
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
 
-        //キューを生成
-        LeonGunWar.getPlugin().getMatchQueueManager().createQueue(LeonGunWar.getPlugin().getMapsConfig().getRandomMap(), MatchMode.LEADER_DEATH_MATCH_POINT);
+        if(!isLobby) {
+            //キューを生成
+            LeonGunWar.getPlugin().getMatchQueueManager().createQueue(LeonGunWar.getPlugin().getMapsConfig().getRandomMap(), MatchMode.LEADER_DEATH_MATCH_POINT);
+        }
 
         Bukkit.getLogger().info(Chat.f("{0} が有効化されました。", getName()));
     }
@@ -302,4 +315,6 @@ public class LeonGunWar extends JavaPlugin {
         return levelingConfig;
     }
     public SQLPlayerStats getSQLPlayerStats(){ return stats; }
+
+    public boolean isLobby(){ return isLobby; }
 }
