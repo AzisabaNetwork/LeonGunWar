@@ -50,6 +50,12 @@ public class PlayerStats {
 
     public static void loadStats(Player player){
 
+        if(!LeonGunWar.getPlugin().isEnabledDatabese()){
+            PlayerStats stats = new PlayerStats(player.getUniqueId(),player.getName(),199,0,0,0,0,0,0,9,0);
+            cached.put(player.getUniqueId(),stats);
+            return;
+        }
+
         PlayerStats stats = LeonGunWar.getPlugin().getSQLPlayerStats().getStats(player.getUniqueId());
 
         if(stats != null){
@@ -72,7 +78,7 @@ public class PlayerStats {
     public static void unloadStats(UUID uuid,boolean save){
 
         if(cached.containsKey(uuid)){
-            if(save){
+            if(save && LeonGunWar.getPlugin().isEnabledDatabese()){
                 LeonGunWar.getPlugin().getSQLPlayerStats().update(cached.get(uuid));
             }
             cached.remove(uuid);
@@ -84,6 +90,12 @@ public class PlayerStats {
 
         if(cached.containsKey(uuid)){
             return cached.get(uuid);
+        }
+
+        if(!LeonGunWar.getPlugin().isEnabledDatabese()){
+            PlayerStats stats = new PlayerStats(uuid,"unknown",1,0,0,0,0,0,0,0,0);
+            cached.put(uuid,stats);
+            return stats;
         }
 
         PlayerStats stats = LeonGunWar.getPlugin().getSQLPlayerStats().getStats(uuid);
@@ -102,6 +114,12 @@ public class PlayerStats {
             return cached.get(player.getUniqueId());
         }
 
+        if(!LeonGunWar.getPlugin().isEnabledDatabese()){
+            PlayerStats stats = new PlayerStats(player.getUniqueId(),player.getName(),199,0,0,0,0,0,0,9,0);
+            cached.put(player.getUniqueId(),stats);
+            return stats;
+        }
+
         PlayerStats stats = LeonGunWar.getPlugin().getSQLPlayerStats().getStats(player.getUniqueId());
 
         if(stats != null){
@@ -113,6 +131,11 @@ public class PlayerStats {
     }
 
     public void update(){
+
+        if(!LeonGunWar.getPlugin().isEnabledDatabese()){
+            return;
+        }
+
         LeonGunWar.getPlugin().getSQLPlayerStats().update(this);
     }
 
@@ -176,6 +199,8 @@ public class PlayerStats {
     public void addCoins(int coins){
         this.coins = this.coins + coins;
     }
+
+    public void setCoins(int set) { this.coins = set; }
 
     public int getAngelOfDeathLevel() {
         return angelOfDeathLevel;

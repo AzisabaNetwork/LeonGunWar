@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,7 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
+import com.avaje.ebean.validation.NotNull;
 import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.distributors.TeamDistributor;
@@ -159,7 +163,7 @@ public class ScoreboardDisplayer {
 
         messages.add("");
 
-        messages.add("Level: " + LevelingUtils.coloring(stats.getLevel(),stats.getLevel() + LevelingUtils.getAngelIcon(stats.getAngelOfDeathLevel())));
+        messages.add(Chat.f("Level: " + LevelingUtils.coloring(stats.getLevel(),stats.getLevel() + LevelingUtils.getAngelIcon(stats.getAngelOfDeathLevel()))));
 
         messages.add("");
 
@@ -181,23 +185,26 @@ public class ScoreboardDisplayer {
     // Objectiveを作成したいスコアボード
     private Scoreboard scoreBoard;
 
+    private Map<Player,Scoreboard> scoreboardMap = new HashMap<>();
+
     /**
      * プレイヤーにスコアボードを表示します
      *
      */
     public void updateScoreboard(Player player,List<String> bordLines) {
-        Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
+        //Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
         if ( Bukkit.getOnlinePlayers().size() <= 0 ) {
             return;
         }
 
         // Objectiveを取得
-        Objective obj = scoreBoard.getObjective("side");
+        Scoreboard sb = player.getScoreboard();
+        Objective obj = sb.getObjective("side");
 
         // Objectiveが存在しなかった場合は作成
         if ( obj == null ) {
-            obj = scoreBoard.registerNewObjective("side", "dummy");
+            obj = sb.registerNewObjective("side", "dummy");
         }
 
         // Slotを設定
@@ -213,7 +220,7 @@ public class ScoreboardDisplayer {
         Collections.reverse(bordLines);
 
         // 現在指定されているEntryを全て解除
-        clearEntries();
+        clearEntries(player);
 
         int currentValue = 0;
         for ( String msg : bordLines ) {
@@ -236,31 +243,55 @@ public class ScoreboardDisplayer {
         // スコアボードを設定する
         //Bukkit.getOnlinePlayers()
 
-        if ( player.getScoreboard() != scoreBoard ) {
-            player.setScoreboard(scoreBoard);
-        }
+        //if ( sb != scoreBoard ) {
+            player.setScoreboard(sb);
+        //}
 
     }
 
     /**
      * 現在設定されているEntryを全てリセットする
      */
-    private void clearEntries() {
-        Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
+    private void clearEntries(Player player) {
+        //Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
-        scoreBoard.getEntries().forEach(scoreBoard::resetScores);
+        player.getScoreboard().getEntries().forEach(player.getScoreboard()::resetScores);
     }
 
-    public void clearSideBar() {
-        Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
+    public void clearSideBar(Player player) {
+        //Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
         // boardがnullでなければSIDEBARを削除
-        scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
+        player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
     }
 
     public void setScoreBoard(Scoreboard scoreboard) {
 
         this.scoreBoard = scoreboard;
+
+    }
+
+    public void createBoard(Player player) {
+
+        Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective o = board.registerNewObjective("side", "dummy");
+        o.setDisplaySlot(DisplaySlot.SIDEBAR);
+        o.setDisplayName(scoreBoardTitle());
+        player.setScoreboard(board);
+
+    }
+
+    public void addLine(Player p,String msg,int score) {
+        Scoreboard board = p.getScoreboard();
+        Team t = board.registerNewTeam("t");
+        t.addEntry(String.valueOf(score));
+        t.setPrefix(msg);
+        board.getObjective("side").getScore(String.valueOf(score)).setScore(score);
+    }
+
+    public void update(Player p,String msg,int score){
+
+
 
     }
 }

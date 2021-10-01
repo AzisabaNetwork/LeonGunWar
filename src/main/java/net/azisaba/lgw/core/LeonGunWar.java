@@ -10,11 +10,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.azisaba.lgw.core.MySQL.SQLConnection;
 import net.azisaba.lgw.core.MySQL.SQLPlayerStats;
 import net.azisaba.lgw.core.commands.AdminChatCommand;
+import net.azisaba.lgw.core.commands.AngelOfDeathCommand;
 import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.LimitCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
+import net.azisaba.lgw.core.commands.StatsGUICommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
@@ -102,8 +104,9 @@ public class LeonGunWar extends JavaPlugin {
     private final MatchQueueManager matchQueueManager = new MatchQueueManager(manager);
 
     public SQLConnection sql;
-    private final SQLPlayerStats stats = new SQLPlayerStats();
+    private SQLPlayerStats stats;
     private boolean isLobby = false;
+    private boolean isEnabledDatabese = false;
 
     public static JSONMessage getQuickBar() { return quickBar; }
 
@@ -122,6 +125,7 @@ public class LeonGunWar extends JavaPlugin {
 
         getConfig().addDefault("server-name","lgwsv");
         getConfig().addDefault("lobby",false);
+        getConfig().addDefault("database",false);
         getConfig().addDefault ("host","localhost");
         getConfig().addDefault ("port","3306");
         getConfig().addDefault ("database","status");
@@ -131,21 +135,26 @@ public class LeonGunWar extends JavaPlugin {
         saveConfig();
 
         isLobby = getConfig().getBoolean("lobby");
+        isEnabledDatabese = getConfig().getBoolean("database");
 
-        sql = new SQLConnection();
+        if(isEnabledDatabese) {
 
-        try {
-            sql.connect();
-        } catch ( SQLException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
-            getLogger().warning("Failed to connect SQLDatabase.");
-        }
-        if(sql.isConnected()){
-            getLogger().info("Connected SQLDatabase!");
+            sql = new SQLConnection();
+            stats = new SQLPlayerStats();
 
-            //ここでテーブル作るぞ
-            this.stats.createTable();
+            try {
+                sql.connect();
+            } catch ( SQLException | ClassNotFoundException throwables ) {
+                throwables.printStackTrace();
+                getLogger().warning("Failed to connect SQLDatabase.");
+            }
+            if ( sql.isConnected() ) {
+                getLogger().info("Connected SQLDatabase!");
 
+                //ここでテーブル作るぞ
+                this.stats.createTable();
+
+            }
         }
 
         // 設定ファイルを読み込むクラスの初期化
@@ -180,6 +189,8 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
         Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
+        Bukkit.getPluginCommand("angelOfDeath").setExecutor(new AngelOfDeathCommand());
+        Bukkit.getPluginCommand("statsGUI").setExecutor(new StatsGUICommand());
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -192,6 +203,8 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
+        Bukkit.getPluginCommand("angelOfDeath").setPermissionMessage(Chat.f("&c権限がありません！"));
+        Bukkit.getPluginCommand("statsGUI").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -317,4 +330,5 @@ public class LeonGunWar extends JavaPlugin {
     public SQLPlayerStats getSQLPlayerStats(){ return stats; }
 
     public boolean isLobby(){ return isLobby; }
+    public boolean isEnabledDatabese(){ return isEnabledDatabese; }
 }

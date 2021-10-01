@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -13,6 +14,8 @@ public class LobbyJoinListener implements Listener {
     public void onJoin(PlayerJoinEvent e){
 
         if( LeonGunWar.getPlugin().isLobby() ){
+
+            e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
             ScoreboardDisplayer sd = LeonGunWar.getPlugin().getScoreboardDisplayer();
 

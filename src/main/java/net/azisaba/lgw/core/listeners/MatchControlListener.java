@@ -178,7 +178,7 @@ public class MatchControlListener implements Listener {
 
                     // XP付与
                     stats = PlayerStats.getStats(p);
-                    stats.addXps(config.configmap.get("winXP"));
+                    stats.addXps((int)config.configmap.get("winXP"));
                 }
 
                 // 勝利メッセージを送信

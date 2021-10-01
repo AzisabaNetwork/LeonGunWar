@@ -213,6 +213,15 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if( Args.check(args, 0, "stop") ){
+
+            if(true){
+                sender.sendMessage(ChatColor.RED + "This command is currently disabled. Sorry!");
+                return true;
+            }
+
+        }
+
         return true;
     }
 
@@ -221,7 +230,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         /*
         if ( args.length == 1 ) {
-            return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
+            return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl" , "stop");
         }
         if ( args.length == 2 && Args.check(args, 0, "teleport", "tp") ) {
             return Args.complete(args, 1, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
