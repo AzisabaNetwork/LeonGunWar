@@ -69,10 +69,13 @@ public class DamageListener implements Listener {
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
         // ポイントを追
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
-        // levelingデータベースにキルプロセスを実行させる
         // XP付与
-        stats = PlayerStats.getStats(killer);
-        stats.addXps((Integer) config.configmap.get("killXP"));
+        if (LeonGunWar.getPlugin().getManager().isCorrupted()) { // 経験値倍増ゲームだったら
+
+        } else { // 経験値倍増ゲームじゃなかったら
+            stats = PlayerStats.getStats(killer);
+            stats.addXps((Integer) config.configmap.get("killXP"));
+        }
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);

@@ -245,6 +245,7 @@ public class MatchManager {
             }
         }
 
+
         // 全プレイヤーに音を鳴らす
         Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
@@ -265,6 +266,14 @@ public class MatchManager {
 
         // 全プレイヤーにQuickメッセージを送信
         LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+
+        // 倍増ゲームであった場合は音とタイトルで全プレイヤーに伝える
+        isCorrupted = isXpBoost(entryPlayers);
+        if (isCorrupted) {
+            currentGameMap.getWorld().setTime(18000); //真夜中にしてみた
+            Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1));
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendTitle("&8&l&o!!!!&6&l&o経験値倍増ゲーム開始&8&l&o!!!!", "&7いつもよりもXPが多くもらえます！", 0, 40, 0));
+        }
     }
 
     public List<Player> getEntryPlayers() { return entryPlayers; }
