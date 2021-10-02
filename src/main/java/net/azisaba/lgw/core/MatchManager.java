@@ -51,6 +51,7 @@ import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.MapLoader;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
@@ -61,6 +62,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import de.schlichtherle.io.util.LEDataOutputStream;
+import static net.azisaba.lgw.core.utils.LevelingUtils.getAngelOfDeathPercentage;
 
 /**
  * ゲームを司るコアクラス
@@ -243,6 +245,7 @@ public class MatchManager {
             }
         }
 
+
         // 全プレイヤーに音を鳴らす
         Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
@@ -263,6 +266,14 @@ public class MatchManager {
 
         // 全プレイヤーにQuickメッセージを送信
         LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+
+        // 倍増ゲームであった場合は音とタイトルで全プレイヤーに伝える
+        isCorrupted = isXpBoost(entryPlayers);
+        if (isCorrupted) {
+            currentGameMap.getWorld().setTime(18000); //真夜中にしてみた
+            Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1));
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendTitle("&8&l&o!!!!&6&l&o経験値倍増ゲーム開始&8&l&o!!!!", "&7いつもよりもXPが多くもらえます！", 0, 40, 0));
+        }
     }
 
     public List<Player> getEntryPlayers() { return entryPlayers; }
@@ -987,6 +998,16 @@ public class MatchManager {
         } else {
             return 0;
         }
+    }
+
+    public boolean isXpBoost(List<Player> entryPlayers) {
+        // ↓見にくいですね。entryPlayers内ループを回して、AngelOfDeathLevelPercentageの平均の1.3倍を返してます
+        double avgPercentage = entryPlayers.stream().mapToDouble(p -> getAngelOfDeathPercentage(PlayerStats.getStats(p).getAngelOfDeathLevel())).sum() / entryPlayers.size() * 1.3; // TODO: avgPercentageの倍増率（今は1.3倍）を調整可能にするか、微調整。
+
+        Random random = new Random();
+        int seedLike = random.nextInt(100);
+
+        return seedLike <= avgPercentage; // < と <= どっち使えばいいかわからん
     }
 
     /**

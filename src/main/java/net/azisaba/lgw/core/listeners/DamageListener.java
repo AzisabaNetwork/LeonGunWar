@@ -29,6 +29,8 @@ import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 
+import static net.azisaba.lgw.core.utils.LevelingUtils.getBaseIncreaseRate;
+
 public class DamageListener implements Listener {
     private final LevelingConfig config = LeonGunWar.getPlugin().getLevelingConfig();
     private PlayerStats stats;
@@ -69,10 +71,15 @@ public class DamageListener implements Listener {
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
         // ポイントを追
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
-        // levelingデータベースにキルプロセスを実行させる
+
         // XP付与
         stats = PlayerStats.getStats(killer);
-        stats.addXps((Integer) config.configmap.get("killXP"));
+        int baseIncreaseRate = getBaseIncreaseRate(stats.getXps());
+        if (LeonGunWar.getPlugin().getManager().isCorrupted()) { // 経験値倍増ゲームだったら
+            stats.addXps(baseIncreaseRate * 2); // TODO: 倍増率は絶対要検討！
+        } else { // 経験値倍増ゲームじゃなかったら
+            stats.addXps(baseIncreaseRate);
+        }
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);

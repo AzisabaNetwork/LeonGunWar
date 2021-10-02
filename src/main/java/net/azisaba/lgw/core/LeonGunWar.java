@@ -194,7 +194,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JoinAfterSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomMatchSignListener(), this);
         Bukkit.getPluginManager().registerEvents(new MatchStartDetectListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DamageListener(stats), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerControlListener(), this);
         Bukkit.getPluginManager().registerEvents(new QueueListener(),this);
 

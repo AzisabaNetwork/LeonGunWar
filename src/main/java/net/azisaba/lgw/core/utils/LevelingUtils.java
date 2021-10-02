@@ -131,6 +131,24 @@ public class LevelingUtils {
     private static final int REQUIRED_ANGEL_TWELVE = 10000000;
     ///////////////////////////////////////////////////////////////
 
+    ///////////////////////////////////////////////////////////////
+    //BASE XP INCREASE RATE
+    ///////////////////////////////////////////////////////////////
+
+    private static final int BASE_INCREASE_RATE_50 = 1;
+    private static final int BASE_INCREASE_RATE_100 = 2;
+    private static final int BASE_INCREASE_RATE_200 = 3;
+    private static final int BASE_INCREASE_RATE_500 = 4;
+    private static final int BASE_INCREASE_RATE_1000 = 5;
+    private static final int BASE_INCREASE_RATE_2000 = 6;
+    private static final int BASE_INCREASE_RATE_5000 = 7;
+    private static final int BASE_INCREASE_RATE_10000 = 8;
+    private static final int BASE_INCREASE_RATE_40000 = 9;
+    private static final int BASE_INCREASE_RATE_100000 = 10;
+    private static final int BASE_INCREASE_RATE_UPPER = 15;
+
+    ///////////////////////////////////////////////////////////////
+
     public static int getRequiredXpsTotal(int level){
 
         int total = 0;
@@ -166,6 +184,32 @@ public class LevelingUtils {
             default: return 0;
         }
 
+    }
+
+    public static int getBaseIncreaseRate(int xp) {
+        if (xp <= 50) {
+            return BASE_INCREASE_RATE_50;
+        } else if (xp <= 100) {
+            return BASE_INCREASE_RATE_100;
+        } else if (xp <= 200) {
+            return BASE_INCREASE_RATE_200;
+        } else if (xp <= 500) {
+            return BASE_INCREASE_RATE_500;
+        } else if (xp <= 1000) {
+            return BASE_INCREASE_RATE_1000;
+        } else if (xp <= 2000) {
+            return BASE_INCREASE_RATE_2000;
+        } else if (xp <= 5000) {
+            return BASE_INCREASE_RATE_5000;
+        } else if (xp <= 10000) {
+            return BASE_INCREASE_RATE_10000;
+        } else if (xp <= 40000) {
+            return BASE_INCREASE_RATE_40000;
+        } else if (xp <= 100000) {
+            return BASE_INCREASE_RATE_100000;
+        } else {
+            return BASE_INCREASE_RATE_UPPER;
+        }
     }
 
     public static int getLevelFromXp(int xps){
