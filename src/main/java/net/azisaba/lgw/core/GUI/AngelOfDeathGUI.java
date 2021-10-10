@@ -42,7 +42,7 @@ public class AngelOfDeathGUI implements Listener {
         Inventory inv = Bukkit.createInventory(null,45,"ショップ");
         addItem(inv,13,Material.SEA_LANTERN,Chat.f("未せってい"));
         addItem(inv,29,Material.PRISMARINE_SHARD,Chat.f("未せってい"));
-        addItem(inv,33,Material.SKULL_ITEM,Chat.f("未せってい"));
+        addItem(inv,33,Material.SKULL_ITEM,Chat.f("未せってい"),Chat.f("&7倍増ゲームの確率が増えるだけ"));
 
         player.openInventory(inv);
 
@@ -55,11 +55,12 @@ public class AngelOfDeathGUI implements Listener {
 
                 stats.setCoins(stats.getCoins() - LevelingUtils.getRequiredCoin(stats.getAngelOfDeathLevel() + 1));
                 stats.addAngelOfDeathLevel(1);
+                stats.update();
                 player.sendMessage(Chat.f("&4&lお前の〇〇レベルが {0} になったぞ... せいぜいLGWを楽しむんだな...ふはははははは", stats.getAngelOfDeathLevel()));
 
             } else {
 
-                player.sendMessage(ChatColor.RED + "コインが足りません！");
+                player.sendMessage(Chat.f("&cコインが足りません！"));
 
             }
         }
@@ -90,9 +91,14 @@ public class AngelOfDeathGUI implements Listener {
             if(phase == AngelGUIPhase.SHOP){
 
                 if(e.getSlot() == 33){
-                    phase = AngelGUIPhase.OPENING_GUI;
-                    type = AngelGUIType.ANGEL_OF_DEATH;
-                    are_you_ok();
+
+                    if(stats.getCoins() >= LevelingUtils.getRequiredCoin(stats.getAngelOfDeathLevel() + 1)) {
+                        phase = AngelGUIPhase.OPENING_GUI;
+                        type = AngelGUIType.ANGEL_OF_DEATH;
+                        are_you_ok();
+                    }else {
+                        player.sendMessage(Chat.f("&cコインが足りません！"));
+                    }
                 }
 
             }else if(phase == AngelGUIPhase.ARE_YOU_OK){
