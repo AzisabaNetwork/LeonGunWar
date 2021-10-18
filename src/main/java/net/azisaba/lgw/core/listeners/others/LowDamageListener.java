@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder;
 import net.minecraft.server.v1_12_R1.WorldBorder;
@@ -53,5 +54,14 @@ public class LowDamageListener implements Listener {
             worldBorder.setCenter(craftPlayer.getLocation().getX(), craftPlayer.getLocation().getZ());
             craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE));
         }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        CraftPlayer craftPlayer = (CraftPlayer) event.getEntity();
+        WorldBorder worldBorder = new WorldBorder();
+        worldBorder.setSize(30_000_000);
+        worldBorder.setCenter(craftPlayer.getLocation().getX(), craftPlayer.getLocation().getZ());
+        craftPlayer.getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE));
     }
 }
