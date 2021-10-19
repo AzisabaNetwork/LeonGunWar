@@ -44,6 +44,7 @@ import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
 import net.azisaba.lgw.core.listeners.others.LimitActionListener;
+import net.azisaba.lgw.core.listeners.others.LowDamageListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
@@ -229,6 +230,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LowDamageListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
@@ -301,5 +303,6 @@ public class LeonGunWar extends JavaPlugin {
     public LevelingConfig getLevelingConfig() {
         return levelingConfig;
     }
+
     public SQLPlayerStats getSQLPlayerStats(){ return stats; }
 }
