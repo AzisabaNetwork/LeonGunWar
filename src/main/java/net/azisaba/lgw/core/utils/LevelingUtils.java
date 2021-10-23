@@ -186,26 +186,26 @@ public class LevelingUtils {
 
     }
 
-    public static int getBaseIncreaseRate(int xp) {
-        if (xp <= 50) {
+    public static int getBaseIncreaseRate(int kills) {
+        if (kills <= 50) {
             return BASE_INCREASE_RATE_50;
-        } else if (xp <= 100) {
+        } else if (kills <= 100) {
             return BASE_INCREASE_RATE_100;
-        } else if (xp <= 200) {
+        } else if (kills <= 200) {
             return BASE_INCREASE_RATE_200;
-        } else if (xp <= 500) {
+        } else if (kills <= 500) {
             return BASE_INCREASE_RATE_500;
-        } else if (xp <= 1000) {
+        } else if (kills <= 1000) {
             return BASE_INCREASE_RATE_1000;
-        } else if (xp <= 2000) {
+        } else if (kills <= 2000) {
             return BASE_INCREASE_RATE_2000;
-        } else if (xp <= 5000) {
+        } else if (kills <= 5000) {
             return BASE_INCREASE_RATE_5000;
-        } else if (xp <= 10000) {
+        } else if (kills <= 10000) {
             return BASE_INCREASE_RATE_10000;
-        } else if (xp <= 40000) {
+        } else if (kills <= 40000) {
             return BASE_INCREASE_RATE_40000;
-        } else if (xp <= 100000) {
+        } else if (kills <= 100000) {
             return BASE_INCREASE_RATE_100000;
         } else {
             return BASE_INCREASE_RATE_UPPER;

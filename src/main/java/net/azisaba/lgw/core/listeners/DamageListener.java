@@ -8,6 +8,9 @@ import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,6 +32,8 @@ import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 
+import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
+import jp.azisaba.lgw.kdstatus.utils.TimeUnit;
 import static net.azisaba.lgw.core.utils.LevelingUtils.getBaseIncreaseRate;
 
 public class DamageListener implements Listener {
@@ -74,11 +79,10 @@ public class DamageListener implements Listener {
 
         // XP付与
         stats = PlayerStats.getStats(killer);
-        int baseIncreaseRate = getBaseIncreaseRate(stats.getXps());
         if (LeonGunWar.getPlugin().getManager().isCorrupted()) { // 経験値倍増ゲームだったら
-            stats.addXps(baseIncreaseRate * 2); // TODO: 倍増率は絶対要検討！
+            stats.addXps(getBaseIncreaseRate(KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(killer,true).getKills(TimeUnit.LIFETIME))); // TODO: 倍増率は絶対要検討！
         } else { // 経験値倍増ゲームじゃなかったら
-            stats.addXps(baseIncreaseRate);
+            stats.addXps(1);
         }
 
         // タイトルを表示
@@ -239,6 +243,10 @@ public class DamageListener implements Listener {
 
         // メッセージ送信
         p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
+
+        String bossbarMsg = Chat.f("{0} 銃 {1}",killer.getDisplayName(),p.getDisplayName());
+
+        BossBar bossBar = Bukkit.createBossBar(bossbarMsg, BarColor.WHITE, BarStyle.SOLID);
 
         // コンソールに出力
         Bukkit.getConsoleSender().sendMessage(msg);
