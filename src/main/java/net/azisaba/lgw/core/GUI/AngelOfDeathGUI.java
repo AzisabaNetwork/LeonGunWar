@@ -42,7 +42,7 @@ public class AngelOfDeathGUI implements Listener {
         Inventory inv = Bukkit.createInventory(null,45,"ショップ");
         addItem(inv,13,Material.SEA_LANTERN,Chat.f("未せってい"));
         addItem(inv,29,Material.PRISMARINE_SHARD,Chat.f("未せってい"));
-        addItem(inv,33,Material.SKULL_ITEM,Chat.f("未せってい"),Chat.f("&7倍増ゲームの確率が増えるだけ"));
+        addItem(inv,33,Material.SKULL_ITEM,Chat.f("えんま大王(仮)"),Chat.f("&7倍増ゲームの確率が増えるだけ"));
 
         player.openInventory(inv);
 
