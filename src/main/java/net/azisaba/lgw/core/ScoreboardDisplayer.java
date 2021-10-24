@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,17 +14,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
+import com.avaje.ebean.validation.NotNull;
 import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.LevelingUtils;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 
 import lombok.Data;
+
+import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
+import jp.azisaba.lgw.kdstatus.utils.TimeUnit;
 
 @Data
 public class ScoreboardDisplayer {
@@ -92,17 +101,16 @@ public class ScoreboardDisplayer {
             }
 
             messageList.add("");
-            messageList.add(ChatColor.GREEN + "キル: " + LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(player));
+            messageList.add(ChatColor.GREEN + "Kills: " + LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(player));
 
-            /*
+
             messageList.add("");
-            messageList.add(Chat.f("マップ: &a{0}", mapName));
+            //messageList.add(Chat.f("マップ: &a{0}", mapName));
             messageList.add(Chat.f("モード: &a{0}", mode.getShortModeName()));
-            messageList.add(Chat.f("振り分け: &a{0}", distributor.getDistributorName()));
+            //messageList.add(Chat.f("振り分け: &a{0}", distributor.getDistributorName()));
 
-             */
             messageList.add("");
-            messageList.add(ChatColor.YELLOW + "www.azisaba.net");
+            messageList.add(ChatColor.GOLD + "azisaba.net");
 
             // return
             return messageList;
@@ -132,13 +140,43 @@ public class ScoreboardDisplayer {
         if(LeonGunWar.getPlugin().getCountdown().isRunning()){
             messages.add("開始まであと: " + ChatColor.GREEN + timeLeft + "秒");
         }else {
-            messages.add("開始まであと: " + ChatColor.GREEN + "Waiting...");
+            messages.add("Waiting...");
         }
 
         messages.add("");
         messages.add("モード: " + mqm.getMatchMode().getShortModeName());
         messages.add("");
-        messages.add(ChatColor.YELLOW + "www.azisaba.net");
+        messages.add(ChatColor.GOLD + "azisaba.net");
+
+        return messages;
+
+    }
+
+    public List<String> lobbyBordLines(Player player){
+
+        PlayerStats stats = PlayerStats.getStats(player);
+
+        List<String> messages = new ArrayList<>();
+
+        messages.add(ChatColor.GRAY + new SimpleDateFormat("yy/MM/dd").format(new Date(System.currentTimeMillis()))
+                + "  " + ChatColor.DARK_GRAY + LeonGunWar.getPlugin().getConfig().get("server-name","lgwsv"));
+
+        messages.add("");
+
+        messages.add(Chat.f("Level: " + LevelingUtils.coloring(stats.getLevel(),stats.getLevel() + LevelingUtils.getAngelIcon(stats.getAngelOfDeathLevel()))));
+
+        messages.add("");
+
+        messages.add("Total Kills: " + ChatColor.GREEN +  KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(player,true).getKills(TimeUnit.LIFETIME));
+        messages.add("Total Wins: " + ChatColor.GREEN + stats.getWins());
+
+        messages.add("");
+
+        messages.add("Coins: " + ChatColor.GOLD + stats.getCoins());
+
+        messages.add("");
+
+        messages.add(ChatColor.GOLD + "azisaba.net");
 
         return messages;
 
@@ -147,23 +185,26 @@ public class ScoreboardDisplayer {
     // Objectiveを作成したいスコアボード
     private Scoreboard scoreBoard;
 
+    private Map<Player,Scoreboard> scoreboardMap = new HashMap<>();
+
     /**
      * プレイヤーにスコアボードを表示します
      *
      */
     public void updateScoreboard(Player player,List<String> bordLines) {
-        Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
+        //Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
         if ( Bukkit.getOnlinePlayers().size() <= 0 ) {
             return;
         }
 
         // Objectiveを取得
-        Objective obj = scoreBoard.getObjective("side");
+        Scoreboard sb = player.getScoreboard();
+        Objective obj = sb.getObjective("side");
 
         // Objectiveが存在しなかった場合は作成
         if ( obj == null ) {
-            obj = scoreBoard.registerNewObjective("side", "dummy");
+            obj = sb.registerNewObjective("side", "dummy");
         }
 
         // Slotを設定
@@ -179,7 +220,7 @@ public class ScoreboardDisplayer {
         Collections.reverse(bordLines);
 
         // 現在指定されているEntryを全て解除
-        clearEntries();
+        clearEntries(player);
 
         int currentValue = 0;
         for ( String msg : bordLines ) {
@@ -202,31 +243,55 @@ public class ScoreboardDisplayer {
         // スコアボードを設定する
         //Bukkit.getOnlinePlayers()
 
-        if ( player.getScoreboard() != scoreBoard ) {
-            player.setScoreboard(scoreBoard);
-        }
+        //if ( sb != scoreBoard ) {
+            player.setScoreboard(sb);
+        //}
 
     }
 
     /**
      * 現在設定されているEntryを全てリセットする
      */
-    private void clearEntries() {
-        Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
+    private void clearEntries(Player player) {
+        //Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
-        scoreBoard.getEntries().forEach(scoreBoard::resetScores);
+        player.getScoreboard().getEntries().forEach(player.getScoreboard()::resetScores);
     }
 
-    public void clearSideBar() {
-        Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
+    public void clearSideBar(Player player) {
+        //Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
         // boardがnullでなければSIDEBARを削除
-        scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
+        player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
     }
 
     public void setScoreBoard(Scoreboard scoreboard) {
 
         this.scoreBoard = scoreboard;
+
+    }
+
+    public void createBoard(Player player) {
+
+        Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective o = board.registerNewObjective("side", "dummy");
+        o.setDisplaySlot(DisplaySlot.SIDEBAR);
+        o.setDisplayName(scoreBoardTitle());
+        player.setScoreboard(board);
+
+    }
+
+    public void addLine(Player p,String msg,int score) {
+        Scoreboard board = p.getScoreboard();
+        Team t = board.registerNewTeam("t");
+        t.addEntry(String.valueOf(score));
+        t.setPrefix(msg);
+        board.getObjective("side").getScore(String.valueOf(score)).setScore(score);
+    }
+
+    public void update(Player p,String msg,int score){
+
+
 
     }
 }

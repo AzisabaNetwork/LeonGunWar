@@ -54,18 +54,18 @@ public class LevelingUtils {
     //LEVEL COLOR
     ///////////////////////////////////////////////////////////////
 
-    private static final String PRESTIGE_COLOR_ONE_TO_FOUR = ChatColor.GRAY + "";
-    private static final String PRESTIGE_COLOR_FIVE_TO_NINE = ChatColor.WHITE + "";
-    private static final String PRESTIGE_COLOR_TEN_TO_FOURTEEN = ChatColor.GOLD + "";
-    private static final String PRESTIGE_COLOR_FIFTEEN_TO_NINETEEN = ChatColor.GREEN + "";
-    private static final String PRESTIGE_COLOR_TWENTY_TO_TWENTY_FOUR = ChatColor.AQUA + "";
-    private static final String PRESTIGE_COLOR_TWENTY_FIVE_TO_TWENTY_NINE = ChatColor.DARK_GREEN + "";
-    private static final String PRESTIGE_COLOR_THIRTY_TO_THIRTY_FOUR = ChatColor.LIGHT_PURPLE + "";
-    private static final String PRESTIGE_COLOR_THIRTY_FIVE_TO_THIRTY_NINE = ChatColor.RED + "";
-    private static final String PRESTIGE_COLOR_FORTY_TO_FORTY_FOUR = ChatColor.DARK_AQUA + "";
-    private static final String PRESTIGE_COLOR_FORTY_FIVE_TO_FORTY_NINE = ChatColor.DARK_RED + "";
-    private static final String PRESTIGE_COLOR_FIFTY_TO_FIFTY_FOUR = ChatColor.DARK_BLUE + "";
-    private static final String PRESTIGE_COLOR_FIFTY_FIVE_TO_FIFTY_NINE = ChatColor.DARK_PURPLE + "";
+    private static final String PRESTIGE_COLOR_ONE_TO_FOUR = "&7";
+    private static final String PRESTIGE_COLOR_FIVE_TO_NINE = "&f";
+    private static final String PRESTIGE_COLOR_TEN_TO_FOURTEEN = "&6";
+    private static final String PRESTIGE_COLOR_FIFTEEN_TO_NINETEEN = "&a";
+    private static final String PRESTIGE_COLOR_TWENTY_TO_TWENTY_FOUR = "&b";
+    private static final String PRESTIGE_COLOR_TWENTY_FIVE_TO_TWENTY_NINE = "&2";
+    private static final String PRESTIGE_COLOR_THIRTY_TO_THIRTY_FOUR = "&d";
+    private static final String PRESTIGE_COLOR_THIRTY_FIVE_TO_THIRTY_NINE = "&c";
+    private static final String PRESTIGE_COLOR_FORTY_TO_FORTY_FOUR = "&3";
+    private static final String PRESTIGE_COLOR_FORTY_FIVE_TO_FORTY_NINE = "&4";
+    private static final String PRESTIGE_COLOR_FIFTY_TO_FIFTY_FOUR = "&1";
+    private static final String PRESTIGE_COLOR_FIFTY_FIVE_TO_FIFTY_NINE = "&5";
     private static final String PRESTIGE_COLOR_SIXTY_TO_NINETY_NINE = "[RAINBOW]";
     private static final String PRESTIGE_COLOR_MORE = "[RAINBOW_BOLDED]";
 
@@ -111,6 +111,7 @@ public class LevelingUtils {
     private static final String ANGEL_ICON_TEN = "❀";
     private static final String ANGEL_ICON_ELEVEN = "犬";
     private static final String ANGEL_ICON_TWELVE = "ඞ";
+
     ///////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////
@@ -242,24 +243,24 @@ public class LevelingUtils {
         int prestige = level / 5;
 
         switch ( prestige ){
-            case 0: return PRESTIGE_COLOR_ONE_TO_FOUR;
-            case 1: return PRESTIGE_COLOR_FIVE_TO_NINE;
-            case 2: return PRESTIGE_COLOR_TEN_TO_FOURTEEN;
-            case 3: return PRESTIGE_COLOR_FIFTEEN_TO_NINETEEN;
-            case 4: return PRESTIGE_COLOR_TWENTY_TO_TWENTY_FOUR;
-            case 5: return PRESTIGE_COLOR_TWENTY_FIVE_TO_TWENTY_NINE;
-            case 6: return PRESTIGE_COLOR_THIRTY_TO_THIRTY_FOUR;
-            case 7: return PRESTIGE_COLOR_THIRTY_FIVE_TO_THIRTY_NINE;
-            case 8: return PRESTIGE_COLOR_FORTY_TO_FORTY_FOUR;
-            case 9: return PRESTIGE_COLOR_FORTY_FIVE_TO_FORTY_NINE;
-            case 10: return PRESTIGE_COLOR_FIFTY_TO_FIFTY_FOUR;
-            case 11: return PRESTIGE_COLOR_FIFTY_FIVE_TO_FIFTY_NINE;
+            case 0: return PRESTIGE_COLOR_ONE_TO_FOUR + prefix;
+            case 1: return PRESTIGE_COLOR_FIVE_TO_NINE + prefix;
+            case 2: return PRESTIGE_COLOR_TEN_TO_FOURTEEN + prefix;
+            case 3: return PRESTIGE_COLOR_FIFTEEN_TO_NINETEEN + prefix;
+            case 4: return PRESTIGE_COLOR_TWENTY_TO_TWENTY_FOUR + prefix;
+            case 5: return PRESTIGE_COLOR_TWENTY_FIVE_TO_TWENTY_NINE + prefix;
+            case 6: return PRESTIGE_COLOR_THIRTY_TO_THIRTY_FOUR + prefix;
+            case 7: return PRESTIGE_COLOR_THIRTY_FIVE_TO_THIRTY_NINE + prefix;
+            case 8: return PRESTIGE_COLOR_FORTY_TO_FORTY_FOUR + prefix;
+            case 9: return PRESTIGE_COLOR_FORTY_FIVE_TO_FORTY_NINE + prefix;
+            case 10: return PRESTIGE_COLOR_FIFTY_TO_FIFTY_FOUR + prefix;
+            case 11: return PRESTIGE_COLOR_FIFTY_FIVE_TO_FIFTY_NINE + prefix;
         }
 
         if(level >= 60){
             if(level < 100){
 
-                String colored = null;
+                String colored = "";
                 int count = 0;
 
                 for ( char c : prefix.toCharArray() ) {
@@ -271,7 +272,7 @@ public class LevelingUtils {
 
             }else {
 
-                String colored = null;
+                String colored = "";
                 int count = 0;
 
                 for ( char c : prefix.toCharArray() ) {
@@ -345,6 +346,27 @@ public class LevelingUtils {
             case 11: return REQUIRED_ANGEL_ELEVEN;
             case 12 : return REQUIRED_ANGEL_TWELVE;
             default: return 0;
+        }
+
+    }
+
+    public static String getAngelIcon(int angelLevel){
+
+        switch ( angelLevel ){
+            case 0 : return ANGEL_ICON_NONE;
+            case 1 : return ANGEL_ICON_ONE;
+            case 2 : return ANGEL_ICON_TWO;
+            case 3 : return ANGEL_ICON_THREE;
+            case 4 : return ANGEL_ICON_FOUR;
+            case 5 : return ANGEL_ICON_FIVE;
+            case 6 : return ANGEL_ICON_SIX;
+            case 7 : return ANGEL_ICON_SEVEN;
+            case 8 : return ANGEL_ICON_EIGHT;
+            case 9 : return ANGEL_ICON_NINE;
+            case 10: return ANGEL_ICON_TEN;
+            case 11: return ANGEL_ICON_ELEVEN;
+            case 12 : return ANGEL_ICON_TWELVE;
+            default: return "";
         }
 
     }

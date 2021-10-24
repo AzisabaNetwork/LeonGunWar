@@ -112,7 +112,7 @@ public class PlayerControlListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendQuickMessage(PlayerJoinEvent e) {
-        LeonGunWar.getQuickBar().send(e.getPlayer());
+        //LeonGunWar.getQuickBar().send(e.getPlayer());
     }
 
     @EventHandler

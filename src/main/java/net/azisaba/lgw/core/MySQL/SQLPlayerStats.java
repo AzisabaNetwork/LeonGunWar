@@ -19,8 +19,7 @@ public class SQLPlayerStats {
     private final LeonGunWar plugin = LeonGunWar.getPlugin();
     private final LevelingConfig config = plugin.getLevelingConfig();
 
-    public SQLPlayerStats(){
-    }
+    public SQLPlayerStats(){ }
 
     public void createTable(){
 
@@ -32,9 +31,12 @@ public class SQLPlayerStats {
                     "level INT DEFAULT 1, " +
                     "xps INT DEFAULT 0 ," +
                     "coins INT DEFAULT 0 ," +
+                    "yobi1 INT DEFAULT 0 ," +
+                    "yobi2 INT DEFAULT 0 ," +
                     "wins INT DEFAULT 0," +
                     "loses INT DEFAULT 0," +
                     "angelOfDeathLevel INT DEFAULT 0, " +
+                    "yobi3 INT DEFAULT 0 ," +
                     ")");
 
             ps.executeUpdate();
@@ -50,15 +52,18 @@ public class SQLPlayerStats {
 
         try {
 
-            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("INSERT INTO PlayerStats SET (UUID ,NAME ,level ,xps ,coins ,wins ,loses,angelOfDeathLevel) VALUES (?,?,?,?,?,?,?,?)");
+            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("INSERT INTO PlayerStats SET (UUID ,NAME ,level ,xps ,coins ,yobi1 ,yobi2 ,wins ,loses,angelOfDeathLevel ,yobi3) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1,stats.getUUID().toString());
             ps.setString(2,stats.getName());
             ps.setInt(3,stats.getLevel());
             ps.setInt(4,stats.getXps());
             ps.setInt(5,stats.getCoins());
-            ps.setInt(6,stats.getWins());
-            ps.setInt(7,stats.getLoses());
-            ps.setInt(8,stats.getAngelOfDeathLevel());
+            ps.setInt(6,stats.getYobi1());
+            ps.setInt(7,stats.getYobi2());
+            ps.setInt(8,stats.getWins());
+            ps.setInt(9,stats.getLoses());
+            ps.setInt(10,stats.getAngelOfDeathLevel());
+            ps.setInt(11,stats.getYobi3());
 
             ps.executeUpdate();
             ps.close();
@@ -86,11 +91,14 @@ public class SQLPlayerStats {
                 int level = result.getInt("level");
                 int xps = result.getInt("xps");
                 int coins = result.getInt("coins");
+                int yobi1 = result.getInt("yobi1");
+                int yobi2 = result.getInt("yobi2");
                 int wins = result.getInt("wins");
                 int loses = result.getInt("loses");
                 int angelOfDeathLevel = result.getInt("angelOfDeathLevel");
+                int yobi3 = result.getInt("yobi3");
 
-                return new PlayerStats(uuid1,name,level,xps,coins,wins,loses,angelOfDeathLevel);
+                return new PlayerStats(uuid1,name,level,xps,coins,yobi1,yobi2,wins,loses,angelOfDeathLevel,yobi3);
             }
 
             return null;

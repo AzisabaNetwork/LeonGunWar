@@ -32,6 +32,12 @@ commands:
   limit:
     usage: /limit [drop/build]
     permission: leongunwar.command.limit
+  angelOfDeath:
+    usage: /angelOfDeath
+    permission: leongunwar.command.angelOfDeath
+  statsGUI:
+    usage: /statsGUI
+    permission: leongunwar.command.statsGUI
   map:
     usage: /map
     permission: leongunwar.command.map
@@ -58,5 +64,3 @@ permissions:
     default: op
   leongunwar.command.limit:
     default: op
-  leongunwar.command.map:
-    default: true
