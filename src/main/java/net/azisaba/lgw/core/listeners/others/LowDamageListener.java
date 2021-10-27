@@ -17,7 +17,6 @@ public class LowDamageListener implements Listener {
     @EventHandler
     public void onDamaged(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) {
-            event.setCancelled(true);
             return;
         }
 
@@ -38,7 +37,6 @@ public class LowDamageListener implements Listener {
     @EventHandler
     public void onHeal(EntityRegainHealthEvent event) {
         if (!(event.getEntity() instanceof Player)) {
-            event.setCancelled(true);
             return;
         }
 
