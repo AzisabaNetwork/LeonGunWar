@@ -17,7 +17,6 @@ import lombok.NonNull;
 public class SQLPlayerStats {
 
     private final LeonGunWar plugin = LeonGunWar.getPlugin();
-    private final LevelingConfig config = plugin.getLevelingConfig();
 
     public SQLPlayerStats(){ }
 

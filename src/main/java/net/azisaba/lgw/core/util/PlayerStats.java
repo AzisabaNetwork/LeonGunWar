@@ -132,6 +132,22 @@ public class PlayerStats {
 
     public void update(){
 
+        int l = LevelingUtils.getLevelFromXp(this.xps);
+        if( l != this.level){
+
+            Player p = Bukkit.getPlayer(uuid);
+
+            if(p != null){
+                p.sendMessage(line);
+                p.sendMessage(" ");
+                p.sendMessage(Chat.f("&e&lLeonGunWar Level UP!!! " + LevelingUtils.coloring(this.level,"[" + this.level + LevelingUtils.getAngelIcon(this.getAngelOfDeathLevel()) + "]")));
+                p.sendMessage(" ");
+                p.sendMessage(line);
+            }
+
+            setLevel(l);
+        }
+
         if(!LeonGunWar.getPlugin().isEnabledDatabese()){
             return;
         }
@@ -146,8 +162,6 @@ public class PlayerStats {
     public String getName() {
         return name;
     }
-
-    // TODO set〇〇にSQLの処理を追加する。→変更。試合終了時にまとめて更新
 
     public int getLevel() {
         return level;
@@ -167,21 +181,6 @@ public class PlayerStats {
 
     public void addXps(int xps){
         this.xps = this.xps + xps;
-        int l = LevelingUtils.getLevelFromXp(this.xps);
-        if( l != this.level){
-
-            Player p = Bukkit.getPlayer(uuid);
-
-            if(p != null){
-                p.sendMessage(line);
-                p.sendMessage(" ");
-                p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "LeonGunWar Level UP!!! " + LevelingUtils.coloring(this.level,"[" + this.level + "]"));
-                p.sendMessage(" ");
-                p.sendMessage(line);
-            }
-
-            setLevel(l);
-        }
     }
 
     public void setXps(int xps){
