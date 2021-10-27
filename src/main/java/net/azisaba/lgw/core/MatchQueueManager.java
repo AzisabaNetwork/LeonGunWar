@@ -15,20 +15,12 @@ import net.azisaba.lgw.core.util.MatchMode;
 
 public class MatchQueueManager {
 
-    private final MatchManager mm;
-
     private boolean hasQueue = false;
     private boolean isLoaded = false;
     private String mapName;
     private World queueWorld;
     private MatchMode matchMode;
     private List<Player> inQueue = new ArrayList<>();
-
-    public MatchQueueManager(MatchManager matchManager){
-
-        this.mm = matchManager;
-
-    }
 
     public void createQueue(String mapName,MatchMode matchMode){
 

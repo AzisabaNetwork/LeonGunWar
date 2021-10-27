@@ -36,6 +36,7 @@ import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
+import net.azisaba.lgw.core.listeners.others.DamageCorrection;
 import net.azisaba.lgw.core.listeners.others.DisableChangeItemListener;
 import net.azisaba.lgw.core.listeners.others.DisableHopperPickupListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
@@ -66,6 +67,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsDuringMatchListe
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsInLobbyListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListener;
+import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWeapons;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.util.MatchMode;
@@ -101,7 +103,7 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
-    private final MatchQueueManager matchQueueManager = new MatchQueueManager(manager);
+    private final MatchQueueManager matchQueueManager = new MatchQueueManager();
 
     public SQLConnection sql;
     private SQLPlayerStats stats;
@@ -112,7 +114,9 @@ public class LeonGunWar extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
         plugin = this;
+
         quickBar = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
                 .then(Chat.f("&a[エントリー]"))
                 .runCommand("/leongunwar:match entry")
@@ -253,6 +257,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
         Bukkit.getPluginManager().registerEvents(new LobbyJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageCorrection(),this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
@@ -260,6 +265,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisablePvEsInLobbyListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvEListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableWaveDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableWeapons(),this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);

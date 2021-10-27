@@ -38,7 +38,6 @@ import static net.azisaba.lgw.core.utils.LevelingUtils.getBaseIncreaseRate;
 
 public class DamageListener implements Listener {
     private final LevelingConfig config = LeonGunWar.getPlugin().getLevelingConfig();
-    private PlayerStats stats;
 
     private final CSUtility crackShot = new CSUtility();
 
@@ -78,12 +77,19 @@ public class DamageListener implements Listener {
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 
         // XP付与
-        stats = PlayerStats.getStats(killer);
+        PlayerStats stats = PlayerStats.getStats(killer);
         if (LeonGunWar.getPlugin().getManager().isCorrupted()) { // 経験値倍増ゲームだったら
-            stats.addXps(getBaseIncreaseRate(KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(killer,true).getKills(TimeUnit.LIFETIME))); // TODO: 倍増率は絶対要検討！
+            int xps = getBaseIncreaseRate(KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(killer,true).getKills(TimeUnit.LIFETIME));
+            stats.addXps(xps); // TODO: 倍増率は絶対要検討！
+            killer.sendMessage(Chat.f("&b+{0} LGW Experiences (Kill)!",xps));
         } else { // 経験値倍増ゲームじゃなかったら
+            killer.sendMessage(Chat.f("&b+{0} LGW Experiences (Kill)!",1));
             stats.addXps(1);
         }
+
+        int coins = 10;
+        stats.addCoins(coins);
+        killer.sendMessage(Chat.f("&6+{0} LGW Coins (Kill)!",coins));
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);

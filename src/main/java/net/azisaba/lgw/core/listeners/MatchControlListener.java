@@ -40,7 +40,7 @@ public class MatchControlListener implements Listener {
      * 制限時間が0秒になったときにMatchFinishedEventを呼び出すリスナー
      */
     private final LevelingConfig config = LeonGunWar.getPlugin().getLevelingConfig();
-    private PlayerStats stats;
+    private final int winXP = (int)config.configmap.get("winXP");
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
@@ -177,15 +177,32 @@ public class MatchControlListener implements Listener {
                     p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
 
                     // XP付与
-                    stats = PlayerStats.getStats(p);
-                    stats.addXps((int)config.configmap.get("winXP"));
+                    PlayerStats stats = PlayerStats.getStats(p);
+                    stats.addXps(winXP);
+                    p.sendMessage(Chat.f("&b+{0} LGW Experiences (Win)!",1));
+
+                    int coins = 100;
+                    stats.addCoins(coins);
+                    p.sendMessage(Chat.f("&b+{0} LGW Coins (Win)!",coins));
+
+
                 }
 
                 // 勝利メッセージを送信
-                Bukkit.broadcastMessage(
+                LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p ->
                         Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX, wonTeam.getTeamName()));
             });
         }
+
+        Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                LeonGunWar.getPlugin().getManager().getEntryPlayers().forEach(player -> {
+                    PlayerStats.getStats(player).update();
+                });
+            }
+        });
+
     }
 
     /**

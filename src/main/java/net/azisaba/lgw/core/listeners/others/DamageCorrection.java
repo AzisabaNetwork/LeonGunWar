@@ -23,7 +23,7 @@ public class DamageCorrection implements Listener {
 
         if(rendame.containsKey(e.getVictim().getUniqueId())){
 
-            if(rendame.get(e.getVictim().getUniqueId()) < System.currentTimeMillis()){
+            if(rendame.get(e.getVictim().getUniqueId()) > System.currentTimeMillis()){
 
                 if(e.getDamager() == null){
 
