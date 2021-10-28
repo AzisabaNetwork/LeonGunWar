@@ -156,7 +156,7 @@ public class MatchControlListener implements Listener {
             p.setFoodLevel(40);
         }
 
-        LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "GAME END",ChatColor.GRAY + "今回は勝利することができなかった",0,100,0));
+        LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "DEFEAT...",ChatColor.GRAY + "今回は勝利することができなかった",0,100,0));
 
         // 勝ったチームがあれば勝者の証を付与 & 勝利XPを付与
         if ( e.getWinners().size() >= 1 ) {
