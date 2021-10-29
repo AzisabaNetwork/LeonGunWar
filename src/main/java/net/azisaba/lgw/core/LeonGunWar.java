@@ -265,7 +265,9 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisablePvEsInLobbyListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvEListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableWaveDuringMatchListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DisableWeapons(),this);
+        if(!isLobby) {
+            Bukkit.getPluginManager().registerEvents(new DisableWeapons(), this);
+        }
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
