@@ -273,12 +273,12 @@ public class MatchManager {
             currentGameMap.getWorld().setTime(18000); //真夜中にしてみた
             entryPlayers.forEach(p -> {
                 p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_THUNDER, 1, 1);
-                p.sendTitle("&c&lぢごくモード", "", 10, 40, 10);
+                p.sendTitle("&c&lぢごくモード", "", 10, 50, 20);
 
                 p.sendMessage(Chat.f("&c&m                                                     "));
                 p.sendMessage("");
                 p.sendMessage(Chat.f("&c&lぢごくモード！！！"));
-                p.sendMessage(Chat.f("&cえんま大王のおかげでこのゲームは「ぢごくモード」になりました！"));
+                p.sendMessage(Chat.f("&c死神のおかげでこのゲームは「ぢごくモード」になりました！"));
                 p.sendMessage(Chat.f("&aこれによってもらえる経験値が増えます！！！！たくさん稼ごう！！！"));
                 p.sendMessage("");
                 p.sendMessage(Chat.f("&c&m                                                     "));
