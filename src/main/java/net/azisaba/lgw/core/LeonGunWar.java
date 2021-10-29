@@ -286,6 +286,10 @@ public class LeonGunWar extends JavaPlugin {
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
 
+        if(getMatchQueueManager().isLoaded()){
+            Bukkit.unloadWorld(getMatchQueueManager().getQueueWorld(),false);
+        }
+
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();
 

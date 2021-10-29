@@ -847,6 +847,9 @@ public class MatchManager {
             // DisplayNameを戻す
             p.setDisplayName(p.getName());
             p.setPlayerListName(p.getName());
+
+            Bukkit.unloadWorld(currentGameMap.getWorld(),false);
+
         });
 
         // エントリーしているプレイヤーの表示名もリセットする
