@@ -58,6 +58,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import static net.azisaba.lgw.core.utils.LevelingUtils.getAngelOfDeathPercentage;
+import static org.bukkit.scoreboard.DisplaySlot.BELOW_NAME;
 
 /**
  * ゲームを司るコアクラス
@@ -147,7 +148,7 @@ public class MatchManager {
 
         if (objective == null) {
             objective = board.registerNewObjective("showhealth", "health");
-            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            objective.setDisplaySlot(BELOW_NAME);
             objective.setDisplayName("§c❤");
         }
 
@@ -364,6 +365,8 @@ public class MatchManager {
         // サイドバーを削除
         getWorldPlayers().forEach(p -> LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar(p));
         //LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
+
+        getWorldPlayers().forEach(p -> p.getScoreboard().clearSlot(BELOW_NAME));
 
         //matsu1213 start
 
