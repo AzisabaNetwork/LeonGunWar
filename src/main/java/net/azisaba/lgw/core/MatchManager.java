@@ -12,8 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.swing.plaf.basic.BasicButtonUI;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,6 +23,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
@@ -32,8 +32,6 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.grinderwolf.swm.api.SlimePlugin;
-import com.grinderwolf.swm.api.loaders.SlimeLoader;
 
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
@@ -41,7 +39,6 @@ import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
@@ -49,7 +46,6 @@ import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.KillDeathCounter;
-import net.azisaba.lgw.core.util.MapLoader;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
@@ -61,8 +57,8 @@ import net.azisaba.playersettings.util.SettingsData;
 import lombok.Data;
 import lombok.NonNull;
 
-import de.schlichtherle.io.util.LEDataOutputStream;
 import static net.azisaba.lgw.core.utils.LevelingUtils.getAngelOfDeathPercentage;
+import static org.bukkit.scoreboard.DisplaySlot.BELOW_NAME;
 
 /**
  * ゲームを司るコアクラス
@@ -114,6 +110,10 @@ public class MatchManager {
     // 倍増ゲームかどうか TODO これ関連の処理を追加
     private boolean isCorrupted = false;
 
+    // 体力表示スコアボード
+    private final Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+    private Objective objective;
+
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
      */
@@ -143,6 +143,14 @@ public class MatchManager {
         // 各チームのチェストプレートを設定
         Arrays.stream(BattleTeam.values())
                 .forEach(team -> chestplates.put(team, CustomItem.getTeamChestplate(team)));
+
+        objective = board.getObjective("showhealth");
+
+        if (objective == null) {
+            objective = board.registerNewObjective("showhealth", "health");
+            objective.setDisplaySlot(BELOW_NAME);
+            objective.setDisplayName("§c❤");
+        }
 
         initialized = true;
     }
@@ -190,7 +198,7 @@ public class MatchManager {
 
         // マップ名を表示
         //Bukkit.broadcastMessage(
-         //       Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+        //       Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
 
         //matsu1213 end
         // 参加プレイヤーを取得
@@ -273,12 +281,12 @@ public class MatchManager {
             currentGameMap.getWorld().setTime(18000); //真夜中にしてみた
             entryPlayers.forEach(p -> {
                 p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_THUNDER, 1, 1);
-                p.sendTitle("&c&lぢごくモード", "", 10, 50, 20);
+                p.sendTitle("&c&lぢごくモード", "", 10, 40, 10);
 
                 p.sendMessage(Chat.f("&c&m                                                     "));
                 p.sendMessage("");
                 p.sendMessage(Chat.f("&c&lぢごくモード！！！"));
-                p.sendMessage(Chat.f("&c死神のおかげでこのゲームは「ぢごくモード」になりました！"));
+                p.sendMessage(Chat.f("&cえんま大王のおかげでこのゲームは「ぢごくモード」になりました！"));
                 p.sendMessage(Chat.f("&aこれによってもらえる経験値が増えます！！！！たくさん稼ごう！！！"));
                 p.sendMessage("");
                 p.sendMessage(Chat.f("&c&m                                                     "));
@@ -357,6 +365,8 @@ public class MatchManager {
         // サイドバーを削除
         getWorldPlayers().forEach(p -> LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar(p));
         //LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
+
+        getWorldPlayers().forEach(p -> p.getScoreboard().clearSlot(BELOW_NAME));
 
         //matsu1213 start
 
@@ -873,6 +883,10 @@ public class MatchManager {
 
         // 防具を装備
         p.getInventory().setChestplate(chestplates.get(team));
+
+        // 体力を表示 FIXME
+        p.setScoreboard(board);
+        objective.getScore(p.getName()).setScore((int) p.getHealth());
     }
 
     /**
