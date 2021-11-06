@@ -492,6 +492,7 @@ public class MatchManager {
 
         // アーマー削除
         p.getInventory().setChestplate(null);
+        p.getInventory().setHelmet(null);
 
         // 退出メッセージを全員に送信
         String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
@@ -835,6 +836,7 @@ public class MatchManager {
 
             // アーマー削除
             p.getInventory().setChestplate(null);
+            p.getInventory().setHelmet(null);
 
             // 各記録を取得
             int kills = killDeathCounter.getKills(p);
@@ -874,6 +876,7 @@ public class MatchManager {
 
         // 防具を装備
         p.getInventory().setChestplate(chestplates.get(team));
+        p.getInventory().setHelmet(CustomItem.getHealthHelmet(p.getHealth()));
     }
 
     /**
