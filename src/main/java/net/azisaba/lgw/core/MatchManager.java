@@ -23,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -143,14 +142,6 @@ public class MatchManager {
         // 各チームのチェストプレートを設定
         Arrays.stream(BattleTeam.values())
                 .forEach(team -> chestplates.put(team, CustomItem.getTeamChestplate(team)));
-
-        objective = board.getObjective("showhealth");
-
-        if (objective == null) {
-            objective = board.registerNewObjective("showhealth", "health");
-            objective.setDisplaySlot(BELOW_NAME);
-            objective.setDisplayName("§c❤");
-        }
 
         initialized = true;
     }
@@ -501,6 +492,7 @@ public class MatchManager {
 
         // アーマー削除
         p.getInventory().setChestplate(null);
+        p.getInventory().setHelmet(null);
 
         // 退出メッセージを全員に送信
         String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
@@ -844,6 +836,7 @@ public class MatchManager {
 
             // アーマー削除
             p.getInventory().setChestplate(null);
+            p.getInventory().setHelmet(null);
 
             // 各記録を取得
             int kills = killDeathCounter.getKills(p);
@@ -883,10 +876,7 @@ public class MatchManager {
 
         // 防具を装備
         p.getInventory().setChestplate(chestplates.get(team));
-
-        // 体力を表示 FIXME
-        p.setScoreboard(board);
-        objective.getScore(p.getName()).setScore((int) p.getHealth());
+        p.getInventory().setHelmet(CustomItem.getHealthHelmet(p.getHealth()));
     }
 
     /**

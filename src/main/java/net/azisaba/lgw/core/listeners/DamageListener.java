@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
