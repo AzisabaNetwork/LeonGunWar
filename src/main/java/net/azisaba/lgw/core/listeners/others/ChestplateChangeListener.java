@@ -10,11 +10,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.CustomItem;
 
 public class ChestplateChangeListener implements Listener {
-    private LeonGunWar plugin;
-
-    public ChestplateChangeListener(LeonGunWar plugin) {
-        this.plugin = plugin;
-    }
+    private LeonGunWar plugin = LeonGunWar.getPlugin();
 
     @EventHandler
     public void onDamaged(EntityDamageEvent event) {

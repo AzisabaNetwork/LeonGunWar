@@ -259,7 +259,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
         Bukkit.getPluginManager().registerEvents(new LobbyJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageCorrection(),this);
-        Bukkit.getPluginManager().registerEvents(new ChestplateChangeListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ChestplateChangeListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
