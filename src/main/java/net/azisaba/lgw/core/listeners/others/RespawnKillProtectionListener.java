@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -50,7 +53,7 @@ public class RespawnKillProtectionListener implements Listener {
     private void sendProtected(Player victim) {
         Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), () -> {
             if ( protectedThrottle.tryAcquire() ) {
-                victim.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
+                //victim.sendMessage(Chat.f("{0}&rあなた &7は保護されています！", LeonGunWar.GAME_PREFIX));
             }
         });
     }
@@ -58,7 +61,7 @@ public class RespawnKillProtectionListener implements Listener {
     private void sendVictimProtected(Player attacker, Player victim) {
         Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), () -> {
             if ( victimProtectedThrottle.tryAcquire() ) {
-                attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
+                //attacker.sendMessage(Chat.f("{0}{1} &7は保護されています！", LeonGunWar.GAME_PREFIX, victim.getDisplayName()));
             }
         });
     }
@@ -110,6 +113,7 @@ public class RespawnKillProtectionListener implements Listener {
 
         // リスポーンから5秒以内ならキャンセル
         if ( isProtected(victim) ) {
+
             e.setCancelled(true);
             sendProtected(victim);
 

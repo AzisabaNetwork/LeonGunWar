@@ -30,8 +30,8 @@ public class SQLPlayerStats {
                     "level INT DEFAULT 1, " +
                     "xps INT DEFAULT 0 ," +
                     "coins INT DEFAULT 0 ," +
-                    "yobi1 INT DEFAULT 0 ," +
-                    "yobi2 INT DEFAULT 0 ," +
+                    "shard INT DEFAULT 0 ," +
+                    "crystal INT DEFAULT 0 ," +
                     "wins INT DEFAULT 0," +
                     "loses INT DEFAULT 0," +
                     "angelOfDeathLevel INT DEFAULT 0, " +
@@ -51,7 +51,7 @@ public class SQLPlayerStats {
 
         try {
 
-            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("INSERT INTO PlayerStats SET (UUID ,NAME ,level ,xps ,coins ,yobi1 ,yobi2 ,wins ,loses,angelOfDeathLevel ,yobi3) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement ps = plugin.sql.getConnection().prepareStatement("INSERT INTO PlayerStats SET (UUID ,NAME ,level ,xps ,coins ,shard ,crystal ,wins ,loses,angelOfDeathLevel ,yobi3) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1,stats.getUUID().toString());
             ps.setString(2,stats.getName());
             ps.setInt(3,stats.getLevel());
@@ -90,14 +90,14 @@ public class SQLPlayerStats {
                 int level = result.getInt("level");
                 int xps = result.getInt("xps");
                 int coins = result.getInt("coins");
-                int yobi1 = result.getInt("yobi1");
-                int yobi2 = result.getInt("yobi2");
+                int shard = result.getInt("shard");
+                int crystal = result.getInt("crystal");
                 int wins = result.getInt("wins");
                 int loses = result.getInt("loses");
                 int angelOfDeathLevel = result.getInt("angelOfDeathLevel");
                 int yobi3 = result.getInt("yobi3");
 
-                return new PlayerStats(uuid1,name,level,xps,coins,yobi1,yobi2,wins,loses,angelOfDeathLevel,yobi3);
+                return new PlayerStats(uuid1,name,level,xps,coins,shard,crystal,wins,loses,angelOfDeathLevel,yobi3);
             }
 
             return null;

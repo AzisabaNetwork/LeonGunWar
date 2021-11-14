@@ -132,7 +132,7 @@ public class MatchManager {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         // ScoreboardDisplayerにScoreboardを設定
-        //LeonGunWar.getPlugin().getScoreboardDisplayer().setScoreBoard(scoreboard);
+        LeonGunWar.getPlugin().getScoreboardDisplayer().setScoreBoard(scoreboard);
 
         // 各スコアボードチームの取得 / 作成
         initializeTeams();

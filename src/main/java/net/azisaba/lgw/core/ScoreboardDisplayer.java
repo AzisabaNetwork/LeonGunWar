@@ -199,12 +199,12 @@ public class ScoreboardDisplayer {
         }
 
         // Objectiveを取得
-        Scoreboard sb = player.getScoreboard();
-        Objective obj = sb.getObjective("side");
+        //Scoreboard sb = player.getScoreboard();
+        Objective obj = scoreBoard.getObjective("side");
 
         // Objectiveが存在しなかった場合は作成
         if ( obj == null ) {
-            obj = sb.registerNewObjective("side", "dummy");
+            obj = scoreBoard.registerNewObjective("side", "dummy");
         }
 
         // Slotを設定
@@ -244,8 +244,11 @@ public class ScoreboardDisplayer {
         //Bukkit.getOnlinePlayers()
 
         //if ( sb != scoreBoard ) {
-            player.setScoreboard(sb);
+            //player.setScoreboard(scoreBoard);
         //}
+        if ( player.getScoreboard() != scoreBoard ) {
+            player.setScoreboard(scoreBoard);
+        }
 
     }
 

@@ -23,6 +23,7 @@ import net.azisaba.lgw.core.configs.KillStreaksConfig;
 import net.azisaba.lgw.core.configs.LevelingConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
 import net.azisaba.lgw.core.configs.SpawnsConfig;
+import net.azisaba.lgw.core.configs.WeaponsConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -37,6 +38,7 @@ import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
 import net.azisaba.lgw.core.listeners.others.DamageCorrection;
+import net.azisaba.lgw.core.listeners.others.DamageIndicator;
 import net.azisaba.lgw.core.listeners.others.DisableChangeItemListener;
 import net.azisaba.lgw.core.listeners.others.DisableHopperPickupListener;
 import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
@@ -48,6 +50,7 @@ import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
 import net.azisaba.lgw.core.listeners.others.LimitActionListener;
 import net.azisaba.lgw.core.listeners.others.LobbyJoinListener;
+import net.azisaba.lgw.core.listeners.others.LowDamageListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
@@ -58,6 +61,7 @@ import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
 import net.azisaba.lgw.core.listeners.others.StreaksListener;
 import net.azisaba.lgw.core.listeners.others.TradeBoardListener;
+import net.azisaba.lgw.core.listeners.others.WeaponCustomDamageListener;
 import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
@@ -104,6 +108,7 @@ public class LeonGunWar extends JavaPlugin {
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
     private final MatchQueueManager matchQueueManager = new MatchQueueManager();
+    private WeaponsConfig weaponConfig;
 
     public SQLConnection sql;
     private SQLPlayerStats stats;
@@ -177,6 +182,8 @@ public class LeonGunWar extends JavaPlugin {
         } catch ( IOException | InvalidConfigurationException exception ) {
             exception.printStackTrace();
         }
+
+        weaponConfig = new WeaponsConfig(getDataFolder());
 
         // 初期化が必要なファイルを初期化する
         manager.initialize();
@@ -256,8 +263,11 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LowDamageListener(),this);
         Bukkit.getPluginManager().registerEvents(new LobbyJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageCorrection(),this);
+        Bukkit.getPluginManager().registerEvents(new WeaponCustomDamageListener(),this);
+        Bukkit.getPluginManager().registerEvents(new DamageIndicator(),this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
@@ -343,4 +353,8 @@ public class LeonGunWar extends JavaPlugin {
 
     public boolean isLobby(){ return isLobby; }
     public boolean isEnabledDatabese(){ return isEnabledDatabese; }
+
+    public WeaponsConfig getWeaponConfig() {
+        return weaponConfig;
+    }
 }

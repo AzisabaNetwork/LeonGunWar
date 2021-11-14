@@ -40,7 +40,7 @@ public class MatchControlListener implements Listener {
      * 制限時間が0秒になったときにMatchFinishedEventを呼び出すリスナー
      */
     private final LevelingConfig config = LeonGunWar.getPlugin().getLevelingConfig();
-    private final int winXP = (int)config.configmap.get("winXP");
+    private final int winXP = 10;//(int)config.configmap.get("winXP");
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
@@ -179,11 +179,11 @@ public class MatchControlListener implements Listener {
                     // XP付与
                     PlayerStats stats = PlayerStats.getStats(p);
                     stats.addXps(winXP);
-                    p.sendMessage(Chat.f("&b+{0} LGW Experiences (Win)!",1));
+                    p.sendMessage(Chat.f("&b+ {0} LGW Experiences (Win)!",1));
 
                     int coins = 100;
                     stats.addCoins(coins);
-                    p.sendMessage(Chat.f("&b+{0} LGW Coins (Win)!",coins));
+                    p.sendMessage(Chat.f("&6+ {0} LGW Coins (Win)!",coins));
 
 
                 }

@@ -22,8 +22,8 @@ public class PlayerStats {
     private int level;
     private int xps;
     private int coins;
-    private int yobi1;
-    private int yobi2;
+    private int shard;
+    private int crystal;
     private int wins;
     private int loses;
     private int angelOfDeathLevel;
@@ -33,15 +33,15 @@ public class PlayerStats {
 
     private final static String line = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "                                                           ";
 
-    public PlayerStats(UUID uuid, String name, int level, int xps, int coins,int yobi1,int yobi2,int wins, int loses, int angelOfDeathLevel,int yobi3){
+    public PlayerStats(UUID uuid, String name, int level, int xps, int coins,int shard,int crystal,int wins, int loses, int angelOfDeathLevel,int yobi3){
 
         this.uuid = uuid;
         this.name = name;
         this.level = level;
         this.xps = xps;
         this.coins = coins;
-        this.yobi1 = yobi1;
-        this.yobi2 = yobi2;
+        this.shard = shard;
+        this.crystal = crystal;
         this.wins = wins;
         this.loses = loses;
         this.angelOfDeathLevel = angelOfDeathLevel;
@@ -51,7 +51,7 @@ public class PlayerStats {
     public static void loadStats(Player player){
 
         if(!LeonGunWar.getPlugin().isEnabledDatabese()){
-            PlayerStats stats = new PlayerStats(player.getUniqueId(),player.getName(),199,0,0,0,0,0,0,9,0);
+            PlayerStats stats = new PlayerStats(player.getUniqueId(),player.getName(),1,0,0,0,0,0,0,9,0);
             cached.put(player.getUniqueId(),stats);
             return;
         }
@@ -115,7 +115,7 @@ public class PlayerStats {
         }
 
         if(!LeonGunWar.getPlugin().isEnabledDatabese()){
-            PlayerStats stats = new PlayerStats(player.getUniqueId(),player.getName(),199,0,0,0,0,0,0,9,0);
+            PlayerStats stats = new PlayerStats(player.getUniqueId(),player.getName(),1,0,0,0,0,0,0,9,0);
             cached.put(player.getUniqueId(),stats);
             return stats;
         }
@@ -137,10 +137,14 @@ public class PlayerStats {
 
             Player p = Bukkit.getPlayer(uuid);
 
+            int now = this.level;
+            int old = now - 1;
+
             if(p != null){
                 p.sendMessage(line);
                 p.sendMessage(" ");
-                p.sendMessage(Chat.f("&e&lLeonGunWar Level UP!!! " + LevelingUtils.coloring(this.level,"[" + this.level + LevelingUtils.getAngelIcon(this.getAngelOfDeathLevel()) + "]")));
+                p.sendMessage(Chat.f("&e&lLeonGunWar Level UP!!! " + LevelingUtils.coloring(old,"[" + old + LevelingUtils.getAngelIcon(this.getAngelOfDeathLevel()) + "]"
+                        + "&a→" + LevelingUtils.coloring(now,"[" + now + LevelingUtils.getAngelIcon(this.getAngelOfDeathLevel()) + "]"))));
                 p.sendMessage(" ");
                 p.sendMessage(line);
             }
@@ -226,19 +230,19 @@ public class PlayerStats {
     }
 
     public int getYobi1() {
-        return yobi1;
+        return shard;
     }
 
-    public void setYobi1(int yobi1) {
-        this.yobi1 = yobi1;
+    public void setYobi1(int shard) {
+        this.shard = shard;
     }
 
     public int getYobi2() {
-        return yobi2;
+        return crystal;
     }
 
-    public void setYobi2(int yobi2) {
-        this.yobi2 = yobi2;
+    public void setYobi2(int crystal) {
+        this.crystal = crystal;
     }
 
     public int getYobi3() {
