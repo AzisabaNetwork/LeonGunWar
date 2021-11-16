@@ -20,6 +20,7 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import com.sk89q.worldguard.bukkit.event.entity.DamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.WeaponData;
@@ -172,6 +173,14 @@ public class DamageCorrection implements Listener {
         if(rendame.containsKey(e.getPlayer().getUniqueId())){
             rendame.remove(e.getPlayer().getUniqueId());
         }
+
+    }
+
+    @EventHandler
+    public void onGameEnd(MatchFinishedEvent e){
+
+        rendame.clear();
+        hitgomuteki.clear();
 
     }
 

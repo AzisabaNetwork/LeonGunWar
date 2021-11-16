@@ -109,6 +109,9 @@ public class MatchManager {
     // 倍増ゲームかどうか TODO これ関連の処理を追加
     private boolean isCorrupted = false;
 
+    // 強制的に倍増ゲームにする
+    private boolean isForceCorrupted = false;
+
     // 体力表示スコアボード
     private final Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
     private Objective objective;
@@ -272,7 +275,7 @@ public class MatchManager {
             currentGameMap.getWorld().setTime(18000); //真夜中にしてみた
             entryPlayers.forEach(p -> {
                 p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_THUNDER, 1, 1);
-                p.sendTitle("&c&lぢごくモード", "", 10, 40, 10);
+                p.sendTitle(Chat.f("&c&lぢごくモード"), "", 10, 40, 10);
 
                 p.sendMessage(Chat.f("&c&m                                                     "));
                 p.sendMessage("");
@@ -1020,6 +1023,12 @@ public class MatchManager {
     }
 
     public boolean isXpBoost(List<Player> entryPlayers) {
+
+        if(isForceCorrupted){
+            isForceCorrupted = false;
+            return true;
+        }
+
         // ↓見にくいですね。entryPlayers内ループを回して、AngelOfDeathLevelPercentageの平均の1.3倍を返してます
         double avgPercentage = entryPlayers.stream().mapToDouble(p -> getAngelOfDeathPercentage(PlayerStats.getStats(p).getAngelOfDeathLevel())).sum() / entryPlayers.size() * 1.3; // TODO: avgPercentageの倍増率（今は1.3倍）を調整可能にするか、微調整。
 
@@ -1090,4 +1099,6 @@ public class MatchManager {
     public boolean isLeaderMatch() {
         return leaderMatch;
     }
+
+    public void forceCorrupted(){ isForceCorrupted = true; }
 }

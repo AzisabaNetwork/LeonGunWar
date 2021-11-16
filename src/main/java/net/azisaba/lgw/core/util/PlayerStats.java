@@ -137,14 +137,13 @@ public class PlayerStats {
 
             Player p = Bukkit.getPlayer(uuid);
 
-            int now = this.level;
-            int old = now - 1;
+            int old = l - 1;
 
             if(p != null){
                 p.sendMessage(line);
                 p.sendMessage(" ");
                 p.sendMessage(Chat.f("&e&lLeonGunWar Level UP!!! " + LevelingUtils.coloring(old,"[" + old + LevelingUtils.getAngelIcon(this.getAngelOfDeathLevel()) + "]"
-                        + "&a→" + LevelingUtils.coloring(now,"[" + now + LevelingUtils.getAngelIcon(this.getAngelOfDeathLevel()) + "]"))));
+                        + "&a→" + LevelingUtils.coloring(l,"[" + l + LevelingUtils.getAngelIcon(this.getAngelOfDeathLevel()) + "]"))));
                 p.sendMessage(" ");
                 p.sendMessage(line);
             }
