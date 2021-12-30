@@ -122,7 +122,7 @@
     <dependency>
       <groupId>com.github.AzisabaNetwork</groupId>
       <artifactId>PlayerSettings</artifactId>
-      <version>master-efa22439b9-1</version>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.github.AzisabaNetwork</groupId>
