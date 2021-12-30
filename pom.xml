@@ -110,9 +110,8 @@
     <dependency>
       <groupId>com.shampaggon</groupId>
       <artifactId>CrackShot</artifactId>
-      <version>0.98.9</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/.idea/CrackShot.jar</systemPath>
+      <version>0.98.11</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
