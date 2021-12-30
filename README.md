@@ -49,7 +49,7 @@ cd build && java -jar BuildTools.jar --rev 1.12.2
 |[Docs] | ドキュメント(説明)系の編集|
 |[Debug] | デバッグコードに関する編集 |
 
-## 製作者
-
-* [siloneco](https://github.com/siloneco)
-* [YukiLeafX](https://github.com/YukiLeafX)
+## Contributors
+<a href="https://github.com/AzisabaNetwork/LeonGunWar/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=AzisabaNetwork/LeonGunWar" />
+</a>
