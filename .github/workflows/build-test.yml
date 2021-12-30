@@ -37,4 +37,4 @@ jobs:
         run: mvn install:install-file -Dfile=./WorldGuard.jar -DgroupId=com.sk89q -DartifactId=worldguard -Dversion=6.2.2 -Dpackaging=jar -DgeneratePom=true
       - run: java -version
       - run: mvn --version
-      - run: mvn -B package
+#      - run: mvn -B package
