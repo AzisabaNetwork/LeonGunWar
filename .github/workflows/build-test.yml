@@ -13,17 +13,29 @@ jobs:
           java-version: "8"
           distribution: "adopt"
           cache: "maven"
-      - name: Check WorldGuard existence
-        id: check_worldguard
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "/home/runner/.m2/repository/com/sk89q/worldguard/6.2.2/worldguard-6.2.2.pom"
-      - name: Download WorldGuard v6.2.2
-        if: steps.check_worldguard.outputs.files_exists == 'false'
-        run: curl -L -o WorldGuard.jar https://dev.bukkit.org/projects/worldguard/files/2610618/download
-      - name: Install WorldGuard into local mvn repo
-        if: steps.check_worldguard.outputs.files_exists == 'false'
-        run: mvn install:install-file -Dfile=./WorldGuard.jar -DgroupId=com.sk89q -DartifactId=worldguard -Dversion=6.2.2 -Dpackaging=jar -DgeneratePom=true
+#      - name: Check 1.12.2 NMS existence
+#        id: check_nms
+#        uses: andstor/file-existence-action@v1
+#        with:
+#          files: "/home/runner/.m2/repository/org/spigotmc/spigot/1.12.2-R0.1-SNAPSHOT/spigot-1.12.2-R0.1-SNAPSHOT.pom"
+#      - name: Download BuildTools
+#        if: steps.check_nms.outputs.files_exists == 'false'
+#        run: mkdir -p ./build/ && curl -L -o ./build/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+#      - name: Run BuildTools
+#        if: steps.check_nms.outputs.files_exists == 'false'
+#        run: cd build && java -jar BuildTools.jar --rev 1.12.2
+#      - name: Check WorldGuard existence
+#        id: check_worldguard
+#        uses: andstor/file-existence-action@v1
+#        with:
+#          files: "/home/runner/.m2/repository/com/sk89q/worldguard/6.2.2/worldguard-6.2.2.pom"
+#      - name: Download WorldGuard v6.2.2
+#        if: steps.check_worldguard.outputs.files_exists == 'false'
+#        run: curl -L -o WorldGuard.jar https://dev.bukkit.org/projects/worldguard/files/2610618/download
+#      - name: Install WorldGuard into local mvn repo
+#        if: steps.check_worldguard.outputs.files_exists == 'false'
+#        run: mvn install:install-file -Dfile=./WorldGuard.jar -DgroupId=com.sk89q -DartifactId=worldguard -Dversion=6.2.2 -Dpackaging=jar -DgeneratePom=true
+      - run: cd /
       - run: java -version
       - run: mvn --version
       - run: mvn -B package
