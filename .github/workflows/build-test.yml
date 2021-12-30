@@ -50,6 +50,18 @@ jobs:
         if: steps.check_worldguard.outputs.files_exists == 'false'
         run: mvn install:install-file -Dfile=./WorldGuard.jar -DgroupId=com.sk89q -DartifactId=worldguard -Dversion=6.2.2 -Dpackaging=jar -DgeneratePom=true
 
+      - name: Check CrackShot existence
+        id: check_crackshot
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "/home/runner/.m2/repository/com/shampaggon/CrackShot/0.98.11/CrackShot-0.98.11.pom"
+      - name: Download CrackShot v0.98.11
+        if: steps.check_crackshot.outputs.files_exists == 'false'
+        run: curl -L -o CrackShot.jar https://dev.bukkit.org/projects/crackshot/files/3151915/download
+      - name: Install CrackShot into local mvn repo
+        if: steps.check_crackshot.outputs.files_exists == 'false'
+        run: mvn install:install-file -Dfile=./CrackShot.jar -DgroupId=com.shampaggon -DartifactId=CrackShot -Dversion=0.98.11 -Dpackaging=jar -DgeneratePom=true
+
       - run: java -version
       - run: mvn --version
       - run: mvn -B package
