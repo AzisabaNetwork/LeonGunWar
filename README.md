@@ -16,6 +16,8 @@
 
 ## ビルド前に
 ```sh
+#!/bin/bash
+
 # WorldEdit v6.1.9をローカルのMavenRepoにインストール
 curl -L -o WorldEdit.jar https://dev.bukkit.org/projects/worldedit/files/2597538/download
 mvn install:install-file -Dfile=./WorldEdit.jar -DgroupId=com.sk89q -DartifactId=worldedit -Dversion=6.1.9 -Dpackaging=jar -DgeneratePom=true
