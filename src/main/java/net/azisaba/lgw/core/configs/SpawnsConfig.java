@@ -1,10 +1,12 @@
 package net.azisaba.lgw.core.configs;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 import net.azisaba.lgw.core.LeonGunWar;
 
@@ -25,7 +27,7 @@ public class SpawnsConfig extends Config {
 
     @SneakyThrows(value = { Exception.class })
     @Override
-    public void loadConfig() {
+    public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();
 
         spawns = new HashMap<>();
@@ -43,5 +45,9 @@ public class SpawnsConfig extends Config {
 
         lobby = spawns.get("lobby");
         onsen = spawns.get("onsen");
+    }
+
+    public Location getLobby() {
+        return lobby;
     }
 }

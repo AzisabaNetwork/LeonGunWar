@@ -35,6 +35,12 @@ public class MatchFinishedEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    public MatchFinishedEvent(GameMap map,List<BattleTeam> winners,Map<BattleTeam, List<Player>> teamPlayers) {
+        this.map = map;
+        this.winners = winners;
+        this.teamPlayers = teamPlayers;
+    }
+
     public List<Player> getAllTeamPlayers() {
         return teamPlayers.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
@@ -50,5 +56,9 @@ public class MatchFinishedEvent extends Event {
 
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
+    }
+
+    public List<BattleTeam> getWinners() {
+        return winners;
     }
 }

@@ -3,11 +3,17 @@ package net.azisaba.lgw.core.listeners;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -106,6 +112,59 @@ public class PlayerControlListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendQuickMessage(PlayerJoinEvent e) {
-        LeonGunWar.getQuickBar().send(e.getPlayer());
+        //LeonGunWar.getQuickBar().send(e.getPlayer());
     }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent e){
+
+        if(e.getPlayer().getGameMode() != GameMode.SURVIVAL && e.getPlayer().getGameMode() != GameMode.ADVENTURE){
+            return;
+        }
+        if(LeonGunWar.getPlugin().getManager().isPlayerMatching(e.getPlayer())
+                || LeonGunWar.getPlugin().getMatchQueueManager().isInQueue(e.getPlayer())){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent e){
+
+        if(e.getPlayer().getGameMode() != GameMode.SURVIVAL && e.getPlayer().getGameMode() != GameMode.ADVENTURE){
+            return;
+        }
+        if(LeonGunWar.getPlugin().getManager().isPlayerMatching(e.getPlayer())
+                || LeonGunWar.getPlugin().getMatchQueueManager().isInQueue(e.getPlayer())){
+            e.setCancelled(true);
+        }
+
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e){
+
+        if(e.getPlayer().getGameMode() != GameMode.SURVIVAL && e.getPlayer().getGameMode() != GameMode.ADVENTURE){
+            return;
+        }
+
+        e.setCancelled(true);
+
+    }
+    @EventHandler
+    public void onPick(EntityPickupItemEvent e){
+
+        if(e.getEntity() instanceof Player){
+
+            Player p = (Player) e.getEntity();
+
+            if(p.getGameMode() != GameMode.SURVIVAL && p.getGameMode() != GameMode.ADVENTURE){
+                return;
+            }
+
+            e.setCancelled(true);
+
+        }
+
+    }
+
 }

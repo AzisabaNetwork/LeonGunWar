@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,11 @@ public class MatchCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+        if(true){
+            sender.sendMessage(ChatColor.RED + "This command is currently disabled. Sorry!");
+            return true;
+        }
 
         // 1秒以内に実行したことがある場合はreturn
         if ( sender instanceof Player

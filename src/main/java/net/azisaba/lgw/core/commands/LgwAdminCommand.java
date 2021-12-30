@@ -1,14 +1,17 @@
 package net.azisaba.lgw.core.commands;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.LeonGunWar;
@@ -57,8 +60,14 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             // カウントダウン終了
             LeonGunWar.getPlugin().getCountdown().stopCountdown();
 
+            //matsu1213 start
+            LeonGunWar.getPlugin().getCountdown().startCountdown();
+
             // 試合開始
-            LeonGunWar.getPlugin().getManager().startMatch();
+            //LeonGunWar.getPlugin().getManager().startMatch();
+
+            //matsu1213 end
+
             return true;
         }
 
@@ -70,6 +79,13 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(Chat.f("&cこのコマンドはプレイヤーのみ有効です！"));
                 return true;
             }
+
+            if(true){
+            sender.sendMessage(ChatColor.RED + "This command is currently disabled. Sorry!");
+            return true;
+            }
+
+            /*
 
             Player p = (Player) sender;
 
@@ -115,19 +131,26 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 p.sendMessage(Chat.f("&c指定したマップが見つかりませんでした。"));
             }
 
+            */
+
             return true;
         }
 
         // reloadなら
         if ( Args.check(args, 0, "reload", "rl") ) {
-            // マップの再読み込み
-            LeonGunWar.getPlugin().getMapsConfig().loadConfig();
 
-            // Lobby Spawnの読み込み
-            LeonGunWar.getPlugin().getSpawnsConfig().loadConfig();
+            try {
+                // マップの再読み込み
+                LeonGunWar.getPlugin().getMapsConfig().loadConfig();
 
-            // 設定ファイルの読み込み
-            LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
+                // Lobby Spawnの読み込み
+                LeonGunWar.getPlugin().getSpawnsConfig().loadConfig();
+
+                // 設定ファイルの読み込み
+                LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
+            } catch ( IOException | InvalidConfigurationException exception ) {
+                exception.printStackTrace();
+            }
 
             sender.sendMessage(Chat.f("{0}&a設定とマップのリロードが完了しました。", LeonGunWar.GAME_PREFIX));
             return true;
@@ -190,19 +213,48 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // map なら
+        if ( Args.check(args, 0, "map") ) {
+            if ( Args.check(args, 1) ) {
+                Player p = Bukkit.getPlayer((args[2]));
+
+                if (p != null && p.isOnline()) {
+                    sender.sendMessage(Chat.f("&7{0}はワールド&8[&c{1}&&8]&7にいます。", p.getName(), p.getWorld().getName()));
+                    return true;
+                } else {
+                    sender.sendMessage(Chat.f("&l&7{0}&cはこのサーバーにいない、もしくは存在していません！", args[2]));
+                    return true;
+                }
+            } else {
+                sender.sendMessage(Chat.f("第二引数にプレイヤー名を指定してください！"));
+                return true;
+            }
+        }
+
+        // stop なら
+        if ( Args.check(args, 0, "stop") ) {
+            if ( true ){
+                sender.sendMessage(Chat.f("&cThis command is currently disabled. Sorry!"));
+            }
+        }
+
+        // forceCorrupted なら
+        if ( Args.check(args, 0, "forceCorrupted") ) {
+            LeonGunWar.getPlugin().getManager().forceCorrupted();
+            sender.sendMessage(Chat.f("%c次の試合は絶対じごくもーど。"));
+        }
+
         return true;
     }
 
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+
         if ( args.length == 1 ) {
-            return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
+            return Args.complete(args, 0, "debug_start", "reload", "rl" , "map" , "showdata" , "stop" , "forceCorrupted");
         }
-        if ( args.length == 2 && Args.check(args, 0, "teleport", "tp") ) {
-            return Args.complete(args, 1, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
-                    .map(GameMap::getMapName)
-                    .toArray(String[]::new));
-        }
+
         return null;
     }
 }

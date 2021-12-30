@@ -7,6 +7,9 @@ import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,11 +25,18 @@ import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.configs.LevelingConfig;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 
+import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
+import jp.azisaba.lgw.kdstatus.utils.TimeUnit;
+import static net.azisaba.lgw.core.utils.LevelingUtils.getBaseIncreaseRate;
+
 public class DamageListener implements Listener {
+    private final LevelingConfig config = LeonGunWar.getPlugin().getLevelingConfig();
 
     private final CSUtility crackShot = new CSUtility();
 
@@ -62,15 +72,30 @@ public class DamageListener implements Listener {
 
         // 個人キルを追加
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
-        // ポイントを追加
+        // ポイントを追
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+
+        // XP付与
+        PlayerStats stats = PlayerStats.getStats(killer);
+        if (LeonGunWar.getPlugin().getManager().isCorrupted()) { // 経験値倍増ゲームだったら
+            int xps = getBaseIncreaseRate(KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(killer,true).getKills(TimeUnit.LIFETIME));
+            stats.addXps(xps); // TODO: 倍増率は絶対要検討！
+            killer.sendMessage(Chat.f("&b+{0} LGW Experiences (Kill)!",xps));
+        } else { // 経験値倍増ゲームじゃなかったら
+            killer.sendMessage(Chat.f("&b+{0} LGW Experiences (Kill)!",1));
+            stats.addXps(1);
+        }
+
+        int coins = 10;
+        stats.addCoins(coins);
+        killer.sendMessage(Chat.f("&6+{0} LGW Coins (Kill)!",coins));
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);
         int streaks = LeonGunWar.getPlugin().getKillStreaks().get(killer).get();
         Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> killer.sendTitle("", Chat.f("&b{0} &7Kill Streaks", streaks), 0, 20, 20), 20);
         // 音を鳴らす
-        killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
+        killer.playSound(killer.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 5f, 1.75f);
     }
 
     /**
@@ -110,7 +135,7 @@ public class DamageListener implements Listener {
                     int streaks = LeonGunWar.getPlugin().getAssistStreaks().get(assist).get();
                     Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> assist.sendTitle("", Chat.f("&a{0} &7Assist Streaks", streaks), 0, 20, 20), 20);
                     // 音を鳴らす
-                    assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                    assist.playSound(assist.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 5f, 1.75f);
                 });
 
         // lastDamagedを初期化
@@ -223,6 +248,10 @@ public class DamageListener implements Listener {
 
         // メッセージ送信
         p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
+
+        String bossbarMsg = Chat.f("{0} 銃 {1}",killer.getDisplayName(),p.getDisplayName());
+
+        BossBar bossBar = Bukkit.createBossBar(bossbarMsg, BarColor.WHITE, BarStyle.SOLID);
 
         // コンソールに出力
         Bukkit.getConsoleSender().sendMessage(msg);

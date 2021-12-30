@@ -13,6 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -22,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
@@ -36,7 +38,6 @@ import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
@@ -45,6 +46,7 @@ import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.util.PlayerStats;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
@@ -53,6 +55,9 @@ import net.azisaba.playersettings.util.SettingsData;
 
 import lombok.Data;
 import lombok.NonNull;
+
+import static net.azisaba.lgw.core.utils.LevelingUtils.getAngelOfDeathPercentage;
+import static org.bukkit.scoreboard.DisplaySlot.BELOW_NAME;
 
 /**
  * ゲームを司るコアクラス
@@ -101,6 +106,16 @@ public class MatchManager {
     // リーダーマッチかどうか
     private boolean leaderMatch = false;
 
+    // 倍増ゲームかどうか TODO これ関連の処理を追加
+    private boolean isCorrupted = false;
+
+    // 強制的に倍増ゲームにする
+    private boolean isForceCorrupted = false;
+
+    // 体力表示スコアボード
+    private final Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+    private Objective objective;
+
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
      */
@@ -143,6 +158,13 @@ public class MatchManager {
         return Bukkit.createBossBar("", barColor, barStyle);
     }
 
+    public void loadMatchData(MatchMode matchMode,GameMap gameMap){
+
+        setMatchMode(matchMode);
+        this.currentGameMap = gameMap;
+
+    }
+
     /**
      * マッチを開始するメソッド
      *
@@ -151,6 +173,7 @@ public class MatchManager {
     public void startMatch() {
         // すでにマッチ中の場合はIllegalStateException
         Preconditions.checkState(!isMatching, "A match is already started.");
+        Preconditions.checkState(currentGameMap != null,"GameMap is not loaded.");
 
         // timeLeftをdurationに変更
         timeLeft.set((int) matchMode.getDuration().getSeconds());
@@ -158,12 +181,20 @@ public class MatchManager {
         // ボスバー作成
         bossBar = createEmptyBossBar();
 
+        //matsu1213 start
         // マップを抽選
-        currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
-        // マップ名を表示
-        Bukkit.broadcastMessage(
-                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+        //currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
 
+        //マップを読み込み(SWM)
+        //MapLoader.loadMap(currentGameMap.getMapName());
+
+        //matsu1213 end
+
+        // マップ名を表示
+        //Bukkit.broadcastMessage(
+        //       Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+
+        //matsu1213 end
         // 参加プレイヤーを取得
         List<Player> entryPlayers = getEntryPlayers();
         // プレイヤーを振り分け
@@ -216,6 +247,7 @@ public class MatchManager {
             }
         }
 
+
         // 全プレイヤーに音を鳴らす
         Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
@@ -235,29 +267,37 @@ public class MatchManager {
         isMatching = true;
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        //LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+
+        // 倍増ゲームであった場合は音とタイトルで全プレイヤーに伝える
+        isCorrupted = isXpBoost(entryPlayers);
+        if (isCorrupted) {
+            currentGameMap.getWorld().setTime(18000); //真夜中にしてみた
+            entryPlayers.forEach(p -> {
+                p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_THUNDER, 1, 1);
+                p.sendTitle(Chat.f("&c&lぢごくモード"), "", 10, 40, 10);
+
+                p.sendMessage(Chat.f("&c&m                                                     "));
+                p.sendMessage("");
+                p.sendMessage(Chat.f("&c&lぢごくモード！！！"));
+                p.sendMessage(Chat.f("&cえんま大王のおかげでこのゲームは「ぢごくモード」になりました！"));
+                p.sendMessage(Chat.f("&aこれによってもらえる経験値が増えます！！！！たくさん稼ごう！！！"));
+                p.sendMessage("");
+                p.sendMessage(Chat.f("&c&m                                                     "));
+
+            });
+        }
     }
 
-    /**
-     * ゲーム終了時に行う処理を書きます
-     */
-    public void finalizeMatch() {
-        // タスクの終了
-        if ( matchTask != null ) {
-            matchTask.cancel();
-            matchTask = null;
-        }
+    public List<Player> getEntryPlayers() { return entryPlayers; }
 
-        // 残り時間を0に
-        timeLeft.set(0);
+    public void gameEnd(){
+
+        currentGameMap.getWorld().setPVP(false);
+
         // チームのポイントを0に
         pointMap.clear();
 
-        // killDeathCounterを初期化
-        killDeathCounter = new KillDeathCounter();
-
-        // サイドバーを削除
-        LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
         // 全プレイヤーのdisplayNameを初期化
         Bukkit.getOnlinePlayers().forEach(p -> {
 
@@ -285,8 +325,54 @@ public class MatchManager {
         // モードをnullに設定
         matchMode = null;
 
-        // ゲーム終了
+        //Game end
         isMatching = false;
+
+    }
+
+    /**
+     * ゲーム終了時に行う処理を書きます
+     */
+    public void finalizeMatch() {
+
+        if(LeonGunWar.getPlugin().getMatchQueueManager().hasQueue()){
+            getWorldPlayers().forEach(p -> {
+                LeonGunWar.getPlugin().getMatchQueueManager().addQueuePlayer(p);
+                p.teleport(LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getSpawnLocation());
+            });
+
+        }else {
+            getWorldPlayers().forEach(p -> p.sendMessage(ChatColor.RED + "エラーが発生しました。これがバグである場合は、管理者に報告して下さい。(ERROR: Queue not found)"));
+        }
+
+        // タスクの終了
+        if ( matchTask != null ) {
+            matchTask.cancel();
+            matchTask = null;
+        }
+
+        killDeathCounter = new KillDeathCounter();
+
+        // 残り時間を0に
+        timeLeft.set(0);
+
+        // サイドバーを削除
+        getWorldPlayers().forEach(p -> LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar(p));
+        //LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
+
+        getWorldPlayers().forEach(p -> p.getScoreboard().clearSlot(BELOW_NAME));
+
+        //matsu1213 start
+
+        Bukkit.unloadWorld(currentGameMap.getMapName(),false);
+
+        currentGameMap = null;
+        entryPlayers.clear();
+
+        //matsu1213 end
+
+        // ゲーム終了
+        //isMatching = false;
     }
 
     /**
@@ -302,15 +388,19 @@ public class MatchManager {
 
         // エントリー追加
         entryPlayers.add(p);
+
         // 名前がデフォルトの場合
         if ( !isPlayerMatching(p) ) {
             // 名前の色を変更
             p.setPlayerListName(Chat.f("&a{0}", p.getName()));
         }
 
+        /*
         // イベント呼び出し
         PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
         Bukkit.getPluginManager().callEvent(event);
+
+         */
 
         return true;
     }
@@ -335,11 +425,22 @@ public class MatchManager {
             p.setPlayerListName(p.getName());
         }
 
+        /*
         // イベント呼び出し
         PlayerLeaveEntryMatchEvent event = new PlayerLeaveEntryMatchEvent(p);
         Bukkit.getPluginManager().callEvent(event);
 
+         */
+
         return true;
+    }
+
+    public void addEntryPlayers(List<Player> players){
+        entryPlayers.addAll(players);
+    }
+
+    public void clearEntryPlayers(){
+        entryPlayers.clear();
     }
 
     /**
@@ -394,6 +495,7 @@ public class MatchManager {
 
         // アーマー削除
         p.getInventory().setChestplate(null);
+        p.getInventory().setHelmet(null);
 
         // 退出メッセージを全員に送信
         String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
@@ -698,7 +800,7 @@ public class MatchManager {
                         target.getPlayerListName())));
 
         // リーダーにタイトルを表示
-        target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
+        target.sendTitle("",Chat.f("&cあなたがリーダーです！"), 0, 20 * 4, 10);
     }
 
     public void setMatchMode(MatchMode mode) {
@@ -710,13 +812,14 @@ public class MatchManager {
 
         // すでに人数が集まっている場合はカウントダウンを開始
         if ( getEntryPlayers().size() >= 2 ) {
-            LeonGunWar.getPlugin().getCountdown().startCountdown();
+            //LeonGunWar.getPlugin().getCountdown().startCountdown();
         }
     }
 
     protected void onDisablePlugin() {
         // 試合をしていなければreturn
         if ( !isMatching ) {
+            LeonGunWar.getPlugin().getMatchQueueManager().onDisable();
             return;
         }
 
@@ -729,13 +832,14 @@ public class MatchManager {
             // メッセージを表示
             p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
             // スポーンにTP
-            Location spawn = LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
+            Location spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
             if ( spawn != null && spawn.getWorld() != null ) {
                 p.teleport(spawn);
             }
 
             // アーマー削除
             p.getInventory().setChestplate(null);
+            p.getInventory().setHelmet(null);
 
             // 各記録を取得
             int kills = killDeathCounter.getKills(p);
@@ -743,12 +847,15 @@ public class MatchManager {
             int assists = killDeathCounter.getAssists(p);
 
             // プレイヤーの戦績を表示
-            p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
+            p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kills, {2} Deaths, {3} Assists", p.getName(), kills,
                     deaths, assists));
 
             // DisplayNameを戻す
             p.setDisplayName(p.getName());
             p.setPlayerListName(p.getName());
+
+            Bukkit.unloadWorld(currentGameMap.getWorld(),false);
+
         });
 
         // エントリーしているプレイヤーの表示名もリセットする
@@ -760,6 +867,8 @@ public class MatchManager {
 
         // ボスバーを非表示
         bossBar.removeAll();
+
+        LeonGunWar.getPlugin().getMatchQueueManager().onDisable();
     }
 
     private void setUpPlayer(Player p, BattleTeam team) {
@@ -773,6 +882,7 @@ public class MatchManager {
 
         // 防具を装備
         p.getInventory().setChestplate(chestplates.get(team));
+        p.getInventory().setHelmet(CustomItem.getHealthHelmet(p.getHealth()));
     }
 
     /**
@@ -819,7 +929,11 @@ public class MatchManager {
 
         // 試合をしていなければlobbySpawnを返す
         if ( !isMatching ) {
-            return LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
+            if(LeonGunWar.getPlugin().getMatchQueueManager().hasQueue() && LeonGunWar.getPlugin().getMatchQueueManager().isLoaded() ){
+                return LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getSpawnLocation();
+            }else {
+                return Bukkit.getWorld("world").getSpawnLocation();
+            }
         }
 
         // チームを取得
@@ -908,6 +1022,22 @@ public class MatchManager {
         }
     }
 
+    public boolean isXpBoost(List<Player> entryPlayers) {
+
+        if(isForceCorrupted){
+            isForceCorrupted = false;
+            return true;
+        }
+
+        // ↓見にくいですね。entryPlayers内ループを回して、AngelOfDeathLevelPercentageの平均の1.3倍を返してます
+        double avgPercentage = entryPlayers.stream().mapToDouble(p -> getAngelOfDeathPercentage(PlayerStats.getStats(p).getAngelOfDeathLevel())).sum() / entryPlayers.size() * 1.3; // TODO: avgPercentageの倍増率（今は1.3倍）を調整可能にするか、微調整。
+
+        Random random = new Random();
+        int seedLike = random.nextInt(100);
+
+        return seedLike <= avgPercentage; // < と <= どっち使えばいいかわからん
+    }
+
     /**
      * パワーレベルでバランスがいいかを判断します
      * <p>
@@ -920,4 +1050,55 @@ public class MatchManager {
         return team1 + 1500 >= team2 && team1 - 1500 <= team2;
     }
 
+    public boolean isMatching() {
+        return isMatching;
+    }
+
+    public GameMap getCurrentGameMap() { return currentGameMap; }
+
+    public void setCurrentGameMap(GameMap currentGameMap) {
+        this.currentGameMap = currentGameMap;
+    }
+
+    public AtomicInteger getTimeLeft() {
+        return timeLeft;
+    }
+
+    public MatchMode getMatchMode() {
+        return matchMode;
+    }
+
+    public TeamDistributor getTeamDistributor() {
+        return teamDistributor;
+    }
+
+    public void setTeamDistributor(TeamDistributor distributor) {
+        this.teamDistributor = distributor;
+    }
+
+    public KillDeathCounter getKillDeathCounter() {
+        return killDeathCounter;
+    }
+
+    public void setMatching(boolean b) {
+        isMatching = b;
+    }
+
+    public BossBar getBossBar() {
+        return bossBar;
+    }
+
+    public void setBossBar(BossBar progressBar) {
+        this.bossBar = bossBar;
+    }
+
+    public List<Player> getWorldPlayers(){
+        return currentGameMap.getWorld().getPlayers();
+    }
+
+    public boolean isLeaderMatch() {
+        return leaderMatch;
+    }
+
+    public void forceCorrupted(){ isForceCorrupted = true; }
 }

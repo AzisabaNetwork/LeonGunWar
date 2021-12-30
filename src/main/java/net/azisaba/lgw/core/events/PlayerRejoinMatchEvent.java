@@ -16,6 +16,10 @@ public class PlayerRejoinMatchEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    public PlayerRejoinMatchEvent(Player player) {
+        this.player = player;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return HANDLERS_LIST;

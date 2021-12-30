@@ -10,10 +10,13 @@ import net.azisaba.lgw.core.utils.Chat;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class LimitCommand implements CommandExecutor {
 
     private final LimitActionListener listener;
+
+    public LimitCommand(LimitActionListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

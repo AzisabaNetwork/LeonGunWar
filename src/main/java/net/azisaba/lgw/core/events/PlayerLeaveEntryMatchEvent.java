@@ -22,6 +22,10 @@ public class PlayerLeaveEntryMatchEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    public PlayerLeaveEntryMatchEvent(Player player) {
+        this.leavePlayer = player;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return HANDLERS_LIST;

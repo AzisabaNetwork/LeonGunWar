@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
  * @author siloneco
  *
  */
-@Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum BattleTeam {
 
     RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED),
@@ -24,7 +22,22 @@ public enum BattleTeam {
     private final Color color;
     private final ChatColor chatColor;
 
+
+    BattleTeam(String name,Color color,ChatColor chatColor) {
+        this.name = name;
+        this.color = color;
+        this.chatColor = chatColor;
+    }
+
     public String getTeamName() {
         return chatColor + name;
+    }
+
+    public ChatColor getChatColor() {
+        return chatColor;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }

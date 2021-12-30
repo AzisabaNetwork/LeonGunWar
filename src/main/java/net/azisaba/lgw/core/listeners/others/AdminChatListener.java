@@ -19,10 +19,14 @@ import lombok.RequiredArgsConstructor;
  * @author siloneco
  *
  */
-@RequiredArgsConstructor
+
 public class AdminChatListener implements Listener {
 
     private final AdminChatCommand adminChatCommand;
+
+    public AdminChatListener(AdminChatCommand adminchat) {
+        this.adminChatCommand = adminchat;
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {

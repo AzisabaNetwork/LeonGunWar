@@ -24,6 +24,11 @@ public class TeamPointIncreasedEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    public TeamPointIncreasedEvent(BattleTeam team,int currentPoint) {
+        this.team = team;
+        this.currentPoint = currentPoint;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return HANDLERS_LIST;

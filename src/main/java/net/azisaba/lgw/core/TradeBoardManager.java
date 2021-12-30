@@ -178,7 +178,7 @@ public class TradeBoardManager {
     }
 
     /**
-     * String形式に変換された座標をLocaitonのインスタンスに戻します
+     * String形式に変換された座標をLocationのインスタンスに戻します
      *
      * @param str 戻したいString
      * @return 変換されたLocation

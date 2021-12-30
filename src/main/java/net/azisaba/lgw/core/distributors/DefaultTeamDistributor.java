@@ -47,6 +47,6 @@ public class DefaultTeamDistributor implements TeamDistributor {
 
     @Override
     public String getDistributorName() {
-        return "デフォルト振り分け";
+        return "デフォルト";
     }
 }

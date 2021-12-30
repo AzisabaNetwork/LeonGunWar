@@ -1,10 +1,10 @@
 name: ${project.name}
 main: net.azisaba.lgw.core.LeonGunWar
 version: ${project.version}
-authors: ["siloneco", "YukiLeafX"]
+authors: ["siloneco", "YukiLeafX" , "matsu1213"]
 description: ${project.description}
 website: ${project.url}
-depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded"]
+depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "SlimeWorldManager"]
 softdepend: ["Multiverse-Core"]
 commands:
   leongunwaradmin:
@@ -32,6 +32,15 @@ commands:
   limit:
     usage: /limit [drop/build]
     permission: leongunwar.command.limit
+  angelOfDeath:
+    usage: /angelOfDeath
+    permission: leongunwar.command.angelOfDeath
+  statsGUI:
+    usage: /statsGUI
+    permission: leongunwar.command.statsGUI
+  map:
+    usage: /map
+    permission: leongunwar.command.map
 permissions:
   leongunwar.entrysign.changestate:
     default: op

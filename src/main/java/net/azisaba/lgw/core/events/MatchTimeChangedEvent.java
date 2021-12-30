@@ -21,6 +21,10 @@ public class MatchTimeChangedEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    public MatchTimeChangedEvent(int timeLeft) {
+        this.timeLeft = timeLeft;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
@@ -28,5 +32,9 @@ public class MatchTimeChangedEvent extends Event {
 
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
+    }
+
+    public int getTimeLeft() {
+        return timeLeft;
     }
 }
