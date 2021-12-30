@@ -1,0 +1,29 @@
+---
+name: Build Test
+"on": [push]
+
+jobs:
+  build-test:
+    name: Build with Java 8
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: "8"
+          distribution: "adopt"
+          cache: "maven"
+      - name: Check WorldGuard existence
+        id: check_worldguard
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "/home/runner/.m2/repository/com/sk89q/worldguard/6.2.2/worldguard-6.2.2.pom"
+      - name: Download WorldGuard v6.2.2
+        if: steps.check_worldguard.outputs.files_exists == 'false'
+        run: curl -L -o WorldGuard.jar https://dev.bukkit.org/projects/worldguard/files/2610618/download
+      - name: Install WorldGuard into local mvn repo
+        if: steps.check_worldguard.outputs.files_exists == 'false'
+        run: mvn install:install-file -Dfile=./WorldGuard.jar -DgroupId=com.sk89q -DartifactId=worldguard -Dversion=6.2.2 -Dpackaging=jar -DgeneratePom=true
+      - run: java -version
+      - run: mvn --version
+      - run: mvn -B package
