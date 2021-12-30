@@ -13,6 +13,7 @@ jobs:
           java-version: "8"
           distribution: "adopt"
           cache: "maven"
+
       - name: Check 1.12.2 NMS existence
         id: check_nms
         uses: andstor/file-existence-action@v1
@@ -24,6 +25,19 @@ jobs:
       - name: Run BuildTools
         if: steps.check_nms.outputs.files_exists == 'false'
         run: cd build && java -jar BuildTools.jar --rev 1.12.2
+
+      - name: Check WorldEdit existence
+        id: check_worldedit
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "/home/runner/.m2/repository/com/sk89q/worldedit/6.1.9/worldedit-6.1.9.pom"
+      - name: Download WorldEdit v6.1.9
+        if: steps.check_worldedit.outputs.files_exists == 'false'
+        run: curl -L -o WorldEdit.jar https://dev.bukkit.org/projects/worldedit/files/2597538/download
+      - name: Install WorldEdit into local mvn repo
+        if: steps.check_worldedit.outputs.files_exists == 'false'
+        run: mvn install:install-file -Dfile=./WorldEdit.jar -DgroupId=com.sk89q -DartifactId=worldedit -Dversion=6.1.9 -Dpackaging=jar -DgeneratePom=true
+
       - name: Check WorldGuard existence
         id: check_worldguard
         uses: andstor/file-existence-action@v1
@@ -35,6 +49,7 @@ jobs:
       - name: Install WorldGuard into local mvn repo
         if: steps.check_worldguard.outputs.files_exists == 'false'
         run: mvn install:install-file -Dfile=./WorldGuard.jar -DgroupId=com.sk89q -DartifactId=worldguard -Dversion=6.2.2 -Dpackaging=jar -DgeneratePom=true
+
       - run: java -version
       - run: mvn --version
       - run: mvn -B package
