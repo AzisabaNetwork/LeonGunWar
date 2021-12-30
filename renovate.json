@@ -1,7 +1,7 @@
 {
   "extends": [
     "github>AzisabaNetwork/renovate-config",
-    "github>AzisabaNetwork/renovate-config:auto-merge-minor"
+    "github>AzisabaNetwork/renovate-config:auto-merge-minor-updates"
   ],
   "assignees": ["siloneco", "matsu1213"]
 }
