@@ -1,6 +1,6 @@
 [![Build Test](https://github.com/AzisabaNetwork/LeonGunWar/actions/workflows/build-test.yml/badge.svg)](https://github.com/AzisabaNetwork/LeonGunWar/actions/workflows/build-test.yml)
 [![](https://badgen.net/twitter/follow/AzisabaNetwork/?icon=twitter)](https://twitter.com/AzisabaNetwork)
-[![](https://discordapp.com/api/guilds/357134045328572418/widget.png)](https://discord.gg/seheC2W)
+[![](https://discordapp.com/api/guilds/357134045328572418/widget.png)](https://discord.gg/azisaba)
 
 # LeonGunWar plugin
 このプラグインは [アジ鯖](https://azisaba.net) 内にあるLGWサーバーのコアとなるPluginです
