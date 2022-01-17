@@ -201,8 +201,8 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
         Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
-        Bukkit.getPluginCommand("angelOfDeath").setExecutor(new AngelOfDeathCommand());
-        Bukkit.getPluginCommand("statsGUI").setExecutor(new StatsGUICommand());
+        //Bukkit.getPluginCommand("angelOfDeath").setExecutor(new AngelOfDeathCommand());
+        //Bukkit.getPluginCommand("statsGUI").setExecutor(new StatsGUICommand());
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -215,8 +215,8 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("angelOfDeath").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("statsGUI").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("angelOfDeath").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("statsGUI").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -263,9 +263,12 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new PlayerStatsListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LowDamageListener(),this);
         Bukkit.getPluginManager().registerEvents(new LobbyJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageCorrection(),this);
+        Bukkit.getPluginManager().registerEvents(new ChestplateChangeListener(),this);
+        Bukkit.getPluginManager().registerEvents(new DamageIndicator(),this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);

@@ -57,12 +57,12 @@ public class SQLPlayerStats {
             ps.setInt(3,stats.getLevel());
             ps.setInt(4,stats.getXps());
             ps.setInt(5,stats.getCoins());
-            ps.setInt(6,stats.getYobi1());
-            ps.setInt(7,stats.getYobi2());
+            ps.setInt(6,stats.getShard());
+            ps.setInt(7,stats.getCrystal());
             ps.setInt(8,stats.getWins());
             ps.setInt(9,stats.getLoses());
             ps.setInt(10,stats.getAngelOfDeathLevel());
-            ps.setInt(11,stats.getYobi3());
+            ps.setInt(11,stats.getShard());//は？
 
             ps.executeUpdate();
             ps.close();

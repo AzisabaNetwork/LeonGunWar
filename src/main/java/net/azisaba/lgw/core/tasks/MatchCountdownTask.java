@@ -14,7 +14,7 @@ public class MatchCountdownTask extends BukkitRunnable {
         int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().decrementAndGet();
 
         // イベントを呼び出す
-
+        //TimeChangeEventを非同期にしたといったな。あれは嘘だ
         Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), new Runnable() {
             @Override
             public void run() {

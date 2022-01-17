@@ -136,11 +136,7 @@ public class MatchControlListener implements Listener {
             // スポーンにTP
             //p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
 
-            //PVPをオフにするだけ
             LeonGunWar.getPlugin().getManager().gameEnd();
-
-            // アーマー削除
-            p.getInventory().setChestplate(null);
 
             // 各記録を取得
             int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
@@ -150,10 +146,6 @@ public class MatchControlListener implements Listener {
             // プレイヤーの戦績を表示
             p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kills, {2} Deaths, {3} Assists", p.getName(), kills,
                     deaths, assists));
-
-            // 回復
-            p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
-            p.setFoodLevel(40);
         }
 
         LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "DEFEAT...",ChatColor.GRAY + "今回は勝利することができなかった",0,100,0));
@@ -177,13 +169,13 @@ public class MatchControlListener implements Listener {
                     p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
 
                     // XP付与
-                    PlayerStats stats = PlayerStats.getStats(p);
-                    stats.addXps(winXP);
-                    p.sendMessage(Chat.f("&b+ {0} LGW Experiences (Win)!",1));
+                    //PlayerStats stats = PlayerStats.getStats(p);
+                    //stats.addXps(winXP);
+                    //p.sendMessage(Chat.f("&b+ {0} LGW Experiences (Win)!",1));
 
-                    int coins = 100;
-                    stats.addCoins(coins);
-                    p.sendMessage(Chat.f("&6+ {0} LGW Coins (Win)!",coins));
+                    //int coins = 100;
+                    //stats.addCoins(coins);
+                    //p.sendMessage(Chat.f("&6+ {0} LGW Coins (Win)!",coins));
 
 
                 }
@@ -194,6 +186,7 @@ public class MatchControlListener implements Listener {
             });
         }
 
+        /*
         Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), new Runnable() {
             @Override
             public void run() {
@@ -202,6 +195,8 @@ public class MatchControlListener implements Listener {
                 });
             }
         });
+
+         */
 
     }
 
@@ -227,11 +222,7 @@ public class MatchControlListener implements Listener {
             return;
 
         // スコアボードをアップデート
-        LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p ->{
-
-            LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(p,LeonGunWar.getPlugin().getScoreboardDisplayer().matchBoardLines(p));
-
-        });
+        LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(LeonGunWar.getPlugin().getScoreboardDisplayer().matchBoardLines());
 
     }
 
@@ -290,7 +281,7 @@ public class MatchControlListener implements Listener {
         }
 
         if(timeLeft == 60){
-            LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle("", ChatColor.YELLOW + "残り" + ChatColor.GREEN + "1" + ChatColor.YELLOW + "分！"));
+            LeonGunWar.getPlugin().getManager().getWorldPlayers().forEach(p -> p.sendTitle("", ChatColor.YELLOW + "残り" + ChatColor.GREEN + " 1 " + ChatColor.YELLOW + "分！"));
         }
 
         // 5秒以下なら音を鳴らす

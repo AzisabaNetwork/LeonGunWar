@@ -233,16 +233,18 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
         // stop なら
         if ( Args.check(args, 0, "stop") ) {
-            if ( true ){
-                sender.sendMessage(Chat.f("&cThis command is currently disabled. Sorry!"));
-            }
+
         }
 
+        /*
         // forceCorrupted なら
         if ( Args.check(args, 0, "forceCorrupted") ) {
             LeonGunWar.getPlugin().getManager().forceCorrupted();
             sender.sendMessage(Chat.f("%c次の試合は絶対じごくもーど。"));
+
         }
+
+         */
 
         return true;
     }
@@ -252,7 +254,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 
         if ( args.length == 1 ) {
-            return Args.complete(args, 0, "debug_start", "reload", "rl" , "map" , "showdata" , "stop" , "forceCorrupted");
+            return Args.complete(args, 0, "debug_start", "reload", "rl" , "map" , "showdata" , "stop");
         }
 
         return null;

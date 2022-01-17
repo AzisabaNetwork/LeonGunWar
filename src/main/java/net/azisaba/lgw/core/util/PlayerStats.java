@@ -228,22 +228,23 @@ public class PlayerStats {
         this.loses = this.loses + loses;
     }
 
-    public int getYobi1() {
+    public int getShard() {
         return shard;
     }
 
-    public void setYobi1(int shard) {
+    public void setShard(int shard) {
         this.shard = shard;
     }
 
-    public int getYobi2() {
+    public int getCrystal() {
         return crystal;
     }
 
-    public void setYobi2(int crystal) {
+    public void setCrystal(int crystal) {
         this.crystal = crystal;
     }
 
+    /*
     public int getYobi3() {
         return yobi3;
     }
@@ -251,4 +252,6 @@ public class PlayerStats {
     public void setYobi3(int yobi3) {
         this.yobi3 = yobi3;
     }
+
+     */
 }

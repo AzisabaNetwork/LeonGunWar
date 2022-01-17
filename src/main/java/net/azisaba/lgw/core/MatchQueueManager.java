@@ -59,9 +59,7 @@ public class MatchQueueManager {
         if(hasQueue){
             inQueue.add(player);
 
-            LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getPlayers().forEach(p -> {
-                LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(p,LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(0));
-            });
+            LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(0));
 
             if(!LeonGunWar.getPlugin().getManager().isMatching() && inQueue.size() >= 2 && !LeonGunWar.getPlugin().getCountdown().isRunning()){
 
@@ -78,9 +76,7 @@ public class MatchQueueManager {
         if(inQueue.contains(player))
             inQueue.remove(player);
 
-        LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getPlayers().forEach(p -> {
-            LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(p,LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(0));
-        });
+        LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(0));
 
         if(!LeonGunWar.getPlugin().getManager().isMatching()){
             if(inQueue.size() < 2){

@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -113,8 +114,8 @@ public class MatchManager {
     private boolean isForceCorrupted = false;
 
     // 体力表示スコアボード
-    private final Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
-    private Objective objective;
+    //private final Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+    //private Objective objective;
 
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
@@ -181,14 +182,11 @@ public class MatchManager {
         // ボスバー作成
         bossBar = createEmptyBossBar();
 
-        //matsu1213 start
         // マップを抽選
         //currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
 
         //マップを読み込み(SWM)
         //MapLoader.loadMap(currentGameMap.getMapName());
-
-        //matsu1213 end
 
         // マップ名を表示
         //Bukkit.broadcastMessage(
@@ -269,7 +267,7 @@ public class MatchManager {
         // 全プレイヤーにQuickメッセージを送信
         //LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
 
-        // 倍増ゲームであった場合は音とタイトルで全プレイヤーに伝える
+        // 倍増ゲームであった場合は音とタイトルで全プレイヤーに伝える//disabled
         isCorrupted = isXpBoost(entryPlayers);
         if (isCorrupted) {
             currentGameMap.getWorld().setTime(18000); //真夜中にしてみた
@@ -293,6 +291,8 @@ public class MatchManager {
 
     public void gameEnd(){
 
+        timeLeft.set(0);
+
         currentGameMap.getWorld().setPVP(false);
 
         // チームのポイントを0に
@@ -312,6 +312,12 @@ public class MatchManager {
                 return;
             }
 
+            // アーマー削除
+            p.getInventory().setChestplate(null);
+
+            //回復
+            p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
+            p.setFoodLevel(40);
             // DisplayNameをリセット
             p.setDisplayName(p.getName());
         });
@@ -357,19 +363,15 @@ public class MatchManager {
         timeLeft.set(0);
 
         // サイドバーを削除
-        getWorldPlayers().forEach(p -> LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar(p));
+        LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
         //LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
 
         getWorldPlayers().forEach(p -> p.getScoreboard().clearSlot(BELOW_NAME));
-
-        //matsu1213 start
 
         Bukkit.unloadWorld(currentGameMap.getMapName(),false);
 
         currentGameMap = null;
         entryPlayers.clear();
-
-        //matsu1213 end
 
         // ゲーム終了
         //isMatching = false;
@@ -1023,6 +1025,10 @@ public class MatchManager {
     }
 
     public boolean isXpBoost(List<Player> entryPlayers) {
+
+        if(true){
+            return false;
+        }
 
         if(isForceCorrupted){
             isForceCorrupted = false;

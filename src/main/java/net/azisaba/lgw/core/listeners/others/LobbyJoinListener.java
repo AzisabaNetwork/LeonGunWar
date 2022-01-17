@@ -15,11 +15,11 @@ public class LobbyJoinListener implements Listener {
 
         if( LeonGunWar.getPlugin().isLobby() ){
 
-            e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+            //e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
             ScoreboardDisplayer sd = LeonGunWar.getPlugin().getScoreboardDisplayer();
 
-            sd.updateScoreboard(e.getPlayer(),sd.lobbyBordLines(e.getPlayer()));
+            sd.updateScoreboard(sd.lobbyBordLines());
 
         }
 

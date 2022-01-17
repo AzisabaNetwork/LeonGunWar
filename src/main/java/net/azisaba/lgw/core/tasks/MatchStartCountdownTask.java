@@ -55,11 +55,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
         }
 
         if(bord){
-            LeonGunWar.getPlugin().getMatchQueueManager().getQueueWorld().getPlayers().forEach(p -> {
-
-                LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(p,LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(timeLeft));
-
-            });
+            LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard(LeonGunWar.getPlugin().getScoreboardDisplayer().queueBordLines(timeLeft));
         }
 
         // 1秒減らす

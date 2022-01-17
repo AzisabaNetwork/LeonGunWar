@@ -77,7 +77,7 @@ public class DamageCorrection implements Listener {
 
                 }else if(e.getDamager() == null){
 
-                    after = sisyagonyuu(e.getDamage() * 0.5);
+                    after = sisyagonyuu(e.getDamage() * 0.75);
 
                     /*
                     long sa = rendame.get(e.getVictim().getUniqueId()) - System.currentTimeMillis();
@@ -103,7 +103,7 @@ public class DamageCorrection implements Listener {
 
                 }else if(e.getDamager() instanceof TNTPrimed ){
 
-                    after = sisyagonyuu(e.getDamage() * 0.6);
+                    after = sisyagonyuu(e.getDamage() * 0.7);
 
                     //e.getPlayer().sendMessage(Chat.f("連ダメ補正: {0} → {1}",before,after));
                     e.setDamage(after);
@@ -161,7 +161,7 @@ public class DamageCorrection implements Listener {
             e.getDamager().getWorld().playSound(e.getEntity().getLocation(), Sound.UI_BUTTON_CLICK, 1F, 1.63F);
             Location loc = e.getEntity().getLocation();
             loc.setY(loc.getY() + 1);
-            e.getDamager().getWorld().spawnParticle(Particle.CRIT,loc,4);
+            e.getDamager().getWorld().spawnParticle(Particle.CRIT,loc,3);
 
         }
 

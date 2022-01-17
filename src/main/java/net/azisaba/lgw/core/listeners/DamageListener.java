@@ -76,6 +76,7 @@ public class DamageListener implements Listener {
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 
         // XP付与
+        /*
         PlayerStats stats = PlayerStats.getStats(killer);
         if (LeonGunWar.getPlugin().getManager().isCorrupted()) { // 経験値倍増ゲームだったら
             int xps = getBaseIncreaseRate(KDStatusReloaded.getPlugin().getKdDataContainer().getPlayerData(killer,true).getKills(TimeUnit.LIFETIME));
@@ -86,9 +87,13 @@ public class DamageListener implements Listener {
             stats.addXps(1);
         }
 
+
+
         int coins = 10;
         stats.addCoins(coins);
         killer.sendMessage(Chat.f("&6+{0} LGW Coins (Kill)!",coins));
+
+         */
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);
