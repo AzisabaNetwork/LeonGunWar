@@ -773,6 +773,8 @@ public class MatchManager {
         // テレポート
         p.teleport(currentGameMap.getSpawnPoint(team));
 
+        //エフェクト削除
+        p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
         // 防具を装備
         p.getInventory().setChestplate(chestplates.get(team));
     }
