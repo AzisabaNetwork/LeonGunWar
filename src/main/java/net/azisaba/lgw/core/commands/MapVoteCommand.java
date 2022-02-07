@@ -30,6 +30,7 @@ public class MapVoteCommand implements CommandExecutor {
             return true;
         }
 
+        // 入力されたStringをintに変換
         int index;
         try {
             index = Integer.parseInt(args[0]) - 1;
@@ -38,13 +39,16 @@ public class MapVoteCommand implements CommandExecutor {
             return true;
         }
 
-        if ( index >= LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().size() ) {
+        // 値が0以下の場合や投票できる最大番号より大きい場合はreturn
+        if ( index < 0 || index >= LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().size() ) {
             sender.sendMessage(Chat.f("&c有効な数字を指定してください！"));
             return true;
         }
 
+        // 投票を反映
         LeonGunWar.getPlugin().getMapSelectCountdown().vote((Player) sender, index);
 
+        // メッセージを送信
         String mapName = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().get(index).getMapName();
         sender.sendMessage(Chat.f("{0} &e{1} &7に投票しました！", LeonGunWar.GAME_PREFIX, mapName));
         return true;
