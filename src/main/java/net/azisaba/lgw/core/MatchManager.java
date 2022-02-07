@@ -712,7 +712,7 @@ public class MatchManager {
 
         // すでに人数が集まっている場合はカウントダウンを開始
         if ( getEntryPlayers().size() >= 2 ) {
-            LeonGunWar.getPlugin().getCountdown().startCountdown();
+            LeonGunWar.getPlugin().getMatchStartCountdown().startCountdown();
         }
     }
 

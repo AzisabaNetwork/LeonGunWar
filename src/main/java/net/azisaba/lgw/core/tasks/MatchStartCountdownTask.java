@@ -16,7 +16,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
     public void run() {
         // 0の場合ゲームスタート
         if ( timeLeft <= 0 ) {
-            LeonGunWar.getPlugin().getCountdown().stopCountdown();
+            LeonGunWar.getPlugin().getMatchStartCountdown().stopCountdown();
             LeonGunWar.getPlugin().getManager().startMatch();
             return;
         }

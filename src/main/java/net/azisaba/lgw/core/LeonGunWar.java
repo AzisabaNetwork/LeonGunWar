@@ -84,7 +84,7 @@ public class LeonGunWar extends JavaPlugin {
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
 
-    private final MatchStartCountdown countdown = new MatchStartCountdown();
+    private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
     private final MatchManager manager = new MatchManager();
     private final AssistStreaks assistStreaks = new AssistStreaks();
@@ -225,8 +225,8 @@ public class LeonGunWar extends JavaPlugin {
         return spawnsConfig;
     }
 
-    public MatchStartCountdown getCountdown() {
-        return countdown;
+    public MatchStartCountdown getMatchStartCountdown() {
+        return matchStartCountdown;
     }
 
     public AssistStreaksConfig getAssistStreaksConfig() {

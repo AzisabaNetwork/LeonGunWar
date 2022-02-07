@@ -38,8 +38,8 @@ public class MatchStartDetectListener implements Listener {
         }
 
         // カウントダウンが始まっていない場合はカウントダウン開始
-        if ( !LeonGunWar.getPlugin().getCountdown().isRunning() ) {
-            LeonGunWar.getPlugin().getCountdown().startCountdown();
+        if ( !LeonGunWar.getPlugin().getMatchStartCountdown().isRunning() ) {
+            LeonGunWar.getPlugin().getMatchStartCountdown().startCountdown();
         }
     }
 
@@ -62,8 +62,8 @@ public class MatchStartDetectListener implements Listener {
         }
 
         // カウントダウン中ならカウントダウン停止
-        if ( LeonGunWar.getPlugin().getCountdown().isRunning() ) {
-            LeonGunWar.getPlugin().getCountdown().stopCountdown();
+        if ( LeonGunWar.getPlugin().getMatchStartCountdown().isRunning() ) {
+            LeonGunWar.getPlugin().getMatchStartCountdown().stopCountdown();
             // メッセージを表示
             Bukkit.broadcastMessage(Chat.f("{0}&7人数が足りないため試合を開始できません！", LeonGunWar.GAME_PREFIX));
         }
