@@ -18,6 +18,10 @@ commands:
   match:
     usage: /match <entry/rejoin/leave> (player)
     permission: leongunwar.command.match
+  mapvote:
+    usage: /mapvote <index>
+    permission: leongunwar.command.mapvote
+    aliases: ["votemap"]
   kiai:
     usage: /kiai
     permission: leongunwar.command.kiai
@@ -42,6 +46,8 @@ permissions:
   leongunwar.command.uav:
     default: op
   leongunwar.command.match:
+    default: true
+  leongunwar.command.mapvote:
     default: true
   leongunwar.command.match.other:
     default: op

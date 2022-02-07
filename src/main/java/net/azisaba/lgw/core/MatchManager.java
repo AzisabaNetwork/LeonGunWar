@@ -158,8 +158,10 @@ public class MatchManager {
         // ボスバー作成
         bossBar = createEmptyBossBar();
 
-        // マップを抽選
-        currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
+        // マップが決まっていない場合マップを抽選 (ありえないはず)
+        if (currentGameMap == null) {
+            currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
+        }
         // マップ名を表示
         Bukkit.broadcastMessage(
                 Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));

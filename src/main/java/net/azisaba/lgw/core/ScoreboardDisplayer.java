@@ -13,6 +13,7 @@ import com.google.common.base.Preconditions;
 
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.SecondOfDay;
@@ -76,6 +77,50 @@ public class ScoreboardDisplayer {
             messageList.add(Chat.f("&7現在のマップ&a: &c{0}", mapName));
             messageList.add(Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()));
             messageList.add(Chat.f("&7アルゴリズム&a: &c{0}", distributor.getDistributorName()));
+            messageList.add("");
+            messageList.add(Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net"));
+
+            // return
+            return messageList;
+        }
+
+        // Map選択中の場合
+        if ( LeonGunWar.getPlugin().getMapSelectCountdown().isRunning() ) {
+            /*
+
+              マップ投票中
+              残り時間: n秒
+
+              1. Map1: n票
+              2. Map2: n票
+              3. Map3: n票
+              4. Map4: n票
+
+              /mapvote [番号] で投票！
+
+              azisaba.net で今すぐ遊べ！
+             */
+            // カウントダウンを取得
+            MapSelectCountdown countdown = LeonGunWar.getPlugin().getMapSelectCountdown();
+            // マップListを取得
+            List<GameMap> maps = countdown.getMaps();
+            // 残り時間を取得
+            int timeLeft = countdown.getTimeLeft();
+
+
+            // 表示するメッセージリストを作成
+            List<String> messageList = new ArrayList<>();
+            messageList.add("");
+            messageList.add(Chat.f("&7マップ投票中"));
+            messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
+            messageList.add("");
+
+            for ( int i = 0, size = maps.size(); i < size; i++ ) {
+                messageList.add(Chat.f("&7{0}. &e{1}&7: &c{2}票", i + 1, maps.get(i).getMapName(), countdown.getVote(i)));
+            }
+
+            messageList.add("");
+            messageList.add(Chat.f("&7/mapvote [番号] で投票！"));
             messageList.add("");
             messageList.add(Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net"));
 

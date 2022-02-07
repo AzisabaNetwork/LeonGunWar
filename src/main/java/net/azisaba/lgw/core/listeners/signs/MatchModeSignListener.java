@@ -1,8 +1,12 @@
 package net.azisaba.lgw.core.listeners.signs;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -24,8 +28,11 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.Chat;
+
+import me.rayzr522.jsonmessage.JSONMessage;
 
 /**
  *
@@ -173,7 +180,8 @@ public class MatchModeSignListener implements Listener {
         }
 
         // モードを指定
-        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != null ) {
+        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != null
+                || LeonGunWar.getPlugin().getMapSelectCountdown().isRunning() ) {
             p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
             p.closeInventory();
             return;
@@ -196,19 +204,41 @@ public class MatchModeSignListener implements Listener {
             return;
         }
 
-        LeonGunWar.getPlugin().getManager().setMatchMode(mode);
         LeonGunWar.getPlugin().getManager().setTeamDistributor(distributor);
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
         Bukkit.broadcastMessage(Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX, distributor.getDistributorName()));
-        Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
+        Bukkit.broadcastMessage(Chat.f("{0}&7Map投票を開始します", LeonGunWar.GAME_PREFIX));
         Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+
+        // ランダムなマップを4つ抽選
+        Set<GameMap> randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomMaps(4);
+        LeonGunWar.getPlugin().getMapSelectCountdown().startCountdown(randomMaps, mode);
 
         // 音を鳴らす
         Bukkit.getOnlinePlayers().forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
-        // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        // 投票用のJSONMessageを作成
+        JSONMessage msg = JSONMessage.create(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));
+
+        HashMap<Integer, ChatColor> colors = new HashMap<Integer, ChatColor>() {{
+            put(0, ChatColor.GREEN);
+            put(1, ChatColor.RED);
+            put(2, ChatColor.GOLD);
+            put(3, ChatColor.AQUA);
+        }};
+
+        List<GameMap> maps = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps();
+        for ( int i = 0, size = maps.size(); i < size; i++ ) {
+            msg = msg.then(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).getMapName()))
+                    .runCommand("/leongunwar:mapvote " + (i + 1));
+            if ( i + 1 < size ) {
+                msg = msg.then(" ");
+            }
+        }
+
+        // JSONMessageを全員に表示
+        msg.send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
 
         p.closeInventory();
     }

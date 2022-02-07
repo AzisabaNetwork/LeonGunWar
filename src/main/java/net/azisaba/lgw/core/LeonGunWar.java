@@ -10,6 +10,7 @@ import net.azisaba.lgw.core.commands.AdminChatCommand;
 import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.LimitCommand;
+import net.azisaba.lgw.core.commands.MapVoteCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
@@ -85,13 +86,16 @@ public class LeonGunWar extends JavaPlugin {
     private MapsConfig mapsConfig;
 
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
+    private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
     private final MatchManager manager = new MatchManager();
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
-    public static JSONMessage getQuickBar() { return quickBar; }
+    public static JSONMessage getQuickBar() {
+        return quickBar;
+    }
 
     @Override
     public void onEnable() {
@@ -136,6 +140,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
         Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
+        Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -215,11 +220,17 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getLogger().info(Chat.f("{0} が無効化されました。", getName()));
     }
 
-    public static LeonGunWar getPlugin(){ return plugin; }
+    public static LeonGunWar getPlugin() {
+        return plugin;
+    }
 
-    public MatchManager getManager() { return manager; }
+    public MatchManager getManager() {
+        return manager;
+    }
 
-    public MapsConfig getMapsConfig() { return mapsConfig; }
+    public MapsConfig getMapsConfig() {
+        return mapsConfig;
+    }
 
     public SpawnsConfig getSpawnsConfig() {
         return spawnsConfig;
@@ -249,5 +260,7 @@ public class LeonGunWar extends JavaPlugin {
         return tradeBoardManager;
     }
 
-    public ScoreboardDisplayer getScoreboardDisplayer() { return scoreboardDisplayer; }
+    public ScoreboardDisplayer getScoreboardDisplayer() {
+        return scoreboardDisplayer;
+    }
 }

@@ -2,11 +2,14 @@ package net.azisaba.lgw.core.configs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -78,6 +81,22 @@ public class MapsConfig extends Config {
         // 0からmapListのサイズ -1 までの値でランダムな数字を生成
         // リストから取得してreturn
         return allGameMap.isEmpty() ? null : allGameMap.get(new Random().nextInt(allGameMap.size()));
+    }
+
+    /**
+     * ロードされているすべてのマップから指定した数だけランダムで抽選します
+     *
+     * @throws IllegalArgumentException 0以下またはロードされているマップの数よりも多い数が指定された場合
+     * @return 指定した数のランダムなマップのHashSetを返す
+     */
+    public Set<GameMap> getRandomMaps(int count) {
+        if ( count > allGameMap.size() || count <= 0 ) {
+            throw new IllegalArgumentException("Mapを" + count + "個抽選することはできません！ (ロードされているMapの数: " + allGameMap.size() + " )");
+        }
+        List<GameMap> shuffleList = new ArrayList<>(allGameMap);
+        Collections.shuffle(shuffleList);
+
+        return new HashSet<>(shuffleList.subList(0, count));
     }
 
     public List<GameMap> getAllGameMap() {
