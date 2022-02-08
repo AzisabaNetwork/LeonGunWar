@@ -32,6 +32,8 @@ public class MatchStartedEvent extends Event {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
     public MatchStartedEvent(GameMap currentGameMap, Map<BattleTeam, List<Player>> teamPlayers) {
+        this.map = currentGameMap;
+        this.teamPlayers = teamPlayers;
     }
 
     public List<Player> getAllTeamPlayers() {
