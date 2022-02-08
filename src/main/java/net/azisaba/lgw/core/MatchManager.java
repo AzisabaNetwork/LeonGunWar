@@ -162,6 +162,9 @@ public class MatchManager {
         if (currentGameMap == null) {
             currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
         }
+
+        // 投票をリセット
+        LeonGunWar.getPlugin().getMapSelectCountdown().resetAllVotes();
         // マップ名を表示
         Bukkit.broadcastMessage(
                 Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
