@@ -1,11 +1,6 @@
 package net.azisaba.lgw.core.tasks;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Bukkit;
@@ -47,6 +42,28 @@ public class MapSelectCountdownTask extends BukkitRunnable {
             // カウントダウンを停止
             LeonGunWar.getPlugin().getMapSelectCountdown().stopCountdown();
 
+            //票数に応じてランダムにマップを決定
+            List<GameMap> temp = new ArrayList<>();
+
+            incrementVoteFor(0);
+            incrementVoteFor(1);
+            incrementVoteFor(2);
+            incrementVoteFor(3);
+
+            for (AtomicInteger i : votes.values()) {
+                for (int count = 0; count < i.get(); count++) {
+                    temp.add(maps.get(i.get()));
+                }
+            }
+
+            Collections.shuffle(temp);
+
+            GameMap m = temp.get(0);
+
+            LeonGunWar.getPlugin().getManager().setCurrentGameMap(m);
+            Bukkit.broadcastMessage(Chat.f("{0}&7Mapが &e{1} &7に決定！", LeonGunWar.GAME_PREFIX, m.getMapName()));
+
+            /*
             // 一番票数が多かったものに決定
             maps.stream()
                     .max(Comparator.comparingInt(o -> votes.getOrDefault(maps.indexOf(o), new AtomicInteger()).get()))
@@ -54,6 +71,8 @@ public class MapSelectCountdownTask extends BukkitRunnable {
                         LeonGunWar.getPlugin().getManager().setCurrentGameMap(m);
                         Bukkit.broadcastMessage(Chat.f("{0}&7Mapが &e{1} &7に決定！", LeonGunWar.GAME_PREFIX, m.getMapName()));
                     });
+
+             */
 
             // 試合開始のカウントダウンのトリガー
             LeonGunWar.getPlugin().getManager().setMatchMode(mode);
