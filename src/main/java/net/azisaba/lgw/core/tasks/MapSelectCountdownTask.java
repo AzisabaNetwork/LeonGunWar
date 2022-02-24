@@ -43,22 +43,21 @@ public class MapSelectCountdownTask extends BukkitRunnable {
             LeonGunWar.getPlugin().getMapSelectCountdown().stopCountdown();
 
             //票数に応じてランダムにマップを決定
-            List<GameMap> temp = new ArrayList<>();
+            List<GameMap> random = new ArrayList<>();
 
-            incrementVoteFor(0);
-            incrementVoteFor(1);
-            incrementVoteFor(2);
-            incrementVoteFor(3);
-
-            for (AtomicInteger i : votes.values()) {
-                for (int count = 0; count < i.get(); count++) {
-                    temp.add(maps.get(i.get()));
+            for (Integer i : votes.keySet()) {
+                for (int count = 0; count < getVoteFor(i); count++) {
+                    random.add(maps.get(i));
                 }
             }
 
-            Collections.shuffle(temp);
+            if(random.isEmpty()){
+                random.addAll(maps);
+            }
 
-            GameMap m = temp.get(0);
+            Collections.shuffle(random);
+
+            GameMap m = random.get(0);
 
             LeonGunWar.getPlugin().getManager().setCurrentGameMap(m);
             Bukkit.broadcastMessage(Chat.f("{0}&7Mapが &e{1} &7に決定！", LeonGunWar.GAME_PREFIX, m.getMapName()));
