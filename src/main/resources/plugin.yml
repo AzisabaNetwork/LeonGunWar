@@ -38,7 +38,7 @@ commands:
     permission: leongunwar.command.limit
   lsyogo:
     usage: /lsyogo <add/give/remove/delete/check>
-    permission: leongunwar.syogo.remove
+    permission: leongunwar.command.syogo
 
 permissions:
   leongunwar.entrysign.changestate:
@@ -65,6 +65,8 @@ permissions:
     default: op
   leongunwar.command.limit:
     default: op
+  leongunwar.command.syogo:
+    default: true
   leongunwar.syogo.add:
     default: op
   leongunwar.syogo.give:
