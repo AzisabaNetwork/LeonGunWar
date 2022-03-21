@@ -1,5 +1,8 @@
 package net.azisaba.lgw.core.commands;
 
+import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.User;
+import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.utils.Chat;
@@ -24,16 +27,16 @@ public class LSyogoCommand implements TabExecutor {
                         sender.sendMessage(Chat.f("&cあなたはこのコマンドを実行する権限を持っていません！"));
                         return true;
                     }
-                    if(args.length > 3) {
+                    if(args.length >= 3) {
                         LeonGunWar.getPlugin().getSyogoConfig().add(args[1],args[2]);
-                        sender.sendMessage(Chat.f("&b称号 {1}({2}&r) を追加しました。",args[1],args[2]));
+                        sender.sendMessage(Chat.f("&b称号 {0}({1}&r) を追加しました。",args[1],args[2]));
                     }
                 }else if(args[0].equalsIgnoreCase("give")){
                     if(!sender.hasPermission("leongunwar.syogo.give")){
                         sender.sendMessage(Chat.f("&cあなたはこのコマンドを実行する権限を持っていません！"));
                         return true;
                     }
-                    if(args.length > 3){
+                    if(args.length >= 3){
                         Player player = Bukkit.getPlayer(args[1]);
                         if(player != null){
                             if(SyogoData.getSyogoDataFromCache(player.getUniqueId()) == null){
@@ -43,7 +46,7 @@ public class LSyogoCommand implements TabExecutor {
                                     @Override
                                     public void run() {
                                         data.give();
-                                        sender.sendMessage(Chat.f("&b{0}&e に称号 &c{1} を付与しました！",args[1],args[2]));
+                                        sender.sendMessage(Chat.f("&b{0}&e に称号 &c{1} &eを付与しました！",args[1],args[2]));
                                     }
                                 });
                             }else {
@@ -57,10 +60,16 @@ public class LSyogoCommand implements TabExecutor {
                                 public void run() {
                                     SyogoData data = SyogoData.getSyogoData(args[1]);
                                     if(data == null){
-                                        data = new SyogoData(player.getUniqueId(),player.getName(),args[2]);
-                                        sender.sendMessage(Chat.f("&e処理中です...お待ち下さい..."));
-                                        data.give();
-                                        sender.sendMessage(Chat.f("&b{0}&a に称号 &c{1} &aを付与しました！",args[1],args[2]));
+                                        Essentials essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+                                        User user = essentials.getUser(args[1]);
+                                        if(user == null){
+                                            sender.sendMessage(Chat.f("&cプレイヤーが見つかりませんでした。"));
+                                        }else {
+                                            data = new SyogoData(user.getConfigUUID(), args[1], args[2]);
+                                            sender.sendMessage(Chat.f("&e処理中です...お待ち下さい..."));
+                                            data.give();
+                                            sender.sendMessage(Chat.f("&b{0}&a に称号 &c{1} &aを付与しました！", args[1], args[2]));
+                                        }
                                     }else {
                                         sender.sendMessage(Chat.f("&cそのプレイヤーは既に称号 &c{0} &aを所持しています！",data.getSyogo()));
                                     }
@@ -71,6 +80,45 @@ public class LSyogoCommand implements TabExecutor {
                 }else if(args[0].equalsIgnoreCase("remove")){
                     if(!sender.hasPermission("leongunwar.syogo.remove")){
                         sender.sendMessage(Chat.f("&cあなたはこのコマンドを実行する権限を持っていません！"));
+                        return true;
+                    }
+                    if(args.length >= 2){
+                        if(sender.hasPermission("leongunwar.syogo.remove-admin")){
+                            Player player = Bukkit.getPlayer(args[1]);
+                            if(player != null){
+                                SyogoData data = SyogoData.getSyogoDataFromCache(player.getUniqueId());
+                                if(data != null){
+                                    sender.sendMessage(Chat.f("&e処理中です...お待ち下さい..."));
+                                    Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            data.remove();
+                                            sender.sendMessage(Chat.f("&b{0}&a の称号を削除しました！",args[1]));
+                                        }
+                                    });
+                                }else {
+                                    sender.sendMessage(Chat.f("&cそのプレイヤーは称号を所持していません！"));
+                                }
+                            }else {
+                                sender.sendMessage(Chat.f("&cプレイヤーはオフラインです！"));
+                                sender.sendMessage(Chat.f("&e確認中です...お待ち下さい..."));
+                                Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        SyogoData data = SyogoData.getSyogoData(args[1]);
+                                        if(data != null){
+                                            sender.sendMessage(Chat.f("&e処理中です...お待ち下さい..."));
+                                            data.remove();
+                                            sender.sendMessage(Chat.f("&b{0}&a の称号を削除しました！",args[1]));
+                                        }else {
+                                            sender.sendMessage(Chat.f("&cそのプレイヤーは称号を所持していません！"));
+                                        }
+                                    }
+                                });
+                            }
+                        }else {
+                            sender.sendMessage(Chat.f("&cあなたはこのコマンドを実行する権限を持っていません！"));
+                        }
                         return true;
                     }
                     if(sender instanceof Player){
@@ -94,7 +142,7 @@ public class LSyogoCommand implements TabExecutor {
                         sender.sendMessage(Chat.f("&cあなたはこのコマンドを実行する権限を持っていません！"));
                         return true;
                     }
-                    if(args.length > 2){
+                    if(args.length >= 2){
                         Player p = Bukkit.getPlayer(args[1]);
                         SyogoData data;
                         if(p != null){
@@ -125,7 +173,7 @@ public class LSyogoCommand implements TabExecutor {
                         sender.sendMessage(Chat.f("&cあなたはこのコマンドを実行する権限を持っていません！"));
                         return true;
                     }
-                    if(args.length > 2) {
+                    if(args.length >= 2) {
                         LeonGunWar.getPlugin().getSyogoConfig().delete(args[1]);
                         sender.sendMessage(Chat.f("&b称号 &c{1} &bを削除しました。",args[1]));
                     }

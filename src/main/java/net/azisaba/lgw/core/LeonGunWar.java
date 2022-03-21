@@ -2,6 +2,7 @@ package net.azisaba.lgw.core;
 
 import java.io.IOException;
 
+import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.util.SyogoData;
@@ -9,14 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.azisaba.lgw.core.commands.AdminChatCommand;
-import net.azisaba.lgw.core.commands.KIAICommand;
-import net.azisaba.lgw.core.commands.LgwAdminCommand;
-import net.azisaba.lgw.core.commands.LimitCommand;
-import net.azisaba.lgw.core.commands.MapVoteCommand;
-import net.azisaba.lgw.core.commands.MatchCommand;
-import net.azisaba.lgw.core.commands.ResourcePackCommand;
-import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -150,6 +143,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
         Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
         Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
+        Bukkit.getPluginCommand("lsyogo").setExecutor(new LSyogoCommand());
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -162,6 +156,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
+        Bukkit.getPluginCommand("lsyogo").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -222,6 +217,8 @@ public class LeonGunWar extends JavaPlugin {
     public void onDisable() {
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
+
+        this.sqlConnection.onDisable();
 
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();

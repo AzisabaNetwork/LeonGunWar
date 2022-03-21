@@ -71,6 +71,8 @@ permissions:
     default: op
   leongunwar.syogo.remove:
     default: true
+  leongunwar.syogo.remove-admin:
+    default: op
   leongunwar.syogo.check:
     default: op
   leongunwar.syogo.delete:

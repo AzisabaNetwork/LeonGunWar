@@ -15,10 +15,10 @@ public class SQLConnection {
 
     private static final int CURRENT_DATABASE_VERSION = 1;
 
-    private static final String SELECT_DATABASE_VERSION = "SELECT value FROM settings WHERE key='database_version'";
-    private static final String INSERT_DATABASE_VERSION = "INSERT INTO settings (key,value) VALUES ('database_version',?)";
+    private static final String SELECT_DATABASE_VERSION = "SELECT value FROM settings WHERE tag='database_version'";
+    private static final String INSERT_DATABASE_VERSION = "INSERT INTO settings (tag,value) VALUES ('database_version',?)";
 
-    private static final String CREATE_VERSION_TABLE = "CREATE TABLE IF NOT EXISTS settings (key INT NOT NULL, value INT DEFAULT 0)";
+    private static final String CREATE_VERSION_TABLE = "CREATE TABLE IF NOT EXISTS settings (tag VARCHAR(64) NOT NULL, value INT DEFAULT 0)";
     private static final String CREATE_SYOGO_TABLE = "CREATE TABLE IF NOT EXISTS syogos (uuid VARCHAR(36) NOT NULL, name VARCHAR(32) NOT NULL, syogo VARCHAR(64) NOT NULL)";
 
     private HikariDataSource dataSource;
@@ -93,6 +93,10 @@ public class SQLConnection {
                 //処理
             }
         }
+    }
+
+    public void onDisable(){
+        this.dataSource.close();
     }
 
     public ResultSet executeQuery(String query, Object... args){

@@ -44,7 +44,7 @@ public class SyogoData {
             return data;
         }
 
-        try(ResultSet s = LeonGunWar.getPlugin().getSqlConnection().executeQuery(SELECT_SYOGO,uuid)) {
+        try(ResultSet s = LeonGunWar.getPlugin().getSqlConnection().executeQuery(SELECT_SYOGO,uuid.toString())) {
             if(s.next()){
                 data = new SyogoData(UUID.fromString(s.getString("uuid")),s.getString("name"),s.getString("syogo"));
                 Player p = Bukkit.getPlayer(data.uuid);
@@ -84,19 +84,19 @@ public class SyogoData {
     public boolean give(){
         cache.put(this.uuid,this);
         try {
-            if(LeonGunWar.getPlugin().getSqlConnection().executeQuery(SELECT_SYOGO).next()){
+            if(LeonGunWar.getPlugin().getSqlConnection().executeQuery(SELECT_SYOGO,this.uuid.toString()).next()){
                 return false;
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        LeonGunWar.getPlugin().getSqlConnection().executeUpdate(INSERT_SYOGO,this.uuid,this.name,this.syogo);
+        LeonGunWar.getPlugin().getSqlConnection().executeUpdate(INSERT_SYOGO,this.uuid.toString(),this.name,this.syogo);
         return true;
     }
 
     public void remove(){
         cache.remove(this.uuid);
-        LeonGunWar.getPlugin().getSqlConnection().executeUpdate(DELETE_SYOGO,this.uuid);
+        LeonGunWar.getPlugin().getSqlConnection().executeUpdate(DELETE_SYOGO,this.uuid.toString());
     }
 
     @NonNull
