@@ -2,6 +2,9 @@ package net.azisaba.lgw.core;
 
 import java.io.IOException;
 
+import net.azisaba.lgw.core.configs.*;
+import net.azisaba.lgw.core.sql.SQLConnection;
+import net.azisaba.lgw.core.util.SyogoData;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,10 +17,6 @@ import net.azisaba.lgw.core.commands.MapVoteCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
-import net.azisaba.lgw.core.configs.AssistStreaksConfig;
-import net.azisaba.lgw.core.configs.KillStreaksConfig;
-import net.azisaba.lgw.core.configs.MapsConfig;
-import net.azisaba.lgw.core.configs.SpawnsConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -84,6 +83,8 @@ public class LeonGunWar extends JavaPlugin {
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
+    private DatabaseConfig databaseConfig;
+    private SyogoConfig syogoConfig;
 
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
@@ -92,6 +93,8 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
+
+    private SQLConnection sqlConnection;
 
     public static JSONMessage getQuickBar() {
         return quickBar;
@@ -115,12 +118,16 @@ public class LeonGunWar extends JavaPlugin {
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
+        databaseConfig = new DatabaseConfig(this);
+        syogoConfig = new SyogoConfig(this);
         // 設定ファイルを読み込む
         try {
             killStreaksConfig.loadConfig();
             assistStreaksConfig.loadConfig();
             spawnsConfig.loadConfig();
             mapsConfig.loadConfig();
+            databaseConfig.loadConfig();
+            syogoConfig.loadConfig();
         } catch ( IOException | InvalidConfigurationException exception ) {
             exception.printStackTrace();
         }
@@ -128,6 +135,8 @@ public class LeonGunWar extends JavaPlugin {
         // 初期化が必要なファイルを初期化する
         manager.initialize();
         tradeBoardManager.init();
+
+        sqlConnection = new SQLConnection(databaseConfig);
 
         // コマンドのインスタンスに渡す必要があるListener
         LimitActionListener preventItemDropListener = new LimitActionListener();
@@ -236,6 +245,8 @@ public class LeonGunWar extends JavaPlugin {
         return spawnsConfig;
     }
 
+    public SyogoConfig getSyogoConfig(){ return syogoConfig; }
+
     public MatchStartCountdown getMatchStartCountdown() {
         return matchStartCountdown;
     }
@@ -262,5 +273,9 @@ public class LeonGunWar extends JavaPlugin {
 
     public ScoreboardDisplayer getScoreboardDisplayer() {
         return scoreboardDisplayer;
+    }
+
+    public SQLConnection getSqlConnection() {
+        return sqlConnection;
     }
 }

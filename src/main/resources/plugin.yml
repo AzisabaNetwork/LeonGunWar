@@ -36,6 +36,10 @@ commands:
   limit:
     usage: /limit [drop/build]
     permission: leongunwar.command.limit
+  lsyogo:
+    usage: /lsyogo <add/give/remove/delete/check>
+    permission: leongunwar.syogo.remove
+
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -60,4 +64,14 @@ permissions:
   leongunwar.adminchat.receive:
     default: op
   leongunwar.command.limit:
+    default: op
+  leongunwar.syogo.add:
+    default: op
+  leongunwar.syogo.give:
+    default: op
+  leongunwar.syogo.remove:
+    default: true
+  leongunwar.syogo.check:
+    default: op
+  leongunwar.syogo.delete:
     default: op
