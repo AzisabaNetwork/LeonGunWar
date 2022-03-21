@@ -28,8 +28,14 @@ public class LSyogoCommand implements TabExecutor {
                         return true;
                     }
                     if(args.length >= 3) {
+                        if(LeonGunWar.getPlugin().getSyogoConfig().exist(args[1])){
+                            sender.sendMessage(Chat.f("&c称号 {0} はすでに存在します！",args[1]));
+                            return true;
+                        }
                         LeonGunWar.getPlugin().getSyogoConfig().add(args[1],args[2]);
                         sender.sendMessage(Chat.f("&b称号 {0}({1}&r) を追加しました。",args[1],args[2]));
+                    }else {
+                        sender.sendMessage(Chat.f("使い方: /lsyogo add <称号ID> <表示される称号>"));
                     }
                 }else if(args[0].equalsIgnoreCase("give")){
                     if(!sender.hasPermission("leongunwar.syogo.give")){
@@ -37,6 +43,10 @@ public class LSyogoCommand implements TabExecutor {
                         return true;
                     }
                     if(args.length >= 3){
+                        if(!LeonGunWar.getPlugin().getSyogoConfig().exist(args[2])){
+                            sender.sendMessage(Chat.f("&c称号 {0} は存在しません。",args[2]));
+                            return true;
+                        }
                         Player player = Bukkit.getPlayer(args[1]);
                         if(player != null){
                             if(SyogoData.getSyogoDataFromCache(player.getUniqueId()) == null){
@@ -174,6 +184,10 @@ public class LSyogoCommand implements TabExecutor {
                         return true;
                     }
                     if(args.length >= 2) {
+                        if(!LeonGunWar.getPlugin().getSyogoConfig().exist(args[1])){
+                            sender.sendMessage(Chat.f("&c称号 {0} は存在しません。",args[1]));
+                            return true;
+                        }
                         LeonGunWar.getPlugin().getSyogoConfig().delete(args[1]);
                         sender.sendMessage(Chat.f("&b称号 &c{1} &bを削除しました。",args[1]));
                     }

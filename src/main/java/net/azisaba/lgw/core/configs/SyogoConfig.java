@@ -36,4 +36,8 @@ public class SyogoConfig extends Config {
         config.set(syogo,null);
     }
 
+    public boolean exist(String syogo){
+        return syogos.containsKey(syogo);
+    }
+
 }
