@@ -2,6 +2,7 @@ package net.azisaba.lgw.core;
 
 import java.io.IOException;
 
+import net.azisaba.lgw.core.listeners.others.KillVillagerOnChunkLoadListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -194,6 +195,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
+        Bukkit.getPluginManager().registerEvents(new KillVillagerOnChunkLoadListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
