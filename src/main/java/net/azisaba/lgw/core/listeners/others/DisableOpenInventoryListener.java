@@ -10,24 +10,24 @@ import org.bukkit.event.inventory.InventoryType;
 // 金床とかまどを開けれないようにするリスナー
 public class DisableOpenInventoryListener implements Listener {
 
-    @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent e) {
-        Player p = (Player) e.getPlayer();
+  @EventHandler
+  public void onInventoryOpen(InventoryOpenEvent e) {
+    Player p = (Player) e.getPlayer();
 
-        if ( e.getInventory().getType() == InventoryType.ANVIL ) {
-            // 金床だった場合はキャンセル
-            e.setCancelled(true);
+    if (e.getInventory().getType() == InventoryType.ANVIL) {
+      // 金床だった場合はキャンセル
+      e.setCancelled(true);
 
-            // 音を鳴らす
-            p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-        }
-
-        if ( e.getInventory().getType() == InventoryType.FURNACE ) {
-            // かまどならキャンセル
-            e.setCancelled(true);
-
-            // 音を鳴らす
-            p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-        }
+      // 音を鳴らす
+      p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
     }
+
+    if (e.getInventory().getType() == InventoryType.FURNACE) {
+      // かまどならキャンセル
+      e.setCancelled(true);
+
+      // 音を鳴らす
+      p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+    }
+  }
 }

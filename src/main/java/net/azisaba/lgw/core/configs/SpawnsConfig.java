@@ -4,50 +4,48 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.bukkit.Location;
-import org.bukkit.configuration.InvalidConfigurationException;
-
-import net.azisaba.lgw.core.LeonGunWar;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import net.azisaba.lgw.core.LeonGunWar;
+import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 @Getter
 public class SpawnsConfig extends Config {
 
-    private Map<String, Location> spawns;
-    private Location lobby;
-    private Location onsen;
+  private Map<String, Location> spawns;
+  private Location lobby;
+  private Location onsen;
 
-    public SpawnsConfig(@NonNull LeonGunWar plugin) {
-        super(plugin, "configs/spawns.yml", "spawns.yml");
+  public SpawnsConfig(@NonNull LeonGunWar plugin) {
+    super(plugin, "configs/spawns.yml", "spawns.yml");
+  }
+
+  @SneakyThrows(value = {Exception.class})
+  @Override
+  public void loadConfig() throws IOException, InvalidConfigurationException {
+    super.loadConfig();
+
+    spawns = new HashMap<>();
+    for (String spawnName : config.getValues(false).keySet()) {
+      Location spawn =
+          new Location(
+              plugin.getServer().getWorld(config.getString(spawnName + ".world")),
+              config.getDouble(spawnName + ".x"),
+              config.getDouble(spawnName + ".y"),
+              config.getDouble(spawnName + ".z"),
+              (float) config.getDouble(spawnName + ".yaw"),
+              (float) config.getDouble(spawnName + ".pitch"));
+      spawns.put(spawnName, spawn);
     }
+    spawns = Collections.unmodifiableMap(spawns);
 
-    @SneakyThrows(value = { Exception.class })
-    @Override
-    public void loadConfig() throws IOException, InvalidConfigurationException {
-        super.loadConfig();
+    lobby = spawns.get("lobby");
+    onsen = spawns.get("onsen");
+  }
 
-        spawns = new HashMap<>();
-        for ( String spawnName : config.getValues(false).keySet() ) {
-            Location spawn = new Location(
-                    plugin.getServer().getWorld(config.getString(spawnName + ".world")),
-                    config.getDouble(spawnName + ".x"),
-                    config.getDouble(spawnName + ".y"),
-                    config.getDouble(spawnName + ".z"),
-                    (float) config.getDouble(spawnName + ".yaw"),
-                    (float) config.getDouble(spawnName + ".pitch"));
-            spawns.put(spawnName, spawn);
-        }
-        spawns = Collections.unmodifiableMap(spawns);
-
-        lobby = spawns.get("lobby");
-        onsen = spawns.get("onsen");
-    }
-
-    public Location getLobby() {
-        return lobby;
-    }
+  public Location getLobby() {
+    return lobby;
+  }
 }
