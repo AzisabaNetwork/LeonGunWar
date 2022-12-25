@@ -1,5 +1,9 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import com.google.common.collect.Sets;
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.CSUtility;
+import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,7 +11,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.tasks.AllowEditInventoryTask;
+import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.SecondOfDay;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
@@ -21,16 +28,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitTask;
-
-import com.google.common.collect.Sets;
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.CSUtility;
-import com.shampaggon.crackshot.events.WeaponPreShootEvent;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.tasks.AllowEditInventoryTask;
-import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.lgw.core.utils.SecondOfDay;
 
 /**
  * ホットバーの変更した武器の数だけクールダウンを設ける
@@ -161,7 +158,9 @@ public class DisableChangeItemListener implements Listener {
             String[] groups = ctrl.replaceAll(" ", "").split(",");
 
             Map<String, String> restore = Arrays.stream(groups)
-                    .flatMap(group -> Stream.of(group + ".Message_Exceeded", group + ".Sounds_Exceeded"))
+                .flatMap(
+                    group -> Stream.of(group + ".Message_Exceeded", group + ".Sounds_Exceeded"))
+                .filter(group -> CSDirector.strings.containsKey(group))
                     .collect(Collectors.toMap(group -> group, CSDirector.strings::remove));
             valid &= cs.validHotbar(holder, weapon);
             checked++;
