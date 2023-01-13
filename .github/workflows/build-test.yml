@@ -41,7 +41,7 @@ jobs:
         id: check_crackshot
         uses: andstor/file-existence-action@v1
         with:
-          files: "/home/runner/.m2/repository/com/shampaggon/CrackShot/0.98.11/CrackShot-0.98.11.pom.ignore_old_cache"
+          files: "/home/runner/.m2/repository/com/shampaggon/CrackShot/0.98.11/CrackShot-0.98.11.pom"
       - name: Download CrackShot v0.98.11
         if: steps.check_crackshot.outputs.files_exists == 'false'
         run: curl -L -o CrackShot.jar https://api.spiget.org/v2/resources/48301/download?version=374396
