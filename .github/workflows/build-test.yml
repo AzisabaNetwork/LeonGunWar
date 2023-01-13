@@ -37,38 +37,14 @@ jobs:
         if: steps.check_nms.outputs.files_exists == 'false'
         run: cd build && java -jar BuildTools.jar --rev 1.12.2
 
-      - name: Check WorldEdit existence
-        id: check_worldedit
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "/home/runner/.m2/repository/com/sk89q/worldedit/6.1.9/worldedit-6.1.9.pom"
-      - name: Download WorldEdit v6.1.9
-        if: steps.check_worldedit.outputs.files_exists == 'false'
-        run: curl -L -o WorldEdit.jar https://dev.bukkit.org/projects/worldedit/files/2597538/download
-      - name: Install WorldEdit into local mvn repo
-        if: steps.check_worldedit.outputs.files_exists == 'false'
-        run: mvn install:install-file -Dfile=./WorldEdit.jar -DgroupId=com.sk89q -DartifactId=worldedit -Dversion=6.1.9 -Dpackaging=jar -DgeneratePom=true
-
-      - name: Check WorldGuard existence
-        id: check_worldguard
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "/home/runner/.m2/repository/com/sk89q/worldguard/6.2.2/worldguard-6.2.2.pom"
-      - name: Download WorldGuard v6.2.2
-        if: steps.check_worldguard.outputs.files_exists == 'false'
-        run: curl -L -o WorldGuard.jar https://dev.bukkit.org/projects/worldguard/files/2610618/download
-      - name: Install WorldGuard into local mvn repo
-        if: steps.check_worldguard.outputs.files_exists == 'false'
-        run: mvn install:install-file -Dfile=./WorldGuard.jar -DgroupId=com.sk89q -DartifactId=worldguard -Dversion=6.2.2 -Dpackaging=jar -DgeneratePom=true
-
       - name: Check CrackShot existence
         id: check_crackshot
         uses: andstor/file-existence-action@v1
         with:
-          files: "/home/runner/.m2/repository/com/shampaggon/CrackShot/0.98.11/CrackShot-0.98.11.pom"
+          files: "/home/runner/.m2/repository/com/shampaggon/CrackShot/0.98.11/CrackShot-0.98.11.pom.ignore_old_cache"
       - name: Download CrackShot v0.98.11
         if: steps.check_crackshot.outputs.files_exists == 'false'
-        run: curl -L -o CrackShot.jar https://dev.bukkit.org/projects/crackshot/files/3151915/download
+        run: curl -L -o CrackShot.jar https://api.spiget.org/v2/resources/48301/download?version=374396
       - name: Install CrackShot into local mvn repo
         if: steps.check_crackshot.outputs.files_exists == 'false'
         run: mvn install:install-file -Dfile=./CrackShot.jar -DgroupId=com.shampaggon -DartifactId=CrackShot -Dversion=0.98.11 -Dpackaging=jar -DgeneratePom=true
