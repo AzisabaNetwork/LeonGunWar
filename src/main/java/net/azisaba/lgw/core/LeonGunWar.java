@@ -1,12 +1,8 @@
 package net.azisaba.lgw.core;
 
 import java.io.IOException;
-
-import net.azisaba.lgw.core.listeners.others.KillVillagerOnChunkLoadListener;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.plugin.java.JavaPlugin;
-
+import lombok.Getter;
+import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.AdminChatCommand;
 import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
@@ -41,11 +37,13 @@ import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
+import net.azisaba.lgw.core.listeners.others.KillVillagerOnChunkLoadListener;
 import net.azisaba.lgw.core.listeners.others.LimitActionListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.OnsenListener;
+import net.azisaba.lgw.core.listeners.others.PreventEscapeListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
 import net.azisaba.lgw.core.listeners.others.StreaksListener;
@@ -62,10 +60,9 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListe
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
-
-import lombok.Getter;
-
-import me.rayzr522.jsonmessage.JSONMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
 public class LeonGunWar extends JavaPlugin {
@@ -196,6 +193,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
         Bukkit.getPluginManager().registerEvents(new KillVillagerOnChunkLoadListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PreventEscapeListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
