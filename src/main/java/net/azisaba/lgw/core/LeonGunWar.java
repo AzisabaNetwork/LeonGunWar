@@ -44,6 +44,7 @@ import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.OnsenListener;
 import net.azisaba.lgw.core.listeners.others.PreventEscapeListener;
+import net.azisaba.lgw.core.listeners.others.RemoveKillStreakScoreListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
 import net.azisaba.lgw.core.listeners.others.StreaksListener;
@@ -194,6 +195,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
         Bukkit.getPluginManager().registerEvents(new KillVillagerOnChunkLoadListener(), this);
         Bukkit.getPluginManager().registerEvents(new PreventEscapeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new RemoveKillStreakScoreListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
