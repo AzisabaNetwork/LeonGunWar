@@ -15,6 +15,7 @@ import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
 import net.azisaba.lgw.core.configs.SpawnsConfig;
+import net.azisaba.lgw.core.configs.WeaponControlConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -58,6 +59,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsDuringMatchListe
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsInLobbyListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListener;
+import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
@@ -83,6 +85,7 @@ public class LeonGunWar extends JavaPlugin {
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
+    private WeaponControlConfig weaponControlConfig;
 
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
@@ -114,12 +117,14 @@ public class LeonGunWar extends JavaPlugin {
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
+        weaponControlConfig = new WeaponControlConfig(this);
         // 設定ファイルを読み込む
         try {
             killStreaksConfig.loadConfig();
             assistStreaksConfig.loadConfig();
             spawnsConfig.loadConfig();
             mapsConfig.loadConfig();
+            weaponControlConfig.loadConfig();
         } catch ( IOException | InvalidConfigurationException exception ) {
             exception.printStackTrace();
         }
@@ -203,6 +208,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisablePvEsInLobbyListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvEListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableWaveDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LimitOneShotPerMatchListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
