@@ -1,2 +1,3 @@
-weaponsLimitOnlyOncePerMatch:
-  - "CRACKSHOT_WEAPON_IDs"
+rateLimitedWeapons:
+  CRACKSHOT_WEAPON_ID_1: 1
+  CRACKSHOT_WEAPON_ID_2: 1

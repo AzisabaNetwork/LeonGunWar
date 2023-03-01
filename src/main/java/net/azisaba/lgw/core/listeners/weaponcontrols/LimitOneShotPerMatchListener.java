@@ -1,9 +1,8 @@
 package net.azisaba.lgw.core.listeners.weaponcontrols;
 
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
@@ -16,7 +15,7 @@ import org.bukkit.event.Listener;
 
 public class LimitOneShotPerMatchListener implements Listener {
 
-    private final HashMap<String, List<UUID>> alreadyUsed = new HashMap<>();
+    private final Map<String, Map<UUID, Integer>> weaponUsedCount = new HashMap<>();
 
     @EventHandler(priority = EventPriority.LOW)
     public void onShoot(WeaponPrepareShootEvent e) {
@@ -25,32 +24,45 @@ public class LimitOneShotPerMatchListener implements Listener {
             return;
         }
 
-        if (!LeonGunWar.getPlugin().getWeaponControlConfig().getWeaponsLimitOnlyOncePerMatch()
-            .contains(e.getWeaponTitle())) {
+        int allowedCount = LeonGunWar.getPlugin().getWeaponControlConfig()
+            .getMaxUseCount(e.getWeaponTitle());
+
+        if (allowedCount < 0) {
             return;
         }
 
-        List<UUID> alreadyUsedPlayers = alreadyUsed.get(e.getWeaponTitle());
+        Map<UUID, Integer> everyoneUsedCountMap = weaponUsedCount.get(e.getWeaponTitle());
+        int playerUsedCount;
 
-        if (alreadyUsedPlayers == null) {
-            alreadyUsedPlayers = new ArrayList<>();
-            alreadyUsedPlayers.add(p.getUniqueId());
-            alreadyUsed.put(e.getWeaponTitle(), alreadyUsedPlayers);
-            return;
+        if (everyoneUsedCountMap == null) {
+            playerUsedCount = 0;
+            everyoneUsedCountMap = new HashMap<>();
+            weaponUsedCount.put(e.getWeaponTitle(), everyoneUsedCountMap);
+        } else {
+            playerUsedCount = everyoneUsedCountMap.getOrDefault(p.getUniqueId(), 0);
         }
 
-        if (alreadyUsedPlayers.contains(p.getUniqueId())) {
+        if (playerUsedCount >= allowedCount) {
             e.setCancelled(true);
-            p.sendMessage(Chat.f("{0}&cこの武器は1試合に1回までしか使用できません！", LeonGunWar.GAME_PREFIX));
+
+            if (playerUsedCount > 0) {
+                p.sendMessage(
+                    Chat.f("{0}&cこの武器は1試合に{1}回までしか使用できません！", LeonGunWar.GAME_PREFIX,
+                        allowedCount));
+            } else {
+                p.sendMessage(
+                    Chat.f("{0}&cこの武器は試合で使用できません！", LeonGunWar.GAME_PREFIX));
+            }
+
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
             return;
         }
 
-        alreadyUsedPlayers.add(p.getUniqueId());
+        everyoneUsedCountMap.put(p.getUniqueId(), playerUsedCount + 1);
     }
 
     @EventHandler
     public void onMatchStart(MatchStartedEvent e) {
-        alreadyUsed.clear();
+        weaponUsedCount.clear();
     }
 }
