@@ -67,6 +67,10 @@ public class DisableChangeItemListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
+        if (!LeonGunWar.getPlugin().getManager().isPlayerMatching(player)) {
+            return;
+        }
+
         if (!LeonGunWar.getPlugin().getManager().getItemChangeValidator()
             .isAllowedToChangeItem(player)) {
             event.setCancelled(true);

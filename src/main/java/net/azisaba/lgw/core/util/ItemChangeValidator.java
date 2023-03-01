@@ -1,11 +1,14 @@
 package net.azisaba.lgw.core.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vindicator;
 
 public class ItemChangeValidator {
 
@@ -44,7 +47,17 @@ public class ItemChangeValidator {
       return true;
     }
 
-    return spawnPoint.distance(p.getLocation()) <= 5;
+    if (spawnPoint.distance(p.getLocation()) <= 5) {
+      return true;
+    }
+
+    List<Entity> entities = p.getNearbyEntities(5, 5, 5);
+    for (Entity e : entities) {
+      if (e instanceof Vindicator) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public void shot(Player p) {
