@@ -12,6 +12,8 @@ import org.bukkit.entity.Vindicator;
 
 public class ItemChangeValidator {
 
+  private static final int MAX_DISTANCE = 10;
+
   private final HashMap<UUID, Boolean> isShot = new HashMap<>();
   private final HashMap<UUID, BattleTeam> teamCache = new HashMap<>();
 
@@ -47,11 +49,11 @@ public class ItemChangeValidator {
       return true;
     }
 
-    if (spawnPoint.distance(p.getLocation()) <= 5) {
+    if (spawnPoint.distance(p.getLocation()) <= MAX_DISTANCE) {
       return true;
     }
 
-    List<Entity> entities = p.getNearbyEntities(5, 5, 5);
+    List<Entity> entities = p.getNearbyEntities(MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE);
     for (Entity e : entities) {
       if (e instanceof Vindicator) {
         return true;
