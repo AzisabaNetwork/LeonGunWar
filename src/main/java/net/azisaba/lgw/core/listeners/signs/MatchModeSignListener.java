@@ -217,7 +217,7 @@ public class MatchModeSignListener implements Listener {
         LeonGunWar.getPlugin().getMapSelectCountdown().startCountdown(randomMaps, mode);
 
         // 音を鳴らす
-        Bukkit.getOnlinePlayers()
+        BroadcastUtils.getOnlinePlayers()
             .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
         // 投票用のJSONMessageを作成
@@ -240,7 +240,7 @@ public class MatchModeSignListener implements Listener {
         }
 
         // JSONMessageを全員に表示
-        msg.send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        msg.send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
 
         p.closeInventory();
     }

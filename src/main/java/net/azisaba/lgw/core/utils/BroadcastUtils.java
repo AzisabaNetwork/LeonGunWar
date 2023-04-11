@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.utils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,5 +17,11 @@ public class BroadcastUtils {
       }
       p.sendMessage(message);
     }
+  }
+
+  public static List<Player> getOnlinePlayers() {
+    return Bukkit.getOnlinePlayers().stream()
+        .filter(p -> !DISABLED_WORLD_NAMES.contains(p.getWorld().getName()))
+        .collect(Collectors.toList());
   }
 }

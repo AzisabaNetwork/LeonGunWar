@@ -97,8 +97,8 @@ public class MatchControlListener implements Listener {
         }
 
         // 結果を全プレイヤーに表示
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            for ( String msg : resultMessages ) {
+        BroadcastUtils.getOnlinePlayers().forEach(p -> {
+            for (String msg : resultMessages) {
                 p.sendMessage(msg);
             }
         });
@@ -165,7 +165,7 @@ public class MatchControlListener implements Listener {
         LeonGunWar.getPlugin().getManager().finalizeMatch();
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     /**
@@ -233,7 +233,8 @@ public class MatchControlListener implements Listener {
 
         // 5秒以下なら音を鳴らす
         if ( Arrays.asList(5, 4, 3, 2, 1).contains(timeLeft) ) {
-            Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1, 1));
+            BroadcastUtils.getOnlinePlayers()
+                .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1, 1));
         }
     }
 

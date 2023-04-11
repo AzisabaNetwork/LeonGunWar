@@ -271,11 +271,11 @@ public class CustomMatchSignListener implements Listener {
                 Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
             // 音を鳴らす
-            Bukkit.getOnlinePlayers()
+            BroadcastUtils.getOnlinePlayers()
                 .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
             // 全プレイヤーにQuickメッセージを送信
-            LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+            LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
 
             p.closeInventory();
             return;

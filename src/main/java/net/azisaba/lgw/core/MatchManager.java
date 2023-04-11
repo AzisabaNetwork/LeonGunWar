@@ -230,7 +230,7 @@ public class MatchManager {
         }
 
         // 全プレイヤーに音を鳴らす
-        Bukkit.getOnlinePlayers()
+        BroadcastUtils.getOnlinePlayers()
             .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
         // 開始メッセージ
@@ -254,7 +254,7 @@ public class MatchManager {
         isMatching = true;
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     public List<Player> getEntryPlayers() { return entryPlayers; }
