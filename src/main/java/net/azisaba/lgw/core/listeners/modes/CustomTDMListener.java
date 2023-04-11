@@ -1,11 +1,23 @@
 package net.azisaba.lgw.core.listeners.modes;
 
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
+import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
+import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,21 +27,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
-import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Chat;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -148,7 +145,8 @@ public class CustomTDMListener implements Listener {
             // メッセージ表示
         } else if ( e.getCurrentPoint() % 50 == 0 || matchpoint - e.getCurrentPoint() == 10 || matchpoint - e.getCurrentPoint() == 5 ) {
             // 50区切り/残り10/残り5ならメッセージを表示
-            Bukkit.broadcastMessage(Chat.f("{0}&7残り &e{1}キル &7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX,
+            BroadcastUtils.broadcast(
+                Chat.f("{0}&7残り &e{1}キル &7で &r{2} &7が勝利！", LeonGunWar.GAME_PREFIX,
                     matchpoint - e.getCurrentPoint(), e.getTeam().getTeamName()));
         }
     }

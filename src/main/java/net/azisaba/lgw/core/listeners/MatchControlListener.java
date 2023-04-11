@@ -7,16 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-
+import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
@@ -25,11 +16,18 @@ import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.KDPlayerData;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
-
-import me.rayzr522.jsonmessage.JSONMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
 public class MatchControlListener implements Listener {
 
@@ -151,8 +149,9 @@ public class MatchControlListener implements Listener {
                 }
 
                 // 勝利メッセージを送信
-                Bukkit.broadcastMessage(
-                        Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX, wonTeam.getTeamName()));
+                BroadcastUtils.broadcast(
+                    Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX,
+                        wonTeam.getTeamName()));
             });
         }
     }
@@ -228,7 +227,8 @@ public class MatchControlListener implements Listener {
 
         // 残り時間が指定された時間の場合チャット欄でお知らせ
         if ( Arrays.asList(60, 30, 10, 5, 4, 3, 2, 1).contains(timeLeft) ) {
-            Bukkit.broadcastMessage(Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, SecondOfDay.f(timeLeft)));
+            BroadcastUtils.broadcast(
+                Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, SecondOfDay.f(timeLeft)));
         }
 
         // 5秒以下なら音を鳴らす

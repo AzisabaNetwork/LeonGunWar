@@ -3,19 +3,18 @@ package net.azisaba.lgw.core.listeners.modes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
  *
@@ -59,17 +58,17 @@ public class LeaderDeathMatchListener implements Listener {
                 continue;
             }
 
-            Bukkit.broadcastMessage(Chat.f("{0}{1} &7が {2} &7のリーダーの {3} &7をキル！",
-                    LeonGunWar.GAME_PREFIX,
-                    killer.getDisplayName(),
-                    team.getTeamName(),
-                    death.getDisplayName()));
+            BroadcastUtils.broadcast(Chat.f("{0}{1} &7が {2} &7のリーダーの {3} &7をキル！",
+                LeonGunWar.GAME_PREFIX,
+                killer.getDisplayName(),
+                team.getTeamName(),
+                death.getDisplayName()));
 
             // ポイント制の場合は試合を終了せずに再抽選
             if ( manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH_POINT ) {
-                Bukkit.broadcastMessage(Chat.f("{0}{1} &7が &e10ポイント &7を獲得！",
-                        LeonGunWar.GAME_PREFIX,
-                        killerTeam.getTeamName()));
+                BroadcastUtils.broadcast(Chat.f("{0}{1} &7が &e10ポイント &7を獲得！",
+                    LeonGunWar.GAME_PREFIX,
+                    killerTeam.getTeamName()));
                 manager.addTeamPoint(killerTeam, 10);
 
                 manager.setLeaderAtRandom(team);

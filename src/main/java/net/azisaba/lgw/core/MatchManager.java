@@ -32,6 +32,7 @@ import net.azisaba.lgw.core.util.ItemChangeValidator;
 import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.RespawnProtection;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
@@ -172,8 +173,9 @@ public class MatchManager {
         // 投票をリセット
         LeonGunWar.getPlugin().getMapSelectCountdown().resetAllVotes();
         // マップ名を表示
-        Bukkit.broadcastMessage(
-                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX,
+                currentGameMap.getMapName()));
 
         // 参加プレイヤーを取得
         List<Player> entryPlayers = getEntryPlayers();
@@ -222,22 +224,28 @@ public class MatchManager {
             Map<BattleTeam, List<Player>> playerMap = getTeamPlayers();
 
             // 各チームからリーダーを抽選する
-            for ( BattleTeam team : playerMap.keySet() ) {
+            for (BattleTeam team : playerMap.keySet()) {
                 setLeaderAtRandom(team);
             }
         }
 
         // 全プレイヤーに音を鳴らす
-        Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+        Bukkit.getOnlinePlayers()
+            .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
         // 開始メッセージ
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-        Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, SecondOfDay.f(matchMode.getDuration().getSeconds())));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        BroadcastUtils.broadcast(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX,
+            SecondOfDay.f(matchMode.getDuration().getSeconds())));
         // 勝利条件を発表
-        Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
-        Bukkit.getPluginManager().callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
+        Bukkit.getPluginManager()
+            .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
         // タスクスタート
         runMatchTask();
@@ -414,7 +422,7 @@ public class MatchManager {
 
         // 退出メッセージを全員に送信
         String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
-        Bukkit.broadcastMessage(msg);
+        BroadcastUtils.broadcast(msg);
 
         // DisplayNameとPlayerListName初期化
         p.setDisplayName(p.getName());
@@ -628,7 +636,8 @@ public class MatchManager {
         p.sendMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
-        Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
         // 途中参加イベントを呼び出し
         Bukkit.getPluginManager().callEvent(new PlayerRejoinMatchEvent(p));
@@ -707,7 +716,9 @@ public class MatchManager {
 
         // チームのリーダーに設定
         ldmLeaderMap.put(team, target);
-        Bukkit.broadcastMessage(Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX, team.getTeamName()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX,
+                team.getTeamName()));
 
         // メッセージを表示
         plist.forEach(p -> p.sendMessage(

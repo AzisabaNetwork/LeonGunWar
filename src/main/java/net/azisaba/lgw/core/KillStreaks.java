@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,9 +24,10 @@ public class KillStreaks {
                 .orElse(-1);
 
         if ( killer != null && streaks >= minStreaks ) {
-            Bukkit.broadcastMessage(
-                    Chat.f(LeonGunWar.getPlugin().getKillStreaksConfig().getRemoved(), LeonGunWar.GAME_PREFIX,
-                            killer.getDisplayName(), player.getDisplayName()));
+            BroadcastUtils.broadcast(
+                Chat.f(LeonGunWar.getPlugin().getKillStreaksConfig().getRemoved(),
+                    LeonGunWar.GAME_PREFIX,
+                    killer.getDisplayName(), player.getDisplayName()));
         }
 
         streaksMap.remove(player.getUniqueId());
@@ -97,7 +99,7 @@ public class KillStreaks {
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
             .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
-            .forEach(Bukkit::broadcastMessage);
+            .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getTimeConditionedStreaks().entrySet()
             .stream()
             .filter(entry -> entry.getKey().isDuring())
@@ -108,15 +110,14 @@ public class KillStreaks {
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
             .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
-            .forEach(Bukkit::broadcastMessage);
-
+            .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getLevels().entrySet().stream()
             .filter(entry -> streaks % entry.getKey() == 0)
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
             .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
-            .forEach(Bukkit::broadcastMessage);
+            .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getTimeConditionedLevels().entrySet().stream()
             .filter(entry -> entry.getKey().isDuring())
             .map(Map.Entry::getValue)
@@ -126,6 +127,6 @@ public class KillStreaks {
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
             .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
-            .forEach(Bukkit::broadcastMessage);
+            .forEach(BroadcastUtils::broadcast);
     }
 }
