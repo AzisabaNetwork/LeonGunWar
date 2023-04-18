@@ -89,23 +89,22 @@ public class MatchControlListener implements Listener {
         }
 
         // MVPを表示 (ない場合は何も表示しない)
-        if ( !mvpPlayers.isEmpty() ) {
-            for ( KDPlayerData data : mvpPlayers ) {
-                resultMessages.add(Chat.f("&c[MVP] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", data.getPlayerName(),
-                        data.getKills(), data.getDeaths(), data.getAssists()));
+        if (!mvpPlayers.isEmpty()) {
+            for (KDPlayerData data : mvpPlayers) {
+                resultMessages.add(Chat.f("&c[MVP] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)",
+                    data.getPlayerName(),
+                    data.getKills(), data.getDeaths(), data.getAssists()));
             }
         }
 
         // 結果を全プレイヤーに表示
-        BroadcastUtils.getOnlinePlayers().forEach(p -> {
-            for (String msg : resultMessages) {
-                p.sendMessage(msg);
-            }
-        });
+        for (String msg : resultMessages) {
+            BroadcastUtils.broadcast(msg);
+        }
 
-        for ( Player p : allPlayers ) {
+        for (Player p : allPlayers) {
 
-            if ( p.isDead() ) {
+            if (p.isDead()) {
                 p.spigot().respawn();
             }
 

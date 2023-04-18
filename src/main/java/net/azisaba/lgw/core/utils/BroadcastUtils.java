@@ -11,6 +11,7 @@ public class BroadcastUtils {
   private static final List<String> DISABLED_WORLD_NAMES = Collections.singletonList("tutorial");
 
   public static void broadcast(String message) {
+    Bukkit.getConsoleSender().sendMessage(message);
     for (Player p : Bukkit.getOnlinePlayers()) {
       if (DISABLED_WORLD_NAMES.contains(p.getWorld().getName())) {
         continue;
