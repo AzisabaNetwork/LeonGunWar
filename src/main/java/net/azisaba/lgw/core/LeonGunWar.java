@@ -3,19 +3,10 @@ package net.azisaba.lgw.core;
 import java.io.IOException;
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
-import net.azisaba.lgw.core.commands.AdminChatCommand;
-import net.azisaba.lgw.core.commands.KIAICommand;
-import net.azisaba.lgw.core.commands.LgwAdminCommand;
-import net.azisaba.lgw.core.commands.LimitCommand;
-import net.azisaba.lgw.core.commands.MapVoteCommand;
-import net.azisaba.lgw.core.commands.MatchCommand;
-import net.azisaba.lgw.core.commands.ResourcePackCommand;
-import net.azisaba.lgw.core.commands.UAVCommand;
-import net.azisaba.lgw.core.configs.AssistStreaksConfig;
-import net.azisaba.lgw.core.configs.KillStreaksConfig;
-import net.azisaba.lgw.core.configs.MapsConfig;
-import net.azisaba.lgw.core.configs.SpawnsConfig;
-import net.azisaba.lgw.core.configs.WeaponControlConfig;
+import net.azisaba.lgw.core.commands.*;
+import net.azisaba.lgw.core.configs.*;
+import net.azisaba.lgw.core.sql.SQLConnection;
+import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -85,6 +76,8 @@ public class LeonGunWar extends JavaPlugin {
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
+    private DatabaseConfig databaseConfig;
+    private SyogoConfig syogoConfig;
     private WeaponControlConfig weaponControlConfig;
 
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
@@ -94,6 +87,8 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
+
+    private SQLConnection sqlConnection;
 
     public static JSONMessage getQuickBar() {
         return quickBar;
@@ -117,6 +112,8 @@ public class LeonGunWar extends JavaPlugin {
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
+        databaseConfig = new DatabaseConfig(this);
+        syogoConfig = new SyogoConfig(this);
         weaponControlConfig = new WeaponControlConfig(this);
         // 設定ファイルを読み込む
         try {
@@ -124,6 +121,8 @@ public class LeonGunWar extends JavaPlugin {
             assistStreaksConfig.loadConfig();
             spawnsConfig.loadConfig();
             mapsConfig.loadConfig();
+            databaseConfig.loadConfig();
+            syogoConfig.loadConfig();
             weaponControlConfig.loadConfig();
         } catch ( IOException | InvalidConfigurationException exception ) {
             exception.printStackTrace();
@@ -132,6 +131,8 @@ public class LeonGunWar extends JavaPlugin {
         // 初期化が必要なファイルを初期化する
         manager.initialize();
         tradeBoardManager.init();
+
+        sqlConnection = new SQLConnection(databaseConfig);
 
         // コマンドのインスタンスに渡す必要があるListener
         LimitActionListener preventItemDropListener = new LimitActionListener();
@@ -145,6 +146,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
         Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
         Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
+        Bukkit.getPluginCommand("lsyogo").setExecutor(new LSyogoCommand());
 
         // タブ補完の登録
         Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -157,6 +159,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
         Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
+        Bukkit.getPluginCommand("lsyogo").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -222,6 +225,11 @@ public class LeonGunWar extends JavaPlugin {
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
 
+        this.sqlConnection.onDisable();
+
+        this.syogoConfig.saveConfig();
+        this.syogoConfig.saveResource();
+
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();
 
@@ -243,6 +251,8 @@ public class LeonGunWar extends JavaPlugin {
     public SpawnsConfig getSpawnsConfig() {
         return spawnsConfig;
     }
+
+    public SyogoConfig getSyogoConfig(){ return syogoConfig; }
 
     public MatchStartCountdown getMatchStartCountdown() {
         return matchStartCountdown;
@@ -270,5 +280,9 @@ public class LeonGunWar extends JavaPlugin {
 
     public ScoreboardDisplayer getScoreboardDisplayer() {
         return scoreboardDisplayer;
+    }
+
+    public SQLConnection getSqlConnection() {
+        return sqlConnection;
     }
 }

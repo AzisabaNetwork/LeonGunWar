@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import net.azisaba.lgw.core.util.SyogoData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -216,8 +217,13 @@ public class DamageListener implements Listener {
 
         // メッセージ削除
         e.setDeathMessage(null);
+        SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
+        String syogo = "";
+        if(data != null) {
+            syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "");
+        }
         // メッセージ作成
-        String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(),
+        String msg = Chat.f("{0}&r {1} &r{2} &7━━━ [ &r{3} &7] ━━━> &r{4}", LeonGunWar.GAME_PREFIX, syogo , killer.getDisplayName(),
                 itemName,
                 p.getDisplayName());
 

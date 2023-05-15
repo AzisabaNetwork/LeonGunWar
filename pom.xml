@@ -5,7 +5,7 @@
 
   <groupId>net.azisaba</groupId>
   <artifactId>LeonGunWar</artifactId>
-  <version>1.4.5</version>
+  <version>1.5.0</version>
 
   <name>${project.artifactId}</name>
   <description>A core plugin in Azisaba LeonGunWar</description>
@@ -147,6 +147,11 @@
       <groupId>com.grinderwolf</groupId>
       <artifactId>slimeworldmanager-api</artifactId>
       <version>2.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>4.0.3</version>
     </dependency>
   </dependencies>
 </project>
