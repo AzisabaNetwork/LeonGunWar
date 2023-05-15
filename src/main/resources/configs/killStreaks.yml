@@ -76,15 +76,28 @@ levels:
       - "minecraft:give {0} minecraft:diamond 1"
       - "crackshot:shot give {0} deathmachine"
   20:
-    messages: []
+    messages: [ ]
     commands:
       - "minecraft:give {0} minecraft:diamond 1"
       - "crackshot:shot give {0} storobo"
   50:
-    messages: []
+    messages: [ ]
     commands:
       - "minecraft:give {0} minecraft:diamond 64"
       - "crackshot:shot give {0} kansuto"
+
+timeConditionedStreaks:
+  "2022/01/01 00:00:00 - 2022/01/31 23:59:59":
+    50:
+      messages: [ ]
+      commands: [ ]
+
+timeConditionedLevels:
+  "2022/01/01 00:00:00 - 2022/01/31 23:59:59":
+    1:
+      messages: [ ]
+      commands: [ ]
+
 
 # 連続キルを阻止した際に表示されるメッセージ
 #

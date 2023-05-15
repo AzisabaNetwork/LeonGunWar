@@ -3,7 +3,14 @@ package net.azisaba.lgw.core.commands;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.Args;
+import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -12,16 +19,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Args;
-import net.azisaba.lgw.core.utils.Chat;
-
-import me.rayzr522.jsonmessage.JSONMessage;
 
 public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
@@ -132,6 +129,8 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
                 // 設定ファイルの読み込み
                 LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
+                LeonGunWar.getPlugin().getAssistStreaksConfig().loadConfig();
+                LeonGunWar.getPlugin().getWeaponControlConfig().loadConfig();
             } catch ( IOException | InvalidConfigurationException exception ) {
                 exception.printStackTrace();
             }

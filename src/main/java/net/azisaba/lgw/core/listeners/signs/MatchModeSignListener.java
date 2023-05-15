@@ -1,10 +1,19 @@
 package net.azisaba.lgw.core.listeners.signs;
 
+import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
+import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
+import net.azisaba.lgw.core.distributors.KDTeamDistributor;
+import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
+import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,18 +30,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.google.common.base.Strings;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
-import net.azisaba.lgw.core.distributors.KDTeamDistributor;
-import net.azisaba.lgw.core.distributors.TeamDistributor;
-import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Chat;
-
-import me.rayzr522.jsonmessage.JSONMessage;
 
 /**
  *
@@ -196,27 +193,32 @@ public class MatchModeSignListener implements Listener {
         TeamDistributor distributor = null;
         if ( clicked.isSimilar(defaultItem) ) {
             distributor = new DefaultTeamDistributor();
-        } else if ( clicked.isSimilar(kdItem) ) {
+        } else if (clicked.isSimilar(kdItem)) {
             distributor = new KDTeamDistributor();
         }
 
-        if ( distributor == null ) {
+        if (distributor == null) {
             return;
         }
 
         LeonGunWar.getPlugin().getManager().setTeamDistributor(distributor);
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-        Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
-        Bukkit.broadcastMessage(Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX, distributor.getDistributorName()));
-        Bukkit.broadcastMessage(Chat.f("{0}&7Map投票を開始します", LeonGunWar.GAME_PREFIX));
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX, distributor.getDistributorName()));
+        BroadcastUtils.broadcast(Chat.f("{0}&7Map投票を開始します", LeonGunWar.GAME_PREFIX));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         // ランダムなマップを4つ抽選
         Set<GameMap> randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomMaps(4);
         LeonGunWar.getPlugin().getMapSelectCountdown().startCountdown(randomMaps, mode);
 
         // 音を鳴らす
-        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+        BroadcastUtils.getOnlinePlayers()
+            .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
         // 投票用のJSONMessageを作成
         JSONMessage msg = JSONMessage.create(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));
@@ -238,7 +240,7 @@ public class MatchModeSignListener implements Listener {
         }
 
         // JSONMessageを全員に表示
-        msg.send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        msg.send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
 
         p.closeInventory();
     }

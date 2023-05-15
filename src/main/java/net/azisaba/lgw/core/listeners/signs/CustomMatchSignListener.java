@@ -1,7 +1,15 @@
 package net.azisaba.lgw.core.listeners.signs;
 
+import com.google.common.base.Strings;
 import java.util.Arrays;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
+import net.azisaba.lgw.core.distributors.KDTeamDistributor;
+import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
+import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,16 +27,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.google.common.base.Strings;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
-import net.azisaba.lgw.core.distributors.KDTeamDistributor;
-import net.azisaba.lgw.core.distributors.TeamDistributor;
-import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Chat;
 
 /**
  *
@@ -246,9 +244,9 @@ public class CustomMatchSignListener implements Listener {
                 CustomTDMListener.customLimit.put(CustomTDMListener.GRENADE, 0);
             }
             // 最終確認 メイン・サブ・グレネード すべてが禁止の場合…
-            if ( CustomTDMListener.customLimit.get(CustomTDMListener.MAIN_WEAPON) == 0
-                    && CustomTDMListener.customLimit.get(CustomTDMListener.SUB_WEAPON) == 0
-                    && CustomTDMListener.customLimit.get(CustomTDMListener.GRENADE) == 0 ) {
+            if (CustomTDMListener.customLimit.get(CustomTDMListener.MAIN_WEAPON) == 0
+                && CustomTDMListener.customLimit.get(CustomTDMListener.SUB_WEAPON) == 0
+                && CustomTDMListener.customLimit.get(CustomTDMListener.GRENADE) == 0) {
                 // 申し訳ないがなにも使えないのでNG
                 p.sendMessage(Chat.f("&4すべて使用不可にすることはできません！1種類は残してください！"));
                 return;
@@ -256,20 +254,28 @@ public class CustomMatchSignListener implements Listener {
 
             LeonGunWar.getPlugin().getManager().setMatchMode(mode);
             LeonGunWar.getPlugin().getManager().setTeamDistributor(distributor);
-            Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-            Bukkit.broadcastMessage(Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
-            Bukkit.broadcastMessage(Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX, distributor.getDistributorName()));
-            Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件  {1}", LeonGunWar.GAME_PREFIX, CustomTDMListener.getWinCase()));
-            Bukkit.broadcastMessage(Chat.f("{0}&7武器制限  {1}", LeonGunWar.GAME_PREFIX, CustomTDMListener.getExtra()));
-            Bukkit.broadcastMessage(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
-            Bukkit.broadcastMessage(Chat.f("{0}&c注意！カスタムデスマッチのため一切報酬はもらえません！", LeonGunWar.GAME_PREFIX));
-            Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+            BroadcastUtils.broadcast(
+                Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+            BroadcastUtils.broadcast(
+                Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+            BroadcastUtils.broadcast(Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX,
+                distributor.getDistributorName()));
+            BroadcastUtils.broadcast(Chat.f("{0}&7勝利条件  {1}", LeonGunWar.GAME_PREFIX,
+                CustomTDMListener.getWinCase()));
+            BroadcastUtils.broadcast(
+                Chat.f("{0}&7武器制限  {1}", LeonGunWar.GAME_PREFIX, CustomTDMListener.getExtra()));
+            BroadcastUtils.broadcast(Chat.f("{0}&7人数が集まり次第開始します", LeonGunWar.GAME_PREFIX));
+            BroadcastUtils.broadcast(
+                Chat.f("{0}&c注意！カスタムデスマッチのため一切報酬はもらえません！", LeonGunWar.GAME_PREFIX));
+            BroadcastUtils.broadcast(
+                Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
             // 音を鳴らす
-            Bukkit.getOnlinePlayers().forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+            BroadcastUtils.getOnlinePlayers()
+                .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
             // 全プレイヤーにQuickメッセージを送信
-            LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+            LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
 
             p.closeInventory();
             return;

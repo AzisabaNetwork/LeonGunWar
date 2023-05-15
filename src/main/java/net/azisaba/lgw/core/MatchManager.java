@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,7 +13,31 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+import lombok.Data;
+import lombok.NonNull;
+import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
+import net.azisaba.lgw.core.distributors.KDTeamDistributor;
+import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.events.MatchStartedEvent;
+import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
+import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
+import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
+import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
+import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
+import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
+import net.azisaba.lgw.core.tasks.MatchCountdownTask;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.ItemChangeValidator;
+import net.azisaba.lgw.core.util.KillDeathCounter;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.util.RespawnProtection;
+import net.azisaba.lgw.core.utils.BroadcastUtils;
+import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.utils.CustomItem;
+import net.azisaba.lgw.core.utils.SecondOfDay;
+import net.azisaba.playersettings.PlayerSettings;
+import net.azisaba.playersettings.util.SettingsData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -26,33 +52,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
-import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
-import net.azisaba.lgw.core.distributors.KDTeamDistributor;
-import net.azisaba.lgw.core.distributors.TeamDistributor;
-import net.azisaba.lgw.core.events.MatchStartedEvent;
-import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
-import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
-import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
-import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
-import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
-import net.azisaba.lgw.core.tasks.MatchCountdownTask;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.KillDeathCounter;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.lgw.core.utils.CustomItem;
-import net.azisaba.lgw.core.utils.SecondOfDay;
-import net.azisaba.playersettings.PlayerSettings;
-import net.azisaba.playersettings.util.SettingsData;
-
-import lombok.Data;
-import lombok.NonNull;
 
 /**
  * ゲームを司るコアクラス
@@ -77,6 +76,10 @@ public class MatchManager {
     private BukkitTask matchTask;
     // KDカウンター
     private KillDeathCounter killDeathCounter;
+    // リスポーンを保護する情報
+    private RespawnProtection respawnProtection;
+    // インベントリの変更を制限するクラス
+    private ItemChangeValidator itemChangeValidator;
 
     // マッチで使用するスコアボード
     private Scoreboard scoreboard;
@@ -106,12 +109,16 @@ public class MatchManager {
      */
     protected void initialize() {
         // すでに初期化されている場合はreturn
-        if ( initialized ) {
+        if (initialized) {
             return;
         }
 
         // killDeathCounterを新規作成
         killDeathCounter = new KillDeathCounter();
+        // リスポーン情報を新規作成
+        respawnProtection = new RespawnProtection();
+        // インベントリ変更制限クラスを新規作成
+        itemChangeValidator = new ItemChangeValidator();
 
         // デフォルトのTeamDistributorを指定
         teamDistributor = new DefaultTeamDistributor();
@@ -166,8 +173,9 @@ public class MatchManager {
         // 投票をリセット
         LeonGunWar.getPlugin().getMapSelectCountdown().resetAllVotes();
         // マップ名を表示
-        Bukkit.broadcastMessage(
-                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX, currentGameMap.getMapName()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX,
+                currentGameMap.getMapName()));
 
         // 参加プレイヤーを取得
         List<Player> entryPlayers = getEntryPlayers();
@@ -216,22 +224,28 @@ public class MatchManager {
             Map<BattleTeam, List<Player>> playerMap = getTeamPlayers();
 
             // 各チームからリーダーを抽選する
-            for ( BattleTeam team : playerMap.keySet() ) {
+            for (BattleTeam team : playerMap.keySet()) {
                 setLeaderAtRandom(team);
             }
         }
 
         // 全プレイヤーに音を鳴らす
-        Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+        BroadcastUtils.getOnlinePlayers()
+            .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
 
         // 開始メッセージ
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
-        Bukkit.broadcastMessage(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX, SecondOfDay.f(matchMode.getDuration().getSeconds())));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        BroadcastUtils.broadcast(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX,
+            SecondOfDay.f(matchMode.getDuration().getSeconds())));
         // 勝利条件を発表
-        Bukkit.broadcastMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
-        Bukkit.broadcastMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
-        Bukkit.getPluginManager().callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
+        Bukkit.getPluginManager()
+            .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
         // タスクスタート
         runMatchTask();
@@ -240,7 +254,7 @@ public class MatchManager {
         isMatching = true;
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     public List<Player> getEntryPlayers() { return entryPlayers; }
@@ -262,6 +276,10 @@ public class MatchManager {
 
         // killDeathCounterを初期化
         killDeathCounter = new KillDeathCounter();
+        // リスポーン情報を初期化
+        respawnProtection = new RespawnProtection();
+        // インベントリ変更制限クラスを初期化
+        itemChangeValidator = new ItemChangeValidator();
 
         // サイドバーを削除
         LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
@@ -269,9 +287,9 @@ public class MatchManager {
         Bukkit.getOnlinePlayers().forEach(p -> {
 
             // PlayerListの色はエントリーしていたら緑色
-            if ( entryPlayers.contains(p) ) {
+            if (entryPlayers.contains(p)) {
                 p.setPlayerListName(Chat.f("&a{0}", p.getName()));
-            } else if ( getBattleTeam(p) != null ) {
+            } else if (getBattleTeam(p) != null) {
                 // チームに参加していたプレイヤーはリセット
                 p.setPlayerListName(p.getName());
             } else {
@@ -404,7 +422,7 @@ public class MatchManager {
 
         // 退出メッセージを全員に送信
         String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
-        Bukkit.broadcastMessage(msg);
+        BroadcastUtils.broadcast(msg);
 
         // DisplayNameとPlayerListName初期化
         p.setDisplayName(p.getName());
@@ -618,7 +636,8 @@ public class MatchManager {
         p.sendMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
-        Bukkit.broadcastMessage(Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
         // 途中参加イベントを呼び出し
         Bukkit.getPluginManager().callEvent(new PlayerRejoinMatchEvent(p));
@@ -697,7 +716,9 @@ public class MatchManager {
 
         // チームのリーダーに設定
         ldmLeaderMap.put(team, target);
-        Bukkit.broadcastMessage(Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX, team.getTeamName()));
+        BroadcastUtils.broadcast(
+            Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX,
+                team.getTeamName()));
 
         // メッセージを表示
         plist.forEach(p -> p.sendMessage(

@@ -1,15 +1,10 @@
 package net.azisaba.lgw.core;
 
 import java.io.IOException;
-
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.util.SyogoData;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -32,11 +27,14 @@ import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
+import net.azisaba.lgw.core.listeners.others.KillVillagerOnChunkLoadListener;
 import net.azisaba.lgw.core.listeners.others.LimitActionListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
 import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
 import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
 import net.azisaba.lgw.core.listeners.others.OnsenListener;
+import net.azisaba.lgw.core.listeners.others.PreventEscapeListener;
+import net.azisaba.lgw.core.listeners.others.RemoveKillStreakScoreListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
 import net.azisaba.lgw.core.listeners.others.StreaksListener;
@@ -50,13 +48,13 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsDuringMatchListe
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsInLobbyListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListener;
+import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.utils.Chat;
-
-import lombok.Getter;
-
-import me.rayzr522.jsonmessage.JSONMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
 public class LeonGunWar extends JavaPlugin {
@@ -78,6 +76,7 @@ public class LeonGunWar extends JavaPlugin {
     private MapsConfig mapsConfig;
     private DatabaseConfig databaseConfig;
     private SyogoConfig syogoConfig;
+    private WeaponControlConfig weaponControlConfig;
 
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
@@ -113,6 +112,7 @@ public class LeonGunWar extends JavaPlugin {
         mapsConfig = new MapsConfig(this);
         databaseConfig = new DatabaseConfig(this);
         syogoConfig = new SyogoConfig(this);
+        weaponControlConfig = new WeaponControlConfig(this);
         // 設定ファイルを読み込む
         try {
             killStreaksConfig.loadConfig();
@@ -121,6 +121,7 @@ public class LeonGunWar extends JavaPlugin {
             mapsConfig.loadConfig();
             databaseConfig.loadConfig();
             syogoConfig.loadConfig();
+            weaponControlConfig.loadConfig();
         } catch ( IOException | InvalidConfigurationException exception ) {
             exception.printStackTrace();
         }
@@ -198,6 +199,9 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
+        Bukkit.getPluginManager().registerEvents(new KillVillagerOnChunkLoadListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PreventEscapeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new RemoveKillStreakScoreListener(), this);
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         Bukkit.getPluginManager().registerEvents(new DisableToysDuringMatchListener(), this);
@@ -205,6 +209,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisablePvEsInLobbyListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvEListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableWaveDuringMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LimitOneShotPerMatchListener(), this);
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
