@@ -19,7 +19,7 @@ public class SQLConnection {
     private static final String INSERT_DATABASE_VERSION = "INSERT INTO settings (tag,value) VALUES ('database_version',?)";
 
     private static final String CREATE_VERSION_TABLE = "CREATE TABLE IF NOT EXISTS settings (tag VARCHAR(64) NOT NULL, value INT DEFAULT 0)";
-    private static final String CREATE_SYOGO_TABLE = "CREATE TABLE IF NOT EXISTS syogos (uuid VARCHAR(36) NOT NULL, name VARCHAR(32) NOT NULL, syogo VARCHAR(64) NOT NULL)";
+    private static final String CREATE_SYOGO_TABLE = "CREATE TABLE IF NOT EXISTS syogos (uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(32) NOT NULL, syogo VARCHAR(64) NOT NULL)";
 
     private HikariDataSource dataSource;
 
