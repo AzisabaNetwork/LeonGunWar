@@ -1,6 +1,8 @@
 package net.azisaba.lgw.core;
 
 import java.io.IOException;
+import lombok.Getter;
+import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
