@@ -1,5 +1,6 @@
 package net.azisaba.lgw.core.listeners;
 
+import com.shampaggon.crackshot.CSUtility;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 public class MatchControlListener implements Listener {
 
@@ -136,9 +138,23 @@ public class MatchControlListener implements Listener {
                 // チームメンバーを取得
                 List<Player> winnerPlayers = e.getTeamPlayers(wonTeam);
 
-                for ( Player p : winnerPlayers ) {
-                    // 勝者の証を付与
-                    p.getInventory().addItem(CustomItem.getWonItem());
+                CSUtility csUtility = new CSUtility();
+                List<String> victoryItemCrackShotIds = LeonGunWar.getPlugin().getItemsConfig()
+                    .getVictoryItemCrackShotIds();
+
+                for (Player p : winnerPlayers) {
+                    // 勝利アイテムを付与
+                    if (victoryItemCrackShotIds == null) {
+                        // 勝者の証を付与
+                        p.getInventory().addItem(CustomItem.getWonItem());
+                    } else {
+                        for (String crackShotId : victoryItemCrackShotIds) {
+                            ItemStack item = csUtility.generateWeapon(crackShotId);
+                            if (item != null) {
+                                p.getInventory().addItem(item);
+                            }
+                        }
+                    }
 
                     // 勝利タイトルを表示
                     p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);

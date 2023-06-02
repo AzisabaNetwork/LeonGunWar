@@ -12,6 +12,7 @@ import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
+import net.azisaba.lgw.core.configs.ItemsConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
 import net.azisaba.lgw.core.configs.SpawnsConfig;
@@ -86,6 +87,7 @@ public class LeonGunWar extends JavaPlugin {
     private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
     private WeaponControlConfig weaponControlConfig;
+    private ItemsConfig itemsConfig;
 
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
@@ -118,6 +120,7 @@ public class LeonGunWar extends JavaPlugin {
         spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
         weaponControlConfig = new WeaponControlConfig(this);
+        itemsConfig = new ItemsConfig(this);
         // 設定ファイルを読み込む
         try {
             killStreaksConfig.loadConfig();
@@ -125,6 +128,7 @@ public class LeonGunWar extends JavaPlugin {
             spawnsConfig.loadConfig();
             mapsConfig.loadConfig();
             weaponControlConfig.loadConfig();
+            itemsConfig.loadConfig();
         } catch ( IOException | InvalidConfigurationException exception ) {
             exception.printStackTrace();
         }

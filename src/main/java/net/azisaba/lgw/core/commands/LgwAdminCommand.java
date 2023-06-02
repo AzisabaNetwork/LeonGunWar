@@ -131,6 +131,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
                 LeonGunWar.getPlugin().getAssistStreaksConfig().loadConfig();
                 LeonGunWar.getPlugin().getWeaponControlConfig().loadConfig();
+                LeonGunWar.getPlugin().getItemsConfig().loadConfig();
             } catch ( IOException | InvalidConfigurationException exception ) {
                 exception.printStackTrace();
             }
