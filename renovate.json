@@ -1,6 +1,5 @@
 {
   "extends": [
     "github>AzisabaNetwork/renovate-config"
-  ],
-  "assignees": ["siloneco"]
+  ]
 }
