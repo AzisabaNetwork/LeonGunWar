@@ -254,7 +254,7 @@ public class MatchManager {
         isMatching = true;
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
+        //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     public List<Player> getEntryPlayers() { return entryPlayers; }

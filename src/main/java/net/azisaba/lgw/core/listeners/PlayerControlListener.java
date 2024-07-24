@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -106,6 +107,14 @@ public class PlayerControlListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendQuickMessage(PlayerJoinEvent e) {
-        LeonGunWar.getQuickBar().send(e.getPlayer());
+        //LeonGunWar.getQuickBar().send(e.getPlayer());
+        if(!LeonGunWar.getPlugin().getMainConfig().isLobby){
+            if(LeonGunWar.getPlugin().getManager().isMatching()){
+                LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(e.getPlayer());
+            }else {
+                LeonGunWar.getPlugin().getManager().addEntryPlayer(e.getPlayer());
+            }
+
+        }
     }
 }

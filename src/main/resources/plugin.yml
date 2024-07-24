@@ -15,9 +15,9 @@ commands:
     usage: /uav [Player]
     description: Nothing
     permission: leongunwar.command.uav
-  match:
-    usage: /match <entry/rejoin/leave> (player)
-    permission: leongunwar.command.match
+  #match:
+  #  usage: /match <entry/rejoin/leave> (player)
+  #  permission: leongunwar.command.match
   mapvote:
     usage: /mapvote <index>
     permission: leongunwar.command.mapvote
@@ -45,8 +45,8 @@ permissions:
     default: op
   leongunwar.command.uav:
     default: op
-  leongunwar.command.match:
-    default: true
+  #leongunwar.command.match:
+  #  default: true
   leongunwar.command.mapvote:
     default: true
   leongunwar.command.match.other:

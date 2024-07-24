@@ -180,7 +180,7 @@ public class MatchControlListener implements Listener {
         LeonGunWar.getPlugin().getManager().finalizeMatch();
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
+        //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     /**
