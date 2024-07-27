@@ -61,7 +61,7 @@ public class TradeBoardListener implements Listener {
             return;
         }
         // 取得したブロックが看板ではない場合はreturn
-        if ( b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.LEGACY_WALL_SIGN ) {
+        if ( b.getType() != Material.OAK_WALL_SIGN && b.getType() != Material.OAK_SIGN ) {
             return;
         }
 

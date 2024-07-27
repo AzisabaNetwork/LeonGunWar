@@ -69,7 +69,7 @@ public class CustomMatchSignListener implements Listener {
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
             return;
         }
 
@@ -110,7 +110,7 @@ public class CustomMatchSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
             return;
         }
 
