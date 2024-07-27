@@ -209,8 +209,8 @@ public class KillDeathCounter {
 
     public String getDefaultActionBar(@NonNull Player player) {
         // アクションバーにKDレートを表示するかどうかを個人設定から取得
-        SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
-        boolean displayKDRatio = data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
+        //SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
+        boolean displayKDRatio = true;//data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
 
         // 何度も個人設定を取得するのは非効率なので設定してからreturnする
         if ( displayKDRatio ) {
@@ -240,8 +240,8 @@ public class KillDeathCounter {
     private void updateActionbar(Player player) {
 
         // アクションバーにKDレートを表示するかどうかを個人設定から取得
-        SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
-        boolean displayKDRatio = data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
+        //SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
+        boolean displayKDRatio = true;//data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
 
         StringBuilder barBuilder = new StringBuilder();
         StringBuilder actionBar = new StringBuilder();

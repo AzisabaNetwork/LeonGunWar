@@ -650,8 +650,8 @@ public class MatchManager {
         }
 
         // 設定を取得
-        SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(p);
-        boolean enableEntry = data.isSet("LeonGunWar.EntryOnRejoin") && data.getBoolean("LeonGunWar.EntryOnRejoin");
+        //SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(p);
+        boolean enableEntry = true;//data.isSet("LeonGunWar.EntryOnRejoin") && data.getBoolean("LeonGunWar.EntryOnRejoin");
 
         // 有効ならエントリーする
         if ( enableEntry ) {
