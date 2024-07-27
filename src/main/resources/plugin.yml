@@ -6,6 +6,7 @@ description: ${project.description}
 website: ${project.url}
 depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded"]
 softdepend: ["Multiverse-Core"]
+api-version: 1.16
 commands:
   leongunwaradmin:
     description: Nothing
