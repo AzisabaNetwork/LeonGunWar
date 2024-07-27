@@ -165,7 +165,7 @@ public class MatchModeSignListener implements Listener {
         Player p = (Player) e.getWhoClicked();
         Inventory openingInv = e.getInventory();
 
-        if ( !Chat.r(openingInv.getTitle()).startsWith("Distribute Selector - ") ) {
+        if ( !Chat.r(e.getView().getTitle()).startsWith("Distribute Selector - ") ) {
             return;
         }
 
@@ -184,9 +184,9 @@ public class MatchModeSignListener implements Listener {
             return;
         }
 
-        MatchMode mode = MatchMode.getFromString(openingInv.getTitle().substring(openingInv.getTitle().indexOf(Chat.f("&e")) + 2));
+        MatchMode mode = MatchMode.getFromString(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
         if ( mode == null ) {
-            Bukkit.getLogger().info(openingInv.getTitle().substring(openingInv.getTitle().indexOf(Chat.f("&e")) + 2));
+            Bukkit.getLogger().info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
             return;
         }
 
