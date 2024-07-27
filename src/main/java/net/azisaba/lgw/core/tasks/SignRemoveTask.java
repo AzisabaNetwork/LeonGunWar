@@ -25,7 +25,7 @@ public class SignRemoveTask extends BukkitRunnable {
                     // 座標からブロックを取得
                     Block b = data.getLocation().getBlock();
                     // 壁の看板か床に置いてある看板ならAIRに変更する
-                    if ( b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST ) {
+                    if ( b.getType() == Material.LEGACY_WALL_SIGN || b.getType() == Material.LEGACY_SIGN_POST ) {
                         b.setType(Material.AIR);
                     }
 
