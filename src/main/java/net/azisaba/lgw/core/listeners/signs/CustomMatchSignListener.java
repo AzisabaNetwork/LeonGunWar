@@ -40,10 +40,10 @@ public class CustomMatchSignListener implements Listener {
     private final ItemStack no_limit, matchpoint, main_limit, sub_limit, granade_limit, defaultItem, kdItem;
 
     public CustomMatchSignListener() {
-        no_limit = create(Material.WATCH, Chat.f("&eモード : &6NO LIMIT"));
+        no_limit = create(Material.LEGACY_WATCH, Chat.f("&eモード : &6NO LIMIT"));
         matchpoint = create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a50P"));
         main_limit = create(Material.SUGAR_CANE, Chat.f("&eメイン武器射撃 : &a可能"));
-        sub_limit = create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &a可能"));
+        sub_limit = create(Material.GOLDEN_HOE, Chat.f("&eサブ武器射撃 : &a可能"));
         granade_limit = create(Material.SLIME_BALL, Chat.f("&eグレネード投擲 : &a可能"));
         defaultItem = create(Material.EMERALD_BLOCK, Chat.f("&e通常のチーム分け&aで開始！"));
         kdItem = create(Material.DIAMOND_BLOCK, Chat.f("&cK/Dのチーム分け&aで開始！"));
@@ -69,7 +69,7 @@ public class CustomMatchSignListener implements Listener {
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 
@@ -110,7 +110,7 @@ public class CustomMatchSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 
@@ -178,7 +178,7 @@ public class CustomMatchSignListener implements Listener {
         Player p = (Player) e.getWhoClicked();
         Inventory openingInv = e.getInventory();
 
-        if ( !Chat.r(openingInv.getTitle()).startsWith("Custom-TDM Setting") ) {
+        if ( !Chat.r(e.getView().getTitle()).startsWith("Custom-TDM Setting") ) {
             return;
         }
 
@@ -198,7 +198,7 @@ public class CustomMatchSignListener implements Listener {
 
         MatchMode mode = MatchMode.getFromString("cdm");
         if ( mode == null ) {
-            Bukkit.getLogger().info(openingInv.getTitle().substring(openingInv.getTitle().indexOf(Chat.f("&e")) + 2));
+            Bukkit.getLogger().info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
             return;
         }
 
@@ -272,7 +272,7 @@ public class CustomMatchSignListener implements Listener {
 
             // 音を鳴らす
             BroadcastUtils.getOnlinePlayers()
-                .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+                .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
             // 全プレイヤーにQuickメッセージを送信
             LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
@@ -289,9 +289,9 @@ public class CustomMatchSignListener implements Listener {
             String itemname = clicked.getItemMeta().getDisplayName();
             if ( e.getSlot() == 0 ) {
                 if ( Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT") ) {
-                    e.getClickedInventory().setItem(0, create(Material.WATCH, Chat.f("&eモード : &cLEADER")));
+                    e.getClickedInventory().setItem(0, create(Material.LEGACY_WATCH, Chat.f("&eモード : &cLEADER")));
                 } else if ( Chat.r(itemname).equalsIgnoreCase("モード : LEADER") ) {
-                    e.getClickedInventory().setItem(0, create(Material.WATCH, Chat.f("&eモード : &aPOINT")));
+                    e.getClickedInventory().setItem(0, create(Material.LEGACY_WATCH, Chat.f("&eモード : &aPOINT")));
                 } else if ( Chat.r(itemname).equalsIgnoreCase("モード : POINT") ) {
                     e.getClickedInventory().setItem(0, no_limit);
                 }
@@ -309,7 +309,7 @@ public class CustomMatchSignListener implements Listener {
                 }
             } else if ( e.getSlot() == 6 ) {
                 if ( Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 可能") ) {
-                    e.getClickedInventory().setItem(6, create(Material.GOLD_HOE, Chat.f("&eサブ武器射撃 : &c不可能")));
+                    e.getClickedInventory().setItem(6, create(Material.GOLDEN_HOE, Chat.f("&eサブ武器射撃 : &c不可能")));
                 } else if ( Chat.r(itemname).equalsIgnoreCase("サブ武器射撃 : 不可能") ) {
                     e.getClickedInventory().setItem(6, sub_limit);
                 }

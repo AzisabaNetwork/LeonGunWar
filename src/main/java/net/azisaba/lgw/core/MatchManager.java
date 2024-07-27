@@ -231,7 +231,7 @@ public class MatchManager {
 
         // 全プレイヤーに音を鳴らす
         BroadcastUtils.getOnlinePlayers()
-            .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+            .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
         // 開始メッセージ
         BroadcastUtils.broadcast(

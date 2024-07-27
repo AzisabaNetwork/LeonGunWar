@@ -48,7 +48,7 @@ public class MatchStartCountdownTask extends BukkitRunnable {
         // soundがtrueの場合音を鳴らす
         if ( sound ) {
             BroadcastUtils.getOnlinePlayers()
-                .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1f, 1f));
+                .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f));
         }
 
         // 1秒減らす
