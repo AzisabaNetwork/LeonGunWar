@@ -110,7 +110,13 @@ public class PlayerControlListener implements Listener {
         //LeonGunWar.getQuickBar().send(e.getPlayer());
         if(!LeonGunWar.getPlugin().getMainConfig().isLobby){
             if(LeonGunWar.getPlugin().getManager().isMatching()){
-                LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(e.getPlayer());
+                Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(e.getPlayer());
+                    }
+                }, 5L);
+
             }else {
                 LeonGunWar.getPlugin().getManager().addEntryPlayer(e.getPlayer());
             }
