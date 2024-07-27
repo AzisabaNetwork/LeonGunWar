@@ -179,7 +179,7 @@ public class DamageListener implements Listener {
             e.setDeathMessage(null);
 
             // メッセージを作成
-            String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getDisplayName());
+            String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
             // メッセージ送信
             p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 
@@ -217,9 +217,9 @@ public class DamageListener implements Listener {
         // メッセージ削除
         e.setDeathMessage(null);
         // メッセージ作成
-        String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getDisplayName(),
+        String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
                 itemName,
-                p.getDisplayName());
+                p.getPlayerListName());
 
         // メッセージ送信
         p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));

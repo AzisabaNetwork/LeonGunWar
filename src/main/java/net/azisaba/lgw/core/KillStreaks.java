@@ -98,7 +98,7 @@ public class KillStreaks {
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getTimeConditionedStreaks().entrySet()
             .stream()
@@ -109,14 +109,14 @@ public class KillStreaks {
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getLevels().entrySet().stream()
             .filter(entry -> streaks % entry.getKey() == 0)
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getTimeConditionedLevels().entrySet().stream()
             .filter(entry -> entry.getKey().isDuring())
@@ -126,7 +126,7 @@ public class KillStreaks {
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
     }
 }
