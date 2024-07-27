@@ -11,12 +11,7 @@ import net.azisaba.lgw.core.commands.MapVoteCommand;
 import net.azisaba.lgw.core.commands.MatchCommand;
 import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.UAVCommand;
-import net.azisaba.lgw.core.configs.AssistStreaksConfig;
-import net.azisaba.lgw.core.configs.ItemsConfig;
-import net.azisaba.lgw.core.configs.KillStreaksConfig;
-import net.azisaba.lgw.core.configs.MapsConfig;
-import net.azisaba.lgw.core.configs.SpawnsConfig;
-import net.azisaba.lgw.core.configs.WeaponControlConfig;
+import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -82,6 +77,7 @@ public class LeonGunWar extends JavaPlugin {
     @Getter
     private static JSONMessage quickBar;
 
+    private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
@@ -115,6 +111,7 @@ public class LeonGunWar extends JavaPlugin {
                 .runCommand("/leongunwar:match rejoin");
 
         // 設定ファイルを読み込むクラスの初期化
+        mainConfig = new MainConfig(this);
         killStreaksConfig = new KillStreaksConfig(this);
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
@@ -123,6 +120,7 @@ public class LeonGunWar extends JavaPlugin {
         itemsConfig = new ItemsConfig(this);
         // 設定ファイルを読み込む
         try {
+            mainConfig.loadConfig();
             killStreaksConfig.loadConfig();
             assistStreaksConfig.loadConfig();
             spawnsConfig.loadConfig();
@@ -143,7 +141,7 @@ public class LeonGunWar extends JavaPlugin {
         // コマンドの登録
         Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
         Bukkit.getPluginCommand("uav").setExecutor(new UAVCommand());
-        Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
+        //Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
@@ -151,16 +149,16 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
 
         // タブ補完の登録
-        Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
-        Bukkit.getPluginCommand("match").setTabCompleter(new MatchCommand());
+        //Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
+        //Bukkit.getPluginCommand("match").setTabCompleter(new MatchCommand());
 
         // コマンドの権限がない時のメッセージの指定
-        Bukkit.getPluginCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
@@ -187,7 +185,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
-        Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
         Bukkit.getPluginManager().registerEvents(new StreaksListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLimitListener(), this);
@@ -196,7 +194,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
-        Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
+       // Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
@@ -239,6 +237,8 @@ public class LeonGunWar extends JavaPlugin {
     public MatchManager getManager() {
         return manager;
     }
+
+    public MainConfig getMainConfig(){ return mainConfig; }
 
     public MapsConfig getMapsConfig() {
         return mapsConfig;
