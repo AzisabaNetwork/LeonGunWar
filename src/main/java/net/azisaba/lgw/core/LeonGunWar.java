@@ -149,16 +149,16 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
 
         // タブ補完の登録
-        Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
-        Bukkit.getPluginCommand("match").setTabCompleter(new MatchCommand());
+        //Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
+        //Bukkit.getPluginCommand("match").setTabCompleter(new MatchCommand());
 
         // コマンドの権限がない時のメッセージの指定
-        Bukkit.getPluginCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
         //Bukkit.getPluginCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
-        Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
+        //Bukkit.getPluginCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         Bukkit.getPluginManager().registerEvents(new MatchControlListener(), this);
