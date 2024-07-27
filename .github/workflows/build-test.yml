@@ -26,17 +26,17 @@ jobs:
           distribution: "adopt"
           cache: "maven"
 
-      - name: Check 1.12.2 NMS existence
+      - name: Check 1.16.5 NMS existence
         id: check_nms
         uses: andstor/file-existence-action@v1
         with:
-          files: "/home/runner/.m2/repository/org/spigotmc/spigot/1.12.2-R0.1-SNAPSHOT/spigot-1.12.2-R0.1-SNAPSHOT.pom"
+          files: "/home/runner/.m2/repository/org/spigotmc/spigot/1.16.5-R0.1-SNAPSHOT/spigot-1.16.5-R0.1-SNAPSHOT.pom"
       - name: Download BuildTools
         if: steps.check_nms.outputs.files_exists == 'false'
         run: mkdir -p ./build/ && curl -L -o ./build/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
       - name: Run BuildTools
         if: steps.check_nms.outputs.files_exists == 'false'
-        run: cd build && java -jar BuildTools.jar --rev 1.12.2
+        run: cd build && java -jar BuildTools.jar --rev 1.16.5
 
       - name: Check CrackShot existence
         id: check_crackshot
