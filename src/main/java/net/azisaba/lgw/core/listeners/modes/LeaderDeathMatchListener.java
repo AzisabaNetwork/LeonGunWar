@@ -60,9 +60,9 @@ public class LeaderDeathMatchListener implements Listener {
 
             BroadcastUtils.broadcast(Chat.f("{0}{1} &7が {2} &7のリーダーの {3} &7をキル！",
                 LeonGunWar.GAME_PREFIX,
-                killer.getDisplayName(),
+                killer.getPlayerListName(),
                 team.getTeamName(),
-                death.getDisplayName()));
+                death.getPlayerListName()));
 
             // ポイント制の場合は試合を終了せずに再抽選
             if ( manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH_POINT ) {
