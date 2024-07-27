@@ -68,7 +68,7 @@ public class MatchModeSignListener implements Listener {
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 
@@ -118,7 +118,7 @@ public class MatchModeSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 
@@ -218,7 +218,7 @@ public class MatchModeSignListener implements Listener {
 
         // 音を鳴らす
         BroadcastUtils.getOnlinePlayers()
-            .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+            .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
         // 投票用のJSONMessageを作成
         JSONMessage msg = JSONMessage.create(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));

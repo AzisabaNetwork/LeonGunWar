@@ -105,7 +105,7 @@ public class MapSelectCountdownTask extends BukkitRunnable {
 
             // 音を鳴らす
             BroadcastUtils.getOnlinePlayers().forEach(
-                player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+                player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
             // 全プレイヤーにQuickメッセージを送信
             //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));

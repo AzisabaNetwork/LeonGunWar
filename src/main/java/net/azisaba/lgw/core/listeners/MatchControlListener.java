@@ -249,7 +249,7 @@ public class MatchControlListener implements Listener {
         // 5秒以下なら音を鳴らす
         if ( Arrays.asList(5, 4, 3, 2, 1).contains(timeLeft) ) {
             BroadcastUtils.getOnlinePlayers()
-                .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_HAT, 1, 1));
+                .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1));
         }
     }
 
