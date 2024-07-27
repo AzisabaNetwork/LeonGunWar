@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class PreventEscapeListener implements Listener {
 
   private static final List<Material> WATER_BLOCKS = Collections.unmodifiableList(
-      Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
+      Arrays.asList(Material.WATER, Material.LEGACY_STATIONARY_WATER));
   private static final List<Material> ILLEGAL_BLOCKS = Collections.unmodifiableList(
       Arrays.asList(Material.BARRIER, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 

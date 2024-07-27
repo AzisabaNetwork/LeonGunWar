@@ -44,7 +44,7 @@ public class EntrySignListener implements Listener {
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 
@@ -95,7 +95,7 @@ public class EntrySignListener implements Listener {
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 
@@ -138,7 +138,7 @@ public class EntrySignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.LEGACY_SIGN_POST && clickedBlock.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 

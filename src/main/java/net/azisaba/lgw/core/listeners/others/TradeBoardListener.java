@@ -61,7 +61,7 @@ public class TradeBoardListener implements Listener {
             return;
         }
         // 取得したブロックが看板ではない場合はreturn
-        if ( b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN ) {
+        if ( b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.LEGACY_WALL_SIGN ) {
             return;
         }
 
@@ -123,7 +123,7 @@ public class TradeBoardListener implements Listener {
         }
 
         // 看板ではない場合はキャンセル
-        if ( b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN ) {
+        if ( b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.LEGACY_WALL_SIGN ) {
             e.setCancelled(true);
         }
     }
