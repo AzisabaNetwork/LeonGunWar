@@ -27,7 +27,7 @@ public class KillStreaks {
             BroadcastUtils.broadcast(
                 Chat.f(LeonGunWar.getPlugin().getKillStreaksConfig().getRemoved(),
                     LeonGunWar.GAME_PREFIX,
-                    killer.getDisplayName(), player.getDisplayName()));
+                    killer.getPlayerListName(), player.getPlayerListName()));
         }
 
         streaksMap.remove(player.getUniqueId());
