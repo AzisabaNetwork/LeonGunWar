@@ -77,7 +77,7 @@ public class LeonGunWar extends JavaPlugin {
     @Getter
     private static JSONMessage quickBar;
 
-    private MainConfig mainConfig;
+    //private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
@@ -111,7 +111,7 @@ public class LeonGunWar extends JavaPlugin {
                 .runCommand("/leongunwar:match rejoin");
 
         // 設定ファイルを読み込むクラスの初期化
-        mainConfig = new MainConfig(this);
+        //mainConfig = new MainConfig(this);
         killStreaksConfig = new KillStreaksConfig(this);
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
@@ -120,7 +120,7 @@ public class LeonGunWar extends JavaPlugin {
         itemsConfig = new ItemsConfig(this);
         // 設定ファイルを読み込む
         try {
-            mainConfig.loadConfig();
+            //mainConfig.loadConfig();
             killStreaksConfig.loadConfig();
             assistStreaksConfig.loadConfig();
             spawnsConfig.loadConfig();
@@ -238,7 +238,7 @@ public class LeonGunWar extends JavaPlugin {
         return manager;
     }
 
-    public MainConfig getMainConfig(){ return mainConfig; }
+    //public MainConfig getMainConfig(){ return mainConfig; }
 
     public MapsConfig getMapsConfig() {
         return mapsConfig;
