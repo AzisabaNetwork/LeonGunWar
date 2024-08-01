@@ -141,7 +141,7 @@ public class LeonGunWar extends JavaPlugin {
         // コマンドの登録
         Bukkit.getPluginCommand("leongunwaradmin").setExecutor(new LgwAdminCommand());
         Bukkit.getPluginCommand("uav").setExecutor(new UAVCommand());
-        //Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
+        Bukkit.getPluginCommand("match").setExecutor(new MatchCommand());
         Bukkit.getPluginCommand("kiai").setExecutor(new KIAICommand());
         Bukkit.getPluginCommand("resourcepack").setExecutor(new ResourcePackCommand());
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
