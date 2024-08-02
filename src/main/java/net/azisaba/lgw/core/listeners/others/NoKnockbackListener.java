@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Damageable;
@@ -24,6 +25,7 @@ import org.bukkit.util.Vector;
 
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+
 
 /**
  * ノックバックを無効化するためのクラス
@@ -44,6 +46,7 @@ public class NoKnockbackListener implements Listener {
     /**
      * プレイヤーが爆発でノックバックしたときにキャンセルするリスナー
      */
+
     @EventHandler
     public void onExplosionKnockback(EntityExplodeEvent e) {
         if ( e.getEntity() instanceof Explosive ) {
@@ -53,6 +56,7 @@ public class NoKnockbackListener implements Listener {
             Explosive explosive = (Explosive) e.getEntity();
             float power = explosive.getYield();
             double radius = 2 * power;
+            e.getEntity().getWorld().playSound(e.getLocation(), Sound.ENTITY_GENERIC_EXPLODE,1f,1f);
 
             // パーティクルを表示
             Particle explode = power >= 1 ? power >= 2 ? Particle.EXPLOSION_HUGE : Particle.EXPLOSION_LARGE : Particle.EXPLOSION_NORMAL;
@@ -109,13 +113,6 @@ public class NoKnockbackListener implements Listener {
                     }
                 }
 
-                // 防具のダメージを計算する
-                if ( target instanceof LivingEntity ) {
-                    LivingEntity entity = (LivingEntity) target;
-                    double toughness = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
-                    double defensePoints = entity.getAttribute(Attribute.GENERIC_ARMOR).getValue();
-                    damage *= 1 - Math.min(20, Math.max(defensePoints / 5, defensePoints - damage / (2 + toughness / 4))) / 25;
-                }
 
                 // ターゲットが無敵の場合はダメージを無くす
                 if ( target.isInvulnerable() ) {
