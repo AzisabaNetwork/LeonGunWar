@@ -215,12 +215,11 @@ public class DamageListener implements Listener {
         }
 
         // メッセージ削除
-        e.setDeathMessage(null);
+        e.deathMessage(null);
         // メッセージ作成
-        String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
+        String msg = Chat.f("{0}&f{1} &7━━━ [ &f{2} &7] ━━━> &f{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
                 itemName,
                 p.getPlayerListName());
-
         // メッセージ送信
         p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 
