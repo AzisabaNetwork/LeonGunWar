@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import net.azisaba.lgw.core.events.PlayerKillEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -210,6 +211,8 @@ public class DamageListener implements Listener {
             if ( itemName == null ) {
                 itemName = item.getItemMeta().getDisplayName();
             }
+
+            Bukkit.getPluginManager().callEvent(new PlayerKillEvent(killer, nodes));
         } else { // それ以外
             itemName = Chat.f("&6{0}", item.getType().name());
         }
