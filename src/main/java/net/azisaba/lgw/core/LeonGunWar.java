@@ -165,6 +165,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(),this);
         //Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
         Bukkit.getPluginManager().registerEvents(new StreaksListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
