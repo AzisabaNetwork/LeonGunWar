@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -56,6 +57,10 @@ public class DisableChangeItemListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getClickedInventory();
+
+        if (event.getWhoClicked().getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
 
         if (inventory == null || inventory.getType() != InventoryType.PLAYER) {
             return;
