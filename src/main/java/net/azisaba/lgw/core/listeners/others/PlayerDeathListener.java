@@ -51,7 +51,7 @@ public class PlayerDeathListener implements Listener {
             } else { // それ以外
                 itemName = Chat.f("&6{0}", item.getType().name());
             }
-            msg = Chat.f("&7&l[&c&lFFA&7&l]&f{0}&7---[&6{1}&7]-->&f{2}", p.getName(), itemName, p.getKiller().getName());
+            msg = Chat.f("&7&l[&c&lFFA&7&l]&f{0}&7---[&6{1}&7]-->&f{2}", p.getKiller().getName(), itemName, p.getName());
             // メッセージ送信
             p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 

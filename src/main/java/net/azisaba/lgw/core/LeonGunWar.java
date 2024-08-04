@@ -166,7 +166,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(),this);
-        //Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
         Bukkit.getPluginManager().registerEvents(new StreaksListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLimitListener(), this);
@@ -175,7 +175,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
-       // Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
+        Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
