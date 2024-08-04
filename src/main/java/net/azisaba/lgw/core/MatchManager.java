@@ -40,6 +40,7 @@ import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -832,7 +833,8 @@ public class MatchManager {
                 // 押し合いをなくす
                 scoreboardTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
                 // Prefixを設定
-                scoreboardTeam.prefix(Component.text(" ").color(team.getNamedTextColor()));
+                scoreboardTeam.prefix(Component.text("").color(team.getNamedTextColor()));
+
             }
 
             // チームを保存

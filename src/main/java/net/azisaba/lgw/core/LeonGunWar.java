@@ -33,6 +33,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListe
 import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
+import net.azisaba.lgw.core.util.LGWExpansion;
 import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -84,6 +85,10 @@ public class LeonGunWar extends JavaPlugin {
                 .then(" ")
                 .then(Chat.f("&6[途中参加]"))
                 .runCommand("/leongunwar:match rejoin");
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
+            new LGWExpansion(this).register(); //
+        }
 
         // 設定ファイルを読み込むクラスの初期化
         //mainConfig = new MainConfig(this);
