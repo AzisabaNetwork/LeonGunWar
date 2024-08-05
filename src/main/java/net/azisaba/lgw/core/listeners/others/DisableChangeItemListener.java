@@ -71,10 +71,12 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        Location spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getWhoClicked()));
+        if (LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getWhoClicked()))!=null){
+            Location spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getWhoClicked()));
 
-        if (spawnPoint.distance(event.getWhoClicked().getLocation()) <= 10) {
-            return;
+            if (spawnPoint.distance(event.getWhoClicked().getLocation()) <= 10) {
+                return;
+            }
         }
 
         Player player = (Player) event.getWhoClicked();
