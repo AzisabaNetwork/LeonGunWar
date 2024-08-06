@@ -156,7 +156,7 @@ public class KDTeamDistributor implements TeamDistributor {
             return false;
         }
         // 代入
-        kdsPlugin = (KDStatusReloaded) pl;
+        kdsPlugin = KDStatusReloaded.getPlugin();
         // 無効化されていたらreturn false
         return kdsPlugin.isEnabled();
     }
