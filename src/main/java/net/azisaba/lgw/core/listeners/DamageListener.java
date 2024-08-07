@@ -176,7 +176,7 @@ public class DamageListener implements Listener {
         if ( p.getKiller() == null || p.getKiller() == p ) {
 
             // メッセージ削除
-            e.setDeathMessage(null);
+            e.deathMessage(null);
 
             // メッセージを作成
             String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
