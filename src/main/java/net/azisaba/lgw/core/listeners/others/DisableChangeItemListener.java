@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -65,6 +66,14 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
+        if (LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getWhoClicked()))!=null){
+            Location spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getWhoClicked()));
+
+            if (spawnPoint.distance(event.getWhoClicked().getLocation()) <= 10) {
+                return;
+            }
+        }
+
         Player player = (Player) event.getWhoClicked();
 
         if (!LeonGunWar.getPlugin().getManager().isPlayerMatching(player)) {
@@ -75,7 +84,7 @@ public class DisableChangeItemListener implements Listener {
             .isAllowedToChangeItem(player)) {
             event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, .8f);
-            player.sendMessage(Chat.f("{0}&c現在アイテム整理はクールダウン中です！", LeonGunWar.GAME_PREFIX));
+            player.sendMessage(Chat.f("{0}&cスポーン地点以外ではインベントリの操作ができません!", LeonGunWar.GAME_PREFIX));
             return;
         }
 
