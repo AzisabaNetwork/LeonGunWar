@@ -13,6 +13,11 @@ public class DisableBlockInteractListener implements Listener {
     public void onBlockInteract(PlayerInteractEvent event){
         //右クリックしたブロックが特定のブロックだった場合イベントをキャンセルするリスナー
         Block block = event.getClickedBlock();
+        if(block != null&& block.getType() == Material.COMPOSTER){
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                event.setCancelled(true);
+            }
+        }
         if(block != null&& block.getType() == Material.ENCHANTING_TABLE){
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 event.setCancelled(true);
