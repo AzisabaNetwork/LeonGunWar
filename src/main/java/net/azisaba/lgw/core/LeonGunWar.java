@@ -202,7 +202,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
         Bukkit.getPluginManager().registerEvents(new DisableHopperPickupListener(), this);
         Bukkit.getPluginManager().registerEvents(new NoFishingOnFightListener(), this);
-        Bukkit.getPluginManager().registerEvents(new KillVillagerOnChunkLoadListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new KillVillagerOnChunkLoadListener(), this);
         Bukkit.getPluginManager().registerEvents(new PreventEscapeListener(), this);
         Bukkit.getPluginManager().registerEvents(new RemoveKillStreakScoreListener(), this);
 
