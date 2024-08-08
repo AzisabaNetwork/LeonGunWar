@@ -37,6 +37,9 @@ commands:
   limit:
     usage: /limit [drop/build]
     permission: leongunwar.command.limit
+  spawn:
+    aliases: ["lobby", "hub"]
+    permission: leongunwar.command.spawn
 permissions:
   leongunwar.entrysign.changestate:
     default: op

@@ -3,14 +3,7 @@ package net.azisaba.lgw.core;
 import java.io.IOException;
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
-import net.azisaba.lgw.core.commands.AdminChatCommand;
-import net.azisaba.lgw.core.commands.KIAICommand;
-import net.azisaba.lgw.core.commands.LgwAdminCommand;
-import net.azisaba.lgw.core.commands.LimitCommand;
-import net.azisaba.lgw.core.commands.MapVoteCommand;
-import net.azisaba.lgw.core.commands.MatchCommand;
-import net.azisaba.lgw.core.commands.ResourcePackCommand;
-import net.azisaba.lgw.core.commands.UAVCommand;
+import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
@@ -147,6 +140,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("adminchat").setExecutor(new AdminChatCommand());
         Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
         Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
+        Bukkit.getPluginCommand("spawn").setExecutor(new SpawnCommand());
 
         // タブ補完の登録
         //Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
