@@ -39,6 +39,7 @@ import net.azisaba.lgw.core.utils.SecondOfDay;
 import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -798,7 +799,7 @@ public class MatchManager {
         p.setPlayerListName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
         // テレポート
         p.teleport(currentGameMap.getSpawnPoint(team));
-
+        p.setGameMode(GameMode.SURVIVAL);
         //エフェクト削除
         p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
         // 防具を装備
