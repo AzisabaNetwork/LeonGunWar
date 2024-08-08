@@ -194,7 +194,9 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
-       // Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
+        if(this.mainConfig.isLobby) {
+            Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
+        }
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
         Bukkit.getPluginManager().registerEvents(preventItemDropListener, this);
@@ -211,6 +213,8 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableNormalWeaponsInNewYearPvEListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableWaveDuringMatchListener(), this);
         Bukkit.getPluginManager().registerEvents(new LimitOneShotPerMatchListener(), this);
+
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
