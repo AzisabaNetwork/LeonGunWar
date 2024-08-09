@@ -5,7 +5,7 @@ authors: ["siloneco", "YukiLeafX"]
 description: ${project.description}
 website: ${project.url}
 depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded"]
-softdepend: ["Multiverse-Core"]
+softdepend: ["Multiverse-Core", "PlaceholderAPI"]
 api-version: 1.16
 commands:
   leongunwaradmin:

@@ -833,7 +833,7 @@ public class MatchManager {
                 // 押し合いをなくす
                 scoreboardTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
                 // Prefixを設定
-                scoreboardTeam.prefix(Component.text(" ").color(team.getNamedTextColor()));
+                scoreboardTeam.prefix(Component.text("").color(team.getNamedTextColor()));
             }
 
             // チームを保存

@@ -13,32 +13,7 @@ import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
 import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
 import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
-import net.azisaba.lgw.core.listeners.others.AdminChatListener;
-import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
-import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
-import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
-import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
-import net.azisaba.lgw.core.listeners.others.DisableChangeItemListener;
-import net.azisaba.lgw.core.listeners.others.DisableHopperPickupListener;
-import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
-import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
-import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
-import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
-import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
-import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
-import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
-import net.azisaba.lgw.core.listeners.others.KillVillagerOnChunkLoadListener;
-import net.azisaba.lgw.core.listeners.others.LimitActionListener;
-import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
-import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
-import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
-import net.azisaba.lgw.core.listeners.others.OnsenListener;
-import net.azisaba.lgw.core.listeners.others.PreventEscapeListener;
-import net.azisaba.lgw.core.listeners.others.RemoveKillStreakScoreListener;
-import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
-import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
-import net.azisaba.lgw.core.listeners.others.StreaksListener;
-import net.azisaba.lgw.core.listeners.others.TradeBoardListener;
+import net.azisaba.lgw.core.listeners.others.*;
 import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
@@ -51,6 +26,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListe
 import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
+import net.azisaba.lgw.core.util.LGWExpansion;
 import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -86,6 +62,8 @@ public class LeonGunWar extends JavaPlugin {
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
+
+
     public static JSONMessage getQuickBar() {
         return quickBar;
     }
@@ -102,6 +80,10 @@ public class LeonGunWar extends JavaPlugin {
                 .then(" ")
                 .then(Chat.f("&6[途中参加]"))
                 .runCommand("/leongunwar:match rejoin");
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
+            new LGWExpansion(this).register(); //
+        }
 
         // 設定ファイルを読み込むクラスの初期化
         mainConfig = new MainConfig(this);
@@ -179,6 +161,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(),this);
         //Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
         Bukkit.getPluginManager().registerEvents(new StreaksListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
@@ -188,6 +171,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new SignWithColorListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DisableBlockInteractListener(), this);
         if(this.mainConfig.isLobby) {
             Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
         }
