@@ -38,6 +38,7 @@ import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -824,7 +825,7 @@ public class MatchManager {
                 // チーム作成
                 scoreboardTeam = scoreboard.registerNewTeam(teamName);
                 // チームの色を指定
-                scoreboardTeam.setColor(team.getChatColor());
+                scoreboardTeam.color(team.getNamedTextColor());
                 // フレンドリーファイアーを無効化
                 scoreboardTeam.setAllowFriendlyFire(false);
                 // 他チームからネームタグが見えるのを無効化
@@ -832,7 +833,7 @@ public class MatchManager {
                 // 押し合いをなくす
                 scoreboardTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
                 // Prefixを設定
-                scoreboardTeam.setPrefix(team.getChatColor() + "");
+                scoreboardTeam.prefix(Component.text(" ").color(team.getNamedTextColor()));
             }
 
             // チームを保存
