@@ -105,7 +105,7 @@ public class PlayerControlListener implements Listener {
     /**
      * 参加時にQuickメッセージを表示します
      */
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void sendQuickMessage(PlayerJoinEvent e) {
         //LeonGunWar.getQuickBar().send(e.getPlayer());
         if(!LeonGunWar.getPlugin().getMainConfig().isLobby){

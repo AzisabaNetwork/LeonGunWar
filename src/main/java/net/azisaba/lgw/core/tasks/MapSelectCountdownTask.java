@@ -30,7 +30,7 @@ public class MapSelectCountdownTask extends BukkitRunnable {
     private final HashMap<Integer, AtomicInteger> votes = new HashMap<>();
 
     @Getter
-    private final AtomicInteger timeLeft = new AtomicInteger(20);
+    private final AtomicInteger timeLeft = new AtomicInteger(10);
 
     public MapSelectCountdownTask(Set<GameMap> maps, MatchMode mode) {
         this.maps = new ArrayList<>(maps);

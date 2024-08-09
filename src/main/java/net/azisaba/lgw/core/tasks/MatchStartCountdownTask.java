@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class MatchStartCountdownTask extends BukkitRunnable {
 
-    private int timeLeft = 20;
+    private int timeLeft = 3;
 
     @Override
     public void run() {
