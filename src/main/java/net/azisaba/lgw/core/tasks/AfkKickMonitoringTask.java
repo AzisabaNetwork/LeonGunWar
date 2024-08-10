@@ -2,6 +2,8 @@ package net.azisaba.lgw.core.tasks;
 
 import java.util.Map;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -41,13 +43,17 @@ public class AfkKickMonitoringTask extends BukkitRunnable {
             }
 
             // 権限を持っていればreturn
-            if ( p.hasPermission("leongunwar.afkkick.exempt") ) {
-                return;
-            }
+            //if ( p.hasPermission("leongunwar.afkkick.exempt") ) {
+             //   return;
+            //}
 
             // 試合から退出 & エントリー解除
             LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
             LeonGunWar.getPlugin().getManager().kickPlayer(p);
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("Connect");
+            out.writeUTF("lgw2");
+            (p).sendPluginMessage(LeonGunWar.getPlugin(), "BungeeCord", out.toByteArray());
 
             p.sendMessage(Chat.f("{0}&7放置と判定されたため試合から退出しました", LeonGunWar.GAME_PREFIX));
 
