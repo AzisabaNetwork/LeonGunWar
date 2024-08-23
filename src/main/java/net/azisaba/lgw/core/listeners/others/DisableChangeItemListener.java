@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -54,6 +55,40 @@ public class DisableChangeItemListener implements Listener {
 
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
     private final CSUtility csUtil = new CSUtility();
+
+    @EventHandler
+    public void onSwapHand(PlayerSwapHandItemsEvent event) {
+        Inventory inventory = event.getPlayer().getInventory();
+
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+
+        if(LeonGunWar.getPlugin().getManager().getCurrentGameMap() != null) {
+            if (LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getPlayer())) != null) {
+                Location spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getPlayer()));
+                if (spawnPoint.distance(event.getPlayer().getLocation()) <= 10) {
+                    return;
+                }
+            }
+        }
+
+
+        Player player = event.getPlayer();
+
+        if (!LeonGunWar.getPlugin().getManager().isPlayerMatching(player)) {
+            return;
+        }
+
+        if (!LeonGunWar.getPlugin().getManager().getItemChangeValidator()
+                .isAllowedToChangeItem(player)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        ItemStack[] befores = getHotbar((PlayerInventory) inventory);
+        hotbars.putIfAbsent(player, befores);
+    }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {

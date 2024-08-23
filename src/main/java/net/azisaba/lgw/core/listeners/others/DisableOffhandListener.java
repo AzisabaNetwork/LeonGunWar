@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -15,10 +16,10 @@ import org.bukkit.inventory.PlayerInventory;
 public class DisableOffhandListener implements Listener {
 
     // Fキーでのオフハンド切り替えを無効化
-    @EventHandler
-    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent e) {
-        e.setCancelled(true);
-    }
+    //@EventHandler(priority = EventPriority.LOWEST)
+    //public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent e) {
+    //    e.setCancelled(true);
+    //}
 
     // インベントリーを閉じた際にオフハンドにアイテムがある場合は移動するかドロップ
     @EventHandler

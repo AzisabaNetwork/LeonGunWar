@@ -1,10 +1,16 @@
 package net.azisaba.lgw.core.listeners;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import net.azisaba.lgw.core.events.PlayerKillEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -207,6 +213,7 @@ public class DamageListener implements Listener {
             // DisplayNameを取得
             itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 
+
             // DisplayNameがnullの場合は普通にアイテム名を取得
             if ( itemName == null ) {
                 itemName = item.getItemMeta().getDisplayName();
@@ -220,15 +227,47 @@ public class DamageListener implements Listener {
         // メッセージ削除
         e.deathMessage(null);
         // メッセージ作成
-        String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
-                itemName,
-                p.getPlayerListName());
+       // String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
+        //        itemName,
+         //       p.getPlayerListName());
 
-        // メッセージ送信
-        p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
+        TextComponent msg2 =Component.text()
+                .append(Component.text(LeonGunWar.GAME_PREFIX))
+                .append(Component.text(killer.getPlayerListName()))
+                .append(Component.text("━━━ [ ").color(NamedTextColor.GRAY))
+                .append(Component.text(itemName))
+                .append(Component.text("] ━━━>").color(NamedTextColor.GRAY))
+                .append(Component.text(p.getPlayerListName()))
+                .build();
 
-        // コンソールに出力
-        Bukkit.getConsoleSender().sendMessage(msg);
+
+            // LoreをComponentリストとして取得
+            List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
+
+            // Loreを一つのComponentにまとめる
+            TextComponent.Builder loreTextBuilder = Component.text();
+            if (loreComponents != null) {
+                for (Component loreLine : loreComponents) {
+                    loreTextBuilder.append(loreLine).append(Component.text("\n"));
+                }
+            }
+            // ホバーイベントの作成（Loreを含む）
+            HoverEvent<Component> hoverEvent = HoverEvent.showText(
+                    Component.text(itemName, NamedTextColor.AQUA)
+                            .append(Component.text("\n"))
+                            .append(loreTextBuilder.build())
+            );
+
+            // ホバーイベントをメインメッセージに追加
+            TextComponent messageWithTooltip = msg2.hoverEvent(hoverEvent);
+
+            // メッセージ送信
+            p.getWorld().getPlayers().forEach(player -> player.sendMessage(messageWithTooltip));
+
+            // コンソールに出力
+            Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
+
+
     }
 
     @EventHandler
