@@ -261,5 +261,10 @@ public class DisableBlockInteractListener implements Listener {
                 event.setCancelled(isCancel);
             }
         }
+        if(block != null&& block.getType() == Material.BEACON){
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                event.setCancelled(isCancel);
+            }
+        }
     }
 }
