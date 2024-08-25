@@ -234,7 +234,7 @@ public class DamageListener implements Listener {
         TextComponent msg2 =Component.text()
                 .append(Component.text(LeonGunWar.GAME_PREFIX))
                 .append(Component.text(killer.getPlayerListName()))
-                .append(Component.text("━━━ [ ").color(NamedTextColor.GRAY))
+                .append(Component.text("━━━ [").color(NamedTextColor.GRAY))
                 .append(Component.text(itemName))
                 .append(Component.text("] ━━━>").color(NamedTextColor.GRAY))
                 .append(Component.text(p.getPlayerListName()))
