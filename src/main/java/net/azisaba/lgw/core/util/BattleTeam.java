@@ -16,33 +16,31 @@ import lombok.RequiredArgsConstructor;
  */
 public enum BattleTeam {
 
-    RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED, NamedTextColor.DARK_RED),
-    BLUE("青チーム", Color.fromRGB(0x0000A0), ChatColor.BLUE, NamedTextColor.BLUE);
+    RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED, NamedTextColor.DARK_RED , "red"),
+    BLUE("青チーム", Color.fromRGB(0x0000A0), ChatColor.BLUE, NamedTextColor.BLUE, "blue");
 
     private final String name;
+    @Getter
     private final Color color;
+    @Getter
     private final ChatColor chatColor;
     private final NamedTextColor namedtextcolor;
+    @Getter
+    private final String engTeamName;
 
 
-    BattleTeam(String name, Color color, ChatColor chatColor, NamedTextColor namedtextcolor) {
+    BattleTeam(String name, Color color, ChatColor chatColor, NamedTextColor namedtextcolor, String engTeamName) {
         this.name = name;
         this.color = color;
         this.chatColor = chatColor;
         this.namedtextcolor = namedtextcolor;
+        this.engTeamName = engTeamName;
     }
 
     public String getTeamName() {
         return chatColor + name;
     }
 
-    public ChatColor getChatColor() {
-        return chatColor;
-    }
-
-    public Color getColor() {
-        return color;
-    }
     public NamedTextColor getNamedTextColor() {
         return namedtextcolor;
     }

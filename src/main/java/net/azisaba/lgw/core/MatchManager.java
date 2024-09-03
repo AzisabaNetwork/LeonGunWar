@@ -805,6 +805,10 @@ public class MatchManager {
         p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
         // 防具を装備
         p.getInventory().setChestplate(chestplates.get(team));
+        // 別pl用のtagを付与。
+        p.removeScoreboardTag("red");
+        p.removeScoreboardTag("blue");
+        p.addScoreboardTag(team.getEngTeamName());
     }
 
     /**
