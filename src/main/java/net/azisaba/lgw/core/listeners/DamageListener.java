@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
@@ -46,8 +47,9 @@ public class DamageListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onKill(PlayerDeathEvent e) {
+        MatchManager manager = LeonGunWar.getPlugin().getManager();
         // 試合中でなければreturn
-        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if ( !manager.isMatching() ) {
             return;
         }
 
@@ -69,9 +71,12 @@ public class DamageListener implements Listener {
 
         // 個人キルを追加
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
-        // ポイントを追加
-        LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
 
+        //キルがポイント追加のゲームモードのみポイントを追加
+        if(manager.getMatchMode().getKillingPlayerGetPoint()) {
+            // ポイントを追加
+            LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+        }
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);
         int streaks = LeonGunWar.getPlugin().getKillStreaks().get(killer).get();

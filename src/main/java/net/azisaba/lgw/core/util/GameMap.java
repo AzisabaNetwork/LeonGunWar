@@ -1,7 +1,10 @@
 package net.azisaba.lgw.core.util;
 
+import java.util.List;
 import java.util.Map;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -21,11 +24,15 @@ public class GameMap {
     private final World world;
     // 各チームのスポーン地点
     private final Map<BattleTeam, Location> spawnMap;
+    //マップの対応ゲームモード
+    //MatchModeのsuggestが入っている
+    private final List<String> allowMatchMode;
 
-    public GameMap(String mapName, World world, Map<BattleTeam, Location> spawnMap) {
+    public GameMap(String mapName, World world, Map<BattleTeam, Location> spawnMap, List<String> allowMatchMode) {
         this.mapName = mapName;
         this.world = world;
         this.spawnMap = spawnMap;
+        this.allowMatchMode = allowMatchMode;
     }
 
     public Location getSpawnPoint(BattleTeam team) {

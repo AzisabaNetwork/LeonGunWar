@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
+import net.azisaba.lgw.core.util.MatchMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,6 +26,7 @@ import net.azisaba.lgw.core.util.GameMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class MapsConfig extends Config {
@@ -46,6 +48,7 @@ public class MapsConfig extends Config {
             ConfigurationSection spawnsSection = mapSection.getConfigurationSection("spawns");
 
             World world = plugin.getServer().getWorld(mapSection.getString("world"));
+            List<String> matchMode = mapSection.getStringList("matchmode");
 
             Map<BattleTeam, Location> spawnMap = new HashMap<>();
             for ( String teamName : spawnsSection.getValues(false).keySet() ) {
@@ -63,7 +66,7 @@ public class MapsConfig extends Config {
                 }
             }
 
-            GameMap gameMap = new GameMap(mapName, world, spawnMap);
+            GameMap gameMap = new GameMap(mapName, world, spawnMap,matchMode);
             allGameMap.add(gameMap);
 
             plugin.getLogger().info("マップ " + mapName + " をロードしました。");

@@ -1,100 +1,220 @@
 'Sports Gym':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 1499.0, y: 21.0, z: -417.0, yaw: -90.0, pitch: 0.0 }
     blue: { world: maps, x: 1543.0, y: 26.0, z: -299.0, yaw: 90.0, pitch: 0.0 }
 'BF of Xmas':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -1047.5, y: 11.0, z: 458.5, yaw: -90.0, pitch: 8.9 }
     blue: { world: maps, x: -951.5, y: 5.0, z: 548.5, yaw: 135.0, pitch: 10.6 }
 'cargo':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 514.5, y: 34.0, z: 420.5, yaw: 0.0, pitch: 0.0 }
     blue: { world: maps, x: 503.5, y: 34.0, z: 560.5, yaw: 180.0, pitch: 0.0 }
 'carrier':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 433.5, y: 37.0, z: -28.5, yaw: -50.0, pitch: 0.0 }
     blue: { world: maps, x: 530.5, y: 34.0, z: 33.5, yaw: 94.0, pitch: 0.0 }
 'drone':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 546.5, y: 13.0, z: -563.5, yaw: 45.0, pitch: 0.0 }
     blue: { world: maps, x: 461.5, y: 11.0, z: -430.5, yaw: -155.0, pitch: 0.0 }
 'encore':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -1031.5, y: 17.0, z: -564.5, yaw: 0.0, pitch: 0.0 }
     blue: { world: maps, x: -988.5, y: 20.0, z: -418.5, yaw: 180.0, pitch: 0.0 }
 'express':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -40.5, y: 22.0, z: -437.5, yaw: 173.0, pitch: 0.0 }
     blue: { world: maps, x: -40.5, y: 20.0, z: -592.5, yaw: 0.0, pitch: 0.0 }
 'grind':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -573.5, y: 17.0, z: -494.5, yaw: -90.0, pitch: 0.0 }
     blue: { world: maps, x: -431.5, y: 14.0, z: -504.5, yaw: 90.0, pitch: 0.0 }
 'hijacked':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -544.5, y: 18.0, z: 3.5, yaw: -90.0, pitch: 0.0 }
     blue: { world: maps, x: -451.5, y: 22.0, z: 3.5, yaw: 90.0, pitch: 0.0 }
 'magma':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -981.5, y: 18.0, z: -55.5, yaw: 0.0, pitch: 0.0 }
     blue: { world: maps, x: -969.5, y: 19.0, z: 90.5, yaw: 115.0, pitch: 0.0 }
 'meltdown':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -570.5, y: 13.0, z: 479.5, yaw: -90.0, pitch: 0.0 }
     blue: { world: maps, x: -426.5, y: 13.0, z: 479.5, yaw: 90.0, pitch: 0.0 }
 'nuketown':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 9.5, y: 4.0, z: 543.5, yaw: 180.0, pitch: 0.0 }
     blue: { world: maps, x: 8.5, y: 4.0, z: 449.5, yaw: 0.0, pitch: 0.0 }
 'overflow':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 1046.5, y: 15.0, z: -9.5, yaw: 45.0, pitch: 0.0 }
     blue: { world: maps, x: 978.5, y: 15.0, z: 60.5, yaw: -140.0, pitch: 0.0 }
 'plaza':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 1047.5, y: 17.0, z: -554.5, yaw: 90.0, pitch: 0.0 }
     blue: { world: maps, x: 937.5, y: 17.0, z: -445.5, yaw: -180.0, pitch: 0.0 }
 'raid':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 936.5, y: 16.0, z: -1000.5, yaw: -90.0, pitch: 0.0 }
     blue: { world: maps, x: 1072.5, y: 14.0, z: -999.5, yaw: 90.0, pitch: 0.0 }
 'slums':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: 507.5, y: 8.0, z: -940.5, yaw: 180.0, pitch: 0.0 }
     blue: { world: maps, x: 499.5, y: 4.0, z: -1050.5, yaw: 0.0, pitch: 0.0 }
 'standoff':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -43.5, y: 4.0, z: -957.5, yaw: 180.0, pitch: 0.0 }
     blue: { world: maps, x: 44.5, y: 4.0, z: -994.5, yaw: 90.0, pitch: 0.0 }
 'studio':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -469.5, y: 14.0, z: -972.5, yaw: 180.0, pitch: 0.0 }
     blue: { world: maps, x: -537.5, y: 12.0, z: -1028.5, yaw: -90.0, pitch: 0.0 }
 'vertigo':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -911.5, y: 161.0, z: -999.5, yaw: 90.0, pitch: 0.0 }
     blue: { world: maps, x: -1080.5, y: 160.0, z: -1008.5, yaw: -90.0, pitch: 0.0 }
 'resort':
   world: maps
+  matchmode:
+    - tdm
+    - tdmn
+    - ldm
+    - ldmp
+    - cdm
   spawns:
     red: { world: maps, x: -1419.5, y: 76.0, z: -1270.5, yaw: 90.0, pitch: 0.0 }
     blue: { world: maps, x: -1546.5, y: 76.0, z: -1273.5, yaw: -90.0, pitch: 0.0 }
