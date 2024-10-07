@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.Getter;
 import net.azisaba.lgw.core.utils.Chat;
 
 //@Getter
@@ -63,6 +64,7 @@ public enum MatchMode {
     private final String shortModeName;
     private final String description;
     private final Duration duration;
+    @Getter
     private final List<String> suggests;
     private final boolean killingplayergetpoint;
 

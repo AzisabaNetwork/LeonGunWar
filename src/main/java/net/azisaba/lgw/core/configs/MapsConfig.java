@@ -92,11 +92,20 @@ public class MapsConfig extends Config {
      * @throws IllegalArgumentException 0以下またはロードされているマップの数よりも多い数が指定された場合
      * @return 指定した数のランダムなマップのHashSetを返す
      */
-    public Set<GameMap> getRandomMaps(int count) {
+    public Set<GameMap> getRandomMaps(int count, MatchMode mode) {
         if ( count > allGameMap.size() || count <= 0 ) {
             throw new IllegalArgumentException("Mapを" + count + "個抽選することはできません！ (ロードされているMapの数: " + allGameMap.size() + " )");
         }
-        List<GameMap> shuffleList = new ArrayList<>(allGameMap);
+
+        List<GameMap> allowGameMap = new ArrayList<>();;
+
+        //対応したゲームモードのみのMAPをallowGameMapに代入
+        for(GameMap map : allGameMap){
+            if(map.getAllowMatchMode().retainAll(mode.getSuggests())){
+                allowGameMap.add(map);
+            }
+        }
+        List<GameMap> shuffleList = new ArrayList<>(allowGameMap);
         Collections.shuffle(shuffleList);
 
         return new HashSet<>(shuffleList.subList(0, count));
