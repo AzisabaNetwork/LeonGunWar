@@ -46,6 +46,7 @@ public class MapsConfig extends Config {
         for ( String mapName : config.getValues(false).keySet() ) {
             ConfigurationSection mapSection = config.getConfigurationSection(mapName);
             ConfigurationSection spawnsSection = mapSection.getConfigurationSection("spawns");
+            ConfigurationSection bossSpawnsSection = mapSection.getConfigurationSection("bossspawns");
 
             World world = plugin.getServer().getWorld(mapSection.getString("world"));
             List<String> matchMode = mapSection.getStringList("matchmode");
@@ -66,7 +67,23 @@ public class MapsConfig extends Config {
                 }
             }
 
-            GameMap gameMap = new GameMap(mapName, world, spawnMap,matchMode);
+            Map<BattleTeam, Location> bossSpawnMap = new HashMap<>();
+            for ( String teamName : bossSpawnsSection.getValues(false).keySet() ) {
+                Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
+
+                if ( battleTeam.isPresent() ) {
+                    Location spawn = new Location(
+                            plugin.getServer().getWorld(spawnsSection.getString(teamName + ".world")),
+                            bossSpawnsSection.getDouble(teamName + ".x"),
+                            bossSpawnsSection.getDouble(teamName + ".y"),
+                            bossSpawnsSection.getDouble(teamName + ".z"),
+                            (float) bossSpawnsSection.getDouble(teamName + ".yaw"),
+                            (float) bossSpawnsSection.getDouble(teamName + ".pitch"));
+                    bossSpawnMap.put(battleTeam.get(), spawn);
+                }
+            }
+
+            GameMap gameMap = new GameMap(mapName, world, spawnMap, matchMode, bossSpawnMap);
             allGameMap.add(gameMap);
 
             plugin.getLogger().info("マップ " + mapName + " をロードしました。");

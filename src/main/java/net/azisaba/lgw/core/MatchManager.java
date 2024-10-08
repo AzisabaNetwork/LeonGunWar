@@ -47,8 +47,10 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wither;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -954,6 +956,24 @@ public class MatchManager {
      */
     public boolean getPowerLevelBalance(int team1, int team2) {
         return team1 + 1500 >= team2 && team1 - 1500 <= team2;
+    }
+
+    public void spawnWither(BattleTeam team){
+        Location location = currentGameMap.getBossSpawnPoint(team);
+        Wither wither = location.getWorld().spawn(location, Wither.class);
+        wither.setHealth(3000);
+        wither.setAI(false);
+        // ウィザーを地面に固定するためのタスクを開始
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (wither.isValid()) {
+                    wither.teleport(location); // 元の位置に戻す
+                } else {
+                    this.cancel(); // ウィザーが無効になった場合はタスクを停止
+                }
+            }
+        }.runTaskTimer(LeonGunWar.getPlugin(), 0, 1); // 1ティックごとに実行
     }
 
     public boolean isMatching() {
