@@ -252,7 +252,8 @@ public class DamageListener implements Listener {
             }
             // ホバーイベントの作成（Loreを含む）
             HoverEvent<Component> hoverEvent = HoverEvent.showText(
-                    Component.text(itemName, NamedTextColor.AQUA)
+                    Component.text()
+                            .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
                             .append(Component.text("\n"))
                             .append(loreTextBuilder.build())
             );
