@@ -11,18 +11,7 @@ public class Chat {
 
     // メッセージをフォーマットして、&で色をつける
     public static String f(String text, Object... args) {
-
-        // String型の引数は装飾コードを適用する
-        Object[] formattedArgs = new Object[args.length];
-        for(int i = 0; i < args.length; i++) {
-            if (args[i] instanceof String) {
-                formattedArgs[i] = f(ChatColor.translateAlternateColorCodes('&', args[i].toString()));
-            }
-            else {
-                formattedArgs[i] = args[i];
-            }
-        }
-        return MessageFormat.format(ChatColor.translateAlternateColorCodes('&', text), formattedArgs);
+        return MessageFormat.format(ChatColor.translateAlternateColorCodes('&', text), args);
     }
 
     // 色を消す
