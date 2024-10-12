@@ -8,10 +8,10 @@ import java.util.Objects;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -218,7 +218,6 @@ public class DamageListener implements Listener {
             // DisplayNameを取得
             itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 
-
             // DisplayNameがnullの場合は普通にアイテム名を取得
             if ( itemName == null ) {
                 itemName = item.getItemMeta().getDisplayName();
@@ -240,7 +239,7 @@ public class DamageListener implements Listener {
                 .append(Component.text(LeonGunWar.GAME_PREFIX))
                 .append(Component.text(killer.getPlayerListName()))
                 .append(Component.text("━━━ [").color(NamedTextColor.GRAY))
-                .append(Component.text(itemName))
+                .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
                 .append(Component.text("] ━━━>").color(NamedTextColor.GRAY))
                 .append(Component.text(p.getPlayerListName()))
                 .build();
@@ -258,7 +257,8 @@ public class DamageListener implements Listener {
             }
             // ホバーイベントの作成（Loreを含む）
             HoverEvent<Component> hoverEvent = HoverEvent.showText(
-                    Component.text(itemName, NamedTextColor.AQUA)
+                    Component.text()
+                            .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
                             .append(Component.text("\n"))
                             .append(loreTextBuilder.build())
             );
