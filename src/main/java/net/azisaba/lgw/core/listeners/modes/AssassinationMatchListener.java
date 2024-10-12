@@ -5,12 +5,15 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.MatchMode;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,13 @@ import java.util.Map;
 public class AssassinationMatchListener implements Listener {
     @Getter
     Map<Player,Double> AttackDamage = new HashMap<>();
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onWitherTargetEntity (EntityTargetEvent e){
+        if(e.getEntityType() == EntityType.WITHER){
+            e.setCancelled(true);
+        }
+    }
     @EventHandler
     public void onWitherAttackDetector (EntityDamageByEntityEvent e){
 

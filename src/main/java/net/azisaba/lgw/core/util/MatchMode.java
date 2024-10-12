@@ -53,10 +53,10 @@ public enum MatchMode {
 
     ASSASSINATION_MATCH(
             Chat.f("&eアサシネーション"),
-            Chat.f("&eASN"),
+            Chat.f("&eASM"),
             Chat.f("&7相手チームのウィザーをキルまたは、試合終了時に &c残りHPが多いチーム &7が勝利"),
             Duration.ofMinutes(10),
-            Arrays.asList("asn", "assassinationmatch", "assasination"),
+            Arrays.asList("asm", "assassinationmatch", "assasination", "am"),
             false);
 
 

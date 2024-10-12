@@ -68,19 +68,22 @@ public class MapsConfig extends Config {
             }
 
             Map<BattleTeam, Location> bossSpawnMap = new HashMap<>();
-            for ( String teamName : bossSpawnsSection.getValues(false).keySet() ) {
-                Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
+            if(bossSpawnsSection != null){
+                for ( String teamName : bossSpawnsSection.getValues(false).keySet() ) {
+                    Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
 
-                if ( battleTeam.isPresent() ) {
-                    Location spawn = new Location(
-                            plugin.getServer().getWorld(spawnsSection.getString(teamName + ".world")),
-                            bossSpawnsSection.getDouble(teamName + ".x"),
-                            bossSpawnsSection.getDouble(teamName + ".y"),
-                            bossSpawnsSection.getDouble(teamName + ".z"),
-                            (float) bossSpawnsSection.getDouble(teamName + ".yaw"),
-                            (float) bossSpawnsSection.getDouble(teamName + ".pitch"));
-                    bossSpawnMap.put(battleTeam.get(), spawn);
+                    if ( battleTeam.isPresent() ) {
+                        Location spawn = new Location(
+                                plugin.getServer().getWorld(spawnsSection.getString(teamName + ".world")),
+                                bossSpawnsSection.getDouble(teamName + ".x"),
+                                bossSpawnsSection.getDouble(teamName + ".y"),
+                                bossSpawnsSection.getDouble(teamName + ".z"),
+                                (float) bossSpawnsSection.getDouble(teamName + ".yaw"),
+                                (float) bossSpawnsSection.getDouble(teamName + ".pitch"));
+                        bossSpawnMap.put(battleTeam.get(), spawn);
+                    }
                 }
+
             }
 
             GameMap gameMap = new GameMap(mapName, world, spawnMap, matchMode, bossSpawnMap);
@@ -118,7 +121,7 @@ public class MapsConfig extends Config {
 
         //対応したゲームモードのみのMAPをallowGameMapに代入
         for(GameMap map : allGameMap){
-            if(map.getAllowMatchMode().retainAll(mode.getSuggests())){
+            if(map.getAllowMatchMode().stream().anyMatch(mode.getSuggests()::contains)){
                 allowGameMap.add(map);
             }
         }

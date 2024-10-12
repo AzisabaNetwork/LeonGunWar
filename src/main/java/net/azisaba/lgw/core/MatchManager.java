@@ -26,12 +26,7 @@ import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.ItemChangeValidator;
-import net.azisaba.lgw.core.util.KillDeathCounter;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.util.RespawnProtection;
+import net.azisaba.lgw.core.util.*;
 import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
@@ -250,6 +245,12 @@ public class MatchManager {
 
         Bukkit.getPluginManager()
             .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
+
+        //ASMだった場合ウィザーを召喚
+        if(matchMode == MatchMode.ASSASSINATION_MATCH){
+            new BossSpawn().spawnWither(BattleTeam.BLUE,currentGameMap);
+            new BossSpawn().spawnWither(BattleTeam.RED,currentGameMap);
+        }
 
         // タスクスタート
         runMatchTask();
@@ -958,23 +959,6 @@ public class MatchManager {
         return team1 + 1500 >= team2 && team1 - 1500 <= team2;
     }
 
-    public void spawnWither(BattleTeam team){
-        Location location = currentGameMap.getBossSpawnPoint(team);
-        Wither wither = location.getWorld().spawn(location, Wither.class);
-        wither.setHealth(3000);
-        wither.setAI(false);
-        // ウィザーを地面に固定するためのタスクを開始
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (wither.isValid()) {
-                    wither.teleport(location); // 元の位置に戻す
-                } else {
-                    this.cancel(); // ウィザーが無効になった場合はタスクを停止
-                }
-            }
-        }.runTaskTimer(LeonGunWar.getPlugin(), 0, 1); // 1ティックごとに実行
-    }
 
     public boolean isMatching() {
         return isMatching;
