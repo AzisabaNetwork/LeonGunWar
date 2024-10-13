@@ -22,6 +22,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AssassinationMatchListener implements Listener {
@@ -75,7 +76,7 @@ public class AssassinationMatchListener implements Listener {
 
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onWitherDeathDetector (EntityDeathEvent e) {
         Bukkit.getLogger().info("うごごごｇ");
         MatchManager manager = LeonGunWar.getPlugin().getManager();
@@ -118,5 +119,12 @@ public class AssassinationMatchListener implements Listener {
         } else if (!redTask.isCancelled()) {
             redTask.cancel(); // 赤チームのタスクをキャンセル
         }
+        List<Wither> summonedWithers = LeonGunWar.getPlugin().getManager().getSummonedBOSS();
+        for (Wither wither : summonedWithers) {
+            if (wither.isValid()) {
+                wither.remove(); // エンティティを削除
+            }
+        }
+        summonedWithers.clear(); // リストをクリア
     }
 }

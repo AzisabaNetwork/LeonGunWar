@@ -33,6 +33,7 @@ public class BossSpawn {
         stand.setGravity(false);
         stand.addPassenger(wither); // ウィザーを防具立てに乗せる
 
+        LeonGunWar.getPlugin().getManager().getSummonedBOSS().add(wither);
         //ウィザーが死んでいるか死んでいないかのフラグ更新
         LeonGunWar.getPlugin().getManager().setBossDeath(team,false);
     }
@@ -62,6 +63,7 @@ public class BossSpawn {
         stand.setInvulnerable(true);
         stand.setGravity(false);
         stand.addPassenger(wither); // ウィザーを防具立てに乗せる
+        LeonGunWar.getPlugin().getManager().getSummonedBOSS().add(wither);
         //ウィザーが死んでいるか死んでいないかのフラグ更新
         LeonGunWar.getPlugin().getManager().setBossDeath(team,false);
         BroadcastUtils.broadcast(team.getTeamName() + "&6の目標が復活しました!!");

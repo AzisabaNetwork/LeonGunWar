@@ -23,7 +23,7 @@ public class AssasinationWitherDeathCountdown extends BukkitRunnable {
 
     @Override
     public void run() {
-
+        Bukkit.getLogger().info(String.valueOf(timeLeft));
         // 0の場合ゲームスタート
         if ( timeLeft <= 0 ) {
             MatchManager manager = LeonGunWar.getPlugin().getManager();

@@ -107,6 +107,9 @@ public class MatchManager {
     private boolean redBossDeath = true;
     private boolean blueBossDeath = true;
 
+    //召喚したBOSSのlist
+    private List<Wither> summonedBOSS = new ArrayList<>();
+
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
      */
