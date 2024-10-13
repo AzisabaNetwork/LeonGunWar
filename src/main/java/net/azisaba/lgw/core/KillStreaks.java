@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import net.azisaba.lgw.core.util.BossSpawn;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
@@ -90,6 +92,11 @@ public class KillStreaks {
                 player.sendMessage(
                     Chat.f("{0}&7あなたはリーダーなので &e2倍 &7の報酬を受け取りました！", LeonGunWar.GAME_PREFIX));
             }
+        }
+        if(LeonGunWar.getPlugin().getManager().getMatchMode()
+                == MatchMode.ASSASSINATION_MATCH) {
+            MatchManager manager = LeonGunWar.getPlugin().getManager();
+            new BossSpawn().reviveWither(manager.getBattleTeam(player),manager.getCurrentGameMap());
         }
 
         // キルストリークをお知らせ

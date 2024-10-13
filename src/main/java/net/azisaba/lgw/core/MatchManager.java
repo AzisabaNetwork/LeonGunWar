@@ -103,6 +103,10 @@ public class MatchManager {
     // リーダーマッチかどうか
     private boolean leaderMatch = false;
 
+    //ウィザーが死んでいるかどうか trueなら死んでいる
+    private boolean redBossDeath = true;
+    private boolean blueBossDeath = true;
+
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
      */
@@ -960,6 +964,14 @@ public class MatchManager {
     }
 
 
+    public void setBossDeath(BattleTeam team,boolean death){
+        //ウィザーが死んでいるかどうか trueなら死んでいる
+        if(team == BattleTeam.RED){
+            redBossDeath = death;
+        }else {
+            blueBossDeath = death;
+        }
+    }
     public boolean isMatching() {
         return isMatching;
     }
