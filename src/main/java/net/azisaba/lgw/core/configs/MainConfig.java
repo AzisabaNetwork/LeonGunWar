@@ -11,6 +11,7 @@ import java.util.HashMap;
 public class MainConfig extends Config{
 
     public boolean isLobby = true;
+    public String serverName;
 
     public MainConfig(@NonNull LeonGunWar plugin) {
         super(plugin, "configs/main.yml", "main.yml");
@@ -22,6 +23,8 @@ public class MainConfig extends Config{
         super.loadConfig();
 
         isLobby = config.getBoolean("isLobby", true);
+        //sv1かsv2かlobby
+        serverName = config.getString("servername","lobby");
     }
 
 }

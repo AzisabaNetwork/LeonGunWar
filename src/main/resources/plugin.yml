@@ -40,6 +40,9 @@ commands:
   spawn:
     aliases: ["lobby", "hub"]
     permission: leongunwar.command.spawn
+  noticewar:
+    usage: /noticewar
+    permission: leongunwar.adminchat.send
 permissions:
   leongunwar.entrysign.changestate:
     default: op

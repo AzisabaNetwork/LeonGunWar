@@ -123,6 +123,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("limit").setExecutor(new LimitCommand(preventItemDropListener));
         Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
         Bukkit.getPluginCommand("spawn").setExecutor(new SpawnCommand());
+        Bukkit.getPluginCommand("noticewar").setExecutor(new SiaiTuutiCommand());
 
         // タブ補完の登録
         //Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());

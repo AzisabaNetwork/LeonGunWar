@@ -249,6 +249,14 @@ public class MatchManager {
         Bukkit.getPluginManager()
             .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
+        //試合開始をほかサーバーに通知(要SyncCommandExec)
+        if(LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv1")){
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv1");
+        } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv2")) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv2");
+        }
+
+
         // タスクスタート
         runMatchTask();
 

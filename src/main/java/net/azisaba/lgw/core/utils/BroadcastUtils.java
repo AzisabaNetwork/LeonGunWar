@@ -3,6 +3,8 @@ package net.azisaba.lgw.core.utils;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import me.rayzr522.jsonmessage.JSONMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -17,6 +19,14 @@ public class BroadcastUtils {
         continue;
       }
       p.sendMessage(message);
+    }
+  }
+  public static void broadcast(JSONMessage message) {
+    for (Player p : Bukkit.getOnlinePlayers()) {
+      if (DISABLED_WORLD_NAMES.contains(p.getWorld().getName())) {
+        continue;
+      }
+      message.send(p);
     }
   }
 
