@@ -13,6 +13,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,7 +37,7 @@ public class SiaiTuutiCommand implements CommandExecutor {
             msg.suggestCommand("")
                     .then(Chat.f("&b[クリックで参加]"))
                     .runCommand("/server lgw2sv1");
-            BroadcastUtils.broadcast(msg);
+            BroadcastUtils.broadcast(msg, Sound.BLOCK_NOTE_BLOCK_PLING);
             return true;
         }
         // sv2なら
@@ -45,7 +46,7 @@ public class SiaiTuutiCommand implements CommandExecutor {
             msg.suggestCommand("")
                     .then(Chat.f("&b[クリックで参加]"))
                     .runCommand("/server lgw2sv2");
-            BroadcastUtils.broadcast(msg);
+            BroadcastUtils.broadcast(msg, Sound.BLOCK_NOTE_BLOCK_PLING);
             return true;
         }
         return true;
