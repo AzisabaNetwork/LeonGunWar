@@ -116,7 +116,8 @@ public class AssassinationMatchListener implements Listener {
     public void onMatchFinish(MatchFinishedEvent e){
         if (!blueTask.isCancelled()) {
             blueTask.cancel(); // 青チームのタスクをキャンセル
-        } else if (!redTask.isCancelled()) {
+        }
+        if (!redTask.isCancelled()) {
             redTask.cancel(); // 赤チームのタスクをキャンセル
         }
         List<Wither> summonedWithers = LeonGunWar.getPlugin().getManager().getSummonedBOSS();
