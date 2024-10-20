@@ -200,13 +200,14 @@ public class DamageListener implements Listener {
         // 殺したアイテム
         ItemStack item = killer.getInventory().getItemInMainHand();
 
+        // CrackShot Pluginを取得
+        CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+
         // アイテム名を取得
         String itemName;
         if ( item == null || item.getType() == Material.AIR ) { // null または Air なら素手
             itemName = Chat.f("&6素手");
         } else if ( item.hasItemMeta() && item.getItemMeta().hasDisplayName() ) { // DisplayNameが指定されている場合
-            // CrackShot Pluginを取得
-            CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
             // 銃ID取得
             String nodes = crackShot.getWeaponTitle(item);
@@ -239,22 +240,38 @@ public class DamageListener implements Listener {
                 .append(Component.text(p.getPlayerListName()))
                 .build();
 
+            // 銃ID取得
+            String nodes = crackShot.getWeaponTitle(item);
 
-            // LoreをComponentリストとして取得
-            List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
+        // LoreをComponentリストとして取得
+        List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
+        String result;
+        String itemName2;
+        if (nodes.startsWith("NC_")) {
+            String deleteThreeString = nodes.substring(3);
+            int lastUnderIndex = deleteThreeString.lastIndexOf('_');
 
-            // Loreを一つのComponentにまとめる
-            TextComponent.Builder loreTextBuilder = Component.text();
-            if (loreComponents != null) {
-                for (Component loreLine : loreComponents) {
-                    loreTextBuilder.append(loreLine).append(Component.text("\n"));
-                }
+            if (lastUnderIndex != -1) {
+                result = deleteThreeString.substring(0, lastUnderIndex);
+                // DisplayNameを取得
+                itemName2 = crackshot.getString(result + ".Item_Information.Item_Name");
+                Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(Component.text(itemName2));
+                loreComponents.add(previouslore);
             }
+        }
+
+
+        // Loreを一つのComponentにまとめる
+        TextComponent.Builder loreTextBuilder = Component.text();
+        if (loreComponents != null) {
+            for (Component loreLine : loreComponents) {
+                loreTextBuilder.append(loreLine).append(Component.text("\n"));
+            }
+        }
             // ホバーイベントの作成（Loreを含む）
             HoverEvent<Component> hoverEvent = HoverEvent.showText(
                     Component.text()
                             .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
-                            .append(Component.text("\n"))
                             .append(loreTextBuilder.build())
             );
 
