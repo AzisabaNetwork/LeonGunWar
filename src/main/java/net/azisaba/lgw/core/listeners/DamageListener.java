@@ -280,7 +280,7 @@ public class DamageListener implements Listener {
             HoverEvent<Component> hoverEvent = HoverEvent.showText(
                     Component.text()
                             .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
-                            .append(Component.text("\n"))
+                            .append(Component.newline())
                             .append(loreTextBuilder.build())
             );
 
