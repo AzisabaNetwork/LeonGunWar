@@ -252,7 +252,15 @@ public class DamageListener implements Listener {
             int lastUnderIndex = deleteThreeString.lastIndexOf('_');
 
             if (lastUnderIndex != -1) {
-                result = deleteThreeString.substring(0, lastUnderIndex);
+                if(deleteThreeString.substring(lastUnderIndex + 1).matches("\\d+")){
+                    String middleResult = deleteThreeString.substring(0, lastUnderIndex);
+                    lastUnderIndex = middleResult.lastIndexOf('_');
+                    result = deleteThreeString.substring(0, lastUnderIndex);
+                }else{
+                    result = deleteThreeString.substring(0, lastUnderIndex);
+                }
+
+
                 // DisplayNameを取得
                 itemName2 = crackshot.getString(result + ".Item_Information.Item_Name");
                 Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
