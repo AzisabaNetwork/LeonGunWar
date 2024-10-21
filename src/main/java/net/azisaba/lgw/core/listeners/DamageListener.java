@@ -255,7 +255,7 @@ public class DamageListener implements Listener {
                 result = deleteThreeString.substring(0, lastUnderIndex);
                 // DisplayNameを取得
                 itemName2 = crackshot.getString(result + ".Item_Information.Item_Name");
-                Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(Component.text(itemName2));
+                Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
                 loreComponents.add(previouslore);
             }
         }
@@ -272,6 +272,7 @@ public class DamageListener implements Listener {
             HoverEvent<Component> hoverEvent = HoverEvent.showText(
                     Component.text()
                             .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
+                            .append(Component.text("\n"))
                             .append(loreTextBuilder.build())
             );
 
