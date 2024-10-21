@@ -181,8 +181,6 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        System.out.println(1);
-
         Player holder = (Player) inventory.getHolder();
         inventory = holder.getInventory();
 
@@ -227,7 +225,6 @@ public class DisableChangeItemListener implements Listener {
         }
 
         validHotbar.put(holder, valid);
-        System.out.println(valid);
 
         if (checked == 0) {
             return;
