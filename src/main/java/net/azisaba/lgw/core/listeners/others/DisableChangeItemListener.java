@@ -56,6 +56,9 @@ public class DisableChangeItemListener implements Listener {
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
     private final CSUtility csUtil = new CSUtility();
 
+    // 有効なホットバーであるか
+    private final Map<Player, Boolean> validHotbar = new HashMap<>();
+
     @EventHandler
     public void onSwapHand(PlayerSwapHandItemsEvent event) {
         Inventory inventory = event.getPlayer().getInventory();
@@ -144,19 +147,23 @@ public class DisableChangeItemListener implements Listener {
         Player holder = (Player) p.getInventory().getHolder();
         ItemStack[] hotbar = getHotbar(p.getInventory());
 
-        boolean valid = true;
+        if(!validHotbar.containsKey(holder)) {
+            boolean valid = true;
 
-        for (ItemStack item : hotbar) {
-            String weapon = csUtil.getWeaponTitle(item);
-            String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
+            for (ItemStack item : hotbar) {
+                String weapon = csUtil.getWeaponTitle(item);
+                String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
 
-            if (ctrl == null) {
-                continue;
+                if (ctrl == null) {
+                    continue;
+                }
+                valid &= cs.validHotbar(holder, weapon);
             }
-            valid &= cs.validHotbar(holder, weapon);
+            validHotbar.put(holder, valid);
         }
 
-        if (!valid) {
+//        if (!valid) {
+        if(!validHotbar.getOrDefault(p, false)) {
             e.setCancelled(true);
             p.sendMessage(Chat.f("{0}&c無効なアイテム欄であるため銃を打てません！", LeonGunWar.GAME_PREFIX));
         }
@@ -173,6 +180,8 @@ public class DisableChangeItemListener implements Listener {
         if (!(inventory.getHolder() instanceof Player)) {
             return;
         }
+
+        System.out.println(1);
 
         Player holder = (Player) inventory.getHolder();
         inventory = holder.getInventory();
@@ -216,6 +225,9 @@ public class DisableChangeItemListener implements Listener {
             checked++;
             CSDirector.strings.putAll(restore);
         }
+
+        validHotbar.put(holder, valid);
+        System.out.println(valid);
 
         if (checked == 0) {
             return;
