@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import net.azisaba.lgw.core.events.PlayerKillEvent;
+import net.azisaba.namechange.config.NameChangeInfoIO;
+import net.azisaba.namechange.data.NameChangeInfoData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -245,29 +247,16 @@ public class DamageListener implements Listener {
 
         // LoreをComponentリストとして取得
         List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
-        String result;
-        String itemName2;
-        if (nodes.startsWith("NC_")) {
-            String deleteThreeString = nodes.substring(3);
-            int lastUnderIndex = deleteThreeString.lastIndexOf('_');
+        NameChangeInfoIO nameInfo = new NameChangeInfoIO();
+        NameChangeInfoData nameInfoData = nameInfo.load(nodes);
+        if(nameInfoData != null) {
 
-            if (lastUnderIndex != -1) {
-                if(deleteThreeString.substring(lastUnderIndex + 1).matches("\\d+")){
-                    String middleResult = deleteThreeString.substring(0, lastUnderIndex);
-                    lastUnderIndex = middleResult.lastIndexOf('_');
-                    result = deleteThreeString.substring(0, lastUnderIndex);
-                }else{
-                    result = deleteThreeString.substring(0, lastUnderIndex);
-                }
-
-
-                // DisplayNameを取得
-                itemName2 = crackshot.getString(result + ".Item_Information.Item_Name");
-                Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
-                loreComponents.add(previouslore);
-            }
+            // 元武器のDisplayNameを取得
+            String baseWeapon = nameInfoData.getBaseWeapon();
+            String itemName2 = crackshot.getString(baseWeapon + ".Item_Information.Item_Name");
+            Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
+            loreComponents.add(previouslore);
         }
-
 
         // Loreを一つのComponentにまとめる
         TextComponent.Builder loreTextBuilder = Component.text();
