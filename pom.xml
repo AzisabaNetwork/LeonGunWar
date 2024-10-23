@@ -160,5 +160,13 @@
       <artifactId>slimeworldmanager-api</artifactId>
       <version>2.2.1</version>
     </dependency>
+<!--  Note: 以下はローカルリポジトリにインストールしてください  -->
+<!--  e.g.  mvn install:install-file -Dfile="../libs/NameChangeAutomation.jar" -DgroupId="net.azisaba" -DartifactId=NameChangeAutomation -Dversion="2.0.1" -Dpackaging=jar -DgeneratePom=true -->
+    <dependency>
+      <groupId>net.azisaba</groupId>
+      <artifactId>NameChangeAutomation</artifactId>
+      <version>2.0.1</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>
