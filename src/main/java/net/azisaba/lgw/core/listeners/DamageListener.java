@@ -43,6 +43,9 @@ public class DamageListener implements Listener {
     // アシストの判定に使用される
     private final Map<Player, Map<Player, Long>> lastDamaged = new HashMap<>();
 
+    // 名前変更データ
+    private final Map<String, NameChangeInfoData> nameChangeData = new HashMap<>();
+
     /**
      * プレイヤーを殺したことを検知するリスナー 死亡したプレイヤーの処理は他のリスナーで行います
      */
@@ -248,7 +251,9 @@ public class DamageListener implements Listener {
         // LoreをComponentリストとして取得
         List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
         NameChangeInfoIO nameInfo = new NameChangeInfoIO();
-        NameChangeInfoData nameInfoData = nameInfo.load(nodes);
+        NameChangeInfoData nameInfoData = nameChangeData.get(nodes);
+        if(nameInfoData == null) nameInfo.load(nodes);
+        nameChangeData.put(nodes, nameInfoData);
         if(nameInfoData != null) {
 
             // 元武器のDisplayNameを取得
