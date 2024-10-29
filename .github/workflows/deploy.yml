@@ -26,10 +26,6 @@ jobs:
         run: curl -L -o CrackShot.jar https://dev.bukkit.org/projects/crackshot/files/3151915/download
       - name: Install CrackShot into local mvn repo
         run: mvn install:install-file -Dfile=./CrackShot.jar -DgroupId=com.shampaggon -DartifactId=CrackShot -Dversion=0.98.11 -Dpackaging=jar -DgeneratePom=true
-      - name: Install Spigot 1.15.2
-        run: |
-          wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
-          java -jar BuildTools.jar --rev 1.15.2
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Prepare settings.xml
