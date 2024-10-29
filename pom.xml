@@ -161,4 +161,15 @@
       <version>2.2.1</version>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>azisaba</id>
+      <url>https://repo.azisaba.net/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>azisaba</id>
+      <url>https://repo.azisaba.net/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
