@@ -252,10 +252,11 @@ public class DamageListener implements Listener {
         List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
         NameChangeInfoIO nameInfo = new NameChangeInfoIO();
         NameChangeInfoData nameInfoData = nameChangeData.get(nodes);
-        if(nameInfoData == null) nameInfo.load(nodes);
+        if(nameInfoData == null) {
+            nameInfoData = nameInfo.load(nodes);
+        }
         nameChangeData.put(nodes, nameInfoData);
         if(nameInfoData != null) {
-
             // 元武器のDisplayNameを取得
             String baseWeapon = nameInfoData.getBaseWeapon();
             String itemName2 = crackshot.getString(baseWeapon + ".Item_Information.Item_Name");
