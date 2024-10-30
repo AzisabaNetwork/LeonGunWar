@@ -4,7 +4,7 @@ version: ${project.version}
 authors: ["siloneco", "YukiLeafX", "matsu1213", "Arisa9006"]
 description: ${project.description}
 website: ${project.url}
-depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded"]
+depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "NameChangeAutomation"]
 softdepend: ["Multiverse-Core", "PlaceholderAPI"]
 api-version: 1.16
 commands:
