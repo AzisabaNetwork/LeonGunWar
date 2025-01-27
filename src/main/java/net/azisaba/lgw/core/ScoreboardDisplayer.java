@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.azisaba.leoncsaddon.LeonCSAddon;
+import net.azisaba.leoncsaddon.WeaponDamageRandomizer;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -62,6 +64,9 @@ public class ScoreboardDisplayer {
             // 振り分け方式
             TeamDistributor distributor = LeonGunWar.getPlugin().getManager().getTeamDistributor();
 
+            //節分限定機能　ランダムダメージを取得
+            double randomDamage = WeaponDamageRandomizer.randomDamage;
+
             // 表示するメッセージリストを作成
             List<String> messageList = new ArrayList<>();
             messageList.add("");
@@ -78,6 +83,12 @@ public class ScoreboardDisplayer {
             messageList.add(Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()));
             messageList.add(Chat.f("&7アルゴリズム&a: &c{0}", distributor.getDistributorName()));
             messageList.add("");
+            messageList.add(Chat.f("&5---------------"));
+            messageList.add(Chat.f("&7現在適用中の"));
+            messageList.add(Chat.f("&7ダメージ減衰&a: &c{0}", randomDamage));
+            messageList.add(Chat.f("&5---------------"));
+            messageList.add("");
+
             messageList.add(Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net"));
 
             // return
