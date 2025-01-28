@@ -65,7 +65,10 @@ public class ScoreboardDisplayer {
             TeamDistributor distributor = LeonGunWar.getPlugin().getManager().getTeamDistributor();
 
             //節分限定機能　ランダムダメージを取得
-            double randomDamage = WeaponDamageRandomizer.randomDamage;
+            LeonCSAddon leonCSAddon = null;
+            if(LeonGunWar.getLeonCSAddon() != null) {
+                leonCSAddon = LeonGunWar.getLeonCSAddon();
+            }
 
             // 表示するメッセージリストを作成
             List<String> messageList = new ArrayList<>();
@@ -83,11 +86,14 @@ public class ScoreboardDisplayer {
             messageList.add(Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()));
             messageList.add(Chat.f("&7アルゴリズム&a: &c{0}", distributor.getDistributorName()));
             messageList.add("");
-            messageList.add(Chat.f("&5---------------"));
-            messageList.add(Chat.f("&7現在適用中の"));
-            messageList.add(Chat.f("&7ダメージ減衰&a: &c{0}", randomDamage));
-            messageList.add(Chat.f("&5---------------"));
-            messageList.add("");
+            if(leonCSAddon != null) {
+                double lCARandomDamage = leonCSAddon.weaponDamageRandomizer.getRandomDamage();
+                messageList.add(Chat.f("&5---------------"));
+                messageList.add(Chat.f("&7現在適用中の"));
+                messageList.add(Chat.f("&7ダメージ減衰&a: &c" + String.valueOf(lCARandomDamage)));
+                messageList.add(Chat.f("&5---------------"));
+                messageList.add("");
+            }
 
             messageList.add(Chat.f("&7今すぐ &6{0} &7で遊べ！", "azisaba.net"));
 

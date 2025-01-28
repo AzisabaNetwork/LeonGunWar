@@ -3,6 +3,7 @@ package net.azisaba.lgw.core;
 import java.io.IOException;
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.leoncsaddon.LeonCSAddon;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.listeners.DamageListener;
@@ -46,6 +47,9 @@ public class LeonGunWar extends JavaPlugin {
     @Getter
     private static JSONMessage quickBar;
 
+    @Getter
+    public static LeonCSAddon leonCSAddon;
+
     private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
@@ -71,6 +75,7 @@ public class LeonGunWar extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        leonCSAddon = (LeonCSAddon) Bukkit.getPluginManager().getPlugin("LeonCSAddon");
         quickBar = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
                 .then(Chat.f("&a[エントリー]"))
                 .runCommand("/leongunwar:match entry")
