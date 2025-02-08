@@ -31,6 +31,7 @@ import net.azisaba.lgw.core.util.LGWExpansion;
 import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -47,7 +48,6 @@ public class LeonGunWar extends JavaPlugin {
     @Getter
     private static JSONMessage quickBar;
 
-    @Getter
     public static LeonCSAddon leonCSAddon;
 
     private MainConfig mainConfig;
@@ -129,6 +129,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("mapvote").setExecutor(new MapVoteCommand());
         Bukkit.getPluginCommand("spawn").setExecutor(new SpawnCommand());
         Bukkit.getPluginCommand("noticewar").setExecutor(new SiaiTuutiCommand());
+        Bukkit.getPluginCommand("updateRD").setExecutor(new updateRD());
 
         // タブ補完の登録
         //Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -220,6 +221,14 @@ public class LeonGunWar extends JavaPlugin {
 
     public static LeonGunWar getPlugin() {
         return plugin;
+    }
+
+    public Plugin getLeonCSAddon(){
+        return leonCSAddon;
+    }
+
+    public void updateLeonCSAddon(){
+        leonCSAddon = (LeonCSAddon) Bukkit.getPluginManager().getPlugin("LeonCSAddon");
     }
 
     public MatchManager getManager() {

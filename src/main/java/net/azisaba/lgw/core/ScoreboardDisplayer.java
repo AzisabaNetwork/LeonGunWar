@@ -65,10 +65,7 @@ public class ScoreboardDisplayer {
             TeamDistributor distributor = LeonGunWar.getPlugin().getManager().getTeamDistributor();
 
             //節分限定機能　ランダムダメージを取得
-            LeonCSAddon leonCSAddon = null;
-            if(LeonGunWar.getLeonCSAddon() != null) {
-                leonCSAddon = LeonGunWar.getLeonCSAddon();
-            }
+            LeonCSAddon leonCSAddon = (LeonCSAddon) LeonGunWar.getPlugin().getLeonCSAddon();
 
             // 表示するメッセージリストを作成
             List<String> messageList = new ArrayList<>();

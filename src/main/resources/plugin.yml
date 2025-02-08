@@ -43,6 +43,9 @@ commands:
   noticewar:
     usage: /noticewar
     permission: leongunwar.adminchat.send
+  updateRD:
+    usage: /updateRD
+    permission: leongunwar.command.leongunwaradmin
 permissions:
   leongunwar.entrysign.changestate:
     default: op
