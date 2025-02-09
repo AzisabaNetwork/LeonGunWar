@@ -3,7 +3,6 @@ package net.azisaba.lgw.core.commands;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.BattleTeam;
@@ -92,24 +91,6 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 p.teleport(correctMapList.get(0).getSpawnPoint(BattleTeam.values()[0]));
                 p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", correctMapList.get(0).getMapName()));
 
-                // 1より多い場合
-            } else if ( correctMapList.size() > 1 ) {
-                p.sendMessage(Chat.f("&cマッチしたマップが2つあります"));
-
-                // 各マップのJSONMessageを表示
-                correctMapList.forEach(map -> {
-                    Location spawn = map.getSpawnPoint(BattleTeam.values()[0]);
-                    JSONMessage msg = JSONMessage.create(Chat.f("&7 - &e{0}: &7{1}, {2}, {3} &7({4})", map.getMapName(),
-                            spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getWorld().getName()));
-                    msg.tooltip(Chat.f("&eクリックでテレポート"));
-                    msg.runCommand(Chat.f("/essentials:tppos {0} {1} {2} {3} {4} {5}", spawn.getX(), spawn.getY(),
-                            spawn.getZ(), spawn.getYaw(), spawn.getPitch(), spawn.getWorld().getName()));
-
-                    // メッセージを送信
-                    msg.send(p);
-                });
-
-                // 1より少ない場合 (0以下の場合)
             } else {
                 p.sendMessage(Chat.f("&c指定したマップが見つかりませんでした。"));
             }

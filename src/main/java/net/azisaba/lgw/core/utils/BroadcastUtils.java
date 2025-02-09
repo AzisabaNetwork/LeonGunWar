@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import me.rayzr522.jsonmessage.JSONMessage;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -22,12 +22,12 @@ public class BroadcastUtils {
       p.sendMessage(message);
     }
   }
-  public static void broadcast(JSONMessage message,Sound sound ) {
+  public static void broadcast(Component message, Sound sound ) {
     for (Player p : Bukkit.getOnlinePlayers()) {
       if (DISABLED_WORLD_NAMES.contains(p.getWorld().getName())) {
         continue;
       }
-      message.send(p);
+      p.sendMessage(message);
       p.playSound(p.getLocation(), sound, 1, 1);
     }
   }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +16,6 @@ import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 import net.azisaba.lgw.core.util.StrikesCooldown;
 import net.azisaba.lgw.core.utils.Chat;
 
-import me.rayzr522.jsonmessage.JSONMessage;
 
 public class FixStrikesCooldownListener implements Listener {
 
@@ -42,7 +42,7 @@ public class FixStrikesCooldownListener implements Listener {
 
         if ( cooldown.isNowInCooldown() ) {
             event.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&cこの武器はクールダウン中です！"), player);
+            player.sendActionBar(Component.text(Chat.f("&cこの武器はクールダウン中です！")));
         } else if ( cooldown.isEnabled() ) {
             cooldown.setLastUsed(System.currentTimeMillis());
         }

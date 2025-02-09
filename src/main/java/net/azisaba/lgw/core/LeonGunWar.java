@@ -2,7 +2,6 @@ package net.azisaba.lgw.core;
 
 import java.io.IOException;
 import lombok.Getter;
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.leoncsaddon.LeonCSAddon;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
@@ -45,9 +44,6 @@ public class LeonGunWar extends JavaPlugin {
     @Getter
     private static LeonGunWar plugin;
 
-    @Getter
-    private static JSONMessage quickBar;
-
     public static LeonCSAddon leonCSAddon;
 
     private MainConfig mainConfig;
@@ -68,23 +64,10 @@ public class LeonGunWar extends JavaPlugin {
 
 
 
-    public static JSONMessage getQuickBar() {
-        return quickBar;
-    }
-
     @Override
     public void onEnable() {
         plugin = this;
         leonCSAddon = (LeonCSAddon) Bukkit.getPluginManager().getPlugin("LeonCSAddon");
-        quickBar = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
-                .then(Chat.f("&a[エントリー]"))
-                .runCommand("/leongunwar:match entry")
-                .then(" ")
-                .then(Chat.f("&c[エントリー解除]"))
-                .runCommand("/leongunwar:match leave")
-                .then(" ")
-                .then(Chat.f("&6[途中参加]"))
-                .runCommand("/leongunwar:match rejoin");
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
             new LGWExpansion(this).register(); //

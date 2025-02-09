@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
@@ -14,6 +13,8 @@ import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -221,7 +222,7 @@ public class MatchModeSignListener implements Listener {
             .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
         // 投票用のJSONMessageを作成
-        JSONMessage msg = JSONMessage.create(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));
+        Component cmt = Component.text(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));
 
         HashMap<Integer, ChatColor> colors = new HashMap<Integer, ChatColor>() {{
             put(0, ChatColor.GREEN);
@@ -232,15 +233,17 @@ public class MatchModeSignListener implements Listener {
 
         List<GameMap> maps = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps();
         for ( int i = 0, size = maps.size(); i < size; i++ ) {
-            msg = msg.then(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).getMapName()))
-                    .runCommand("/leongunwar:mapvote " + (i + 1));
+            cmt = cmt.append(Component.text(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).getMapName())))
+                    .clickEvent(ClickEvent.runCommand("/leongunwar:mapvote " + (i + 1)));
             if ( i + 1 < size ) {
-                msg = msg.then(" ");
+                cmt = cmt.appendSpace();
             }
         }
 
         // JSONMessageを全員に表示
-        msg.send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
+        for (Player onlinePlayer : BroadcastUtils.getOnlinePlayers()) {
+            onlinePlayer.sendMessage(cmt);
+        }
 
         p.closeInventory();
     }

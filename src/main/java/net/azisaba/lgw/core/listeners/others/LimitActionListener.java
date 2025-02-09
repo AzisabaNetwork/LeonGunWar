@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -18,7 +19,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.azisaba.lgw.core.utils.Chat;
 
-import me.rayzr522.jsonmessage.JSONMessage;
 
 /**
  * 運営の不必要な動きを制限するListener
@@ -43,7 +43,7 @@ public class LimitActionListener implements Listener {
         // allowDropPlayersに含まれていない場合はキャンセル
         if ( !allowDropPlayers.contains(p.getUniqueId()) ) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&cアイテムをドロップするには /limit drop と入力"), p);
+            p.sendActionBar(Component.text(Chat.f("&cアイテムをドロップするには /limit drop と入力")));
         }
     }
 
@@ -59,7 +59,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            p.sendActionBar(Component.text(Chat.f("&c建築をするには /limit build と入力")));
         }
     }
 
@@ -75,7 +75,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            p.sendActionBar(Component.text(Chat.f("&c建築をするには /limit build と入力")));
         }
     }
 
@@ -113,7 +113,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            p.sendActionBar(Component.text(Chat.f("&c建築をするには /limit build と入力")));
         }
     }
 
@@ -135,7 +135,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            p.sendActionBar(Component.text(Chat.f("&c建築をするには /limit build と入力")));
         }
     }
 
