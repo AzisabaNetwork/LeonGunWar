@@ -1,5 +1,9 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -22,22 +26,25 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        String prefix = PlaceholderAPI.setPlaceholders(player, "%luckperms_prefix%");
-        ChatColor lastColor = getLastColor(prefix);
-        if (lastColor == null) {
-            lastColor = ChatColor.WHITE;
+        LuckPerms lp = LuckPermsProvider.get();
+        User user = lp.getUserManager().getUser(player.getUniqueId());
+        Group group = lp.getGroupManager().getGroup(user.getPrimaryGroup());
+        String prefix = group.getCachedData().getMetaData().getPrefix();
+        if(prefix == null) {
+            prefix = "";
         }
-        Team team = scoreboard.getTeam(lastColor.name());
+        Team team = scoreboard.getTeam(group.getName());
         if (team == null) {
-            team = scoreboard.registerNewTeam(lastColor.name());
-            team.setColor(lastColor);
+            team = scoreboard.registerNewTeam(group.getName());
+            ChatColor color = this.getLastColor(prefix.replace("&", "§"));
+            team.setColor(color);
             if(prefix.length() <= 16) {
                 team.setPrefix(prefix);
             }else{
-                team.setPrefix(lastColor.toString());
+                team.setPrefix(color.toString());
             }
         }
-        scoreboard.getTeam(lastColor.name()).addEntry(player.getName());
+        scoreboard.getTeam(group.getName()).addEntry(player.getName());
         player.setScoreboard(this.scoreboard);
     }
 
