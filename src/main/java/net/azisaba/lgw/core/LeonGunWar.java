@@ -175,6 +175,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableBlockInteractListener(), this);
         if(this.mainConfig.isLobby) {
             Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
+            Bukkit.getPluginManager().registerEvents(new LobbyListener(), this);
         }
         Bukkit.getPluginManager().registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()), this);
         Bukkit.getPluginManager().registerEvents(new CrackShotLagFixListener(), this);
