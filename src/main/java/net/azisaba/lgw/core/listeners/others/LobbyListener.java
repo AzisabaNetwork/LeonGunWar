@@ -54,7 +54,7 @@ public class LobbyListener implements Listener {
             char section = input.charAt(index);
             if (section == '§' && index < length - 1) {
                 char c = input.charAt(index + 1);
-                if (c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e' || c == 'f') {
+                if (Character.digit(c, 16) != -1) {
                     return ChatColor.getByChar(c);
                 }
             }
