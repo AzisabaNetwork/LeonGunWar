@@ -27,8 +27,9 @@ public class LobbyListener implements Listener {
         if (lastColor == null) {
             lastColor = ChatColor.WHITE;
         }
-        if (scoreboard.getTeam(lastColor.name()) == null) {
-            Team team = scoreboard.registerNewTeam(lastColor.name());
+        Team team = scoreboard.getTeam(lastColor.name());
+        if (team == null) {
+            team = scoreboard.registerNewTeam(lastColor.name());
             team.setColor(lastColor);
             if(prefix.length() <= 16) {
                 team.setPrefix(prefix);
@@ -43,8 +44,9 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        if (scoreboard.getEntryTeam(player.getName()) != null) {
-            scoreboard.getEntryTeam(player.getName()).removeEntry(player.getName());
+        Team team = scoreboard.getTeam(player.getName());
+        if (team != null) {
+            team.removeEntry(player.getName());
         }
     }
 
