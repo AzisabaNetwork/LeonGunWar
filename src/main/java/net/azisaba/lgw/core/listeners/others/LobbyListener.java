@@ -39,7 +39,7 @@ public class LobbyListener implements Listener {
             ChatColor color = this.getLastColor(prefix.replace("&", "§"));
             team.setColor(color);
             if(prefix.length() <= 16) {
-                team.setPrefix(prefix);
+                team.setPrefix(prefix.replace("&", "§"));
             }else{
                 team.setPrefix(color.toString());
             }
