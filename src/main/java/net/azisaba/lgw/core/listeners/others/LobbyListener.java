@@ -29,13 +29,17 @@ public class LobbyListener implements Listener {
         LuckPerms lp = LuckPermsProvider.get();
         User user = lp.getUserManager().getUser(player.getUniqueId());
         Group group = lp.getGroupManager().getGroup(user.getPrimaryGroup());
-        String prefix = group.getCachedData().getMetaData().getPrefix();
+        String prefix = user.getCachedData().getMetaData().getPrefix();
+        String teamName = group.getName();
         if(prefix == null) {
             prefix = "";
         }
-        Team team = scoreboard.getTeam(group.getName());
+        if(player.hasPermission("group.nitro")) {
+            teamName = player.getName();
+        }
+        Team team = scoreboard.getTeam(teamName);
         if (team == null) {
-            team = scoreboard.registerNewTeam(group.getName());
+            team = scoreboard.registerNewTeam(teamName);
             ChatColor color = this.getLastColor(prefix.replace("&", "§"));
             team.setColor(color);
             if(prefix.length() <= 16) {
@@ -44,7 +48,7 @@ public class LobbyListener implements Listener {
                 team.setPrefix(color.toString());
             }
         }
-        scoreboard.getTeam(group.getName()).addEntry(player.getName());
+        scoreboard.getTeam(teamName).addEntry(player.getName());
         player.setScoreboard(this.scoreboard);
     }
 
