@@ -1,11 +1,12 @@
 name: ${project.name}
 main: net.azisaba.lgw.core.LeonGunWar
 version: ${project.version}
-authors: ["siloneco", "YukiLeafX"]
+authors: ["siloneco", "YukiLeafX", "matsu1213", "Arisa9006"]
 description: ${project.description}
 website: ${project.url}
-depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded"]
-softdepend: ["Multiverse-Core"]
+depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "NameChangeAutomation"]
+softdepend: ["Multiverse-Core", "PlaceholderAPI"]
+api-version: 1.16
 commands:
   leongunwaradmin:
     description: Nothing
@@ -15,9 +16,9 @@ commands:
     usage: /uav [Player]
     description: Nothing
     permission: leongunwar.command.uav
-  match:
-    usage: /match <entry/rejoin/leave> (player)
-    permission: leongunwar.command.match
+  #match:
+  #  usage: /match <entry/rejoin/leave> (player)
+  #  permission: leongunwar.command.match
   mapvote:
     usage: /mapvote <index>
     permission: leongunwar.command.mapvote
@@ -39,7 +40,12 @@ commands:
   lsyogo:
     usage: /lsyogo <add/give/remove/delete/check>
     permission: leongunwar.command.syogo
-
+  spawn:
+    aliases: ["lobby", "hub"]
+    permission: leongunwar.command.spawn
+  noticewar:
+    usage: /noticewar
+    permission: leongunwar.adminchat.send
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -49,8 +55,8 @@ permissions:
     default: op
   leongunwar.command.uav:
     default: op
-  leongunwar.command.match:
-    default: true
+  #leongunwar.command.match:
+  #  default: true
   leongunwar.command.mapvote:
     default: true
   leongunwar.command.match.other:

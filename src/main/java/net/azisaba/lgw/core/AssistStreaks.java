@@ -42,7 +42,7 @@ public class AssistStreaks {
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getDisplayName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
     }
 }

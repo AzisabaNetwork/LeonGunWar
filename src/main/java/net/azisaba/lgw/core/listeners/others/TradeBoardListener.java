@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,6 +28,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldedit.math.BlockVector3;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.SignData;
@@ -61,7 +64,7 @@ public class TradeBoardListener implements Listener {
             return;
         }
         // 取得したブロックが看板ではない場合はreturn
-        if ( b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN ) {
+        if ( b.getType() != Material.OAK_WALL_SIGN && b.getType() != Material.OAK_SIGN ) {
             return;
         }
 
@@ -123,7 +126,7 @@ public class TradeBoardListener implements Listener {
         }
 
         // 看板ではない場合はキャンセル
-        if ( b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN ) {
+        if ( b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.LEGACY_WALL_SIGN ) {
             e.setCancelled(true);
         }
     }
@@ -226,8 +229,10 @@ public class TradeBoardListener implements Listener {
      * @return 武器交換掲示板のエリアならtrue、そうでなければfalse
      */
     private boolean inTradeBoardRegion(Location loc) {
-        WorldGuardPlugin wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
-        ApplicableRegionSet regions = wg.getRegionManager(loc.getWorld()).getApplicableRegions(loc);
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        ApplicableRegionSet regions = container.get(BukkitAdapter.adapt(loc.getWorld())).getApplicableRegions(BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()));
+
+        if(regions == null) return false;
 
         for ( ProtectedRegion rg : regions ) {
             if ( rg.getId().toLowerCase().startsWith("keiziban") ) {

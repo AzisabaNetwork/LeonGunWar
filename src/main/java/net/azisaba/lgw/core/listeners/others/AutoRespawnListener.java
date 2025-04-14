@@ -18,8 +18,13 @@ public class AutoRespawnListener implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         Player deader = e.getEntity();
 
-        // リスポーン
-        deader.spigot().respawn();
+        Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                // リスポーン
+                deader.spigot().respawn();
+            }
+        });
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

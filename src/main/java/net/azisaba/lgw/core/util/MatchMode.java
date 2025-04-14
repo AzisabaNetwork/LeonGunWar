@@ -21,7 +21,7 @@ public enum MatchMode {
             Chat.f("&6上限なしチームデスマッチ"),
             Chat.f("&6TDM-NOLIMIT"),
             Chat.f("&7終了時に &cキル数が多いチーム &7が勝利"),
-            Duration.ofMinutes(15),
+            Duration.ofMinutes(10),
             Arrays.asList("tdmn", "nolimit", "no-limit", "teamdeathmatchnolimit", "tdm-nolimit", "tdm-no-limit", "team-no-limit", "team-nolimit")),
 
     LEADER_DEATH_MATCH(

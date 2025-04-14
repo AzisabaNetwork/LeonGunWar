@@ -1,10 +1,19 @@
 package net.azisaba.lgw.core.listeners;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import net.azisaba.lgw.core.util.SyogoData;
+import net.azisaba.lgw.core.events.PlayerKillEvent;
+import net.azisaba.namechange.config.NameChangeInfoIO;
+import net.azisaba.namechange.data.NameChangeInfoData;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -34,6 +43,9 @@ public class DamageListener implements Listener {
     // 最初のHashMapはダメージを受けた側のプレイヤーであり、そのValueとなるHashMapにはどのプレイヤーが何秒にそのプレイヤーを攻撃したか
     // アシストの判定に使用される
     private final Map<Player, Map<Player, Long>> lastDamaged = new HashMap<>();
+
+    // 名前変更データ
+    private final Map<String, NameChangeInfoData> nameChangeData = new HashMap<>();
 
     /**
      * プレイヤーを殺したことを検知するリスナー 死亡したプレイヤーの処理は他のリスナーで行います
@@ -177,10 +189,10 @@ public class DamageListener implements Listener {
         if ( p.getKiller() == null || p.getKiller() == p ) {
 
             // メッセージ削除
-            e.setDeathMessage(null);
+            e.deathMessage(null);
 
             // メッセージを作成
-            String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getDisplayName());
+            String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
             // メッセージ送信
             p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 
@@ -194,13 +206,14 @@ public class DamageListener implements Listener {
         // 殺したアイテム
         ItemStack item = killer.getInventory().getItemInMainHand();
 
+        // CrackShot Pluginを取得
+        CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+
         // アイテム名を取得
         String itemName;
         if ( item == null || item.getType() == Material.AIR ) { // null または Air なら素手
             itemName = Chat.f("&6素手");
         } else if ( item.hasItemMeta() && item.getItemMeta().hasDisplayName() ) { // DisplayNameが指定されている場合
-            // CrackShot Pluginを取得
-            CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
             // 銃ID取得
             String nodes = crackShot.getWeaponTitle(item);
@@ -211,27 +224,79 @@ public class DamageListener implements Listener {
             if ( itemName == null ) {
                 itemName = item.getItemMeta().getDisplayName();
             }
+
+            Bukkit.getPluginManager().callEvent(new PlayerKillEvent(killer, nodes));
         } else { // それ以外
             itemName = Chat.f("&6{0}", item.getType().name());
         }
 
         // メッセージ削除
-        e.setDeathMessage(null);
+        e.deathMessage(null);
+        // メッセージ作成
+       // String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
+        //        itemName,
+         //       p.getPlayerListName());
+      
         SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
         String syogo = "";
         if(data != null) {
             syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "");
         }
-        // メッセージ作成
-        String msg = Chat.f("{0}&r {1} &r{2} &7━━━ [ &r{3} &7] ━━━> &r{4}", LeonGunWar.GAME_PREFIX, syogo , killer.getDisplayName(),
-                itemName,
-                p.getDisplayName());
 
-        // メッセージ送信
-        p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
+        TextComponent msg2 =Component.text()
+                .append(Component.text(LeonGunWar.GAME_PREFIX))
+                .append(Component.text(syogo))
+                .append(Component.text(killer.getPlayerListName()))
+                .append(Component.text("━━━ [").color(NamedTextColor.GRAY))
+                .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
+                .append(Component.text("] ━━━>").color(NamedTextColor.GRAY))
+                .append(Component.text(p.getPlayerListName()))
+                .build();
 
-        // コンソールに出力
-        Bukkit.getConsoleSender().sendMessage(msg);
+            // 銃ID取得
+            String nodes = crackShot.getWeaponTitle(item);
+
+        // LoreをComponentリストとして取得
+        List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
+        NameChangeInfoIO nameInfo = new NameChangeInfoIO();
+        NameChangeInfoData nameInfoData = nameChangeData.get(nodes);
+        if(nameInfoData == null) {
+            nameInfoData = nameInfo.load(nodes);
+        }
+        nameChangeData.put(nodes, nameInfoData);
+        if(nameInfoData != null) {
+            // 元武器のDisplayNameを取得
+            String baseWeapon = nameInfoData.getBaseWeapon();
+            String itemName2 = crackshot.getString(baseWeapon + ".Item_Information.Item_Name");
+            Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
+            loreComponents.add(previouslore);
+        }
+
+        // Loreを一つのComponentにまとめる
+        TextComponent.Builder loreTextBuilder = Component.text();
+        if (loreComponents != null) {
+            for (Component loreLine : loreComponents) {
+                loreTextBuilder.append(loreLine).append(Component.text("\n"));
+            }
+        }
+            // ホバーイベントの作成（Loreを含む）
+            HoverEvent<Component> hoverEvent = HoverEvent.showText(
+                    Component.text()
+                            .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
+                            .append(Component.newline())
+                            .append(loreTextBuilder.build())
+            );
+
+            // ホバーイベントをメインメッセージに追加
+            TextComponent messageWithTooltip = msg2.hoverEvent(hoverEvent);
+
+            // メッセージ送信
+            p.getWorld().getPlayers().forEach(player -> player.sendMessage(messageWithTooltip));
+
+            // コンソールに出力
+            Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
+
+
     }
 
     @EventHandler

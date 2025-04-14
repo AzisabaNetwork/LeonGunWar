@@ -38,7 +38,9 @@ import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -231,7 +233,7 @@ public class MatchManager {
 
         // 全プレイヤーに音を鳴らす
         BroadcastUtils.getOnlinePlayers()
-            .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+            .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
         // 開始メッセージ
         BroadcastUtils.broadcast(
@@ -247,6 +249,14 @@ public class MatchManager {
         Bukkit.getPluginManager()
             .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
+        //試合開始をほかサーバーに通知(要SyncCommandExec)
+        if(LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv1")){
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv1");
+        } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv2")) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv2");
+        }
+
+
         // タスクスタート
         runMatchTask();
 
@@ -254,7 +264,7 @@ public class MatchManager {
         isMatching = true;
 
         // 全プレイヤーにQuickメッセージを送信
-        LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
+        //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     public List<Player> getEntryPlayers() { return entryPlayers; }
@@ -650,8 +660,8 @@ public class MatchManager {
         }
 
         // 設定を取得
-        SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(p);
-        boolean enableEntry = data.isSet("LeonGunWar.EntryOnRejoin") && data.getBoolean("LeonGunWar.EntryOnRejoin");
+        //SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(p);
+        boolean enableEntry = true;//data.isSet("LeonGunWar.EntryOnRejoin") && data.getBoolean("LeonGunWar.EntryOnRejoin");
 
         // 有効ならエントリーする
         if ( enableEntry ) {
@@ -726,7 +736,7 @@ public class MatchManager {
                         target.getPlayerListName())));
 
         // リーダーにタイトルを表示
-        target.sendTitle(Chat.f("&cあなたがリーダーです！"), "", 0, 20 * 4, 10);
+        target.sendTitle(Chat.f("&cあなたがリーダーです！"), " ", 0, 20, 10);
     }
 
     public void setMatchMode(MatchMode mode) {
@@ -798,11 +808,15 @@ public class MatchManager {
         p.setPlayerListName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
         // テレポート
         p.teleport(currentGameMap.getSpawnPoint(team));
-
+        p.setGameMode(GameMode.SURVIVAL);
         //エフェクト削除
         p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
         // 防具を装備
         p.getInventory().setChestplate(chestplates.get(team));
+        // 別pl用のtagを付与。
+        p.removeScoreboardTag("red");
+        p.removeScoreboardTag("blue");
+        p.addScoreboardTag(team.getEngTeamName());
     }
 
     /**
@@ -823,7 +837,7 @@ public class MatchManager {
                 // チーム作成
                 scoreboardTeam = scoreboard.registerNewTeam(teamName);
                 // チームの色を指定
-                scoreboardTeam.setColor(team.getChatColor());
+                scoreboardTeam.color(team.getNamedTextColor());
                 // フレンドリーファイアーを無効化
                 scoreboardTeam.setAllowFriendlyFire(false);
                 // 他チームからネームタグが見えるのを無効化
@@ -831,7 +845,7 @@ public class MatchManager {
                 // 押し合いをなくす
                 scoreboardTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
                 // Prefixを設定
-                scoreboardTeam.setPrefix(team.getChatColor() + "");
+                scoreboardTeam.prefix(Component.text("").color(team.getNamedTextColor()));
             }
 
             // チームを保存

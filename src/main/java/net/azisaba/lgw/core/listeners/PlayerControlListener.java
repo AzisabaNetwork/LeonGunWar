@@ -107,16 +107,29 @@ public class PlayerControlListener implements Listener {
     /**
      * 参加時にQuickメッセージを表示します
      */
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void sendQuickMessage(PlayerJoinEvent e) {
-        LeonGunWar.getQuickBar().send(e.getPlayer());
-
         Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), new Runnable() {
             @Override
             public void run() {
                 SyogoData.getSyogoData(e.getPlayer().getUniqueId());
             }
         });
+      
+        //LeonGunWar.getQuickBar().send(e.getPlayer());
+        if(!LeonGunWar.getPlugin().getMainConfig().isLobby){
+            if(LeonGunWar.getPlugin().getManager().isMatching()){
+                Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(e.getPlayer());
+                    }
+                }, 5L);
 
+            }else {
+                LeonGunWar.getPlugin().getManager().addEntryPlayer(e.getPlayer());
+            }
+
+        }
     }
 }

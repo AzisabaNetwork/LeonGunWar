@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -29,6 +30,13 @@ public class AfkKickEntryListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
+        lastMoved.put(e.getPlayer(), System.currentTimeMillis());
+    }
+    /**
+     * 銃を撃ったときも値を設定
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onShot(PlayerInteractEvent e) {
         lastMoved.put(e.getPlayer(), System.currentTimeMillis());
     }
 

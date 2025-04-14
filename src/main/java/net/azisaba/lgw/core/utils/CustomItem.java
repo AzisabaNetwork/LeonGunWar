@@ -1,9 +1,13 @@
 package net.azisaba.lgw.core.utils;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -33,6 +37,7 @@ public class CustomItem {
         meta.setDisplayName(team.getTeamName());
         meta.setColor(team.getColor());
         meta.setUnbreakable(true);
+        meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(),"generic.armor", 0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST));
         item.setItemMeta(meta);
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
         item.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);

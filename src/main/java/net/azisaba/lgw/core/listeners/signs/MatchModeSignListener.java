@@ -68,7 +68,7 @@ public class MatchModeSignListener implements Listener {
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
             return;
         }
 
@@ -118,7 +118,7 @@ public class MatchModeSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
             return;
         }
 
@@ -165,7 +165,7 @@ public class MatchModeSignListener implements Listener {
         Player p = (Player) e.getWhoClicked();
         Inventory openingInv = e.getInventory();
 
-        if ( !Chat.r(openingInv.getTitle()).startsWith("Distribute Selector - ") ) {
+        if ( !Chat.r(e.getView().getTitle()).startsWith("Distribute Selector - ") ) {
             return;
         }
 
@@ -184,9 +184,9 @@ public class MatchModeSignListener implements Listener {
             return;
         }
 
-        MatchMode mode = MatchMode.getFromString(openingInv.getTitle().substring(openingInv.getTitle().indexOf(Chat.f("&e")) + 2));
+        MatchMode mode = MatchMode.getFromString(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
         if ( mode == null ) {
-            Bukkit.getLogger().info(openingInv.getTitle().substring(openingInv.getTitle().indexOf(Chat.f("&e")) + 2));
+            Bukkit.getLogger().info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
             return;
         }
 
@@ -218,7 +218,7 @@ public class MatchModeSignListener implements Listener {
 
         // 音を鳴らす
         BroadcastUtils.getOnlinePlayers()
-            .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1));
+            .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
         // 投票用のJSONMessageを作成
         JSONMessage msg = JSONMessage.create(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));

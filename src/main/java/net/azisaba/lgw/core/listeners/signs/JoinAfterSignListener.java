@@ -43,7 +43,7 @@ public class JoinAfterSignListener implements Listener {
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
             return;
         }
 
@@ -96,7 +96,7 @@ public class JoinAfterSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.SIGN_POST && clickedBlock.getType() != Material.WALL_SIGN ) {
+        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
             return;
         }
 
