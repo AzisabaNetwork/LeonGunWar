@@ -37,6 +37,9 @@ commands:
   limit:
     usage: /limit [drop/build]
     permission: leongunwar.command.limit
+  lsyogo:
+    usage: /lsyogo <add/give/remove/delete/check>
+    permission: leongunwar.command.syogo
   spawn:
     aliases: ["lobby", "hub"]
     permission: leongunwar.command.spawn
@@ -67,4 +70,18 @@ permissions:
   leongunwar.adminchat.receive:
     default: op
   leongunwar.command.limit:
+    default: op
+  leongunwar.command.syogo:
+    default: true
+  leongunwar.syogo.add:
+    default: op
+  leongunwar.syogo.give:
+    default: op
+  leongunwar.syogo.remove:
+    default: true
+  leongunwar.syogo.remove-admin:
+    default: op
+  leongunwar.syogo.check:
+    default: op
+  leongunwar.syogo.delete:
     default: op

@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners;
 import java.util.List;
 import java.util.Map;
 
+import net.azisaba.lgw.core.util.SyogoData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,6 +26,7 @@ public class PlayerControlListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
+        SyogoData.removeCache(p.getUniqueId());
 
         MatchManager manager = LeonGunWar.getPlugin().getManager();
         // プレイヤーが試合中でなければreturn
@@ -107,6 +109,13 @@ public class PlayerControlListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void sendQuickMessage(PlayerJoinEvent e) {
+        Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                SyogoData.getSyogoData(e.getPlayer().getUniqueId());
+            }
+        });
+      
         //LeonGunWar.getQuickBar().send(e.getPlayer());
         if(!LeonGunWar.getPlugin().getMainConfig().isLobby){
             if(LeonGunWar.getPlugin().getManager().isMatching()){

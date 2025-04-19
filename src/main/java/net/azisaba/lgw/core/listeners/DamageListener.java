@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.namechange.config.NameChangeInfoIO;
 import net.azisaba.namechange.data.NameChangeInfoData;
@@ -235,9 +236,16 @@ public class DamageListener implements Listener {
        // String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
         //        itemName,
          //       p.getPlayerListName());
+      
+        SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
+        String syogo = "";
+        if(data != null) {
+            syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "");
+        }
 
         TextComponent msg2 =Component.text()
                 .append(Component.text(LeonGunWar.GAME_PREFIX))
+                .append(Component.text(syogo))
                 .append(Component.text(killer.getPlayerListName()))
                 .append(Component.text("━━━ [").color(NamedTextColor.GRAY))
                 .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
