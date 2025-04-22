@@ -97,7 +97,7 @@ public class Config {
                     exception.printStackTrace();
                 }
             });
-        } else {
+        } else if ( !existsResource() ) {
             Files.createDirectories(getPath().getParent());
             Files.copy(getResource(), getPath());
         }

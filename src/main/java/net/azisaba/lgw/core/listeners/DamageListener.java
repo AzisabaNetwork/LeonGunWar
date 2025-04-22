@@ -240,12 +240,12 @@ public class DamageListener implements Listener {
         SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
         String syogo = "";
         if(data != null) {
-            syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "");
+            syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "") + "&r ";
         }
 
         TextComponent msg2 =Component.text()
                 .append(Component.text(LeonGunWar.GAME_PREFIX))
-                .append(Component.text(syogo))
+                .append(Component.text(Chat.f(syogo)))
                 .append(Component.text(killer.getPlayerListName()))
                 .append(Component.text("━━━ [").color(NamedTextColor.GRAY))
                 .append(LegacyComponentSerializer.legacySection().deserialize(itemName))

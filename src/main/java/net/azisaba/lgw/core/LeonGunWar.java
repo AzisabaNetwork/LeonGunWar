@@ -221,9 +221,6 @@ public class LeonGunWar extends JavaPlugin {
 
         this.sqlConnection.onDisable();
 
-        this.syogoConfig.saveConfig();
-        this.syogoConfig.saveResource();
-
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();
 

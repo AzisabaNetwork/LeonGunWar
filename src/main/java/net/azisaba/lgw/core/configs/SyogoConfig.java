@@ -21,7 +21,7 @@ public class SyogoConfig extends Config {
     public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();
         for ( String syogo : config.getValues(false).keySet() ) {
-            syogos.put(syogo,config.getString(syogo));
+            syogos.put(syogo, config.getString(syogo));
         }
         LeonGunWar.getPlugin().getLogger().info("称号を " + syogos.size() + " 個読み込みました");
     }
