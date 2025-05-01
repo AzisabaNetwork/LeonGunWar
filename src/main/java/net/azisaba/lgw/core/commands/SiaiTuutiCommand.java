@@ -49,6 +49,15 @@ public class SiaiTuutiCommand implements CommandExecutor {
             BroadcastUtils.broadcast(msg, Sound.BLOCK_NOTE_BLOCK_PLING);
             return true;
         }
+        // sv3なら
+        if ( Args.check(args, 0, "sv3") ) {
+            JSONMessage msg = JSONMessage.create(Chat.f("&a&l試合サーバー3で試合が開始されました!"));
+            msg.suggestCommand("")
+                    .then(Chat.f("&b[クリックで参加]"))
+                    .runCommand("/server lgw2sv3");
+            BroadcastUtils.broadcast(msg, Sound.BLOCK_NOTE_BLOCK_PLING);
+            return true;
+        }
         return true;
     }
 }
