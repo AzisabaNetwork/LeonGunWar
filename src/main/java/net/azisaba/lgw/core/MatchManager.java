@@ -254,6 +254,8 @@ public class MatchManager {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv1");
         } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv2")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv2");
+        } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv3")) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv3");
         }
 
 
