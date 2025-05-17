@@ -1,9 +1,6 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
@@ -258,6 +255,9 @@ public class DamageListener implements Listener {
 
         // LoreをComponentリストとして取得
         List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
+        if(loreComponents == null){
+            loreComponents = new ArrayList<>();
+        }
         NameChangeInfoIO nameInfo = new NameChangeInfoIO();
         NameChangeInfoData nameInfoData = nameChangeData.get(nodes);
         if(nameInfoData == null) {
