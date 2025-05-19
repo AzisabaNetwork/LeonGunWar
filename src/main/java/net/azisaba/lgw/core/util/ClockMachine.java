@@ -52,6 +52,6 @@ public class ClockMachine {
         long initialDelay = targetMillis - currentMillis;
         long oneDayInTicks = 20L * 60 * 60 * 24; // 1日の長さ (20 ticks/秒)
 
-        LeonGunWar.taskList.add(Bukkit.getScheduler().runTaskTimer(LeonGunWar.getPlugin(), task, initialDelay / 50 + 2, oneDayInTicks));
+        LeonGunWar.timeTaskList.add(Bukkit.getScheduler().runTaskTimer(LeonGunWar.getPlugin(), task, initialDelay / 50 + 2, oneDayInTicks));
     }
 }

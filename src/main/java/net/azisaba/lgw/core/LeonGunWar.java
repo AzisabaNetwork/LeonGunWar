@@ -69,7 +69,7 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
-    public static List<BukkitTask> taskList = new ArrayList<>();
+    public static List<BukkitTask> timeTaskList = new ArrayList<>();
     public static boolean doubleRewardEnable;
 
     private SQLConnection sqlConnection;
@@ -143,6 +143,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginCommand("lsyogo").setExecutor(new LSyogoCommand());
         Bukkit.getPluginCommand("spawn").setExecutor(new SpawnCommand());
         Bukkit.getPluginCommand("noticewar").setExecutor(new SiaiTuutiCommand());
+        Bukkit.getPluginCommand("toggledoublereward").setExecutor(new ToggleDoubleReward());
 
         // タブ補完の登録
         //Bukkit.getPluginCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());

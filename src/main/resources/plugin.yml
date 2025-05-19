@@ -46,6 +46,9 @@ commands:
   noticewar:
     usage: /noticewar
     permission: leongunwar.adminchat.send
+  toggledoublereward:
+    usage: /toggledoublereward
+    permission: leongunwar.command.leongunwaradmin
 permissions:
   leongunwar.entrysign.changestate:
     default: op
