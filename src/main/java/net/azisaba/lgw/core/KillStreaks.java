@@ -82,13 +82,22 @@ public class KillStreaks {
         int streaks = get(player).incrementAndGet();
 
         // 報酬を付与
+        if(LeonGunWar.doubleRewardEnable){
+            giveRewards(streaks, player);
+        }
         giveRewards(streaks, player);
+
         if (LeonGunWar.getPlugin().getManager().getMatchMode()
             == MatchMode.LEADER_DEATH_MATCH_POINT) {
             if (LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(player)) {
                 giveRewards(streaks, player);
-                player.sendMessage(
-                    Chat.f("{0}&7あなたはリーダーなので &e2倍 &7の報酬を受け取りました！", LeonGunWar.GAME_PREFIX));
+                if(LeonGunWar.doubleRewardEnable){
+                    player.sendMessage(
+                            Chat.f("{0}&7あなたはリーダーなので &e2倍 &7の報酬を受け取りました!(報酬ブーストは適用されていません)", LeonGunWar.GAME_PREFIX));
+                }else {
+                    player.sendMessage(
+                            Chat.f("{0}&7あなたはリーダーなので &e2倍 &7の報酬を受け取りました！", LeonGunWar.GAME_PREFIX));
+                }
             }
         }
 

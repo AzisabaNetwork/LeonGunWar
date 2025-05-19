@@ -1,12 +1,15 @@
 package net.azisaba.lgw.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
-import net.azisaba.lgw.core.util.SyogoData;
+import net.azisaba.lgw.core.util.ClockMachine;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -33,6 +36,7 @@ import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 @Getter
 public class LeonGunWar extends JavaPlugin {
@@ -65,6 +69,8 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
+    public static List<BukkitTask> taskList = new ArrayList<>();
+    public static boolean doubleRewardEnable;
 
     private SQLConnection sqlConnection;
 
@@ -89,7 +95,9 @@ public class LeonGunWar extends JavaPlugin {
             new LGWExpansion(this).register(); //
         }
 
+
         // 設定ファイルを読み込むクラスの初期化
+        saveDefaultConfig();
         mainConfig = new MainConfig(this);
         killStreaksConfig = new KillStreaksConfig(this);
         assistStreaksConfig = new AssistStreaksConfig(this);
@@ -210,6 +218,10 @@ public class LeonGunWar extends JavaPlugin {
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
+        doubleRewardEnable = ClockMachine.isWithinRewardTime();
+        if(getConfig().getBoolean("DoubleRewardTaskEnable", false)){
+            new ClockMachine().doubleRewardTaskStarter();
+        }
 
         Bukkit.getLogger().info(Chat.f("{0} が有効化されました。", getName()));
     }
