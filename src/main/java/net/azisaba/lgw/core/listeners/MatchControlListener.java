@@ -146,7 +146,15 @@ public class MatchControlListener implements Listener {
                     // 勝利アイテムを付与
                     if (victoryItemCrackShotIds == null) {
                         // 勝者の証を付与
-                        p.getInventory().addItem(CustomItem.getWonItem());
+                        long now = System.currentTimeMillis();
+                        if (isOverSixMinutes(now, LeonGunWar.matchJoin.get(p.getUniqueId())) || LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20) {
+                            p.getInventory().addItem(CustomItem.getWonItem());
+                            if (LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20){
+                                p.sendMessage("試合参加時間が6分未満でしたが、20キルを超えているため勝利報酬が付与されました");
+                            }
+                        } else {
+                            p.sendMessage("試合参加時間が6分未満だったため勝利報酬は付与されませんでした");
+                        }
                     } else {
                         for (String crackShotId : victoryItemCrackShotIds) {
                             ItemStack item = csUtility.generateWeapon(crackShotId);
@@ -155,7 +163,7 @@ public class MatchControlListener implements Listener {
                             }
                         }
                     }
-
+                    LeonGunWar.matchJoin.clear();
                     // 勝利タイトルを表示
                     p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
 
@@ -169,6 +177,12 @@ public class MatchControlListener implements Listener {
                         wonTeam.getTeamName()));
             });
         }
+    }
+
+    public boolean isOverSixMinutes(long time1, long time2) {
+        long diffMillis = Math.abs(time1 - time2);
+        long sixMinutesInMillis = 6 * 60 * 1000; // 6分 = 360,000ミリ秒
+        return diffMillis >= sixMinutesInMillis;
     }
 
     /**

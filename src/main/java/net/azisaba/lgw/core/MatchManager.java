@@ -25,6 +25,7 @@ import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
+import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
@@ -49,6 +50,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -720,7 +722,9 @@ public class MatchManager {
      */
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
-
+        LeaderSelectionTask leaderSelectionTask = new LeaderSelectionTask(team, LeonGunWar.getPlugin(), 1200);
+        LeonGunWar.leaderSelectionTaskMap.put(team, leaderSelectionTask);
+        leaderSelectionTask.runTaskLater(LeonGunWar.getPlugin(), 1200);
         // シャッフル
         Collections.shuffle(plist);
         // 先頭のプレイヤーを取得
@@ -819,6 +823,7 @@ public class MatchManager {
         p.removeScoreboardTag("red");
         p.removeScoreboardTag("blue");
         p.addScoreboardTag(team.getEngTeamName());
+        LeonGunWar.matchJoin.put(p.getUniqueId(), System.currentTimeMillis());
     }
 
     /**
