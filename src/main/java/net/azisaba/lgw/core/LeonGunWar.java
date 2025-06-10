@@ -73,7 +73,7 @@ public class LeonGunWar extends JavaPlugin {
     public static List<BukkitTask> timeTaskList = new ArrayList<>();
     public static boolean doubleRewardEnable;
     public static Map<UUID, Long> matchJoin = new HashMap<>();
-    public static Map<BattleTeam, LeaderSelectionTask> leaderSelectionTaskMap = new HashMap<>();
+    public static Map<BattleTeam, BukkitTask> leaderSelectionTaskMap = new HashMap<>();
 
     private SQLConnection sqlConnection;
 

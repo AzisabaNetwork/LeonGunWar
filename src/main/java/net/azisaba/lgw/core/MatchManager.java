@@ -242,7 +242,7 @@ public class MatchManager {
             Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         BroadcastUtils.broadcast(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX,
             SecondOfDay.f(matchMode.getDuration().getSeconds())));
-        // 勝利条件を発表
+        // 勝利条件を発表z
         BroadcastUtils.broadcast(
             Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         BroadcastUtils.broadcast(
@@ -722,9 +722,9 @@ public class MatchManager {
      */
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
-        LeaderSelectionTask leaderSelectionTask = new LeaderSelectionTask(team, LeonGunWar.getPlugin(), 1200);
+        BukkitTask leaderSelectionTask = new LeaderSelectionTask(team)
+                .runTaskLater(LeonGunWar.getPlugin(), 1200);
         LeonGunWar.leaderSelectionTaskMap.put(team, leaderSelectionTask);
-        leaderSelectionTask.runTaskLater(LeonGunWar.getPlugin(), 1200);
         // シャッフル
         Collections.shuffle(plist);
         // 先頭のプレイヤーを取得
@@ -858,6 +858,18 @@ public class MatchManager {
             // チームを保存
             teams.putIfAbsent(team, scoreboardTeam);
         }
+    }
+
+    public void scheduleOrExtend(BattleTeam team, Plugin plugin, long delayTicks) {
+        // 既存のタスクがあればキャンセル
+        BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
+        if (existingTask != null && !existingTask.isCancelled()) {
+            existingTask.cancel();
+        }
+
+        // 新しいタスクを作ってスケジュール
+        BukkitTask newTask = new LeaderSelectionTask(team).runTaskLater(plugin, delayTicks);
+        LeonGunWar.leaderSelectionTaskMap.put(team, newTask);
     }
 
     /**
