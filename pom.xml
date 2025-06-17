@@ -5,7 +5,8 @@
 
   <groupId>net.azisaba</groupId>
   <artifactId>LeonGunWar</artifactId>
-  <version>3.3.3</version>
+
+  <version>3.4.0</version>
 
   <name>${project.artifactId}</name>
   <description>A core plugin in Azisaba LeonGunWar</description>
@@ -35,8 +36,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.9.0</version>
         <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
+          <source>11</source>
+          <target>11</target>
         </configuration>
       </plugin>
       <plugin>

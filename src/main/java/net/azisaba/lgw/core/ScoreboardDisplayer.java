@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -22,6 +23,7 @@ import lombok.Data;
 
 @Data
 public class ScoreboardDisplayer {
+    private List<String> lastDisplayLines = new ArrayList<>();
 
     /**
      * プレイヤーに表示するスコアボードのタイトルを取得します
@@ -128,8 +130,10 @@ public class ScoreboardDisplayer {
             return messageList;
         }
 
+        List<String> fallback = new ArrayList<>();
+        fallback.add(ChatColor.GRAY + "スコアボードを初期化中...");
         // 試合をしていない場合
-        return null;
+        return fallback;
     }
 
     // Objectiveを作成したいスコアボード
@@ -139,6 +143,7 @@ public class ScoreboardDisplayer {
      * プレイヤーにスコアボードを表示します
      *
      */
+    /**
     public void updateScoreboard() {
         Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
@@ -195,6 +200,65 @@ public class ScoreboardDisplayer {
                 p.setScoreboard(scoreBoard);
             }
         });
+    }
+     **/
+
+    public void tickScoreboard() {
+        updateScoreboardLines(boardLines());
+    }
+
+    private void updateScoreboardLines(List<String> lines) {
+        if (lines == null || lines.isEmpty()) {
+            lines = List.of(ChatColor.GRAY + "スコアボード待機中...");
+        }
+
+        Objective obj = scoreBoard.getObjective("side");
+        if (obj == null) {
+            obj = scoreBoard.registerNewObjective("side", "dummy");
+            obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
+
+        obj.setDisplayName(scoreBoardTitle());
+
+        // 差分削除
+        for (String oldDisplay : lastDisplayLines) {
+            scoreBoard.resetScores(oldDisplay);
+        }
+
+        List<String> reversed = new ArrayList<>(lines);
+        Collections.reverse(reversed);
+
+        List<String> newDisplayLines = new ArrayList<>();
+        for (int i = 0; i < reversed.size(); i++) {
+            String line = reversed.get(i);
+            if (line == null) line = "";
+
+            // 見た目そのまま、でも内部では別の行になる
+            String displayLine = makeUniqueLine(line, i);
+            obj.getScore(displayLine).setScore(i);
+            newDisplayLines.add(displayLine);
+        }
+
+        lastDisplayLines = newDisplayLines;
+
+        // 全プレイヤーにスコアボード適用
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            if (p.getScoreboard() != scoreBoard) {
+                p.setScoreboard(scoreBoard);
+            }
+        });
+    }
+
+    private List<String> boardLinesSafe() {
+        List<String> base = boardLines();
+        if (base == null || base.isEmpty()) {
+            return List.of(ChatColor.GRAY + "スコアボード待機中...");
+        }
+        return base;
+    }
+
+    private String makeUniqueLine(String base, int index) {
+        return base + ChatColor.COLOR_CHAR + (char) ('a' + index);
     }
 
     /**

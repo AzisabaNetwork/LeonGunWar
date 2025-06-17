@@ -1,14 +1,15 @@
 package net.azisaba.lgw.core;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
+import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
+import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.ClockMachine;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
@@ -71,6 +72,8 @@ public class LeonGunWar extends JavaPlugin {
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
     public static List<BukkitTask> timeTaskList = new ArrayList<>();
     public static boolean doubleRewardEnable;
+    public static Map<UUID, Long> matchJoin = new HashMap<>();
+    public static Map<BattleTeam, BukkitTask> leaderSelectionTaskMap = new HashMap<>();
 
     private SQLConnection sqlConnection;
 
@@ -91,7 +94,7 @@ public class LeonGunWar extends JavaPlugin {
                 .then(Chat.f("&6[途中参加]"))
                 .runCommand("/leongunwar:match rejoin");
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LGWExpansion(this).register(); //
         }
 

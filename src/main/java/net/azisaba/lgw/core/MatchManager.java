@@ -25,6 +25,7 @@ import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
+import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
@@ -49,6 +50,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -240,7 +242,7 @@ public class MatchManager {
             Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         BroadcastUtils.broadcast(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX,
             SecondOfDay.f(matchMode.getDuration().getSeconds())));
-        // 勝利条件を発表
+        // 勝利条件を発表z
         BroadcastUtils.broadcast(
             Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         BroadcastUtils.broadcast(
@@ -280,6 +282,13 @@ public class MatchManager {
             matchTask.cancel();
             matchTask = null;
         }
+        for(BattleTeam team : BattleTeam.values()){
+            BukkitTask task = LeonGunWar.leaderSelectionTaskMap.get(team);
+            if(task != null){
+                task.cancel();
+            }
+        }
+
 
         // 残り時間を0に
         timeLeft.set(0);
@@ -293,8 +302,6 @@ public class MatchManager {
         // インベントリ変更制限クラスを初期化
         itemChangeValidator = new ItemChangeValidator();
 
-        // サイドバーを削除
-        LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
         // 全プレイヤーのdisplayNameを初期化
         Bukkit.getOnlinePlayers().forEach(p -> {
 
@@ -721,6 +728,14 @@ public class MatchManager {
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
 
+        BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        BukkitTask leaderSelectionTask = new LeaderSelectionTask(team)
+                .runTaskLater(LeonGunWar.getPlugin(), 1200);
+        LeonGunWar.leaderSelectionTaskMap.put(team, leaderSelectionTask);
         // シャッフル
         Collections.shuffle(plist);
         // 先頭のプレイヤーを取得
@@ -819,6 +834,7 @@ public class MatchManager {
         p.removeScoreboardTag("red");
         p.removeScoreboardTag("blue");
         p.addScoreboardTag(team.getEngTeamName());
+        LeonGunWar.matchJoin.put(p.getUniqueId(), System.currentTimeMillis());
     }
 
     /**
@@ -853,6 +869,18 @@ public class MatchManager {
             // チームを保存
             teams.putIfAbsent(team, scoreboardTeam);
         }
+    }
+
+    public void scheduleOrExtend(BattleTeam team, Plugin plugin, long delayTicks) {
+        // 既存のタスクがあればキャンセル
+        BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        // 新しいタスクを作ってスケジュール
+        BukkitTask newTask = new LeaderSelectionTask(team).runTaskLater(plugin, delayTicks);
+        LeonGunWar.leaderSelectionTaskMap.put(team, newTask);
     }
 
     /**

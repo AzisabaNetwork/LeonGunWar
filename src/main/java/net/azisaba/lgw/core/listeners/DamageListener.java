@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.*;
 
+import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.namechange.config.NameChangeInfoIO;
@@ -74,6 +75,12 @@ public class DamageListener implements Listener {
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
         // ポイントを追加
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+
+        if(LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(killer)){
+            BattleTeam battleTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
+            LeonGunWar.getPlugin().getManager().scheduleOrExtend(battleTeam, LeonGunWar.getPlugin(), 20L * 60);
+        }
+
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);
