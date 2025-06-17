@@ -23,7 +23,7 @@ import lombok.Data;
 
 @Data
 public class ScoreboardDisplayer {
-    private List<String> lastEntries = new ArrayList<>();
+    private List<String> lastDisplayLines = new ArrayList<>();
 
     /**
      * プレイヤーに表示するスコアボードのタイトルを取得します
@@ -130,8 +130,10 @@ public class ScoreboardDisplayer {
             return messageList;
         }
 
+        List<String> fallback = new ArrayList<>();
+        fallback.add(ChatColor.GRAY + "スコアボードを初期化中...");
         // 試合をしていない場合
-        return null;
+        return fallback;
     }
 
     // Objectiveを作成したいスコアボード
@@ -207,8 +209,7 @@ public class ScoreboardDisplayer {
 
     private void updateScoreboardLines(List<String> lines) {
         if (lines == null || lines.isEmpty()) {
-            scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
-            return;
+            lines = List.of(ChatColor.GRAY + "スコアボード待機中...");
         }
 
         Objective obj = scoreBoard.getObjective("side");
@@ -219,28 +220,45 @@ public class ScoreboardDisplayer {
 
         obj.setDisplayName(scoreBoardTitle());
 
-        // 差分削除（元の行に対して）
-        for (String oldLine : lastEntries) {
-            if (!lines.contains(oldLine)) {
-                scoreBoard.resetScores(oldLine);
-            }
+        // 差分削除
+        for (String oldDisplay : lastDisplayLines) {
+            scoreBoard.resetScores(oldDisplay);
         }
 
-        // 表示用にリストを反転（元linesはそのまま）
         List<String> reversed = new ArrayList<>(lines);
         Collections.reverse(reversed);
 
+        List<String> newDisplayLines = new ArrayList<>();
         for (int i = 0; i < reversed.size(); i++) {
             String line = reversed.get(i);
             if (line == null) line = "";
 
-            // 表示用にユニーク化
-            String displayLine = line + ChatColor.values()[i % ChatColor.values().length];
+            // 見た目そのまま、でも内部では別の行になる
+            String displayLine = makeUniqueLine(line, i);
             obj.getScore(displayLine).setScore(i);
+            newDisplayLines.add(displayLine);
         }
 
-        // 元の行リストを保存（反転もChatColorもなし）
-        lastEntries = new ArrayList<>(lines);
+        lastDisplayLines = newDisplayLines;
+
+        // 全プレイヤーにスコアボード適用
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            if (p.getScoreboard() != scoreBoard) {
+                p.setScoreboard(scoreBoard);
+            }
+        });
+    }
+
+    private List<String> boardLinesSafe() {
+        List<String> base = boardLines();
+        if (base == null || base.isEmpty()) {
+            return List.of(ChatColor.GRAY + "スコアボード待機中...");
+        }
+        return base;
+    }
+
+    private String makeUniqueLine(String base, int index) {
+        return base + ChatColor.COLOR_CHAR + (char) ('a' + index);
     }
 
     /**

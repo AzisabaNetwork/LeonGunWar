@@ -80,9 +80,11 @@ public class MapSelectCountdownTask extends BukkitRunnable {
             LeonGunWar.getPlugin().getManager().setMatchMode(mode);
 
             // 5秒後にスコアボードを消す
+            /**
             Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
                 LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
             }, 20L * 5);
+             **/
 
             // 表示内容を取得
             String distributorName = LeonGunWar.getPlugin().getManager().getTeamDistributor()

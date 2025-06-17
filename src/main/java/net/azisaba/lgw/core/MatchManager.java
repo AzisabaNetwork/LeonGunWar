@@ -282,6 +282,13 @@ public class MatchManager {
             matchTask.cancel();
             matchTask = null;
         }
+        for(BattleTeam team : BattleTeam.values()){
+            BukkitTask task = LeonGunWar.leaderSelectionTaskMap.get(team);
+            if(task != null){
+                task.cancel();
+            }
+        }
+
 
         // 残り時間を0に
         timeLeft.set(0);
@@ -295,8 +302,6 @@ public class MatchManager {
         // インベントリ変更制限クラスを初期化
         itemChangeValidator = new ItemChangeValidator();
 
-        // サイドバーを削除
-        LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
         // 全プレイヤーのdisplayNameを初期化
         Bukkit.getOnlinePlayers().forEach(p -> {
 
@@ -722,6 +727,12 @@ public class MatchManager {
      */
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
+
+        BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
         BukkitTask leaderSelectionTask = new LeaderSelectionTask(team)
                 .runTaskLater(LeonGunWar.getPlugin(), 1200);
         LeonGunWar.leaderSelectionTaskMap.put(team, leaderSelectionTask);
@@ -863,7 +874,7 @@ public class MatchManager {
     public void scheduleOrExtend(BattleTeam team, Plugin plugin, long delayTicks) {
         // 既存のタスクがあればキャンセル
         BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
-        if (existingTask != null && !existingTask.isCancelled()) {
+        if (existingTask != null) {
             existingTask.cancel();
         }
 
