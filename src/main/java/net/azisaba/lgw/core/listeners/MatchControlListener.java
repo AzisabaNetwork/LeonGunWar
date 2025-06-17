@@ -203,7 +203,7 @@ public class MatchControlListener implements Listener {
     @EventHandler
     public void scoreboardUpdater(MatchTimeChangedEvent e) {
         // スコアボードをアップデート
-        LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard();
+        LeonGunWar.getPlugin().getScoreboardDisplayer().tickScoreboard();
     }
 
     /**

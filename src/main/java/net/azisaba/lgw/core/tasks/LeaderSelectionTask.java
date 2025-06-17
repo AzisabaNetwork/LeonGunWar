@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class LeaderSelectionTask extends BukkitRunnable {
     private final BattleTeam team;
-    private final Plugin plugin;
+
 
     public LeaderSelectionTask(BattleTeam team) {
         this.team = team;

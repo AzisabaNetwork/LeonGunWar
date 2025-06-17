@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -22,6 +23,7 @@ import lombok.Data;
 
 @Data
 public class ScoreboardDisplayer {
+    private List<String> lastEntries = new ArrayList<>();
 
     /**
      * プレイヤーに表示するスコアボードのタイトルを取得します
@@ -139,6 +141,7 @@ public class ScoreboardDisplayer {
      * プレイヤーにスコアボードを表示します
      *
      */
+    /**
     public void updateScoreboard() {
         Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
 
@@ -195,6 +198,49 @@ public class ScoreboardDisplayer {
                 p.setScoreboard(scoreBoard);
             }
         });
+    }
+     **/
+
+    public void tickScoreboard() {
+        updateScoreboardLines(boardLines());
+    }
+
+    private void updateScoreboardLines(List<String> lines) {
+        if (lines == null || lines.isEmpty()) {
+            scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
+            return;
+        }
+
+        Objective obj = scoreBoard.getObjective("side");
+        if (obj == null) {
+            obj = scoreBoard.registerNewObjective("side", "dummy");
+            obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
+
+        obj.setDisplayName(scoreBoardTitle());
+
+        // 差分削除（元の行に対して）
+        for (String oldLine : lastEntries) {
+            if (!lines.contains(oldLine)) {
+                scoreBoard.resetScores(oldLine);
+            }
+        }
+
+        // 表示用にリストを反転（元linesはそのまま）
+        List<String> reversed = new ArrayList<>(lines);
+        Collections.reverse(reversed);
+
+        for (int i = 0; i < reversed.size(); i++) {
+            String line = reversed.get(i);
+            if (line == null) line = "";
+
+            // 表示用にユニーク化
+            String displayLine = line + ChatColor.values()[i % ChatColor.values().length];
+            obj.getScore(displayLine).setScore(i);
+        }
+
+        // 元の行リストを保存（反転もChatColorもなし）
+        lastEntries = new ArrayList<>(lines);
     }
 
     /**

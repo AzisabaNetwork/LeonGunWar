@@ -121,7 +121,7 @@ public class MapSelectCountdownTask extends BukkitRunnable {
         // 1秒減らす
         timeLeft.decrementAndGet();
         // スコアボードを更新
-        LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard();
+        LeonGunWar.getPlugin().getScoreboardDisplayer().tickScoreboard();
     }
 
     public int getVoteFor(int index) {
