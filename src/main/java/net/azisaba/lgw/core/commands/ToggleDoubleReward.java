@@ -21,6 +21,7 @@ public class ToggleDoubleReward implements CommandExecutor {
             LeonGunWar.timeTaskList.clear();
         }
         sender.sendMessage("報酬２倍機能の有効無効化を切り替えました 現在:" + LeonGunWar.doubleRewardEnable);
+        LeonGunWar.getPlugin().getConfig().set("DoubleRewardTaskEnable", LeonGunWar.doubleRewardEnable);
         return true;
     }
 }
