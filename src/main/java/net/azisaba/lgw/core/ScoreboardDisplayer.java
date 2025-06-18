@@ -31,7 +31,7 @@ public class ScoreboardDisplayer {
      * @return スコアボードのタイトル
      */
     private String scoreBoardTitle() {
-        return Chat.f("&6LeonGunWar&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
+        return Chat.f("&6LeonGunWarII&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
     }
 
     /**
@@ -214,67 +214,70 @@ public class ScoreboardDisplayer {
             lines = List.of(ChatColor.GRAY + "スコアボード待機中...");
         }
 
-        // Objective 初期化
+        // Objective の準備
         Objective obj = scoreBoard.getObjective("side");
         if (obj == null) {
-            obj = scoreBoard.registerNewObjective(
-                    "side",
-                    "dummy",
-                    scoreBoardTitleComponent()
-            );
+            obj = scoreBoard.registerNewObjective("side", "dummy", scoreBoardTitleComponent());
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
-
         obj.displayName(scoreBoardTitleComponent());
 
-        // 表示順のためにリスト反転（上が一番上に来るように）
+        // スコア表示用にリスト反転
         List<String> reversed = new ArrayList<>(lines);
         Collections.reverse(reversed);
 
-        // 表示用マップ（見た目 → 内部ユニーク文字列）
-        Map<String, String> currentDisplayMap = new LinkedHashMap<>();
+        // 前回のスコア位置マップ
+        Map<String, Integer> oldScoreMap = new HashMap<>();
+        for (int i = 0; i < lastDisplayLines.size(); i++) {
+            oldScoreMap.put(lastDisplayLines.get(i), i);
+        }
+
         Set<String> usedLines = new HashSet<>();
+        List<String> newDisplayLines = new ArrayList<>();
 
         for (int i = 0; i < reversed.size(); i++) {
             String line = reversed.get(i);
             if (line == null) line = "";
 
-            // 被り防止のためにユニーク化（ただし内容が同じなら前と同じものを使う）
             String displayLine = makeUniqueLine(line, usedLines);
             usedLines.add(displayLine);
-            currentDisplayMap.put(line, displayLine);
+            newDisplayLines.add(displayLine);
+
+            Integer oldScore = oldScoreMap.get(displayLine);
+            if (oldScore != null && oldScore == i) {
+                continue; // 同じスコアなら変更不要
+            }
 
             obj.getScore(displayLine).setScore(i);
         }
 
-        // 差分削除：前回にあって今回にないユニーク文字列だけ削除
+        // 差分削除：前回あって今回にない行のみ削除
         for (String oldLine : lastDisplayLines) {
-            if (!currentDisplayMap.containsValue(oldLine)) {
+            if (!newDisplayLines.contains(oldLine)) {
                 scoreBoard.resetScores(oldLine);
             }
         }
 
-        // 更新
-        lastDisplayLines = new ArrayList<>(currentDisplayMap.values());
+        lastDisplayLines = newDisplayLines;
 
-        // スコアボードを全プレイヤーに反映
+        // 全プレイヤーにスコアボードを適用
         Bukkit.getOnlinePlayers().forEach(p -> {
             if (p.getScoreboard() != scoreBoard) {
                 p.setScoreboard(scoreBoard);
             }
         });
     }
+
     private Component scoreBoardTitleComponent() {
         return LegacyComponentSerializer.legacySection().deserialize(scoreBoardTitle());
     }
-    
+
     private String makeUniqueLine(String base, Set<String> used) {
         String result = base;
         int index = 0;
         while (used.contains(result)) {
             result = base + ChatColor.values()[index % ChatColor.values().length];
             index++;
-            // 16文字制限を考慮するなら、切り詰めも必要かも
             if (result.length() > 40) {
                 result = result.substring(0, 40);
             }
