@@ -69,7 +69,9 @@ public class NoKnockbackListener implements Listener {
                 double damage = 20;
                 double distance = explosive.getLocation().toVector().distance(target.getLocation().toVector());
 
-                damage *= (radius - distance) / (2 * 4);
+                double falloff = (radius - distance) / (2 * 4);
+                if (falloff < 0) falloff = 0;
+                damage *= falloff;
 
                 // 障害物が間にある場合は軽減
                 Vector period = target.getLocation().toVector().subtract(explosive.getLocation().toVector()).normalize().multiply(0.1);
@@ -81,7 +83,9 @@ public class NoKnockbackListener implements Listener {
                     }
                     next.add(period);
                 }
-                damage = Math.max(1, damage * (1 - obstacle * 0.061));
+                double obstacleFactor = 1 - obstacle * 0.061;
+                if (obstacleFactor < 0) obstacleFactor = 0;
+                damage = Math.max(1, damage * obstacleFactor);
 
                 Player shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
@@ -93,8 +97,8 @@ public class NoKnockbackListener implements Listener {
                     shooter = Bukkit.getPlayerExact(shooterName);
 
                     // 自分にダメージが当たらないバグを直す
-                    if ( shooter == target ) {
-                        shooter = null;
+                    if (shooter != null && shooter.equals(target)) {
+                        continue;
                     }
                 }
 

@@ -37,6 +37,9 @@ public class OnsenListener implements Listener {
         if ( !afk || matching ) {
             return;
         }
+        if (player.hasPermission("leongunwar.afkkick.exempt")) {
+            return;
+        }
 
         Location onsen = LeonGunWar.getPlugin().getSpawnsConfig().getOnsen();
 
