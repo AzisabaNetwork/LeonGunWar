@@ -1,9 +1,9 @@
 package net.azisaba.lgw.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -208,57 +208,78 @@ public class ScoreboardDisplayer {
     }
 
     private void updateScoreboardLines(List<String> lines) {
+        if (scoreBoard == null) return;
+
         if (lines == null || lines.isEmpty()) {
             lines = List.of(ChatColor.GRAY + "スコアボード待機中...");
         }
 
+        // Objective 初期化
         Objective obj = scoreBoard.getObjective("side");
         if (obj == null) {
-            obj = scoreBoard.registerNewObjective("side", "dummy");
+            obj = scoreBoard.registerNewObjective(
+                    "side",
+                    "dummy",
+                    scoreBoardTitleComponent()
+            );
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
 
-        obj.setDisplayName(scoreBoardTitle());
+        obj.displayName(scoreBoardTitleComponent());
 
-        // 差分削除
-        for (String oldDisplay : lastDisplayLines) {
-            scoreBoard.resetScores(oldDisplay);
-        }
-
+        // 表示順のためにリスト反転（上が一番上に来るように）
         List<String> reversed = new ArrayList<>(lines);
         Collections.reverse(reversed);
 
-        List<String> newDisplayLines = new ArrayList<>();
+        // 表示用マップ（見た目 → 内部ユニーク文字列）
+        Map<String, String> currentDisplayMap = new LinkedHashMap<>();
+        Set<String> usedLines = new HashSet<>();
+
         for (int i = 0; i < reversed.size(); i++) {
             String line = reversed.get(i);
             if (line == null) line = "";
 
-            // 見た目そのまま、でも内部では別の行になる
-            String displayLine = makeUniqueLine(line, i);
+            // 被り防止のためにユニーク化（ただし内容が同じなら前と同じものを使う）
+            String displayLine = makeUniqueLine(line, usedLines);
+            usedLines.add(displayLine);
+            currentDisplayMap.put(line, displayLine);
+
             obj.getScore(displayLine).setScore(i);
-            newDisplayLines.add(displayLine);
         }
 
-        lastDisplayLines = newDisplayLines;
+        // 差分削除：前回にあって今回にないユニーク文字列だけ削除
+        for (String oldLine : lastDisplayLines) {
+            if (!currentDisplayMap.containsValue(oldLine)) {
+                scoreBoard.resetScores(oldLine);
+            }
+        }
 
-        // 全プレイヤーにスコアボード適用
+        // 更新
+        lastDisplayLines = new ArrayList<>(currentDisplayMap.values());
+
+        // スコアボードを全プレイヤーに反映
         Bukkit.getOnlinePlayers().forEach(p -> {
             if (p.getScoreboard() != scoreBoard) {
                 p.setScoreboard(scoreBoard);
             }
         });
     }
-
-    private List<String> boardLinesSafe() {
-        List<String> base = boardLines();
-        if (base == null || base.isEmpty()) {
-            return List.of(ChatColor.GRAY + "スコアボード待機中...");
-        }
-        return base;
+    private Component scoreBoardTitleComponent() {
+        return LegacyComponentSerializer.legacySection().deserialize(scoreBoardTitle());
     }
-
-    private String makeUniqueLine(String base, int index) {
-        return base + ChatColor.COLOR_CHAR + (char) ('a' + index);
+    
+    private String makeUniqueLine(String base, Set<String> used) {
+        String result = base;
+        int index = 0;
+        while (used.contains(result)) {
+            result = base + ChatColor.values()[index % ChatColor.values().length];
+            index++;
+            // 16文字制限を考慮するなら、切り詰めも必要かも
+            if (result.length() > 40) {
+                result = result.substring(0, 40);
+            }
+        }
+        return result;
     }
 
     /**
