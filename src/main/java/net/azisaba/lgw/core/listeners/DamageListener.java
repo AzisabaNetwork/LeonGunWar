@@ -78,7 +78,7 @@ public class DamageListener implements Listener {
 
         if(LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(killer)){
             BattleTeam battleTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
-            LeonGunWar.getPlugin().getManager().scheduleOrExtend(battleTeam, LeonGunWar.getPlugin(), 20L * 60);
+            LeonGunWar.getPlugin().getManager().scheduleOrExtend(battleTeam, LeonGunWar.getPlugin(), 20L * 30);
         }
 
 

@@ -75,6 +75,12 @@ public class ScoreboardDisplayer {
                 messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getTeamName(), point));
             }
 
+            if(mode == MatchMode.LEADER_DEATH_MATCH_POINT){
+                for(BattleTeam team : BattleTeam.values()){
+                    messageList.add(Chat.f("{0}&6のリーダー&a: &e{1} ", team.getTeamName(), LeonGunWar.getPlugin().getManager().getLDMLeader(team).getName()));
+                }
+            }
+
             messageList.add("");
             messageList.add(Chat.f("&7現在のマップ&a: &c{0}", mapName));
             messageList.add(Chat.f("&7現在のモード&a: &c{0}", mode.getShortModeName()));

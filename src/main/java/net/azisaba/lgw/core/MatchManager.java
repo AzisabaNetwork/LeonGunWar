@@ -734,7 +734,7 @@ public class MatchManager {
         }
 
         BukkitTask leaderSelectionTask = new LeaderSelectionTask(team)
-                .runTaskLater(LeonGunWar.getPlugin(), 1200);
+                .runTaskLater(LeonGunWar.getPlugin(), 600);
         LeonGunWar.leaderSelectionTaskMap.put(team, leaderSelectionTask);
         // シャッフル
         Collections.shuffle(plist);
@@ -834,7 +834,10 @@ public class MatchManager {
         p.removeScoreboardTag("red");
         p.removeScoreboardTag("blue");
         p.addScoreboardTag(team.getEngTeamName());
-        LeonGunWar.matchJoin.put(p.getUniqueId(), System.currentTimeMillis());
+        if(!LeonGunWar.matchJoin.containsKey(p.getUniqueId())){
+            LeonGunWar.matchJoin.put(p.getUniqueId(), System.currentTimeMillis());
+        }
+
     }
 
     /**
