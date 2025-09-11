@@ -13,9 +13,6 @@ import org.bukkit.entity.Player;
 import com.google.common.base.Strings;
 
 import net.azisaba.lgw.core.events.PlayerAssistEvent;
-import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.playersettings.PlayerSettings;
-import net.azisaba.playersettings.util.SettingsData;
 
 import lombok.NonNull;
 

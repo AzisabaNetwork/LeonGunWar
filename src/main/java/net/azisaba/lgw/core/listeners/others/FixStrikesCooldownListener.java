@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 
 import net.azisaba.lgw.core.util.StrikesCooldown;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 
 import me.rayzr522.jsonmessage.JSONMessage;
 

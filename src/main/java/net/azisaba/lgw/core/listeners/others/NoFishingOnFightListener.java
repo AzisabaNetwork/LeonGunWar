@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 
 /**
  * 試合中に釣りをできなくするListener

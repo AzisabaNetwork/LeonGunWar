@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 
 import lombok.RequiredArgsConstructor;
 

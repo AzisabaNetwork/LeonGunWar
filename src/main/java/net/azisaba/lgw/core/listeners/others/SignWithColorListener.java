@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 
 public class SignWithColorListener implements Listener {
 

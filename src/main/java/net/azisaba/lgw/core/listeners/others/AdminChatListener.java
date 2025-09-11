@@ -9,9 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import net.azisaba.lgw.core.commands.AdminChatCommand;
-import net.azisaba.lgw.core.utils.Chat;
-
-import lombok.RequiredArgsConstructor;
+import net.azisaba.lgw.core.util.Chat;
 
 /**
  * AdminChatをトグルできるようにするListener

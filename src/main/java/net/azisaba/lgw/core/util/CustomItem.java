@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.utils;
+package net.azisaba.lgw.core.util;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -11,8 +11,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-
-import net.azisaba.lgw.core.util.BattleTeam;
 
 import lombok.experimental.UtilityClass;
 

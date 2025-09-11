@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

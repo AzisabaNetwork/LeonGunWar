@@ -2,22 +2,13 @@ package net.azisaba.lgw.core.commands;
 
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.configs.MainConfig;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Args;
-import net.azisaba.lgw.core.utils.BroadcastUtils;
-import net.azisaba.lgw.core.utils.Chat;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
+import net.azisaba.lgw.core.util.Args;
+import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class SiaiTuutiCommand implements CommandExecutor {
     @Override

@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.utils;
+package net.azisaba.lgw.core.util;
 
 import java.util.Arrays;
 import java.util.List;

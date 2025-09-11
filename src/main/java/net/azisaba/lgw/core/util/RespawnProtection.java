@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.tasks.RespawnKillProtectionTask;
-import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;

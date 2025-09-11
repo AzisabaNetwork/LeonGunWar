@@ -12,8 +12,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.utils.Args;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Args;
+import net.azisaba.lgw.core.util.Chat;
 
 /**
  *

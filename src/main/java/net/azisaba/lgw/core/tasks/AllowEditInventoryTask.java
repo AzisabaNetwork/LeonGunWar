@@ -11,8 +11,8 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.lgw.core.utils.SecondOfDay;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.SecondOfDay;
 
 import lombok.RequiredArgsConstructor;
 

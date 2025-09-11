@@ -8,7 +8,6 @@ import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
-import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.ClockMachine;
 import net.azisaba.lgw.core.listeners.DamageListener;
@@ -33,7 +32,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListene
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.util.LGWExpansion;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;

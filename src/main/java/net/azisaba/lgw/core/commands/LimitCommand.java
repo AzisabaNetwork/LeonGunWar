@@ -6,9 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.azisaba.lgw.core.listeners.others.LimitActionListener;
-import net.azisaba.lgw.core.utils.Chat;
-
-import lombok.RequiredArgsConstructor;
+import net.azisaba.lgw.core.util.Chat;
 
 public class LimitCommand implements CommandExecutor {
 

@@ -16,8 +16,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
-import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.lgw.core.utils.SecondOfDay;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.SecondOfDay;
 
 public class JoinAfterSignListener implements Listener {
 

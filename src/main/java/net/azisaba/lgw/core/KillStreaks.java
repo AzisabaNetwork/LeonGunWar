@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.BroadcastUtils;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

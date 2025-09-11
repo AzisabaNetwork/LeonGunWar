@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 
 import net.ess3.api.events.AfkStatusChangeEvent;
 

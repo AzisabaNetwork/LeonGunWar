@@ -2,7 +2,6 @@ package net.azisaba.lgw.core.listeners;
 
 import java.util.*;
 
-import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.namechange.config.NameChangeInfoIO;
@@ -32,7 +31,7 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 
 public class DamageListener implements Listener {
 

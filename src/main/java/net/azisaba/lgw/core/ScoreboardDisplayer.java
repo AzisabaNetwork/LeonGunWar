@@ -16,8 +16,8 @@ import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.lgw.core.utils.SecondOfDay;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.SecondOfDay;
 
 import lombok.Data;
 

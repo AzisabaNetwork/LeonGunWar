@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.utils.Chat;
+import net.azisaba.lgw.core.util.Chat;
 
 public class UAVCommand implements CommandExecutor {
 
