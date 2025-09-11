@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import net.azisaba.kdstatusreloaded.KDStatusReloaded;
+import net.azisaba.kdstatusreloaded.playerkd.model.KDUserData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -13,10 +15,6 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 
 import lombok.RequiredArgsConstructor;
-
-import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
-import jp.azisaba.lgw.kdstatus.sql.KDUserData;
-import jp.azisaba.lgw.kdstatus.utils.TimeUnit;
 
 /**
  *
@@ -47,9 +45,9 @@ public class KDTeamDistributor implements TeamDistributor {
         }
 
         // プレイヤーの戦績取得
-        KDUserData pd = kdsPlugin.getKdDataContainer().getPlayerData(p, true);
-        int kills = pd.getKills(TimeUnit.LIFETIME);
-        int deaths = pd.getDeaths();
+        KDUserData pd = kdsPlugin.getPlayerKd().getPlayerData(p.getUniqueId());
+        int kills = pd.totalKills;
+        int deaths = pd.deaths;
 
         // デス数が0以下の場合は1に変更
         if ( deaths <= 0 ) {
@@ -60,12 +58,12 @@ public class KDTeamDistributor implements TeamDistributor {
         double kd = (double) kills / (double) deaths;
 
         // 累計キル数が1000未満の人は除外
-        if ( pd.getKills(TimeUnit.LIFETIME) < 1000 ) {
+        if ( pd.totalKills < 1000 ) {
             return false;
         }
 
         // 月のキル数が3000以上 or KD1.2以上ならtrue それ以外ならfalse
-        return kd >= 1.2 || pd.getKills(TimeUnit.MONTHLY) >= 3000;
+        return kd >= 1.2 || pd.monthlyKills >= 3000;
     }
 
     /**
@@ -86,9 +84,9 @@ public class KDTeamDistributor implements TeamDistributor {
 
         int pl;
         // プレイヤーの戦績取得
-        KDUserData pd = kdsPlugin.getKdDataContainer().getPlayerData(p, true);
-        int kills = pd.getKills(TimeUnit.LIFETIME);
-        int deaths = pd.getDeaths();
+        KDUserData pd = kdsPlugin.getPlayerKd().getPlayerData(p.getUniqueId());
+        int kills = pd.totalKills;
+        int deaths = pd.deaths;
 
         // デス数が0以下の場合は1に変更
         if ( deaths <= 0 ) {
@@ -97,13 +95,13 @@ public class KDTeamDistributor implements TeamDistributor {
 
         // KD計算
         double kd = (double) kills / (double) deaths;
-        if ( pd.getKills(TimeUnit.LIFETIME) < 100 ) {
+        if ( pd.totalKills < 100 ) {
             kd = 0.8;
         }
         // 代入
         pl = (int) (kd * 1000);
         // 今月のキル数を代入
-        pl += pd.getKills(TimeUnit.MONTHLY) / 10;
+        pl += pd.totalKills / 10;
         return pl;
     }
 

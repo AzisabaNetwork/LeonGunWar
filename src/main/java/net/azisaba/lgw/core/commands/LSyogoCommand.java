@@ -2,7 +2,6 @@ package net.azisaba.lgw.core.commands;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
-import jp.azisaba.lgw.kdstatus.KDStatusReloaded;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.utils.Chat;
@@ -10,10 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
