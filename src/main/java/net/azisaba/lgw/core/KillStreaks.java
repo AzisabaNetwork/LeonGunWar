@@ -77,25 +77,27 @@ public class KillStreaks {
             .forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
     }
 
-    public void add(Player killer, Player deader) {
+    public void add(Player player) {
         // カウントを追加
-        int streaks = get(killer).incrementAndGet();
+        int streaks = get(player).incrementAndGet();
 
         // 報酬を付与
         if(LeonGunWar.doubleRewardEnable){
-            giveRewards(streaks, killer);
+            giveRewards(streaks, player);
         }
-
+        giveRewards(streaks, player);
 
         if (LeonGunWar.getPlugin().getManager().getMatchMode()
             == MatchMode.LEADER_DEATH_MATCH_POINT) {
-            if (LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(killer)) {
-                killer.sendMessage(
-                        Chat.f("{0}&7あなたはリーダーなので &e3倍 &7の報酬を受け取りました！", LeonGunWar.GAME_PREFIX));
-                giveRewards(streaks, killer);
-                giveRewards(streaks, killer);
-                giveRewards(streaks, killer);
-
+            if (LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(player)) {
+                if(LeonGunWar.doubleRewardEnable){
+                    player.sendMessage(
+                            Chat.f("{0}&7あなたはリーダーなので &e2倍 &7の報酬を受け取りました!(報酬ブーストは適用されていません)", LeonGunWar.GAME_PREFIX));
+                }else {
+                    player.sendMessage(
+                            Chat.f("{0}&7あなたはリーダーなので &e2倍 &7の報酬を受け取りました！", LeonGunWar.GAME_PREFIX));
+                    giveRewards(streaks, player);
+                }
             }
         }
 
@@ -105,7 +107,7 @@ public class KillStreaks {
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, killer.getPlayerListName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getTimeConditionedStreaks().entrySet()
             .stream()
@@ -116,14 +118,14 @@ public class KillStreaks {
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, killer.getPlayerListName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getLevels().entrySet().stream()
             .filter(entry -> streaks % entry.getKey() == 0)
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, killer.getPlayerListName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
         LeonGunWar.getPlugin().getKillStreaksConfig().getTimeConditionedLevels().entrySet().stream()
             .filter(entry -> entry.getKey().isDuring())
@@ -133,7 +135,7 @@ public class KillStreaks {
             .map(Map.Entry::getValue)
             .map(Map.Entry::getKey)
             .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, killer.getPlayerListName()))
+            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
             .forEach(BroadcastUtils::broadcast);
     }
 }

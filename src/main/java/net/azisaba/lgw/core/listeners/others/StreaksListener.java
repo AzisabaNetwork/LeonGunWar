@@ -33,7 +33,7 @@ public class StreaksListener implements Listener {
         }
 
         // カウントを追加
-        LeonGunWar.getPlugin().getKillStreaks().add(killer,deader);
+        LeonGunWar.getPlugin().getKillStreaks().add(killer);
     }
 
     @EventHandler
