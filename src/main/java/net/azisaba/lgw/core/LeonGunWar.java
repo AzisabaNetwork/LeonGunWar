@@ -2,13 +2,10 @@ package net.azisaba.lgw.core;
 
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
-import net.azisaba.lgw.core.commands.AdminChatCommand;
-import net.azisaba.lgw.core.commands.KIAICommand;
 import net.azisaba.lgw.core.commands.LSyogoCommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.LimitCommand;
 import net.azisaba.lgw.core.commands.MapVoteCommand;
-import net.azisaba.lgw.core.commands.ResourcePackCommand;
 import net.azisaba.lgw.core.commands.SiaiTuutiCommand;
 import net.azisaba.lgw.core.commands.SpawnCommand;
 import net.azisaba.lgw.core.commands.ToggleDoubleReward;
@@ -30,7 +27,6 @@ import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
 import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
 import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
-import net.azisaba.lgw.core.listeners.others.AdminChatListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
@@ -58,7 +54,6 @@ import net.azisaba.lgw.core.listeners.others.RemoveKillStreakScoreListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
 import net.azisaba.lgw.core.listeners.others.StreaksListener;
-import net.azisaba.lgw.core.listeners.others.TradeBoardListener;
 import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
@@ -115,7 +110,6 @@ public class LeonGunWar extends JavaPlugin {
     private final MatchManager manager = new MatchManager();
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
-    private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
     private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
@@ -181,7 +175,6 @@ public class LeonGunWar extends JavaPlugin {
 
         // 初期化が必要なファイルを初期化する
         manager.initialize();
-        tradeBoardManager.init();
         plLogger.info("ファイルの準備が完了しました。");
 ;
         sqlConnection = new SQLConnection(databaseConfig);
@@ -193,9 +186,6 @@ public class LeonGunWar extends JavaPlugin {
         registerCommand("leongunwaradmin", new LgwAdminCommand());
         registerCommand("uav", new UAVCommand());
         //registerCommand("match", new MatchCommand());
-        registerCommand("kiai", new KIAICommand());
-        registerCommand("resourcepack", new ResourcePackCommand());
-        registerCommand("adminchat", new AdminChatCommand());
         registerCommand("limit", new LimitCommand(preventItemDropListener));
         registerCommand("mapvote", new MapVoteCommand());
         registerCommand("lsyogo", new LSyogoCommand());
@@ -246,7 +236,6 @@ public class LeonGunWar extends JavaPlugin {
                 new StreaksListener(),
                 new DisableRecipeListener(),
                 new CrackShotLimitListener(),
-                new TradeBoardListener(),
                 new DisableTNTBlockDamageListener(),
                 new SignWithColorListener(),
                 new DisableChangeItemListener(),
@@ -257,7 +246,7 @@ public class LeonGunWar extends JavaPlugin {
             registerEvents(new LobbyListener());
             plLogger.info("ロビー用のリスナーを登録しました。");
         }
-        registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()),
+        registerEvents(
                 new CrackShotLagFixListener(),
                 preventItemDropListener,
                 new DisableHopperPickupListener(),
@@ -321,9 +310,6 @@ public class LeonGunWar extends JavaPlugin {
 
         this.sqlConnection.onDisable();
 
-        // 武器交換掲示板の看板を保存
-        tradeBoardManager.saveAll();
-
         plLogger.info(Chat.f("{0} が無効化されました。", getName()));
     }
 
@@ -367,9 +353,6 @@ public class LeonGunWar extends JavaPlugin {
         return killStreaksConfig;
     }
 
-    public TradeBoardManager getTradeBoardManager() {
-        return tradeBoardManager;
-    }
 
     public ScoreboardDisplayer getScoreboardDisplayer() {
         return scoreboardDisplayer;
