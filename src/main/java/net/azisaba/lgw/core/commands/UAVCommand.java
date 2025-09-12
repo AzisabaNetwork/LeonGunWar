@@ -4,6 +4,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,12 +12,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class UAVCommand implements CommandExecutor {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private final double uavRadius = 60d;
     private final double uavSeconds = 2d;
@@ -61,7 +64,7 @@ public class UAVCommand implements CommandExecutor {
 
         // プレイヤーがチームに所属していない場合はメッセージを表示
         if (!allPlayers.contains(shooter)) {
-            LeonGunWar.getPlugin().getLogger().warning(shooter.getName() + " はどのチームにも所属していません。");
+            logger.warn("{} はどのチームにも所属していません。", shooter.getName());
             shooter.sendMessage(Chat.f("&cあなたはどのチームにも所属していません。"));
             return true;
         }
@@ -93,8 +96,7 @@ public class UAVCommand implements CommandExecutor {
                 int amp = 1;
 
                 // ログを出力
-                LeonGunWar.getPlugin().getLogger()
-                        .info(target.getName() + "にGLOWINGを付与 (time=" + l + "ticks, level=" + amp + ")");
+                logger.info("{}にGLOWINGを付与 (time={}ticks, level={})", target.getName(), l, amp);
 
                 // 発行を付与
                 target.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, l, amp, false, false));
@@ -102,7 +104,7 @@ public class UAVCommand implements CommandExecutor {
         }
 
         // 完了ログを出力
-        LeonGunWar.getPlugin().getLogger().info("正常に " + shooter.getName() + " のUAVを実行しました。");
+        logger.info("正常に {} のUAVを実行しました。", shooter.getName());
         return true;
     }
 }

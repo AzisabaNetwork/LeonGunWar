@@ -5,14 +5,17 @@ import com.google.common.io.ByteStreams;
 import lombok.RequiredArgsConstructor;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.slf4j.Logger;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
 public class AfkKickMonitoringTask extends BukkitRunnable {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private final Map<Player, Long> lastMoved;
 
@@ -55,7 +58,7 @@ public class AfkKickMonitoringTask extends BukkitRunnable {
 
             p.sendMessage(Chat.f("{0}&7放置と判定されたため試合から退出しました", LeonGunWar.GAME_PREFIX));
 
-            LeonGunWar.getPlugin().getLogger().info(Chat.f("{0} を試合から退出させました", p.getName()));
+            logger.info(Chat.f("{0} を試合から退出させました", p.getName()));
         });
     }
 }

@@ -97,8 +97,7 @@ import java.util.UUID;
 
 @Getter
 public class LeonGunWar extends JavaPlugin {
-
-    private final Logger logger = LgwLog.getLogger(this.getClass());
+    private final Logger plLogger = LgwLog.getLogger(this.getClass());
     public static final String PL_ID = "leongunwar";
     public static final String GAME_PREFIX = Chat.f("&7[&6PvP&7]&r ");
     public static final String SIGN_ACTIVE = Chat.f("&a[ACTIVE]");
@@ -108,9 +107,7 @@ public class LeonGunWar extends JavaPlugin {
     public static Map<UUID, Long> matchJoin = new HashMap<>();
     public static Map<BattleTeam, BukkitTask> leaderSelectionTaskMap = new HashMap<>();
     // plugin
-    @Getter
     private static LeonGunWar plugin;
-    @Getter
     private static JSONMessage quickBar;
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
@@ -179,13 +176,13 @@ public class LeonGunWar extends JavaPlugin {
             weaponControlConfig.loadConfig();
             itemsConfig.loadConfig();
         } catch (IOException | InvalidConfigurationException exception) {
-            logger.error("Failed to load config", exception);
+            plLogger.error("Failed to load config", exception);
         }
 
         // 初期化が必要なファイルを初期化する
         manager.initialize();
         tradeBoardManager.init();
-        logger.info("ファイルの準備が完了しました。");
+        plLogger.info("ファイルの準備が完了しました。");
 ;
         sqlConnection = new SQLConnection(databaseConfig);
 
@@ -205,7 +202,7 @@ public class LeonGunWar extends JavaPlugin {
         registerCommand("spawn", new SpawnCommand());
         registerCommand("noticewar", new SiaiTuutiCommand());
         registerCommand("toggledoublereward", new ToggleDoubleReward());
-        logger.info("コマンドの登録完了しました。");
+        plLogger.info("コマンドの登録完了しました。");
 
         // タブ補完の登録
         //registerCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
@@ -258,7 +255,7 @@ public class LeonGunWar extends JavaPlugin {
         if (this.mainConfig.isLobby) {
             registerEvents(new OnsenListener());
             registerEvents(new LobbyListener());
-            logger.info("ロビー用のリスナーを登録しました。");
+            plLogger.info("ロビー用のリスナーを登録しました。");
         }
         registerEvents(new AdminChatListener((AdminChatCommand) Bukkit.getPluginCommand("adminchat").getExecutor()),
                 new CrackShotLagFixListener(),
@@ -287,7 +284,7 @@ public class LeonGunWar extends JavaPlugin {
             new ClockMachine().doubleRewardTaskStarter();
         }
 
-        logger.info("{} が有効化されました。", getName());
+        plLogger.info("{} が有効化されました。", getName());
     }
 
     public void registerEvents(Listener... listeners) {
@@ -307,7 +304,7 @@ public class LeonGunWar extends JavaPlugin {
     public PluginCommand registerCommand(String commandName, @Nullable CommandExecutor commandExecutor) {
         PluginCommand cmd = Bukkit.getPluginCommand(commandName);
         if(cmd == null) {
-            logger.warn("Failed to get command instance of {}", commandName);
+            plLogger.warn("Failed to get command instance of {}", commandName);
             return null;
         }
 
@@ -327,7 +324,7 @@ public class LeonGunWar extends JavaPlugin {
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();
 
-        logger.info(Chat.f("{0} が無効化されました。", getName()));
+        plLogger.info(Chat.f("{0} が無効化されました。", getName()));
     }
 
     public MatchManager getManager() {

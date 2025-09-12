@@ -8,6 +8,7 @@ import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.LgwLog;
 import net.azisaba.lgw.core.util.MatchMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,6 +27,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 
@@ -36,6 +38,7 @@ import java.util.Arrays;
  * @author Mr_IK Thanks: siloneco
  */
 public class CustomMatchSignListener implements Listener {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private final ItemStack no_limit, matchpoint, main_limit, sub_limit, granade_limit, defaultItem, kdItem;
 
@@ -197,7 +200,7 @@ public class CustomMatchSignListener implements Listener {
 
         MatchMode mode = MatchMode.getFromString("cdm");
         if (mode == null) {
-            Bukkit.getLogger().info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
+            logger.info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
             return;
         }
 

@@ -7,10 +7,12 @@ import lombok.SneakyThrows;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.Set;
 
 @Getter
 public class MapsConfig extends Config {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private List<GameMap> allGameMap;
 
@@ -63,9 +66,9 @@ public class MapsConfig extends Config {
             GameMap gameMap = new GameMap(mapName, world, spawnMap);
             allGameMap.add(gameMap);
 
-            plugin.getLogger().info("マップ " + mapName + " をロードしました。");
+            logger.info("マップ {} をロードしました。", mapName);
         }
-        plugin.getLogger().info(allGameMap.size() + " 個のマップをロードしました。");
+        logger.info("{} 個のマップをロードしました。", allGameMap.size());
     }
 
     /**

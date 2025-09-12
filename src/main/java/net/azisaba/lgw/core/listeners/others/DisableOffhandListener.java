@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import com.shampaggon.crackshot.CSUtility;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,9 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.slf4j.Logger;
 
 // オフハンドを無効化するリスナー
 public class DisableOffhandListener implements Listener {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     // Fキーでのオフハンド切り替えを無効化
     //@EventHandler(priority = EventPriority.LOWEST)
@@ -39,9 +42,9 @@ public class DisableOffhandListener implements Listener {
             //p.getWorld().dropItem(p.getLocation(), offhand);
             String weaponTitle = new CSUtility().getWeaponTitle(offhand);
             if (weaponTitle == null) {
-                Bukkit.getLogger().info("[LeonGunWar] " + p.getName() + " がオフハンドの " + offhand.getType().name() + " をドロップしようとしました");
+                logger.info("[LeonGunWar] " + p.getName() + " がオフハンドの " + offhand.getType().name() + " をドロップしようとしました");
             } else {
-                Bukkit.getLogger().info("[LeonGunWar] " + p.getName() + " がオフハンドの " + weaponTitle + " をドロップしようとしました");
+                logger.info("[LeonGunWar] " + p.getName() + " がオフハンドの " + weaponTitle + " をドロップしようとしました");
             }
         }
 

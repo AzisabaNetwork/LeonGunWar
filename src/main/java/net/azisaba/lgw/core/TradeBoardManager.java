@@ -43,7 +43,7 @@ public class TradeBoardManager {
                 .filter(file -> file.isFile() && (file.getName().endsWith(".yml") || file.getName().endsWith(".yaml")))
                 .forEach(this::loadSignLocationFromFile);
 
-        LeonGunWar.getPlugin().getLogger().info(signs.size() + " 個の看板をロードしました。");
+        logger.info("{} 個の看板をロードしました。", signs.size());
     }
 
     private void loadSignLocationFromFile(File file) {
@@ -53,7 +53,7 @@ public class TradeBoardManager {
 
         // ロードできなかった場合はログを出してreturn
         if (loc == null) {
-            Bukkit.getLogger().warning("Error trying parsing location \"" + file.getName() + "\"");
+            logger.warn("Error trying parsing location \"{}\"", file.getName());
             return;
         }
 
@@ -82,10 +82,10 @@ public class TradeBoardManager {
             signs.put(loc, data);
 
             // ログを出力
-            LeonGunWar.getPlugin().getLogger().fine(locStr + " の看板をロードしました。");
+            logger.info("{} の看板をロードしました。", locStr);
         } else {
             // 失敗したログを出力
-            LeonGunWar.getPlugin().getLogger().warning(locStr + " の看板はロードされませんでした。");
+            logger.warn("{} の看板はロードされませんでした。", locStr);
         }
     }
 

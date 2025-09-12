@@ -1,13 +1,16 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;
+import org.slf4j.Logger;
 
 public class EnableKeepInventoryListener implements Listener {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     public EnableKeepInventoryListener() {
         // load: STARTUP
@@ -25,7 +28,7 @@ public class EnableKeepInventoryListener implements Listener {
         world.setGameRuleValue("keepInventory", "true");
 
         // コンソールに有効化したよと表示
-        LeonGunWar.getPlugin().getLogger().info(world.getName() + " ワールドの keepInventory を true に設定したよ(´・ω・`)");
+        logger.info(world.getName() + " ワールドの keepInventory を true に設定したよ(´・ω・`)");
     }
 
     @EventHandler

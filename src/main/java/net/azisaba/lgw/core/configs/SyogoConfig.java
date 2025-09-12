@@ -2,12 +2,15 @@ package net.azisaba.lgw.core.configs;
 
 import lombok.SneakyThrows;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 public class SyogoConfig extends Config {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     public final HashMap<String, String> syogos = new HashMap<>();
 
@@ -22,7 +25,7 @@ public class SyogoConfig extends Config {
         for (String syogo : config.getValues(false).keySet()) {
             syogos.put(syogo, config.getString(syogo));
         }
-        LeonGunWar.getPlugin().getLogger().info("称号を " + syogos.size() + " 個読み込みました");
+        logger.info("称号を " + syogos.size() + " 個読み込みました");
     }
 
     public void add(String syogo, String display) {

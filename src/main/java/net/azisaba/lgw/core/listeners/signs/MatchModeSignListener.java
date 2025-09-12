@@ -9,6 +9,7 @@ import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.LgwLog;
 import net.azisaba.lgw.core.util.MatchMode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,6 +27,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +41,7 @@ import java.util.Set;
  * @author siloneco
  */
 public class MatchModeSignListener implements Listener {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private final ItemStack defaultItem, kdItem;
 
@@ -184,7 +187,7 @@ public class MatchModeSignListener implements Listener {
 
         MatchMode mode = MatchMode.getFromString(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
         if (mode == null) {
-            Bukkit.getLogger().info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
+            logger.info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
             return;
         }
 
