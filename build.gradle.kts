@@ -43,6 +43,12 @@ dependencies {
 
     implementation(libs.jsonMessage)
     implementation(libs.slimeworldmanagerApi)
+
+    // check
+    implementation(libs.jspecify)
+    testImplementation(platform(libs.junitBom))
+    testImplementation(libs.junitJupiter)
+    testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
 java {
