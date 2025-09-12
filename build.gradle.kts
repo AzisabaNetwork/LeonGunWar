@@ -45,9 +45,6 @@ dependencies {
     implementation(libs.slimeworldmanagerApi)
 }
 
-version = "3.4.2"
-java.sourceCompatibility = JavaVersion.VERSION_17
-
 java {
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
