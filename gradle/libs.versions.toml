@@ -6,6 +6,7 @@
 shadow = "9.1.0"
 runPaper = "3.0.0"
 lombok = "8.14.2"
+download = "5.6.0"
 
 # library
 paperApi = "1.16.5-R0.1-SNAPSHOT"
@@ -31,6 +32,7 @@ junit = "5.13.4"
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
+download = { id = "de.undercouch.download", version.ref = "download" }
 
 [libraries]
 # system
