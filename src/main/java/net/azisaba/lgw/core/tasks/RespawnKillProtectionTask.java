@@ -1,9 +1,8 @@
 package net.azisaba.lgw.core.tasks;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -11,10 +10,9 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.SecondOfDay;
-
-import lombok.RequiredArgsConstructor;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class RespawnKillProtectionTask extends BukkitRunnable {
@@ -41,7 +39,7 @@ public class RespawnKillProtectionTask extends BukkitRunnable {
         long remain = Duration.between(Instant.now(), remainTimes.get(p)).plusSeconds(1).getSeconds();
 
         // 0以下ならキャンセルしてreturn
-        if ( remain <= 0 ) {
+        if (remain <= 0) {
             bossBar.removePlayer(p);
             cancel();
             return;

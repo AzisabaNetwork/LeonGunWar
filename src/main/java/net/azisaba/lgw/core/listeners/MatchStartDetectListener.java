@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.util.List;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
@@ -10,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.List;
+
 public class MatchStartDetectListener implements Listener {
 
     /**
@@ -18,7 +19,7 @@ public class MatchStartDetectListener implements Listener {
     @EventHandler
     public void matchStarter(PlayerEntryMatchEvent e) {
         // すでに試合中ならreturn
-        if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (LeonGunWar.getPlugin().getManager().isMatching()) {
             return;
         }
 
@@ -26,17 +27,17 @@ public class MatchStartDetectListener implements Listener {
         List<Player> entryPlayers = LeonGunWar.getPlugin().getManager().getEntryPlayers();
 
         // 人数が2人未満ならreturn
-        if ( entryPlayers.size() < 2 ) {
+        if (entryPlayers.size() < 2) {
             return;
         }
 
         // モードがnullの場合return
-        if ( LeonGunWar.getPlugin().getManager().getMatchMode() == null ) {
+        if (LeonGunWar.getPlugin().getManager().getMatchMode() == null) {
             return;
         }
 
         // カウントダウンが始まっていない場合はカウントダウン開始
-        if ( !LeonGunWar.getPlugin().getMatchStartCountdown().isRunning() ) {
+        if (!LeonGunWar.getPlugin().getMatchStartCountdown().isRunning()) {
             LeonGunWar.getPlugin().getMatchStartCountdown().startCountdown();
         }
     }
@@ -47,7 +48,7 @@ public class MatchStartDetectListener implements Listener {
     @EventHandler
     public void matchStarter(PlayerLeaveEntryMatchEvent e) {
         // すでに試合中ならreturn
-        if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (LeonGunWar.getPlugin().getManager().isMatching()) {
             return;
         }
 
@@ -55,16 +56,16 @@ public class MatchStartDetectListener implements Listener {
         List<Player> entryPlayers = LeonGunWar.getPlugin().getManager().getEntryPlayers();
 
         // 人数が2人以上ならreturn
-        if ( entryPlayers.size() >= 2 ) {
+        if (entryPlayers.size() >= 2) {
             return;
         }
 
         // カウントダウン中ならカウントダウン停止
-        if ( LeonGunWar.getPlugin().getMatchStartCountdown().isRunning() ) {
+        if (LeonGunWar.getPlugin().getMatchStartCountdown().isRunning()) {
             LeonGunWar.getPlugin().getMatchStartCountdown().stopCountdown();
             // メッセージを表示
             BroadcastUtils.broadcast(
-                Chat.f("{0}&7人数が足りないため試合を開始できません！", LeonGunWar.GAME_PREFIX));
+                    Chat.f("{0}&7人数が足りないため試合を開始できません！", LeonGunWar.GAME_PREFIX));
         }
     }
 }

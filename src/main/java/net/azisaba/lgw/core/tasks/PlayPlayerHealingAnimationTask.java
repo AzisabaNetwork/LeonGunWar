@@ -1,11 +1,10 @@
 package net.azisaba.lgw.core.tasks;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PlayPlayerHealingAnimationTask extends BukkitRunnable {

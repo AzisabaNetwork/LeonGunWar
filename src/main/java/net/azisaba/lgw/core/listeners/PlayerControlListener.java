@@ -1,8 +1,9 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.util.List;
-import java.util.Map;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
+import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.SyogoData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,10 +14,8 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.util.BattleTeam;
+import java.util.List;
+import java.util.Map;
 
 public class PlayerControlListener implements Listener {
 
@@ -30,7 +29,7 @@ public class PlayerControlListener implements Listener {
 
         MatchManager manager = LeonGunWar.getPlugin().getManager();
         // プレイヤーが試合中でなければreturn
-        if ( !manager.isPlayerMatching(p) ) {
+        if (!manager.isPlayerMatching(p)) {
             return;
         }
 
@@ -47,13 +46,13 @@ public class PlayerControlListener implements Listener {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
         // LDMではなかった場合return
-        if ( !manager.isLeaderMatch() ) {
+        if (!manager.isLeaderMatch()) {
             return;
         }
 
         // どれかのチームの人数が0人の場合はキャンセル (他のListenerが対応するため)
-        if ( manager.getTeamPlayers().values().stream()
-                .anyMatch(List::isEmpty) ) {
+        if (manager.getTeamPlayers().values().stream()
+                .anyMatch(List::isEmpty)) {
             return;
         }
 
@@ -68,7 +67,7 @@ public class PlayerControlListener implements Listener {
                 .orElse(null);
 
         // プレイヤーがリーダーだった場合、リーダーの再抽選を行う
-        if ( team != null ) {
+        if (team != null) {
             manager.setLeaderAtRandom(team);
         }
     }
@@ -86,17 +85,17 @@ public class PlayerControlListener implements Listener {
         Player p = e.getPlayer();
 
         // 試合中ではなかったらreturn
-        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (!LeonGunWar.getPlugin().getManager().isMatching()) {
             return;
         }
 
         // プレイヤーが試合をしていなかったらreturn
-        if ( !LeonGunWar.getPlugin().getManager().getAllTeamPlayers().contains(p) ) {
+        if (!LeonGunWar.getPlugin().getManager().getAllTeamPlayers().contains(p)) {
             return;
         }
 
         // Fromが試合のワールドではなかったらreturn
-        if ( e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld() ) {
+        if (e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
             return;
         }
 
@@ -115,10 +114,10 @@ public class PlayerControlListener implements Listener {
                 SyogoData.getSyogoData(e.getPlayer().getUniqueId());
             }
         });
-      
+
         //LeonGunWar.getQuickBar().send(e.getPlayer());
-        if(!LeonGunWar.getPlugin().getMainConfig().isLobby){
-            if(LeonGunWar.getPlugin().getManager().isMatching()){
+        if (!LeonGunWar.getPlugin().getMainConfig().isLobby) {
+            if (LeonGunWar.getPlugin().getManager().isMatching()) {
                 Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
                     @Override
                     public void run() {
@@ -126,7 +125,7 @@ public class PlayerControlListener implements Listener {
                     }
                 }, 5L);
 
-            }else {
+            } else {
                 LeonGunWar.getPlugin().getManager().addEntryPlayer(e.getPlayer());
             }
 

@@ -1,17 +1,15 @@
 package net.azisaba.lgw.core.tasks;
 
-import java.util.Map;
-
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import lombok.RequiredArgsConstructor;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class AfkKickMonitoringTask extends BukkitRunnable {
@@ -25,12 +23,12 @@ public class AfkKickMonitoringTask extends BukkitRunnable {
             boolean entrying = LeonGunWar.getPlugin().getManager().isEntryPlayer(p);
 
             // 試合もエントリーもしていないプレイヤーならreturn
-            if ( !matching && !entrying ) {
+            if (!matching && !entrying) {
                 return;
             }
 
             // 試合はしていないがエントリーはしているプレイヤーもreturn
-            if ( !matching ) {
+            if (!matching) {
                 return;
             }
 
@@ -38,13 +36,13 @@ public class AfkKickMonitoringTask extends BukkitRunnable {
             long lastMovedMilliSecond = lastMoved.getOrDefault(p, 0L);
 
             // 30秒より少なければreturn
-            if ( lastMovedMilliSecond + 1000 * 60 > System.currentTimeMillis() ) {
+            if (lastMovedMilliSecond + 1000 * 60 > System.currentTimeMillis()) {
                 return;
             }
 
             // 権限を持っていればreturn
             //if ( p.hasPermission("leongunwar.afkkick.exempt") ) {
-             //   return;
+            //   return;
             //}
 
             // 試合から退出 & エントリー解除

@@ -5,10 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -29,20 +27,20 @@ public class DisableOffhandListener implements Listener {
         ItemStack offhand = inventory.getItemInOffHand();
 
         // オフハンドにアイテムがない場合はreturn
-        if ( offhand == null || offhand.getType() == Material.AIR ) {
+        if (offhand == null || offhand.getType() == Material.AIR) {
             return;
         }
 
-        if ( inventory.firstEmpty() != -1 ) {
+        if (inventory.firstEmpty() != -1) {
             // インベントリーに空きがある場合はアイテムを追加
             inventory.addItem(offhand);
         } else {
             // インベントリーに空きがない場合はドロップ
             //p.getWorld().dropItem(p.getLocation(), offhand);
             String weaponTitle = new CSUtility().getWeaponTitle(offhand);
-            if(weaponTitle == null){
+            if (weaponTitle == null) {
                 Bukkit.getLogger().info("[LeonGunWar] " + p.getName() + " がオフハンドの " + offhand.getType().name() + " をドロップしようとしました");
-            }else {
+            } else {
                 Bukkit.getLogger().info("[LeonGunWar] " + p.getName() + " がオフハンドの " + weaponTitle + " をドロップしようとしました");
             }
         }

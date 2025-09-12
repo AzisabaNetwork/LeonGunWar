@@ -12,26 +12,27 @@ import java.util.concurrent.TimeUnit;
 
 public class ClockMachine {
 
-    public void doubleRewardTaskStarter(){
-        scheduleDailyTask(24, 0, this::doubleRewardEndTask);
-        scheduleDailyTask(18, 0, this::doubleRewardStartTask);
-    }
-
-    private void doubleRewardStartTask(){
-        Bukkit.getServer().broadcast(Component.text("-+----時限報酬ブースト開始！----+-").color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD));
-        LeonGunWar.doubleRewardEnable = true;
-    }
-    private void doubleRewardEndTask(){
-        Bukkit.getServer().broadcast(Component.text("-+----時限報酬ブースト終了...----+-").color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD));
-        LeonGunWar.doubleRewardEnable = false;
-    }
-
     public static boolean isWithinRewardTime() {
         LocalTime now = LocalTime.now(); // 現在時刻（システム時刻）
         LocalTime start = LocalTime.of(18, 0); // 14:00
         LocalTime end = LocalTime.of(23, 59);   // 18:00
 
         return !now.isBefore(start) && !now.isAfter(end);
+    }
+
+    public void doubleRewardTaskStarter() {
+        scheduleDailyTask(24, 0, this::doubleRewardEndTask);
+        scheduleDailyTask(18, 0, this::doubleRewardStartTask);
+    }
+
+    private void doubleRewardStartTask() {
+        Bukkit.getServer().broadcast(Component.text("-+----時限報酬ブースト開始！----+-").color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD));
+        LeonGunWar.doubleRewardEnable = true;
+    }
+
+    private void doubleRewardEndTask() {
+        Bukkit.getServer().broadcast(Component.text("-+----時限報酬ブースト終了...----+-").color(NamedTextColor.AQUA).decorate(TextDecoration.BOLD));
+        LeonGunWar.doubleRewardEnable = false;
     }
 
     //1日の指定された時間、分に送られてきたタスクを実行

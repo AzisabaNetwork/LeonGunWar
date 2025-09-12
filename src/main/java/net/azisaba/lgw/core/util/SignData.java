@@ -1,10 +1,9 @@
 package net.azisaba.lgw.core.util;
 
-import java.util.UUID;
-
+import lombok.Data;
 import org.bukkit.Location;
 
-import lombok.Data;
+import java.util.UUID;
 
 @Data
 public class SignData {

@@ -12,10 +12,10 @@ public class ToggleDoubleReward implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         LeonGunWar.doubleRewardEnable = !LeonGunWar.doubleRewardEnable;
-        if(LeonGunWar.doubleRewardEnable){
+        if (LeonGunWar.doubleRewardEnable) {
             new ClockMachine().doubleRewardTaskStarter();
-        }else {
-            for(BukkitTask task : LeonGunWar.timeTaskList){
+        } else {
+            for (BukkitTask task : LeonGunWar.timeTaskList) {
                 task.cancel();
             }
             LeonGunWar.timeTaskList.clear();

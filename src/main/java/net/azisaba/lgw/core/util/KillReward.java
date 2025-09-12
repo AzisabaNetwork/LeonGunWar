@@ -1,11 +1,10 @@
 package net.azisaba.lgw.core.util;
 
-import java.util.List;
-import java.util.function.Function;
-
+import lombok.Data;
 import org.bukkit.entity.Player;
 
-import lombok.Data;
+import java.util.List;
+import java.util.function.Function;
 
 @Data
 public class KillReward {

@@ -18,13 +18,13 @@ public class PlayerDeathListener implements Listener {
 
     //試合外でデスメッセージが変わるように
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerDeath (PlayerDeathEvent e) {
-        if(e.getEntity().getPlayer() != null ){
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        if (e.getEntity().getPlayer() != null) {
             // 試合中の場合はreturn
-            if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+            if (LeonGunWar.getPlugin().getManager().isMatching()) {
                 return;
             }
-            if(e.getEntity().getPlayer().getKiller()==null){
+            if (e.getEntity().getPlayer().getKiller() == null) {
                 return;
             }
             Player p = e.getEntity().getPlayer();
@@ -32,9 +32,9 @@ public class PlayerDeathListener implements Listener {
             String msg;
             ItemStack item = p.getKiller().getInventory().getItemInMainHand();
             String itemName;
-            if ( item == null || item.getType() == Material.AIR ) { // null または Air なら素手
+            if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
                 itemName = Chat.f("&6素手");
-            } else if ( item.hasItemMeta() && item.getItemMeta().hasDisplayName() ) { // DisplayNameが指定されている場合
+            } else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
                 // CrackShot Pluginを取得
                 CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
@@ -44,7 +44,7 @@ public class PlayerDeathListener implements Listener {
                 itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 
                 // DisplayNameがnullの場合は普通にアイテム名を取得
-                if ( itemName == null ) {
+                if (itemName == null) {
                     itemName = item.getItemMeta().getDisplayName();
                 }
             } else { // それ以外

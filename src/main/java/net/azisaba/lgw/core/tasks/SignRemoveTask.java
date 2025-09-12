@@ -1,16 +1,14 @@
 package net.azisaba.lgw.core.tasks;
 
+import net.azisaba.lgw.core.LeonGunWar;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import net.azisaba.lgw.core.LeonGunWar;
 
 /**
  * 定期的に期限切れの看板を探し、あった場合は削除するタスク
  *
  * @author siloneco
- *
  */
 public class SignRemoveTask extends BukkitRunnable {
 
@@ -25,7 +23,7 @@ public class SignRemoveTask extends BukkitRunnable {
                     // 座標からブロックを取得
                     Block b = data.getLocation().getBlock();
                     // 壁の看板か床に置いてある看板ならAIRに変更する
-                    if ( b.getType() == Material.OAK_WALL_SIGN || b.getType() == Material.OAK_SIGN ) {
+                    if (b.getType() == Material.OAK_WALL_SIGN || b.getType() == Material.OAK_SIGN) {
                         b.setType(Material.AIR);
                     }
 

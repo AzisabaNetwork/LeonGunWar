@@ -1,11 +1,10 @@
 package net.azisaba.lgw.core;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-
+import net.azisaba.lgw.core.tasks.MatchStartCountdownTask;
 import org.bukkit.scheduler.BukkitTask;
 
-import net.azisaba.lgw.core.tasks.MatchStartCountdownTask;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MatchStartCountdown {
 

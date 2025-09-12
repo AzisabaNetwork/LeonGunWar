@@ -1,31 +1,30 @@
 package net.azisaba.lgw.core.commands;
 
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
 
 public class MapVoteCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         // プレイヤーではない場合return
-        if ( !(sender instanceof Player) ) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(Chat.f("&cこのコマンドはプレイヤーのみ実行可能です！"));
             return true;
         }
 
         // 投票が行われていない場合はreturn
-        if ( !LeonGunWar.getPlugin().getMapSelectCountdown().isRunning() ) {
+        if (!LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
             sender.sendMessage(Chat.f("&c現在マップ投票は行われていません！"));
             return true;
         }
 
         // 投票先が指定されていない場合はreturn
-        if ( args.length <= 0 ) {
+        if (args.length <= 0) {
             sender.sendMessage(Chat.f("&c投票先を番号で指定してください！"));
             return true;
         }
@@ -34,13 +33,13 @@ public class MapVoteCommand implements CommandExecutor {
         int index;
         try {
             index = Integer.parseInt(args[0]) - 1;
-        } catch ( NumberFormatException expected ) {
+        } catch (NumberFormatException expected) {
             sender.sendMessage(Chat.f("&c有効な数字を指定してください！"));
             return true;
         }
 
         // 値が0以下の場合や投票できる最大番号より大きい場合はreturn
-        if ( index < 0 || index >= LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().size() ) {
+        if (index < 0 || index >= LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().size()) {
             sender.sendMessage(Chat.f("&c有効な数字を指定してください！"));
             return true;
         }

@@ -1,16 +1,14 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.SignData;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,23 +23,22 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldedit.math.BlockVector3;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.SignData;
-import net.azisaba.lgw.core.util.Chat;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 掲示板を管理するListener
- *
+ * <p>
  * 1 看板が設置されたときに登録 2 プレイヤーによって破壊されたときにキャンセル 3 右クリックで作者表示
- *
+ * <p>
  * などの機能
  *
  * @author siloneco
- *
  */
 public class TradeBoardListener implements Listener {
 
@@ -49,6 +46,8 @@ public class TradeBoardListener implements Listener {
     private final long expireMilliSeconds = ChronoUnit.WEEKS.getDuration().toMillis();
 
     private final List<String> denySigns = Arrays.asList("[entry]", "[leave]", "[rejoin]", "[mode]");
+    private final Map<Player, SignData> lastClicked = new HashMap<>();
+    private final Map<Player, Long> lastClickedMilli = new HashMap<>();
 
     /**
      * 看板を設置したときに内容を読み取り、登録やキャンセルをするListener
@@ -59,28 +58,28 @@ public class TradeBoardListener implements Listener {
         Block b = e.getBlock();
 
         // プレイヤーがクリエイティブなら登録せずにreturn
-        if ( p.getGameMode() == GameMode.CREATIVE ) {
+        if (p.getGameMode() == GameMode.CREATIVE) {
             return;
         }
         // 取得したブロックが看板ではない場合はreturn
-        if ( b.getType() != Material.OAK_WALL_SIGN && b.getType() != Material.OAK_SIGN ) {
+        if (b.getType() != Material.OAK_WALL_SIGN && b.getType() != Material.OAK_SIGN) {
             return;
         }
 
         // 武器交換掲示板のエリアではない場合はreturn
-        if ( !inTradeBoardRegion(b.getLocation()) ) {
+        if (!inTradeBoardRegion(b.getLocation())) {
             return;
         }
 
         // 空白の看板なら破壊
-        if ( isEmpty(e.getLines()) ) {
+        if (isEmpty(e.getLines())) {
             b.breakNaturally();
             p.sendMessage(Chat.f("&c空白の看板なため破壊しました。"));
             return;
         }
 
         // 機能付き看板なら破壊
-        if ( e.getLine(0) != null && denySigns.contains(Chat.r(e.getLine(0).toLowerCase().trim())) ) {
+        if (e.getLine(0) != null && denySigns.contains(Chat.r(e.getLine(0).toLowerCase().trim()))) {
             b.breakNaturally();
             p.sendMessage(Chat.f("&c無効な内容の看板なため破壊しました。"));
             return;
@@ -97,7 +96,7 @@ public class TradeBoardListener implements Listener {
                 expire);
 
         // 成功か失敗かで分岐
-        if ( success ) {
+        if (success) {
             p.sendMessage(Chat.f("&a看板を正常に登録しました！"));
         } else {
             // 失敗したら破壊してメッセージを表示
@@ -115,17 +114,17 @@ public class TradeBoardListener implements Listener {
         Block b = e.getBlock();
 
         // クリエイティブモードなら無条件で許可
-        if ( p.getGameMode() == GameMode.CREATIVE ) {
+        if (p.getGameMode() == GameMode.CREATIVE) {
             return;
         }
 
         // 掲示板エリアではない場合はreturn
-        if ( !inTradeBoardRegion(b.getLocation()) ) {
+        if (!inTradeBoardRegion(b.getLocation())) {
             return;
         }
 
         // 看板ではない場合はキャンセル
-        if ( b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.LEGACY_WALL_SIGN ) {
+        if (b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.LEGACY_WALL_SIGN) {
             e.setCancelled(true);
         }
     }
@@ -139,12 +138,12 @@ public class TradeBoardListener implements Listener {
         Block b = e.getBlock();
 
         // 掲示板エリアではない場合はreturn
-        if ( !inTradeBoardRegion(b.getLocation()) ) {
+        if (!inTradeBoardRegion(b.getLocation())) {
             return;
         }
 
         // クリエイティブなら無条件で許可
-        if ( p.getGameMode() == GameMode.CREATIVE ) {
+        if (p.getGameMode() == GameMode.CREATIVE) {
             LeonGunWar.getPlugin().getTradeBoardManager().removeSignData(b.getLocation());
             return;
         }
@@ -152,14 +151,14 @@ public class TradeBoardListener implements Listener {
         // 掲示板のデータを取得
         SignData data = LeonGunWar.getPlugin().getTradeBoardManager().getSignData(b.getLocation());
         // データがない場合は運営が設置した看板と判定しキャンセル
-        if ( data == null ) {
+        if (data == null) {
             e.setCancelled(true);
             p.sendMessage(Chat.f("&c自分の設置した看板のみ破壊することができます！"));
             return;
         }
 
         // 破壊したプレイヤーと設置したプレイヤーとが同じならば破壊を許可
-        if ( data.getAuthor().equals(p.getUniqueId()) ) {
+        if (data.getAuthor().equals(p.getUniqueId())) {
             LeonGunWar.getPlugin().getTradeBoardManager().removeSignData(b.getLocation());
             return;
         }
@@ -169,9 +168,6 @@ public class TradeBoardListener implements Listener {
         p.sendMessage(Chat.f("&cこの看板は&e{0}&cによって作成されたものです！", data.getPlayerName()));
     }
 
-    private final Map<Player, SignData> lastClicked = new HashMap<>();
-    private final Map<Player, Long> lastClickedMilli = new HashMap<>();
-
     /**
      * 右クリックで看板の作者を表示するListener
      */
@@ -179,7 +175,7 @@ public class TradeBoardListener implements Listener {
     public void onClickSign(PlayerInteractEvent e) {
 
         // ブロックを右クリックしていなければreturn
-        if ( e.getAction() != Action.RIGHT_CLICK_BLOCK ) {
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
@@ -189,14 +185,14 @@ public class TradeBoardListener implements Listener {
         // 看板のデータを取得
         SignData data = LeonGunWar.getPlugin().getTradeBoardManager().getSignData(b.getLocation());
         // データがないならreturn
-        if ( data == null ) {
+        if (data == null) {
             return;
         }
 
         // クリック連打を対策
         // 前回クリックしたデータと同じデータであり、3秒以上たっていない場合はreturn
-        if ( Objects.equals(lastClicked.getOrDefault(p, null), data)
-                && lastClickedMilli.getOrDefault(p, 0L) + 3000 > System.currentTimeMillis() ) {
+        if (Objects.equals(lastClicked.getOrDefault(p, null), data)
+                && lastClickedMilli.getOrDefault(p, 0L) + 3000 > System.currentTimeMillis()) {
             return;
         }
 
@@ -231,10 +227,10 @@ public class TradeBoardListener implements Listener {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         ApplicableRegionSet regions = container.get(BukkitAdapter.adapt(loc.getWorld())).getApplicableRegions(BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()));
 
-        if(regions == null) return false;
+        if (regions == null) return false;
 
-        for ( ProtectedRegion rg : regions ) {
-            if ( rg.getId().toLowerCase().startsWith("keiziban") ) {
+        for (ProtectedRegion rg : regions) {
+            if (rg.getId().toLowerCase().startsWith("keiziban")) {
                 return true;
             }
         }

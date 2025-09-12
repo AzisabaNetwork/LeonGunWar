@@ -1,9 +1,6 @@
 package net.azisaba.lgw.core.listeners.weaponcontrols;
 
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
 import net.azisaba.lgw.core.util.Chat;
@@ -12,6 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class LimitOneShotPerMatchListener implements Listener {
 
@@ -25,7 +26,7 @@ public class LimitOneShotPerMatchListener implements Listener {
         }
 
         int allowedCount = LeonGunWar.getPlugin().getWeaponControlConfig()
-            .getMaxUseCount(e.getWeaponTitle());
+                .getMaxUseCount(e.getWeaponTitle());
 
         if (allowedCount < 0) {
             return;
@@ -47,11 +48,11 @@ public class LimitOneShotPerMatchListener implements Listener {
 
             if (playerUsedCount > 0) {
                 p.sendMessage(
-                    Chat.f("{0}&cこの武器は1試合に{1}回までしか使用できません！", LeonGunWar.GAME_PREFIX,
-                        allowedCount));
+                        Chat.f("{0}&cこの武器は1試合に{1}回までしか使用できません！", LeonGunWar.GAME_PREFIX,
+                                allowedCount));
             } else {
                 p.sendMessage(
-                    Chat.f("{0}&cこの武器は試合で使用できません！", LeonGunWar.GAME_PREFIX));
+                        Chat.f("{0}&cこの武器は試合で使用できません！", LeonGunWar.GAME_PREFIX));
             }
 
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);

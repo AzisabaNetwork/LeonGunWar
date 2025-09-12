@@ -1,5 +1,13 @@
 package net.azisaba.lgw.core.configs;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import net.azisaba.lgw.core.LeonGunWar;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,16 +18,6 @@ import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-
-import net.azisaba.lgw.core.LeonGunWar;
-
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
 public class Config {
@@ -37,7 +35,7 @@ public class Config {
     @NonNull
     private final String relativePath;
 
-    public Config(LeonGunWar plugin,String resourcePath,String relativePath) {
+    public Config(LeonGunWar plugin, String resourcePath, String relativePath) {
         this.plugin = plugin;
         this.resourcePath = resourcePath;
         this.relativePath = relativePath;
@@ -59,7 +57,7 @@ public class Config {
         return getResource() != null;
     }
 
-    @SneakyThrows(value = { IOException.class })
+    @SneakyThrows(value = {IOException.class})
     public String loadAsString() throws IOException {
         return Files.lines(getPath()).collect(Collectors.joining(System.lineSeparator()));
     }
@@ -69,11 +67,11 @@ public class Config {
         return reader.lines().collect(Collectors.joining(System.lineSeparator()));
     }
 
-    @SneakyThrows(value = { InvalidConfigurationException.class })
+    @SneakyThrows(value = {InvalidConfigurationException.class})
     public void loadConfig() throws IOException, InvalidConfigurationException {
-        if ( exists() ) {
+        if (exists()) {
             config.loadFromString(loadAsString());
-        } else if ( existsResource() ) {
+        } else if (existsResource()) {
             config.loadFromString(loadResourceAsString());
             saveResource();
         }
@@ -82,22 +80,22 @@ public class Config {
     public void saveResource() {
         try {
             saveResource(true);
-        } catch ( IOException exception ) {
+        } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
 
-    @SneakyThrows(value = { IOException.class })
+    @SneakyThrows(value = {IOException.class})
     public void saveResource(boolean async) throws IOException {
-        if ( async ) {
+        if (async) {
             executor.execute(() -> {
                 try {
                     saveResource(false);
-                } catch ( IOException exception ) {
+                } catch (IOException exception) {
                     exception.printStackTrace();
                 }
             });
-        } else if ( !existsResource() ) {
+        } else if (!existsResource()) {
             Files.createDirectories(getPath().getParent());
             Files.copy(getResource(), getPath());
         }
@@ -106,18 +104,18 @@ public class Config {
     public void saveConfig() {
         try {
             saveConfig(true);
-        } catch ( IOException exception ) {
+        } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
 
-    @SneakyThrows(value = { IOException.class })
+    @SneakyThrows(value = {IOException.class})
     public void saveConfig(boolean async) throws IOException {
-        if ( async ) {
+        if (async) {
             executor.execute(() -> {
                 try {
                     saveConfig(false);
-                } catch ( IOException exception ) {
+                } catch (IOException exception) {
                     exception.printStackTrace();
                 }
             });

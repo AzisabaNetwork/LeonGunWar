@@ -9,13 +9,12 @@ import org.bukkit.event.inventory.InventoryType;
  * ホッパーが外部のアイテムを吸引するのを無効化するListener
  *
  * @author siloneco
- *
  */
 public class DisableHopperPickupListener implements Listener {
 
     @EventHandler
     public void onPickUp(InventoryPickupItemEvent e) {
-        if ( e.getInventory().getType() != InventoryType.HOPPER ) {
+        if (e.getInventory().getType() != InventoryType.HOPPER) {
             return;
         }
 

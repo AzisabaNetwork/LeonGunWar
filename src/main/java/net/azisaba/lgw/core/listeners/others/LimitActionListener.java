@@ -1,9 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -16,15 +14,14 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.azisaba.lgw.core.util.Chat;
-
-import me.rayzr522.jsonmessage.JSONMessage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 運営の不必要な動きを制限するListener
  *
  * @author siloneco
- *
  */
 public class LimitActionListener implements Listener {
 
@@ -37,11 +34,11 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if ( !p.hasPermission("leongunwar.command.limit") ) {
+        if (!p.hasPermission("leongunwar.command.limit")) {
             return;
         }
         // allowDropPlayersに含まれていない場合はキャンセル
-        if ( !allowDropPlayers.contains(p.getUniqueId()) ) {
+        if (!allowDropPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&cアイテムをドロップするには /limit drop と入力"), p);
         }
@@ -53,11 +50,11 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if ( !p.hasPermission("leongunwar.command.limit") ) {
+        if (!p.hasPermission("leongunwar.command.limit")) {
             return;
         }
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
+        if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -69,11 +66,11 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if ( !p.hasPermission("leongunwar.command.limit") ) {
+        if (!p.hasPermission("leongunwar.command.limit")) {
             return;
         }
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
+        if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -83,35 +80,35 @@ public class LimitActionListener implements Listener {
     @EventHandler
     public void preventDestroyItemFrame(EntityDamageByEntityEvent e) {
         // Entityが額縁ではない場合return
-        if ( !(e.getEntity() instanceof ItemFrame) ) {
+        if (!(e.getEntity() instanceof ItemFrame)) {
             return;
         }
 
         Player p = null;
 
         // 攻撃者がプレイヤーの場合
-        if ( e.getDamager() instanceof Player ) {
+        if (e.getDamager() instanceof Player) {
             p = (Player) e.getDamager();
         }
         // 攻撃者が発射物の場合
-        if ( e.getDamager() instanceof Projectile ) {
+        if (e.getDamager() instanceof Projectile) {
             // ソースがプレイヤーの場合
-            if ( ((Projectile) e.getDamager()).getShooter() instanceof Player ) {
+            if (((Projectile) e.getDamager()).getShooter() instanceof Player) {
                 p = (Player) ((Projectile) e.getDamager()).getShooter();
             }
         }
 
         // プレイヤーではない場合return
-        if ( p == null ) {
+        if (p == null) {
             return;
         }
 
         // 権限がない場合return
-        if ( !p.hasPermission("leongunwar.command.limit") ) {
+        if (!p.hasPermission("leongunwar.command.limit")) {
             return;
         }
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
+        if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -121,19 +118,18 @@ public class LimitActionListener implements Listener {
     @EventHandler
     public void preventDestroyEmptyFrame(HangingBreakByEntityEvent e) {
         // 壊したのがプレイヤーではない場合return
-        if ( !(e.getRemover() instanceof Player) ) {
+        if (!(e.getRemover() instanceof Player p)) {
             return;
         }
 
         // プレイヤーを取得
-        Player p = (Player) e.getRemover();
 
         // 権限がない場合return
-        if ( !p.hasPermission("leongunwar.command.limit") ) {
+        if (!p.hasPermission("leongunwar.command.limit")) {
             return;
         }
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if ( !allowBuildPlayers.contains(p.getUniqueId()) ) {
+        if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -147,7 +143,7 @@ public class LimitActionListener implements Listener {
     }
 
     public boolean toggleAllowDrop(Player player) {
-        if ( allowDropPlayers.contains(player.getUniqueId()) ) {
+        if (allowDropPlayers.contains(player.getUniqueId())) {
             allowDropPlayers.remove(player.getUniqueId());
             return false;
         } else {
@@ -157,7 +153,7 @@ public class LimitActionListener implements Listener {
     }
 
     public boolean toggleAllowBuild(Player player) {
-        if ( allowBuildPlayers.contains(player.getUniqueId()) ) {
+        if (allowBuildPlayers.contains(player.getUniqueId())) {
             allowBuildPlayers.remove(player.getUniqueId());
             return false;
         } else {

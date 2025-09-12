@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.Scoreboard;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.scoreboard.Team;
 
 public class LobbyListener implements Listener {
@@ -31,10 +30,10 @@ public class LobbyListener implements Listener {
         Group group = lp.getGroupManager().getGroup(user.getPrimaryGroup());
         String prefix = user.getCachedData().getMetaData().getPrefix();
         String teamName = group.getName();
-        if(prefix == null) {
+        if (prefix == null) {
             prefix = "";
         }
-        if(player.hasPermission("group.nitro")) {
+        if (player.hasPermission("group.nitro")) {
             teamName = player.getName();
         }
         Team team = scoreboard.getTeam(teamName);
@@ -42,9 +41,9 @@ public class LobbyListener implements Listener {
             team = scoreboard.registerNewTeam(teamName);
             ChatColor color = this.getLastColor(prefix.replace("&", "§"));
             team.setColor(color);
-            if(prefix.length() <= 16) {
+            if (prefix.length() <= 16) {
                 team.setPrefix(prefix.replace("&", "§"));
-            }else{
+            } else {
                 team.setPrefix(color.toString());
             }
         }

@@ -1,8 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.tasks.AfkKickMonitoringTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,8 +11,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.tasks.AfkKickMonitoringTask;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AfkKickEntryListener implements Listener {
 
@@ -32,6 +31,7 @@ public class AfkKickEntryListener implements Listener {
     public void onMove(PlayerMoveEvent e) {
         lastMoved.put(e.getPlayer(), System.currentTimeMillis());
     }
+
     /**
      * 銃を撃ったときも値を設定
      */

@@ -1,15 +1,27 @@
 package net.azisaba.lgw.core;
 
-import java.io.IOException;
-import java.util.*;
-
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
-import net.azisaba.lgw.core.commands.*;
-import net.azisaba.lgw.core.configs.*;
-import net.azisaba.lgw.core.sql.SQLConnection;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.ClockMachine;
+import net.azisaba.lgw.core.commands.AdminChatCommand;
+import net.azisaba.lgw.core.commands.KIAICommand;
+import net.azisaba.lgw.core.commands.LSyogoCommand;
+import net.azisaba.lgw.core.commands.LgwAdminCommand;
+import net.azisaba.lgw.core.commands.LimitCommand;
+import net.azisaba.lgw.core.commands.MapVoteCommand;
+import net.azisaba.lgw.core.commands.ResourcePackCommand;
+import net.azisaba.lgw.core.commands.SiaiTuutiCommand;
+import net.azisaba.lgw.core.commands.SpawnCommand;
+import net.azisaba.lgw.core.commands.ToggleDoubleReward;
+import net.azisaba.lgw.core.commands.UAVCommand;
+import net.azisaba.lgw.core.configs.AssistStreaksConfig;
+import net.azisaba.lgw.core.configs.DatabaseConfig;
+import net.azisaba.lgw.core.configs.ItemsConfig;
+import net.azisaba.lgw.core.configs.KillStreaksConfig;
+import net.azisaba.lgw.core.configs.MainConfig;
+import net.azisaba.lgw.core.configs.MapsConfig;
+import net.azisaba.lgw.core.configs.SpawnsConfig;
+import net.azisaba.lgw.core.configs.SyogoConfig;
+import net.azisaba.lgw.core.configs.WeaponControlConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -18,7 +30,35 @@ import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
 import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
 import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
-import net.azisaba.lgw.core.listeners.others.*;
+import net.azisaba.lgw.core.listeners.others.AdminChatListener;
+import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
+import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
+import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
+import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
+import net.azisaba.lgw.core.listeners.others.DisableBlockInteractListener;
+import net.azisaba.lgw.core.listeners.others.DisableChangeItemListener;
+import net.azisaba.lgw.core.listeners.others.DisableHopperPickupListener;
+import net.azisaba.lgw.core.listeners.others.DisableItemDamageListener;
+import net.azisaba.lgw.core.listeners.others.DisableOffhandListener;
+import net.azisaba.lgw.core.listeners.others.DisableOpenInventoryListener;
+import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
+import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
+import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
+import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
+import net.azisaba.lgw.core.listeners.others.KillVillagerOnChunkLoadListener;
+import net.azisaba.lgw.core.listeners.others.LimitActionListener;
+import net.azisaba.lgw.core.listeners.others.LobbyListener;
+import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
+import net.azisaba.lgw.core.listeners.others.NoFishingOnFightListener;
+import net.azisaba.lgw.core.listeners.others.NoKnockbackListener;
+import net.azisaba.lgw.core.listeners.others.OnsenListener;
+import net.azisaba.lgw.core.listeners.others.PlayerDeathListener;
+import net.azisaba.lgw.core.listeners.others.PreventEscapeListener;
+import net.azisaba.lgw.core.listeners.others.RemoveKillStreakScoreListener;
+import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
+import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
+import net.azisaba.lgw.core.listeners.others.StreaksListener;
+import net.azisaba.lgw.core.listeners.others.TradeBoardListener;
 import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
@@ -29,14 +69,24 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsInLobbyListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
+import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
-import net.azisaba.lgw.core.util.LGWExpansion;
+import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.ClockMachine;
+import net.azisaba.lgw.core.util.LGWExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Getter
 public class LeonGunWar extends JavaPlugin {
@@ -44,14 +94,22 @@ public class LeonGunWar extends JavaPlugin {
     public static final String GAME_PREFIX = Chat.f("&7[&6PvP&7]&r ");
     public static final String SIGN_ACTIVE = Chat.f("&a[ACTIVE]");
     public static final String SIGN_INACTIVE = Chat.f("&c[INACTIVE]");
-
+    public static List<BukkitTask> timeTaskList = new ArrayList<>();
+    public static boolean doubleRewardEnable;
+    public static Map<UUID, Long> matchJoin = new HashMap<>();
+    public static Map<BattleTeam, BukkitTask> leaderSelectionTaskMap = new HashMap<>();
     // plugin
     @Getter
     private static LeonGunWar plugin;
-
     @Getter
     private static JSONMessage quickBar;
-
+    private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
+    private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
+    private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
+    private final MatchManager manager = new MatchManager();
+    private final AssistStreaks assistStreaks = new AssistStreaks();
+    private final KillStreaks killStreaks = new KillStreaks();
+    private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
     private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
@@ -61,23 +119,14 @@ public class LeonGunWar extends JavaPlugin {
     private SyogoConfig syogoConfig;
     private WeaponControlConfig weaponControlConfig;
     private ItemsConfig itemsConfig;
-
-    private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
-    private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
-    private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
-    private final MatchManager manager = new MatchManager();
-    private final AssistStreaks assistStreaks = new AssistStreaks();
-    private final KillStreaks killStreaks = new KillStreaks();
-    private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
-    public static List<BukkitTask> timeTaskList = new ArrayList<>();
-    public static boolean doubleRewardEnable;
-    public static Map<UUID, Long> matchJoin = new HashMap<>();
-    public static Map<BattleTeam, BukkitTask> leaderSelectionTaskMap = new HashMap<>();
-
     private SQLConnection sqlConnection;
 
     public static JSONMessage getQuickBar() {
         return quickBar;
+    }
+
+    public static LeonGunWar getPlugin() {
+        return plugin;
     }
 
     @Override
@@ -120,7 +169,7 @@ public class LeonGunWar extends JavaPlugin {
             syogoConfig.loadConfig();
             weaponControlConfig.loadConfig();
             itemsConfig.loadConfig();
-        } catch ( IOException | InvalidConfigurationException exception ) {
+        } catch (IOException | InvalidConfigurationException exception) {
             exception.printStackTrace();
         }
 
@@ -184,7 +233,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EnableKeepInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnKillProtectionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AutoRespawnListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(),this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);
         Bukkit.getPluginManager().registerEvents(new AfkKickEntryListener(), this);
         Bukkit.getPluginManager().registerEvents(new StreaksListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableRecipeListener(), this);
@@ -195,7 +244,7 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DisableChangeItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new FixStrikesCooldownListener(), this);
         Bukkit.getPluginManager().registerEvents(new DisableBlockInteractListener(), this);
-        if(this.mainConfig.isLobby) {
+        if (this.mainConfig.isLobby) {
             Bukkit.getPluginManager().registerEvents(new OnsenListener(), this);
             Bukkit.getPluginManager().registerEvents(new LobbyListener(), this);
         }
@@ -222,7 +271,7 @@ public class LeonGunWar extends JavaPlugin {
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
         doubleRewardEnable = ClockMachine.isWithinRewardTime();
-        if(getConfig().getBoolean("DoubleRewardTaskEnable", false)){
+        if (getConfig().getBoolean("DoubleRewardTaskEnable", false)) {
             new ClockMachine().doubleRewardTaskStarter();
         }
 
@@ -242,15 +291,13 @@ public class LeonGunWar extends JavaPlugin {
         Bukkit.getLogger().info(Chat.f("{0} が無効化されました。", getName()));
     }
 
-    public static LeonGunWar getPlugin() {
-        return plugin;
-    }
-
     public MatchManager getManager() {
         return manager;
     }
 
-    public MainConfig getMainConfig(){ return mainConfig; }
+    public MainConfig getMainConfig() {
+        return mainConfig;
+    }
 
     public MapsConfig getMapsConfig() {
         return mapsConfig;
@@ -260,7 +307,9 @@ public class LeonGunWar extends JavaPlugin {
         return spawnsConfig;
     }
 
-    public SyogoConfig getSyogoConfig(){ return syogoConfig; }
+    public SyogoConfig getSyogoConfig() {
+        return syogoConfig;
+    }
 
     public MatchStartCountdown getMatchStartCountdown() {
         return matchStartCountdown;

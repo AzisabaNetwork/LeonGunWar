@@ -1,18 +1,19 @@
 package net.azisaba.lgw.core.util;
 
-import java.util.Date;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Date;
 
 @Getter
 @RequiredArgsConstructor
 public class TimeCondition {
 
-  private final Date start;
-  private final Date end;
+    private final Date start;
+    private final Date end;
 
-  public boolean isDuring() {
-    long current = System.currentTimeMillis();
-    return start.getTime() <= current && current <= end.getTime();
-  }
+    public boolean isDuring() {
+        long current = System.currentTimeMillis();
+        return start.getTime() <= current && current <= end.getTime();
+    }
 }

@@ -1,9 +1,9 @@
 package net.azisaba.lgw.core.listeners.signs;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -14,10 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
-import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.SecondOfDay;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class JoinAfterSignListener implements Listener {
 
@@ -29,7 +28,7 @@ public class JoinAfterSignListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClickJoinEntrySign(PlayerInteractEvent e) {
         // ブロックをクリックしていなければreturn
-        if ( e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK ) {
+        if (e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
@@ -38,12 +37,12 @@ public class JoinAfterSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // 権限を持っており スニーク + クリックならreturn
-        if ( p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking() ) {
+        if (p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking()) {
             return;
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
+        if (clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN) {
             return;
         }
 
@@ -51,18 +50,18 @@ public class JoinAfterSignListener implements Listener {
         Sign sign = (Sign) clickedBlock.getState();
 
         // 1行目が [rejoin] でなければreturn
-        if ( !sign.getLine(0).equals("[rejoin]") ) {
+        if (!sign.getLine(0).equals("[rejoin]")) {
             return;
         }
 
         // 4行目が[ACTIVE]ではない場合はreturn
-        if ( !sign.getLine(3).equals(LeonGunWar.SIGN_ACTIVE) ) {
+        if (!sign.getLine(3).equals(LeonGunWar.SIGN_ACTIVE)) {
             return;
         }
 
         // 最終クリックが1分より前ならreturn
         long lastClickedMillis = lastClicked.getOrDefault(e.getPlayer().getUniqueId(), 0L);
-        if ( lastClickedMillis + 1000 * 60 > System.currentTimeMillis() ) {
+        if (lastClickedMillis + 1000 * 60 > System.currentTimeMillis()) {
             long remainSecs = (lastClickedMillis + 1000 * 60 - System.currentTimeMillis()) / 1000;
             e.getPlayer().sendMessage(Chat.f("&c現在クールダウン中です！ あと " + SecondOfDay.f(remainSecs)));
             return;
@@ -72,7 +71,7 @@ public class JoinAfterSignListener implements Listener {
         e.setCancelled(true);
 
         // 試合中ではない場合return
-        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (!LeonGunWar.getPlugin().getManager().isMatching()) {
             p.sendMessage(Chat.f("{0}&7現在試合をしていないため途中参加はできません。\n代わりにエントリー看板を使用してください", LeonGunWar.GAME_PREFIX));
             return;
         }
@@ -87,7 +86,7 @@ public class JoinAfterSignListener implements Listener {
     @EventHandler
     public void changeSignState(PlayerInteractEvent e) {
         // ブロックをシフト + 右クリックしていなければreturn
-        if ( e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking() ) {
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking()) {
             return;
         }
 
@@ -96,7 +95,7 @@ public class JoinAfterSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
+        if (clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN) {
             return;
         }
 
@@ -104,12 +103,12 @@ public class JoinAfterSignListener implements Listener {
         Sign sign = (Sign) clickedBlock.getState();
 
         // 1行目が [rejoin] でなければreturn
-        if ( !sign.getLine(0).equals("[rejoin]") ) {
+        if (!sign.getLine(0).equals("[rejoin]")) {
             return;
         }
 
         // 権限がなければreturn
-        if ( !p.hasPermission("leongunwar.entrysign.changestate") ) {
+        if (!p.hasPermission("leongunwar.entrysign.changestate")) {
             return;
         }
 
@@ -122,7 +121,7 @@ public class JoinAfterSignListener implements Listener {
         String edit;
 
         // 4行目の編集
-        if ( line4.equals(LeonGunWar.SIGN_INACTIVE) ) { // [INACTIVE] の場合
+        if (line4.equals(LeonGunWar.SIGN_INACTIVE)) { // [INACTIVE] の場合
             edit = LeonGunWar.SIGN_ACTIVE;
         } else { // それ以外の場合は [INACITVE]に変更
             edit = LeonGunWar.SIGN_INACTIVE;
@@ -137,7 +136,7 @@ public class JoinAfterSignListener implements Listener {
     @EventHandler
     public void onMatchFinishedEvent(MatchFinishedEvent e) {
 
-        if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (LeonGunWar.getPlugin().getManager().isMatching()) {
             lastClicked.clear();
         }
     }

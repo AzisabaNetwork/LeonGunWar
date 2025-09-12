@@ -1,21 +1,18 @@
 package net.azisaba.lgw.core.distributors;
 
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Team;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
-
 /**
- *
  * デフォルトのチーム振り分けクラス
  *
  * @author siloneco
- *
  */
 public class DefaultTeamDistributor implements TeamDistributor {
 

@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,15 +10,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
-import com.shampaggon.crackshot.events.WeaponPreShootEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * CrackShotのアイテムの連打を無効化するリスナー
  *
  * @author siloneco
- *
  */
 public class CrackShotLimitListener implements Listener {
 
@@ -46,13 +44,13 @@ public class CrackShotLimitListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onWeaponDamage(WeaponDamageEntityEvent e) {
         // ナイフではない場合はreturn
-        if ( !e.getWeaponTitle().equals("Combat_Knife") ) {
+        if (!e.getWeaponTitle().equals("Combat_Knife")) {
             return;
         }
 
         Player p = e.getPlayer();
         // クールダウン中ならキャンセルしてreturn
-        if ( knifeMap.getOrDefault(p, 0L) + 1000 * knifeCooldown > System.currentTimeMillis() ) {
+        if (knifeMap.getOrDefault(p, 0L) + 1000 * knifeCooldown > System.currentTimeMillis()) {
             e.setCancelled(true);
             return;
         }
@@ -69,13 +67,13 @@ public class CrackShotLimitListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onShoot(WeaponPreShootEvent e) {
         // ライトニングストライクではない場合はreturn
-        if ( !e.getWeaponTitle().equals("STOROBO2") ) {
+        if (!e.getWeaponTitle().equals("STOROBO2")) {
             return;
         }
 
         Player p = e.getPlayer();
         // クールタイム中ならキャンセル
-        if ( storoboMap.getOrDefault(p, 0L) + 1000 * storoboCooldown > System.currentTimeMillis() ) {
+        if (storoboMap.getOrDefault(p, 0L) + 1000 * storoboCooldown > System.currentTimeMillis()) {
             e.setCancelled(true);
             return;
         }

@@ -4,13 +4,6 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import com.shampaggon.crackshot.events.WeaponShootEvent;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
@@ -31,33 +24,36 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 /**
  * ホットバーの変更した武器の数だけクールダウンを設ける
  *
  * @author siloneco, YukiLeafX
- *
  */
 public class DisableChangeItemListener implements Listener {
 
-    public static ItemStack[] getHotbar(PlayerInventory inventory) {
-        return IntStream.range(0, 9)
-            .mapToObj(inventory::getItem)
-            .toArray(ItemStack[]::new);
-    }
-
     private static final int MULTIPLE_SECONDS = 10;
-
     private final Map<Player, ItemStack[]> hotbars = new HashMap<>();
-
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
     private final Map<Player, BossBar> bossBars = new HashMap<>();
-
     private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
     private final CSUtility csUtil = new CSUtility();
-
     // 有効なホットバーであるか
     private final Map<Player, Boolean> validHotbar = new HashMap<>();
+
+    public static ItemStack[] getHotbar(PlayerInventory inventory) {
+        return IntStream.range(0, 9)
+                .mapToObj(inventory::getItem)
+                .toArray(ItemStack[]::new);
+    }
 
     @EventHandler
     public void onSwapHand(PlayerSwapHandItemsEvent event) {
@@ -67,9 +63,9 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        if(LeonGunWar.getPlugin().getManager().getCurrentGameMap() != null) {
-            if (LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getPlayer())) != null) {
-                Location spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getPlayer()));
+        if (LeonGunWar.getPlugin().getManager().getCurrentGameMap() != null) {
+            if (LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam(event.getPlayer())) != null) {
+                Location spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam(event.getPlayer()));
                 if (spawnPoint.distance(event.getPlayer().getLocation()) <= 10) {
                     return;
                 }
@@ -105,10 +101,10 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        if (!(event.getWhoClicked() instanceof Player)) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(LeonGunWar.getPlugin().getManager().getCurrentGameMap() != null) {
+        if (LeonGunWar.getPlugin().getManager().getCurrentGameMap() != null) {
             if (LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getWhoClicked())) != null) {
                 Location spawnPoint = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getSpawnPoint(LeonGunWar.getPlugin().getManager().getBattleTeam((Player) event.getWhoClicked()));
                 if (spawnPoint.distance(event.getWhoClicked().getLocation()) <= 10) {
@@ -118,14 +114,12 @@ public class DisableChangeItemListener implements Listener {
         }
 
 
-        Player player = (Player) event.getWhoClicked();
-
         if (!LeonGunWar.getPlugin().getManager().isPlayerMatching(player)) {
             return;
         }
 
         if (!LeonGunWar.getPlugin().getManager().getItemChangeValidator()
-            .isAllowedToChangeItem(player)) {
+                .isAllowedToChangeItem(player)) {
             event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, .8f);
             player.sendMessage(Chat.f("{0}&cスポーン地点以外でアイテムの変更はできません!", LeonGunWar.GAME_PREFIX));
@@ -147,7 +141,7 @@ public class DisableChangeItemListener implements Listener {
         Player holder = (Player) p.getInventory().getHolder();
         ItemStack[] hotbar = getHotbar(p.getInventory());
 
-        if(!validHotbar.containsKey(holder)) {
+        if (!validHotbar.containsKey(holder)) {
             boolean valid = true;
 
             for (ItemStack item : hotbar) {
@@ -163,7 +157,7 @@ public class DisableChangeItemListener implements Listener {
         }
 
 //        if (!valid) {
-        if(!validHotbar.getOrDefault(p, false)) {
+        if (!validHotbar.getOrDefault(p, false)) {
             e.setCancelled(true);
             p.sendMessage(Chat.f("{0}&c無効なアイテム欄であるため銃を打てません！", LeonGunWar.GAME_PREFIX));
         }
@@ -177,11 +171,10 @@ public class DisableChangeItemListener implements Listener {
             return;
         }
 
-        if (!(inventory.getHolder() instanceof Player)) {
+        if (!(inventory.getHolder() instanceof Player holder)) {
             return;
         }
 
-        Player holder = (Player) inventory.getHolder();
         inventory = holder.getInventory();
 
         if (inventory == null || inventory.getType() != InventoryType.PLAYER) {
@@ -215,10 +208,10 @@ public class DisableChangeItemListener implements Listener {
             String[] groups = ctrl.replaceAll(" ", "").split(",");
 
             Map<String, String> restore = Arrays.stream(groups)
-                .flatMap(
-                    group -> Stream.of(group + ".Message_Exceeded", group + ".Sounds_Exceeded"))
-                .filter(group -> CSDirector.strings.containsKey(group))
-                .collect(Collectors.toMap(group -> group, CSDirector.strings::remove));
+                    .flatMap(
+                            group -> Stream.of(group + ".Message_Exceeded", group + ".Sounds_Exceeded"))
+                    .filter(group -> CSDirector.strings.containsKey(group))
+                    .collect(Collectors.toMap(group -> group, CSDirector.strings::remove));
             valid &= cs.validHotbar(holder, weapon);
             checked++;
             CSDirector.strings.putAll(restore);
@@ -232,7 +225,6 @@ public class DisableChangeItemListener implements Listener {
 
         if (!valid) {
             holder.sendMessage(Chat.f("{0}&eそんな装備で大丈夫か？", LeonGunWar.GAME_PREFIX));
-            return;
         }
     }
 

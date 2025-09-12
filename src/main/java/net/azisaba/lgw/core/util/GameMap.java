@@ -1,16 +1,13 @@
 package net.azisaba.lgw.core.util;
 
-import java.util.Map;
-
+import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import lombok.Data;
+import java.util.Map;
 
 /**
- *
  * @author siloneco ゲームを行うマップの情報を格納するクラス
- *
  */
 @Data
 public class GameMap {
@@ -33,5 +30,7 @@ public class GameMap {
         return spawnMap.getOrDefault(team, null);
     }
 
-    public String getMapName() { return mapName; }
+    public String getMapName() {
+        return mapName;
+    }
 }

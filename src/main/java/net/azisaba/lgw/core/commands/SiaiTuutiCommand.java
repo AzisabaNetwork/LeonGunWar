@@ -12,18 +12,18 @@ import org.bukkit.command.CommandSender;
 
 public class SiaiTuutiCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd,String lavel, String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String lavel, String[] args) {
 
-        if(!LeonGunWar.getPlugin().getMainConfig().isLobby){
+        if (!LeonGunWar.getPlugin().getMainConfig().isLobby) {
             return false;
         }
 
-        if ( Args.isEmpty(args) ) {
+        if (Args.isEmpty(args)) {
             return true;
         }
 
         // sv1なら
-        if ( Args.check(args, 0, "sv1") ) {
+        if (Args.check(args, 0, "sv1")) {
             JSONMessage msg = JSONMessage.create(Chat.f("&a&l試合サーバー1で試合が開始されました!"));
             msg.suggestCommand("")
                     .then(Chat.f("&b[クリックで参加]"))
@@ -32,7 +32,7 @@ public class SiaiTuutiCommand implements CommandExecutor {
             return true;
         }
         // sv2なら
-        if ( Args.check(args, 0, "sv2") ) {
+        if (Args.check(args, 0, "sv2")) {
             JSONMessage msg = JSONMessage.create(Chat.f("&a&l試合サーバー2で試合が開始されました!"));
             msg.suggestCommand("")
                     .then(Chat.f("&b[クリックで参加]"))
@@ -41,7 +41,7 @@ public class SiaiTuutiCommand implements CommandExecutor {
             return true;
         }
         // sv3なら
-        if ( Args.check(args, 0, "sv3") ) {
+        if (Args.check(args, 0, "sv3")) {
             JSONMessage msg = JSONMessage.create(Chat.f("&a&l試合サーバー3で試合が開始されました!"));
             msg.suggestCommand("")
                     .then(Chat.f("&b[クリックで参加]"))

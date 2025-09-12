@@ -1,5 +1,11 @@
 package net.azisaba.lgw.core.util;
 
+import com.google.common.base.Strings;
+import lombok.NonNull;
+import net.azisaba.lgw.core.events.PlayerAssistEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -7,21 +13,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
-import com.google.common.base.Strings;
-
-import net.azisaba.lgw.core.events.PlayerAssistEvent;
-
-import lombok.NonNull;
-
 /**
- *
  * KDを保存するクラスです
  *
  * @author siloneco
- *
  */
 public class KillDeathCounter {
 
@@ -42,8 +37,7 @@ public class KillDeathCounter {
      * プレイヤーのキル数を1追加します
      *
      * @param player キル数を追加したいプレイヤー
-     *
-     * @exception NullPointerException playerがnullの場合
+     * @throws NullPointerException playerがnullの場合
      */
     public void addKill(@NonNull Player player) {
         // プレイヤー情報を保存
@@ -67,8 +61,7 @@ public class KillDeathCounter {
      *
      * @param player キル数を取得したいプレイヤー
      * @return プレイヤーのキル数
-     *
-     * @exception NullPointerException playerがnullの場合
+     * @throws NullPointerException playerがnullの場合
      */
     public int getKills(@NonNull Player player) {
         // プレイヤー情報を保存
@@ -82,8 +75,7 @@ public class KillDeathCounter {
      * プレイヤーのデス数を1追加します
      *
      * @param player デス数を追加したいプレイヤー
-     *
-     * @exception NullPointerException playerがnullの場合
+     * @throws NullPointerException playerがnullの場合
      */
     public void addDeath(@NonNull Player player) {
         // プレイヤー情報を保存
@@ -107,8 +99,7 @@ public class KillDeathCounter {
      *
      * @param player デス数を取得したいプレイヤー
      * @return プレイヤーのデス数
-     *
-     * @exception NullPointerException playerがnullの場合
+     * @throws NullPointerException playerがnullの場合
      */
     public int getDeaths(@NonNull Player player) {
         // プレイヤー情報を保存
@@ -122,8 +113,7 @@ public class KillDeathCounter {
      * プレイヤーのアシスト数を1追加します
      *
      * @param player アシスト数を追加したいプレイヤー
-     *
-     * @exception NullPointerException playerがnullの場合
+     * @throws NullPointerException playerがnullの場合
      */
     public void addAssist(@NonNull Player player) {
         // プレイヤー情報を保存
@@ -151,8 +141,7 @@ public class KillDeathCounter {
      *
      * @param player アシスト数を取得したいプレイヤー
      * @return プレイヤーのアシスト数
-     *
-     * @exception NullPointerException playerがnullの場合
+     * @throws NullPointerException playerがnullの場合
      */
     public int getAssists(@NonNull Player player) {
         // プレイヤー情報を保存
@@ -210,7 +199,7 @@ public class KillDeathCounter {
         boolean displayKDRatio = true;//data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
 
         // 何度も個人設定を取得するのは非効率なので設定してからreturnする
-        if ( displayKDRatio ) {
+        if (displayKDRatio) {
             actionBarMap.put(player.getUniqueId(), defaultActionBarWithRatio);
             return defaultActionBarWithRatio;
         } else {
@@ -248,7 +237,7 @@ public class KillDeathCounter {
         int assists = getAssists(player);
 
         // kills + deathsが0より多い場合はバーを作成
-        if ( kills + deaths > 0 ) {
+        if (kills + deaths > 0) {
             // キルのパーセンテージ
             double killsPercentage = (double) kills / (double) (kills + deaths) * 100d;
             // デスのパーセンテージ
@@ -268,10 +257,10 @@ public class KillDeathCounter {
         actionBar.append(Chat.f(" &7&l/ &6&l{0} &rAssist(s)", assists));
 
         // displayKDRatioがtrueの場合はKDレートを計算して表示
-        if ( displayKDRatio ) {
+        if (displayKDRatio) {
             // KDレート算出
             double kdRatio = kills;
-            if ( deaths > 0 ) {
+            if (deaths > 0) {
                 kdRatio = (double) kills / (double) deaths;
             }
 

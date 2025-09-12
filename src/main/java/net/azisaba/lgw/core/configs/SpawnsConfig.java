@@ -1,18 +1,16 @@
 package net.azisaba.lgw.core.configs;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import net.azisaba.lgw.core.LeonGunWar;
+import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.bukkit.Location;
-import org.bukkit.configuration.InvalidConfigurationException;
-
-import net.azisaba.lgw.core.LeonGunWar;
-
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.SneakyThrows;
 
 @Getter
 public class SpawnsConfig extends Config {
@@ -25,13 +23,13 @@ public class SpawnsConfig extends Config {
         super(plugin, "configs/spawns.yml", "spawns.yml");
     }
 
-    @SneakyThrows(value = { Exception.class })
+    @SneakyThrows(value = {Exception.class})
     @Override
     public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();
 
         spawns = new HashMap<>();
-        for ( String spawnName : config.getValues(false).keySet() ) {
+        for (String spawnName : config.getValues(false).keySet()) {
             Location spawn = new Location(
                     plugin.getServer().getWorld(config.getString(spawnName + ".world")),
                     config.getDouble(spawnName + ".x"),

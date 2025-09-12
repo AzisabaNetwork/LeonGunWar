@@ -1,25 +1,22 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.Comparator;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.Chat;
+import net.ess3.api.events.AfkStatusChangeEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
-
-import net.ess3.api.events.AfkStatusChangeEvent;
+import java.util.Comparator;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * AFK状態が変化したときに温泉にテレポートするListener
  *
  * @author YukiLeafX
- *
  */
 public class OnsenListener implements Listener {
 
@@ -34,7 +31,7 @@ public class OnsenListener implements Listener {
         boolean matching = LeonGunWar.getPlugin().getManager().isPlayerMatching(player);
 
         // 離席解除のイベントか、試合中の場合はreturn
-        if ( !afk || matching ) {
+        if (!afk || matching) {
             return;
         }
         if (player.hasPermission("leongunwar.afkkick.exempt")) {
@@ -44,7 +41,7 @@ public class OnsenListener implements Listener {
         Location onsen = LeonGunWar.getPlugin().getSpawnsConfig().getOnsen();
 
         // 温泉が見つからないか、プレイヤーのワールドが温泉のワールドと同じではない場合はreturn
-        if ( onsen == null || onsen.getWorld() != player.getWorld() ) {
+        if (onsen == null || onsen.getWorld() != player.getWorld()) {
             return;
         }
 

@@ -1,13 +1,12 @@
 package net.azisaba.lgw.core.listeners.others;
 
 
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
 
 /**
  * 試合中に釣りをできなくするListener
@@ -21,7 +20,7 @@ public class NoFishingOnFightListener implements Listener {
         Player p = e.getPlayer();
 
         // 試合プレイヤーに含まれていない場合return
-        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(p) ) {
+        if (!LeonGunWar.getPlugin().getManager().isPlayerMatching(p)) {
             return;
         }
 

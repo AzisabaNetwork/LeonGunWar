@@ -1,7 +1,13 @@
 package net.azisaba.lgw.core;
 
-import java.util.*;
-
+import com.google.common.base.Preconditions;
+import lombok.Data;
+import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.util.SecondOfDay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -10,20 +16,19 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.google.common.base.Preconditions;
-
-import net.azisaba.lgw.core.distributors.TeamDistributor;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.SecondOfDay;
-
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 public class ScoreboardDisplayer {
     private List<String> lastDisplayLines = new ArrayList<>();
+    // Objectiveを作成したいスコアボード
+    private Scoreboard scoreBoard;
 
     /**
      * プレイヤーに表示するスコアボードのタイトルを取得します
@@ -39,7 +44,7 @@ public class ScoreboardDisplayer {
      */
     private List<String> boardLines() {
         // 試合中の場合
-        if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (LeonGunWar.getPlugin().getManager().isMatching()) {
 
             /*
 
@@ -70,13 +75,13 @@ public class ScoreboardDisplayer {
             messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
             messageList.add("");
 
-            for ( BattleTeam team : BattleTeam.values() ) {
+            for (BattleTeam team : BattleTeam.values()) {
                 int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
                 messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getTeamName(), point));
             }
 
-            if(mode == MatchMode.LEADER_DEATH_MATCH_POINT){
-                for(BattleTeam team : BattleTeam.values()){
+            if (mode == MatchMode.LEADER_DEATH_MATCH_POINT) {
+                for (BattleTeam team : BattleTeam.values()) {
                     messageList.add(Chat.f("{0}&6のリーダー&a: &e{1} ", team.getTeamName(), LeonGunWar.getPlugin().getManager().getLDMLeader(team).getName()));
                 }
             }
@@ -93,7 +98,7 @@ public class ScoreboardDisplayer {
         }
 
         // Map選択中の場合
-        if ( LeonGunWar.getPlugin().getMapSelectCountdown().isRunning() ) {
+        if (LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
             /*
 
               マップ投票中
@@ -123,7 +128,7 @@ public class ScoreboardDisplayer {
             messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
             messageList.add("");
 
-            for ( int i = 0, size = maps.size(); i < size; i++ ) {
+            for (int i = 0, size = maps.size(); i < size; i++) {
                 messageList.add(Chat.f("&7{0}. &e{1}&7: &c{2}票", i + 1, maps.get(i).getMapName(), countdown.getVote(i)));
             }
 
@@ -142,71 +147,69 @@ public class ScoreboardDisplayer {
         return fallback;
     }
 
-    // Objectiveを作成したいスコアボード
-    private Scoreboard scoreBoard;
-
     /**
      * プレイヤーにスコアボードを表示します
      *
      */
+
     /**
-    public void updateScoreboard() {
-        Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
-
-        if ( Bukkit.getOnlinePlayers().size() <= 0 ) {
-            return;
-        }
-
-        // Objectiveを取得
-        Objective obj = scoreBoard.getObjective("side");
-
-        // Objectiveが存在しなかった場合は作成
-        if ( obj == null ) {
-            obj = scoreBoard.registerNewObjective("side", "dummy");
-        }
-
-        // Slotを設定
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName(scoreBoardTitle());
-
-        // 行を取得
-        List<String> lines = boardLines();
-        // nullが返ってきた場合は非表示にしてreturn
-        if ( lines == null ) {
-            scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
-            return;
-        }
-        // リスト反転
-        Collections.reverse(lines);
-
-        // 現在指定されているEntryを全て解除
-        clearEntries();
-
-        int currentValue = 0;
-        for ( String msg : lines ) {
-
-            // 行が0の場合は空白にする
-            if ( msg == null ) {
-                msg = "";
-            }
-
-            // すでに値が設定されている場合は最後に空白を足していく
-            while ( obj.getScore(msg).isScoreSet() ) {
-                msg = msg + " ";
-            }
-
-            // 値を設定
-            obj.getScore(msg).setScore(currentValue);
-            currentValue++;
-        }
-
-        // スコアボードを設定する
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            if ( p.getScoreboard() != scoreBoard ) {
-                p.setScoreboard(scoreBoard);
-            }
-        });
-    }
+     * public void updateScoreboard() {
+     * Preconditions.checkNotNull(scoreBoard, "A scoreboard is not initialized yet.");
+     * <p>
+     * if ( Bukkit.getOnlinePlayers().size() <= 0 ) {
+     * return;
+     * }
+     * <p>
+     * // Objectiveを取得
+     * Objective obj = scoreBoard.getObjective("side");
+     * <p>
+     * // Objectiveが存在しなかった場合は作成
+     * if ( obj == null ) {
+     * obj = scoreBoard.registerNewObjective("side", "dummy");
+     * }
+     * <p>
+     * // Slotを設定
+     * obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+     * obj.setDisplayName(scoreBoardTitle());
+     * <p>
+     * // 行を取得
+     * List<String> lines = boardLines();
+     * // nullが返ってきた場合は非表示にしてreturn
+     * if ( lines == null ) {
+     * scoreBoard.clearSlot(DisplaySlot.SIDEBAR);
+     * return;
+     * }
+     * // リスト反転
+     * Collections.reverse(lines);
+     * <p>
+     * // 現在指定されているEntryを全て解除
+     * clearEntries();
+     * <p>
+     * int currentValue = 0;
+     * for ( String msg : lines ) {
+     * <p>
+     * // 行が0の場合は空白にする
+     * if ( msg == null ) {
+     * msg = "";
+     * }
+     * <p>
+     * // すでに値が設定されている場合は最後に空白を足していく
+     * while ( obj.getScore(msg).isScoreSet() ) {
+     * msg = msg + " ";
+     * }
+     * <p>
+     * // 値を設定
+     * obj.getScore(msg).setScore(currentValue);
+     * currentValue++;
+     * }
+     * <p>
+     * // スコアボードを設定する
+     * Bukkit.getOnlinePlayers().forEach(p -> {
+     * if ( p.getScoreboard() != scoreBoard ) {
+     * p.setScoreboard(scoreBoard);
+     * }
+     * });
+     * }
      **/
 
     public void tickScoreboard() {

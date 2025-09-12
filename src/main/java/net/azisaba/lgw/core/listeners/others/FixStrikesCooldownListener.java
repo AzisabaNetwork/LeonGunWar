@@ -1,21 +1,18 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.StrikesCooldown;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
-
-import net.azisaba.lgw.core.util.StrikesCooldown;
-import net.azisaba.lgw.core.util.Chat;
-
-import me.rayzr522.jsonmessage.JSONMessage;
 
 public class FixStrikesCooldownListener implements Listener {
 
@@ -24,7 +21,7 @@ public class FixStrikesCooldownListener implements Listener {
     @EventHandler
     public void onCooldown(WeaponPrepareShootEvent event) {
         Player player = event.getPlayer();
-        if ( player == null ) {
+        if (player == null) {
             return;
         }
 
@@ -40,10 +37,10 @@ public class FixStrikesCooldownListener implements Listener {
                     return created;
                 });
 
-        if ( cooldown.isNowInCooldown() ) {
+        if (cooldown.isNowInCooldown()) {
             event.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&cこの武器はクールダウン中です！"), player);
-        } else if ( cooldown.isEnabled() ) {
+        } else if (cooldown.isEnabled()) {
             cooldown.setLastUsed(System.currentTimeMillis());
         }
     }
