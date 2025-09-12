@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.util;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -11,7 +12,7 @@ import org.bukkit.Color;
  * @author siloneco
  */
 public enum BattleTeam {
-
+    //todo:チームを追加できるようにしたいね
     RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED, NamedTextColor.DARK_RED, "red"),
     BLUE("青チーム", Color.fromRGB(0x0000A0), ChatColor.BLUE, NamedTextColor.BLUE, "blue");
 
@@ -35,6 +36,10 @@ public enum BattleTeam {
 
     public String getTeamName() {
         return chatColor + name;
+    }
+
+    public Component getComponentTeamName() {
+        return Component.text(ChatColor.translateAlternateColorCodes('&', chatColor + name));
     }
 
     public NamedTextColor getNamedTextColor() {

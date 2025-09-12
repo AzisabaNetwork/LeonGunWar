@@ -132,7 +132,7 @@ public class MatchManager {
 
         // 各チームのチェストプレートを設定
         Arrays.stream(BattleTeam.values())
-                .forEach(team -> chestplates.put(team, CustomItem.getTeamChestplate(team)));
+                .forEach(team -> chestplates.put(team, CustomItem.getTeamChestPlate(team)));
 
         initialized = true;
     }

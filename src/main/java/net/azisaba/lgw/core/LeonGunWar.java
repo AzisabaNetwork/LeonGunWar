@@ -185,7 +185,6 @@ public class LeonGunWar extends JavaPlugin {
         // コマンドの登録
         registerCommand("leongunwaradmin", new LgwAdminCommand());
         registerCommand("uav", new UAVCommand());
-        //registerCommand("match", new MatchCommand());
         registerCommand("limit", new LimitCommand(preventItemDropListener));
         registerCommand("mapvote", new MapVoteCommand());
         registerCommand("lsyogo", new LSyogoCommand());
@@ -193,18 +192,6 @@ public class LeonGunWar extends JavaPlugin {
         registerCommand("noticewar", new SiaiTuutiCommand());
         registerCommand("toggledoublereward", new ToggleDoubleReward());
         plLogger.info("コマンドの登録完了しました。");
-
-        // タブ補完の登録
-        //registerCommand("leongunwaradmin").setTabCompleter(new LgwAdminCommand());
-        //registerCommand("match").setTabCompleter(new MatchCommand());
-
-        // コマンドの権限がない時のメッセージの指定
-        //registerCommand("leongunwaradmin").setPermissionMessage(Chat.f("&c権限がありません！"));
-        //registerCommand("uav").setPermissionMessage(Chat.f("&c権限がありません！"));
-        //registerCommand("match").setPermissionMessage(Chat.f("&c権限がありません！"));
-        //registerCommand("kiai").setPermissionMessage(Chat.f("&c権限がありません！"));
-        //registerCommand("resourcepack").setPermissionMessage(Chat.f("&c権限がありません！"));
-        //registerCommand("adminchat").setPermissionMessage(Chat.f("&c権限がありません！"));
 
         // リスナーの登録
         registerEvents(new MatchControlListener(),

@@ -18,20 +18,21 @@ import java.util.UUID;
 public class CustomItem {
 
     // 勝利したチームに配布するアイテム (卍勝者の証卍)
+    //todo:これ今使われてないかもしれない　勝者の証ではなく勝利の塊魂だったかな
     public ItemStack getWonItem() {
         ItemStack item = new ItemStack(Material.END_CRYSTAL);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(Chat.f("&6勝者の証&6"));
-        meta.setLore(Arrays.asList(Chat.f("&5勝者に与えられる証"), Chat.f("&5ダイヤと交換できる")));
+        meta.displayName(Chat.c("&6勝者の証&6"));
+        meta.lore(Arrays.asList(Chat.c("&5勝者に与えられる証"), Chat.c("&5ダイヤと交換できる")));
         item.setItemMeta(meta);
         return item;
     }
 
     // チームの色付きチェストプレート！！
-    public static ItemStack getTeamChestplate(BattleTeam team) {
+    public static ItemStack getTeamChestPlate(BattleTeam team) {
         ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-        meta.setDisplayName(team.getTeamName());
+        meta.displayName(team.getComponentTeamName());
         meta.setColor(team.getColor());
         meta.setUnbreakable(true);
         meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), "generic.armor", 0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST));
