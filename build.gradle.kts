@@ -1,9 +1,13 @@
+import de.undercouch.gradle.tasks.download.Download
+import de.undercouch.gradle.tasks.download.Verify
+
 plugins {
     `java-library`
     `maven-publish`
     alias(libs.plugins.shadow)
     alias(libs.plugins.runPaper)
     alias(libs.plugins.lombok)
+    alias(libs.plugins.download)
 }
 
 val targetJavaVersion = 17
@@ -31,12 +35,12 @@ dependencies {
     compileOnly(libs.worldeditCore)
     compileOnly(libs.placeholderApi)
     compileOnly(libs.worldguardBukkit)
-    compileOnly(libs.crackshot)
     compileOnly(libs.playerSettings)
     compileOnly(libs.kdStatusReloaded)
     compileOnly(libs.essentialsx)
     compileOnly(libs.nameChangeAutomation)
     compileOnly(libs.luckpermsApi)
+    compileOnly(fileTree("libs/"))
 
     implementation(libs.hikaricp)
     implementation(libs.mysqlConnectorJ)
@@ -60,28 +64,26 @@ java {
     }
 }
 
+val libsDir = layout.projectDirectory.dir("libs")
+val crackShotJar = libsDir.file("Crackshot.jar")
+
 tasks {
+    val downloadFile =
+        register<Download>("downloadFile") {
+            src("https://mediafilez.forgecdn.net/files/3151/915/CrackShot.jar")
+            dest(crackShotJar)
+            overwrite(false)
+        }
+
+    val verifyFile =
+        register<Verify>("verifyFile") {
+            src(crackShotJar)
+            algorithm("SHA-256")
+            checksum("8bb80635778a88521ca6d1ab8ce42bfec67174953967abf849dd231be16c7963")
+            dependsOn(downloadFile)
+        }
+
     jar {
-        dependsOn(shadowJar)
-    }
-
-    compileJava {
-        options.encoding = "UTF-8"
-    }
-
-    javadoc {
-        options.encoding = "UTF-8"
-    }
-
-    shadowJar {
-        mergeServiceFiles()
-        enableAutoRelocation = true
-        relocationPrefix = "net.azisaba.lgw.leongunwar.libs"
-    }
-}
-
-tasks {
-    build {
         dependsOn(shadowJar)
     }
 
@@ -133,6 +135,8 @@ tasks {
         if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
             options.release.set(targetJavaVersion)
         }
+
+        dependsOn(verifyFile)
     }
 
     javadoc {
