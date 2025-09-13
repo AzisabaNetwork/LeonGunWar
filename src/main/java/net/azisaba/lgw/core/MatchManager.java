@@ -62,6 +62,14 @@ import java.util.stream.Collectors;
  */
 @Data
 public class MatchManager {
+    /**
+     * 非同期処理にできそうな部分に
+     * //Tag:Async
+     * 修正が必要な部分に
+     * //Tag:Issue
+     * いらないやつ
+     * //Tag:Deprecated
+     */
 
     // 試合の残り時間
     private final AtomicInteger timeLeft = new AtomicInteger(0);
@@ -70,7 +78,7 @@ public class MatchManager {
     // 試合に参加するプレイヤーのリスト
     private final List<Player> entryPlayers = new ArrayList<>();
     // チェストプレート
-    private final Map<BattleTeam, ItemStack> chestplates = new HashMap<>();
+    private final Map<BattleTeam, ItemStack> chestPlates = new HashMap<>();
     // ポイントを集計するHashMap
     private final Map<BattleTeam, Integer> pointMap = new HashMap<>();
     // チームのリーダー
@@ -108,7 +116,7 @@ public class MatchManager {
         if (initialized) {
             return;
         }
-
+        //Tag:Async==========================================================================
         // killDeathCounterを新規作成
         killDeathCounter = new KillDeathCounter();
         // リスポーン情報を新規作成
@@ -132,14 +140,16 @@ public class MatchManager {
 
         // 各チームのチェストプレートを設定
         Arrays.stream(BattleTeam.values())
-                .forEach(team -> chestplates.put(team, CustomItem.getTeamChestPlate(team)));
+                .forEach(team -> chestPlates.put(team, CustomItem.getTeamChestPlate(team)));
 
         initialized = true;
+        //===================================================================================
     }
 
     /**
      * 空のボスバーを作成するメソッド
      */
+    //Tag:Issue 全体Utilに統合すべき
     public BossBar createEmptyBossBar() {
         BarColor barColor = BarColor.values()[new Random().nextInt(BarColor.values().length)];
         BarStyle barStyle = BarStyle.SEGMENTED_10;
@@ -151,6 +161,9 @@ public class MatchManager {
      *
      * @throws IllegalStateException すでにゲームがスタートしている場合
      */
+    //Tag:Issue Tag:Async
+    //・ロビーと試合サーバーの分割を前提に要修正　
+    //・CompletableFutureチェーンで非同期化
     public void startMatch() {
         // すでにマッチ中の場合はIllegalStateException
         Preconditions.checkState(!isMatching, "A match is already started.");
@@ -225,7 +238,7 @@ public class MatchManager {
             }
         }
 
-        // 全プレイヤーに音を鳴らす
+        // 全プレイヤーに音を鳴らす -> todo:試合参加プレイヤーに限定する
         BroadcastUtils.getOnlinePlayers()
                 .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
@@ -243,7 +256,7 @@ public class MatchManager {
         Bukkit.getPluginManager()
                 .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
-        //試合開始をほかサーバーに通知(要SyncCommandExec)
+        //試合開始をほかサーバーに通知(要SyncCommandExec) -> todo:RedisのStreamで通知させよう Regliaにサーバー間通知機能持たせてもいいかも
         if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv1")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv1");
         } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv2")) {
@@ -270,6 +283,9 @@ public class MatchManager {
     /**
      * ゲーム終了時に行う処理を書きます
      */
+    //Tag:Issue Tag:Async
+    //・再戦システムをここに入れないといけない
+    //・再戦しない場合はロビーサーバーへ強制送還
     public void finalizeMatch() {
         // タスクの終了
         if (matchTask != null) {
@@ -332,6 +348,8 @@ public class MatchManager {
      *
      * @param p 参加させたいプレイヤー
      */
+    //Tag:Issue Tag:Async
+    //・複数試合に対応させるため引数でString MatchID取得が必要
     public boolean addEntryPlayer(Player p) {
         // すでに参加している場合はreturn false
         if (entryPlayers.contains(p)) {
@@ -358,6 +376,8 @@ public class MatchManager {
      *
      * @param p 退出させたいプレイヤー
      */
+    //Tag:Issue
+    //・複数試合に対応させるため引数でString MatchID取得が必要
     public boolean removeEntryPlayer(Player p) {
         // 参加していない場合はreturn false
         if (!entryPlayers.contains(p)) {
@@ -386,6 +406,8 @@ public class MatchManager {
      * @param p 確認したいプレイヤー
      * @return エントリーに参加しているかどうか
      */
+    //Tag:Issue
+    //・複数試合に対応させるため引数でString MatchID取得が必要
     public boolean isEntryPlayer(Player p) {
         return entryPlayers.contains(p);
     }
@@ -394,6 +416,8 @@ public class MatchManager {
      * ゲームの残り時間を操作するタイマータスクを起動します 基本はMatchTimeChangedEventを利用して、イベントからゲームを操作するため
      * このタスクでは基本他の動作を行いません
      */
+    //Tag:Issue
+    //・複数試合に対応させるため引数でString MatchID取得+イベントに埋め込みが必要
     private void runMatchTask() {
         // 試合中ならreturn
         if (isMatching) {
@@ -408,6 +432,8 @@ public class MatchManager {
      *
      * @param p 退出させたいプレイヤー
      */
+    //Tag:Issue
+    //・複数試合に対応させるため引数でString MatchID取得が必要
     public void kickPlayer(Player p) {
         leavePlayer(p);
 
@@ -451,6 +477,8 @@ public class MatchManager {
      *
      * @return チームごとのプレイヤーのMap
      */
+    //Tag:Issue=================================================
+    //・MatchDataにこの機能移したほうがいい
     public Map<BattleTeam, List<Player>> getTeamPlayers() {
         return Arrays.stream(BattleTeam.values())
                 .collect(Collectors.toMap(Function.identity(), this::getTeamPlayers));
@@ -613,7 +641,10 @@ public class MatchManager {
             addTeamPoint(team);
         }
     }
+    //==============================================================================
 
+    //Tag:Issue Tag:Async
+    //・リーダーデスマッチとかの処理をここで書くべきでない。ゲームモード専用処理をinterfaceで実装してそこから独自処理を回すべき
     public boolean addPlayerIntoBattle(Player p) {
         // すでに参加している場合はreturn
         if (getAllTeamPlayers().contains(p)) {
@@ -690,6 +721,8 @@ public class MatchManager {
      * @param team リーダーを取得したいチーム
      * @return そのチームのリーダー / LDMが指定されていない場合もしくは存在しなければnullを返す
      */
+    //Tag:Issue========================================================
+    //・ゲームモード独自処理に書けここに書くな
     public Player getLDMLeader(BattleTeam team) {
         // 試合のモードがLDMでなければreturn null
         if (!leaderMatch) {
@@ -719,6 +752,7 @@ public class MatchManager {
      *
      * @param team 抽選したい対象のチーム
      */
+    //Tag:Async
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
 
@@ -749,7 +783,8 @@ public class MatchManager {
         // リーダーにタイトルを表示
         target.sendTitle(Chat.f("&cあなたがリーダーです！"), " ", 0, 20, 10);
     }
-
+    //=======================================================================================================
+    //Tag:Async
     protected void onDisablePlugin() {
         // 試合をしていなければreturn
         if (!isMatching) {
@@ -797,7 +832,8 @@ public class MatchManager {
         // ボスバーを非表示
         bossBar.removeAll();
     }
-
+    //Tag:Issue
+    //・ゲームモードの拡張性を著しく低下させる要因なのでこれもゲームモード側で指定できるように要修正
     private void setUpPlayer(Player p, BattleTeam team) {
         // メッセージを表示する
         p.sendMessage(Chat.f("{0}&7あなたは &r{1} &7になりました！", LeonGunWar.GAME_PREFIX, team.getTeamName()));
@@ -810,7 +846,7 @@ public class MatchManager {
         //エフェクト削除
         p.getActivePotionEffects().forEach(potionEffect -> p.removePotionEffect(potionEffect.getType()));
         // 防具を装備
-        p.getInventory().setChestplate(chestplates.get(team));
+        p.getInventory().setChestplate(chestPlates.get(team));
         // 別pl用のtagを付与。
         p.removeScoreboardTag("red");
         p.removeScoreboardTag("blue");
@@ -824,6 +860,7 @@ public class MatchManager {
     /**
      * 各チームの初期化を行います
      */
+    //Tag:Async
     private void initializeTeams() {
         // すでに初期化されている場合はreturn
         if (initialized) {
@@ -832,6 +869,7 @@ public class MatchManager {
 
         for (BattleTeam team : BattleTeam.values()) {
             String teamName = team.getTeamName();
+            //Tag: Issue チーム作成はUtilへ
 
             // チーム取得(なかったら作成)
             Team scoreboardTeam = scoreboard.getTeam(teamName);
@@ -854,7 +892,8 @@ public class MatchManager {
             teams.putIfAbsent(team, scoreboardTeam);
         }
     }
-
+    //Tag:Issue
+    //ゲームモード専用処理へいけ
     public void scheduleOrExtend(BattleTeam team, Plugin plugin, long delayTicks) {
         // 既存のタスクがあればキャンセル
         BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
@@ -873,6 +912,7 @@ public class MatchManager {
      * @param p 対象のプレイヤー
      * @return 対象のプレイヤーがリスポーンするべき場所
      */
+    //Tag:Deprecated
     public Location getRespawnLocation(Player p) {
 
         // 試合をしていなければlobbySpawnを返す
@@ -906,6 +946,8 @@ public class MatchManager {
      * @param team 対象のチーム
      * @return レベル
      */
+    //
+    //Tag:Deprecated
     public int getTeamPowerLevel(Team team) {
         int tpl = 0;
         // チームのエントリーリストを取得
@@ -930,6 +972,7 @@ public class MatchManager {
      * @param team 対象のチーム
      * @return レベル
      */
+    //Tag:Deprecated
     public int getTeamAcePowerLevel(Team team) {
         int tpl = 0;
         // チームのエントリーリストを取得
@@ -956,6 +999,7 @@ public class MatchManager {
      * @param team1,team2 チームのパワーレベル
      * @return 1=チーム1が大きい 2=チーム2が大きい 0=等しい
      */
+    //Tag:Deprecated
     public int getPowerLevelComparison(int team1, int team2) {
         if (team1 > team2) {
             return 1;
@@ -974,6 +1018,7 @@ public class MatchManager {
      * @param team1,team2 チームのパワーレベル
      * @return true = バランスがいい false = バランスが悪い
      */
+    //Tag:Deprecated
     public boolean getPowerLevelBalance(int team1, int team2) {
         return team1 + 1500 >= team2 && team1 - 1500 <= team2;
     }

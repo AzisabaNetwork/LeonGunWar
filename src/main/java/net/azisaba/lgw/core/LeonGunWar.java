@@ -7,7 +7,7 @@ import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.LimitCommand;
 import net.azisaba.lgw.core.commands.MapVoteCommand;
 import net.azisaba.lgw.core.commands.SiaiTuutiCommand;
-import net.azisaba.lgw.core.commands.SpawnCommand;
+import net.azisaba.lgw.core.commands.OverwriteCommand;
 import net.azisaba.lgw.core.commands.ToggleDoubleReward;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
@@ -188,7 +188,7 @@ public class LeonGunWar extends JavaPlugin {
         registerCommand("limit", new LimitCommand(preventItemDropListener));
         registerCommand("mapvote", new MapVoteCommand());
         registerCommand("lsyogo", new LSyogoCommand());
-        registerCommand("spawn", new SpawnCommand());
+        registerCommand("spawn", new OverwriteCommand());
         registerCommand("noticewar", new SiaiTuutiCommand());
         registerCommand("toggledoublereward", new ToggleDoubleReward());
         plLogger.info("コマンドの登録完了しました。");
