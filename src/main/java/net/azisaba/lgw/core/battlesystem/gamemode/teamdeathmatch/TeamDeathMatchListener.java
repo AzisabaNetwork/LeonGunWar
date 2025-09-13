@@ -1,12 +1,12 @@
-package net.azisaba.lgw.core.listeners.modes;
+package net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.battlesystem.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.battlesystem.MatchMode;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,6 +19,8 @@ import java.util.Collections;
  *
  * @author siloneco
  */
+//Tag:Deprecated
+//・不人気
 public class TeamDeathMatchListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -6,7 +6,7 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
-import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.namechange.config.NameChangeInfoIO;

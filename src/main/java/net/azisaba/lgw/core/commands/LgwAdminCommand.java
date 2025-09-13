@@ -2,12 +2,12 @@ package net.azisaba.lgw.core.commands;
 
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.battlesystem.MatchManager;
 import net.azisaba.lgw.core.util.Args;
-import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.battlesystem.MatchMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

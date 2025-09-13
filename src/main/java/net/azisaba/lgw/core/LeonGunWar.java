@@ -2,6 +2,7 @@ package net.azisaba.lgw.core;
 
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.battlesystem.MatchManager;
 import net.azisaba.lgw.core.commands.LSyogoCommand;
 import net.azisaba.lgw.core.commands.LgwAdminCommand;
 import net.azisaba.lgw.core.commands.LimitCommand;
@@ -23,10 +24,9 @@ import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.PlayerControlListener;
-import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
-import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
-import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
-import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
+import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.LeaderDeathMatchListener;
+import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TDMNoLimitListener;
+import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TeamDeathMatchListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
@@ -54,7 +54,6 @@ import net.azisaba.lgw.core.listeners.others.RemoveKillStreakScoreListener;
 import net.azisaba.lgw.core.listeners.others.RespawnKillProtectionListener;
 import net.azisaba.lgw.core.listeners.others.SignWithColorListener;
 import net.azisaba.lgw.core.listeners.others.StreaksListener;
-import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
@@ -67,7 +66,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListene
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.tasks.SignRemoveTask;
-import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.ClockMachine;
 import net.azisaba.lgw.core.util.LGWExpansion;
@@ -198,7 +197,6 @@ public class LeonGunWar extends JavaPlugin {
                 new EntrySignListener(),
                 new MatchModeSignListener(),
                 new JoinAfterSignListener(),
-                new CustomMatchSignListener(),
                 new MatchStartDetectListener(),
                 new DamageListener(),
                 new PlayerControlListener());
@@ -206,8 +204,8 @@ public class LeonGunWar extends JavaPlugin {
         // リスナーの登録 (modes)
         registerEvents(new TeamDeathMatchListener(),
                 new TDMNoLimitListener(),
-                new LeaderDeathMatchListener(),
-                new CustomTDMListener());
+                new LeaderDeathMatchListener()
+        );
 
         // リスナーの登録 (others)
         registerEvents(new NoArrowGroundListener(),

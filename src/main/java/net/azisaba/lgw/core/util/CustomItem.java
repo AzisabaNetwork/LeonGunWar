@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.util;
 
 import lombok.experimental.UtilityClass;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;

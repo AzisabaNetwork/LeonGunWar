@@ -1,9 +1,10 @@
-package net.azisaba.lgw.core;
+package net.azisaba.lgw.core.battlesystem;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.Data;
 import lombok.NonNull;
+import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
@@ -13,17 +14,14 @@ import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
-import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
-import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
+import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.task.LeaderSelectionTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
-import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.ItemChangeValidator;
 import net.azisaba.lgw.core.util.KillDeathCounter;
-import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.RespawnProtection;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import net.kyori.adventure.text.Component;
@@ -111,7 +109,7 @@ public class MatchManager {
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
      */
-    protected void initialize() {
+    public void initialize() {
         // すでに初期化されている場合はreturn
         if (initialized) {
             return;
@@ -219,11 +217,6 @@ public class MatchManager {
             case LEADER_DEATH_MATCH_POINT:
                 leaderMatch = true;
                 break;
-            case CUSTOM_DEATH_MATCH:
-                if (CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader) {
-                    leaderMatch = true;
-                    break;
-                }
             default:
                 leaderMatch = false;
         }
@@ -247,7 +240,7 @@ public class MatchManager {
                 Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         BroadcastUtils.broadcast(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX,
                 SecondOfDay.f(matchMode.getDuration().getSeconds())));
-        // 勝利条件を発表z
+        // 勝利条件を発表
         BroadcastUtils.broadcast(
                 Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         BroadcastUtils.broadcast(
@@ -785,7 +778,7 @@ public class MatchManager {
     }
     //=======================================================================================================
     //Tag:Async
-    protected void onDisablePlugin() {
+    public void onDisablePlugin() {
         // 試合をしていなければreturn
         if (!isMatching) {
             return;

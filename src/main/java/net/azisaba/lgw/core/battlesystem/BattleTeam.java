@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.util;
+package net.azisaba.lgw.core.battlesystem;
 
 import lombok.Getter;
 import net.kyori.adventure.text.Component;

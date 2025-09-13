@@ -1,4 +1,6 @@
-package net.azisaba.lgw.core.util;
+package net.azisaba.lgw.core.battlesystem;
+
+import net.azisaba.lgw.core.util.Chat;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -7,7 +9,7 @@ import java.util.List;
 //@Getter
 //@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum MatchMode {
-
+    //Tag:Deprecated
     TEAM_DEATH_MATCH(
             Chat.f("&9チームデスマッチ"),
             Chat.f("&9TDM"),
@@ -21,7 +23,7 @@ public enum MatchMode {
             Chat.f("&7終了時に &cキル数が多いチーム &7が勝利"),
             Duration.ofMinutes(10),
             Arrays.asList("tdmn", "nolimit", "no-limit", "teamdeathmatchnolimit", "tdm-nolimit", "tdm-no-limit", "team-no-limit", "team-nolimit")),
-
+    //Tag:Deprecated
     LEADER_DEATH_MATCH(
             Chat.f("&dリーダーデスマッチ"),
             Chat.f("&dLDM"),
@@ -35,7 +37,7 @@ public enum MatchMode {
             Chat.f("&7終了時に &cポイントが多いチーム &7が勝利"),
             Duration.ofMinutes(10),
             Arrays.asList("ldmp", "ldm-point", "leaderdeathmatchpoint", "leader-point")),
-
+    //Tag:Deprecated
     CUSTOM_DEATH_MATCH(
             Chat.f("&bカスタムデスマッチ"),
             Chat.f("&bCDM"),

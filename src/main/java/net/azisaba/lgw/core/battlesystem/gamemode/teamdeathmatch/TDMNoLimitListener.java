@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.listeners.modes;
+package net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch;
 
 import org.bukkit.event.Listener;
 

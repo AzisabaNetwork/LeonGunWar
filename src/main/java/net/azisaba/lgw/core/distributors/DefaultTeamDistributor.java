@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.distributors;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.battlesystem.MatchManager;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 

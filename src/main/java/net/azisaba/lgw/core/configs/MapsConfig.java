@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Location;

@@ -1,7 +1,7 @@
-package net.azisaba.lgw.core.tasks;
+package net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.task;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LeaderSelectionTask extends BukkitRunnable {

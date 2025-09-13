@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.util;
 
 import lombok.Data;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import org.bukkit.Location;
 import org.bukkit.World;
 

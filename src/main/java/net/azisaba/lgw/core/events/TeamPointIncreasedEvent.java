@@ -2,7 +2,7 @@ package net.azisaba.lgw.core.events;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

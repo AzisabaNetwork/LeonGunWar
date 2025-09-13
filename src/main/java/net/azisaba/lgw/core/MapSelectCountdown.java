@@ -2,7 +2,7 @@ package net.azisaba.lgw.core;
 
 import net.azisaba.lgw.core.tasks.MapSelectCountdownTask;
 import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.battlesystem.MatchMode;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;

@@ -6,7 +6,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.battlesystem.MatchMode;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;

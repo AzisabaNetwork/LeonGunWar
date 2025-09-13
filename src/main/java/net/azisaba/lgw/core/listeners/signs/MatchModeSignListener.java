@@ -10,7 +10,7 @@ import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.LgwLog;
-import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.battlesystem.MatchMode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
