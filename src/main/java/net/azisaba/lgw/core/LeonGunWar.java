@@ -9,7 +9,6 @@ import net.azisaba.lgw.core.commands.LimitCommand;
 import net.azisaba.lgw.core.commands.MapVoteCommand;
 import net.azisaba.lgw.core.commands.SiaiTuutiCommand;
 import net.azisaba.lgw.core.commands.OverwriteCommand;
-import net.azisaba.lgw.core.commands.ToggleDoubleReward;
 import net.azisaba.lgw.core.commands.UAVCommand;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.DatabaseConfig;
@@ -30,7 +29,6 @@ import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TeamDeathMatchL
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
-import net.azisaba.lgw.core.listeners.others.CrackShotLimitListener;
 import net.azisaba.lgw.core.listeners.others.DisableBlockInteractListener;
 import net.azisaba.lgw.core.listeners.others.DisableChangeItemListener;
 import net.azisaba.lgw.core.listeners.others.DisableHopperPickupListener;
@@ -41,7 +39,6 @@ import net.azisaba.lgw.core.listeners.others.DisableRecipeListener;
 import net.azisaba.lgw.core.listeners.others.DisableTNTBlockDamageListener;
 import net.azisaba.lgw.core.listeners.others.EnableKeepInventoryListener;
 import net.azisaba.lgw.core.listeners.others.FixStrikesCooldownListener;
-import net.azisaba.lgw.core.listeners.others.KillVillagerOnChunkLoadListener;
 import net.azisaba.lgw.core.listeners.others.LimitActionListener;
 import net.azisaba.lgw.core.listeners.others.LobbyListener;
 import net.azisaba.lgw.core.listeners.others.NoArrowGroundListener;
@@ -57,18 +54,11 @@ import net.azisaba.lgw.core.listeners.others.StreaksListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
 import net.azisaba.lgw.core.listeners.signs.JoinAfterSignListener;
 import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
-import net.azisaba.lgw.core.listeners.weaponcontrols.DisableNormalWeaponsInNewYearPvEListener;
-import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsDuringMatchListener;
-import net.azisaba.lgw.core.listeners.weaponcontrols.DisablePvEsInLobbyListener;
-import net.azisaba.lgw.core.listeners.weaponcontrols.DisableToysDuringMatchListener;
-import net.azisaba.lgw.core.listeners.weaponcontrols.DisableWaveDuringMatchListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
-import net.azisaba.lgw.core.tasks.SignRemoveTask;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.ClockMachine;
 import net.azisaba.lgw.core.util.LGWExpansion;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
@@ -189,7 +179,6 @@ public class LeonGunWar extends JavaPlugin {
         registerCommand("lsyogo", new LSyogoCommand());
         registerCommand("spawn", new OverwriteCommand());
         registerCommand("noticewar", new SiaiTuutiCommand());
-        registerCommand("toggledoublereward", new ToggleDoubleReward());
         plLogger.info("コマンドの登録完了しました。");
 
         // リスナーの登録
@@ -220,7 +209,6 @@ public class LeonGunWar extends JavaPlugin {
                 new AfkKickEntryListener(),
                 new StreaksListener(),
                 new DisableRecipeListener(),
-                new CrackShotLimitListener(),
                 new DisableTNTBlockDamageListener(),
                 new SignWithColorListener(),
                 new DisableChangeItemListener(),
@@ -236,27 +224,16 @@ public class LeonGunWar extends JavaPlugin {
                 preventItemDropListener,
                 new DisableHopperPickupListener(),
                 new NoFishingOnFightListener(),
-                new KillVillagerOnChunkLoadListener(),
                 new PreventEscapeListener(),
                 new RemoveKillStreakScoreListener());
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
-        registerEvents(new DisableToysDuringMatchListener(),
-                new DisablePvEsDuringMatchListener(),
-                new DisablePvEsInLobbyListener(),
-                new DisableNormalWeaponsInNewYearPvEListener(),
-                new DisableWaveDuringMatchListener(),
+        registerEvents(
                 new LimitOneShotPerMatchListener());
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
-        new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
-        doubleRewardEnable = ClockMachine.isWithinRewardTime();
-        if (getConfig().getBoolean("DoubleRewardTaskEnable", false)) {
-            new ClockMachine().doubleRewardTaskStarter();
-        }
 
         plLogger.info("{} が有効化されました。", getName());
     }
