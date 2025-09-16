@@ -42,8 +42,9 @@ dependencies {
     compileOnly(libs.luckpermsApi)
     compileOnly(fileTree("libs/"))
 
+    implementation(libs.configLib)
     implementation(libs.hikaricp)
-    implementation(libs.mysqlConnectorJ)
+    implementation(libs.mariaDBConnectorJ)
     implementation(libs.bundles.jdbi)
 
     implementation(libs.jsonMessage)
