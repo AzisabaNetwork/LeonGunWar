@@ -25,6 +25,7 @@ nameChangeAutomation = "2.0.1"
 essentialsx = "2.19.2"
 luckpermsApi = "5.4"
 mysqlConnectorJ = "9.4.0"
+jdbi = "3.49.5"
 jspecify = "1.0.0"
 junit = "5.13.4"
 
@@ -47,6 +48,9 @@ caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "c
 # database
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 mysqlConnectorJ = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorJ" }
+jdbiCore = { module = "org.jdbi:jdbi3-core", version.ref = "jdbi" }
+jdbiSqlobject = { module = "org.jdbi:jdbi3-sqlobject", version.ref = "jdbi" }
+
 
 # util
 jsonMessage = { module = "me.rayzr522:jsonmessage", version.ref = "jsonMessage" }
@@ -68,3 +72,9 @@ jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 junitBom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter" }
 junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher" }
+
+[bundles]
+jdbi = [
+    "jdbiCore",
+    "jdbiSqlobject"
+]
