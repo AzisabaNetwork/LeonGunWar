@@ -10,6 +10,7 @@ import java.time.Duration;
 
 public class NameChangeAutomationAPI {
     private static final NameChangeAutomationAPI API = new NameChangeAutomationAPI();
+
     public static NameChangeAutomationAPI getApi() {
         return API;
     }
@@ -22,13 +23,14 @@ public class NameChangeAutomationAPI {
 
     /**
      * Get base weapon's name
+     *
      * @param weaponTitle title of weapon
      * @return name of base weapon. If failure, null.
      */
     @Nullable
     public String getBaseWeapon(String weaponTitle) {
         var nameInfo = cache.get(weaponTitle);
-        if(nameInfo == null) return null;
+        if (nameInfo == null) return null;
         return nameInfo.getBaseWeapon();
     }
 }

@@ -20,7 +20,7 @@ public class EmblemCommand extends BaseCommand {
     @CommandCompletion("@players @emblems")
     private void give(Player player, OfflinePlayer targetPlayer, String emblemId) {
         String emblemDisplayName = plugin.getSyogoConfig().syogos.get(emblemId);
-        if(emblemDisplayName == null) {
+        if (emblemDisplayName == null) {
             player.sendMessage(Component.text("称号" + emblemId + "が見つかりませんでした。").color(NamedTextColor.RED));
             return;
         }

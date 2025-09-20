@@ -10,6 +10,6 @@
 # アシストストリークの倍数の設定
 levels:
   1:
-    messages: []
+    messages: [ ]
     commands:
       - "minecraft:give {0} minecraft:emerald 1"

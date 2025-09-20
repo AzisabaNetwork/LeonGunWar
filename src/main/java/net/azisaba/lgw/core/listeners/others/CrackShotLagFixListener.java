@@ -1,6 +1,5 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;

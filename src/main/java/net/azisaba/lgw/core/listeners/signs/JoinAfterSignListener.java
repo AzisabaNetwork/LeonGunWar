@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.listeners.signs;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.api.util.Chat;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

@@ -18,11 +18,12 @@ public class LimitActionAPI {
 
     /**
      * ドロップの許可を切り替え、最新の状態を返します
+     *
      * @param playerUuid player's uuid
      * @return allowed -> true, else -> false
      */
     public boolean toggleAllowDrop(UUID playerUuid) {
-        if(isAllowedDrop(playerUuid)) {
+        if (isAllowedDrop(playerUuid)) {
             allowDropPlayers.remove(playerUuid);
         } else {
             allowDropPlayers.add(playerUuid);
@@ -32,11 +33,12 @@ public class LimitActionAPI {
 
     /**
      * 建築の許可を切り替え、最新の状態を返します
+     *
      * @param playerUuid player's uuid
      * @return allowed -> true, else false
      */
     public boolean toggleAllowBuild(UUID playerUuid) {
-        if(isAllowedBuild(playerUuid)) {
+        if (isAllowedBuild(playerUuid)) {
             allowBuildPlayers.remove(playerUuid);
         } else {
             allowBuildPlayers.add(playerUuid);
@@ -46,6 +48,7 @@ public class LimitActionAPI {
 
     /**
      * ドロップが許可されているかどうか
+     *
      * @param playerUuid player's uuid
      * @return allowed -> true, else -> false
      */
@@ -55,6 +58,7 @@ public class LimitActionAPI {
 
     /**
      * 建築が許可されているかどうか
+     *
      * @param playerUuid player's uuid
      * @return allowed -> true, else -> false
      */

@@ -1,9 +1,9 @@
 package net.azisaba.lgw.core.listeners;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.battlesystem.MatchManager;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
-import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.util.SyogoData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

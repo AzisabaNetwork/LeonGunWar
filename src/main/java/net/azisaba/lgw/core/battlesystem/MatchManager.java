@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import lombok.Data;
 import lombok.NonNull;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.api.util.Chat;
+import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.task.LeaderSelectionTask;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
@@ -14,10 +16,8 @@ import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
-import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.task.LeaderSelectionTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BroadcastUtils;
-import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.ItemChangeValidator;
@@ -776,6 +776,7 @@ public class MatchManager {
         // リーダーにタイトルを表示
         target.sendTitle(Chat.f("&cあなたがリーダーです！"), " ", 0, 20, 10);
     }
+
     //=======================================================================================================
     //Tag:Async
     public void onDisablePlugin() {
@@ -825,6 +826,7 @@ public class MatchManager {
         // ボスバーを非表示
         bossBar.removeAll();
     }
+
     //Tag:Issue
     //・ゲームモードの拡張性を著しく低下させる要因なのでこれもゲームモード側で指定できるように要修正
     private void setUpPlayer(Player p, BattleTeam team) {
@@ -885,6 +887,7 @@ public class MatchManager {
             teams.putIfAbsent(team, scoreboardTeam);
         }
     }
+
     //Tag:Issue
     //ゲームモード専用処理へいけ
     public void scheduleOrExtend(BattleTeam team, Plugin plugin, long delayTicks) {

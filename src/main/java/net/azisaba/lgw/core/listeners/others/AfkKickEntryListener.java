@@ -15,8 +15,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,14 +44,17 @@ public class AfkKickEntryListener implements Listener {
                         Math.abs(from.getZ() - to.getZ()) > POS_EPS;
 
         boolean movedRot =
-                Math.abs(norm(from.getYaw()   - to.getYaw()))   >= ROT_EPS ||
+                Math.abs(norm(from.getYaw() - to.getYaw())) >= ROT_EPS ||
                         Math.abs(norm(from.getPitch() - to.getPitch())) >= ROT_EPS;
 
         if (movedPos || movedRot) updateActivity(p.getUniqueId());
     }
 
-    private static float norm(float deg){
-        deg %= 360f; if (deg > 180f) deg -= 360f; if (deg < -180f) deg += 360f; return deg;
+    private static float norm(float deg) {
+        deg %= 360f;
+        if (deg > 180f) deg -= 360f;
+        if (deg < -180f) deg += 360f;
+        return deg;
     }
 
     /* ===== スロットル付きの更新 ===== */
@@ -99,6 +100,7 @@ public class AfkKickEntryListener implements Listener {
     public void onInvClick(InventoryClickEvent e) {
         if (e.getWhoClicked() instanceof Player p) updateActivity(p.getUniqueId());
     }
+
     @EventHandler
     public void onInvOpen(InventoryOpenEvent e) {
         if (e.getPlayer() instanceof Player p) updateActivity(p.getUniqueId());

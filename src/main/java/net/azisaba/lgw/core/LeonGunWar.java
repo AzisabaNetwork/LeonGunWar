@@ -3,7 +3,12 @@ package net.azisaba.lgw.core;
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.api.limit.LimitActionAPI;
+import net.azisaba.lgw.core.api.util.Chat;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.battlesystem.MatchManager;
+import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.LeaderDeathMatchListener;
+import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TDMNoLimitListener;
+import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TeamDeathMatchListener;
 import net.azisaba.lgw.core.commands.LGWCommands;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.DatabaseConfig;
@@ -18,9 +23,6 @@ import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.PlayerControlListener;
-import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.LeaderDeathMatchListener;
-import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TDMNoLimitListener;
-import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TeamDeathMatchListener;
 import net.azisaba.lgw.core.listeners.others.AfkKickEntryListener;
 import net.azisaba.lgw.core.listeners.others.AutoRespawnListener;
 import net.azisaba.lgw.core.listeners.others.CrackShotLagFixListener;
@@ -52,8 +54,6 @@ import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
-import net.azisaba.lgw.core.battlesystem.BattleTeam;
-import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.LGWExpansion;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
@@ -159,7 +159,7 @@ public class LeonGunWar extends JavaPlugin {
         // 初期化が必要なファイルを初期化する
         manager.initialize();
         plLogger.info("ファイルの準備が完了しました。");
-;
+        ;
         sqlConnection = new SQLConnection(databaseConfig);
 
         // コマンドのインスタンスに渡す必要があるListener

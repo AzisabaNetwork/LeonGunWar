@@ -10,6 +10,7 @@ import java.time.Duration;
 
 public class CrackShotAPI {
     private static final CrackShotAPI API = new CrackShotAPI();
+
     public static CrackShotAPI getApi() {
         return API;
     }
@@ -21,7 +22,8 @@ public class CrackShotAPI {
 
     private final CSUtility csUtility = new CSUtility();
 
-    protected CrackShotAPI() {}
+    protected CrackShotAPI() {
+    }
 
     public boolean isLoaded() {
         return Bukkit.getPluginManager().isPluginEnabled(CRACKSHOT_PL);
@@ -34,12 +36,13 @@ public class CrackShotAPI {
 
     /**
      * Get weapon's strikes cooldown
+     *
      * @param weaponTitle title of weapon
      * @return millisecond. if failure, returns -1.
      */
     public long getStrikesCooldown(String weaponTitle) {
         var cs = crackShot();
-        if(cs != null) {
+        if (cs != null) {
             String cooldownNode = weaponTitle + ".Airstrikes.Multiple_Strikes.Delay_Between_Strikes";
             int cooldown = cs.getInt(cooldownNode);
             return Duration.ofSeconds(cooldown).toMillis();
@@ -50,18 +53,20 @@ public class CrackShotAPI {
 
     /**
      * Get string in specific path
+     *
      * @param path target path
      * @return literal. If not found, null.
      */
     @Nullable
     public String getString(String path) {
         var cs = crackShot();
-        if(cs == null) return null;
+        if (cs == null) return null;
         return cs.getString(path);
     }
 
     /**
      * Wrapper of {@link CSUtility#getWeaponTitle(ItemStack)}
+     *
      * @param itemStack target weapon stack
      * @return weapon title of target stack
      */

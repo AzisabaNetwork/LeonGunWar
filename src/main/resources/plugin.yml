@@ -1,17 +1,17 @@
 name: ${name}
 main: net.azisaba.lgw.core.LeonGunWar
 version: ${version}
-authors: ["siloneco", "YukiLeafX", "matsu1213", "Arisa9006", "sysnote8main"]
+authors: [ "siloneco", "YukiLeafX", "matsu1213", "Arisa9006", "sysnote8main" ]
 description: ${description}
 website: ${websiteUrl}
-depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "NameChangeAutomation", "LuckPerms"]
-softdepend: ["Multiverse-Core", "PlaceholderAPI"]
+depend: [ "CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "NameChangeAutomation", "LuckPerms" ]
+softdepend: [ "Multiverse-Core", "PlaceholderAPI" ]
 api-version: 1.16
 commands:
   leongunwaradmin:
     description: Nothing
     permission: leongunwar.command.leongunwaradmin
-    aliases: ["lgwadmin"]
+    aliases: [ "lgwadmin" ]
   uav:
     usage: /uav [Player]
     description: Nothing
@@ -22,17 +22,17 @@ commands:
   mapvote:
     usage: /mapvote <index>
     permission: leongunwar.command.mapvote
-    aliases: ["votemap"]
+    aliases: [ "votemap" ]
   kiai:
     usage: /kiai
     permission: leongunwar.command.kiai
   resourcepack:
     usage: /resourcepack
-    aliases: ["pack", "texture"]
+    aliases: [ "pack", "texture" ]
     permission: leongunwar.command.resourcepack
   adminchat:
     usage: /adminchat <msg>
-    aliases: ["c"]
+    aliases: [ "c" ]
     permission: leongunwar.adminchat.send
   limit:
     usage: /limit [drop/build]
@@ -41,7 +41,7 @@ commands:
     usage: /lsyogo <add/give/remove/delete/check>
     permission: leongunwar.command.syogo
   spawn:
-    aliases: ["lobby", "hub"]
+    aliases: [ "lobby", "hub" ]
     permission: leongunwar.command.spawn
   noticewar:
     usage: /noticewar

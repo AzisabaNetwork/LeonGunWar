@@ -3,8 +3,8 @@ package net.azisaba.lgw.core.listeners.others;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.api.limit.LimitActionAPI;
-import net.azisaba.lgw.core.commands.LimitCommand;
 import net.azisaba.lgw.core.api.util.Chat;
+import net.azisaba.lgw.core.commands.LimitCommand;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -37,7 +37,7 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if(hasPermission(p)) return;
+        if (hasPermission(p)) return;
         // allowDropPlayersに含まれていない場合はキャンセル
         if (!limitActionAPI().isAllowedDrop(p.getUniqueId())) {
             e.setCancelled(true);
@@ -51,7 +51,7 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if(hasPermission(p)) return;
+        if (hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);
@@ -65,7 +65,7 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if(hasPermission(p)) return;
+        if (hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);
@@ -101,7 +101,7 @@ public class LimitActionListener implements Listener {
         }
 
         // 権限がない場合return
-        if(hasPermission(p)) return;
+        if (hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);
@@ -120,7 +120,7 @@ public class LimitActionListener implements Listener {
         // プレイヤーを取得
 
         // 権限がない場合return
-        if(hasPermission(p)) return;
+        if (hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);

@@ -1,9 +1,9 @@
 package net.azisaba.lgw.core.commands;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.battlesystem.MatchManager;
-import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.api.util.Chat;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.MatchManager;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public class LuckPermsAPI {
     private static final LuckPermsAPI API = new LuckPermsAPI();
+
     public static LuckPermsAPI getApi() {
         return API;
     }
@@ -28,7 +29,7 @@ public class LuckPermsAPI {
     @Nullable
     public String getUserPrefix(@NonNull UUID playerUuid) {
         User user = getUser(playerUuid);
-        if(user == null) return null;
+        if (user == null) return null;
         return getUserPrefix(user);
     }
 
@@ -45,10 +46,10 @@ public class LuckPermsAPI {
     @Nullable
     public String getGroupName(@NonNull UUID playerUuid) {
         User user = getUser(playerUuid);
-        if(user == null) return null;
+        if (user == null) return null;
 
         Group group = getGroupByName(user.getPrimaryGroup());
-        if(group == null) return null;
+        if (group == null) return null;
 
         return getGroupName(group);
     }

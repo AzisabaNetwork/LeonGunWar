@@ -4,10 +4,10 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.api.integration.CrackShotAPI;
 import net.azisaba.lgw.core.api.integration.NameChangeAutomationAPI;
+import net.azisaba.lgw.core.api.util.Chat;
+import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
-import net.azisaba.lgw.core.battlesystem.BattleTeam;
-import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -202,7 +202,7 @@ public class DamageListener implements Listener {
         }
 
         Player killer = e.getEntity().getKiller();
-        if(killer == null) {
+        if (killer == null) {
             logger.warn("Killer is empty so skip task!");
             return;
         }

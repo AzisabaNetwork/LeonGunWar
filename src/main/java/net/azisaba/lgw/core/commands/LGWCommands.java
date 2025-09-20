@@ -49,19 +49,20 @@ public class LGWCommands {
 
     /**
      * register command
-     * @param commandName name of command
+     *
+     * @param commandName     name of command
      * @param commandExecutor executor of command
      * @return command instance. if failure, returns null.
      */
     @Nullable
     public PluginCommand registerCommand(String commandName, @Nullable CommandExecutor commandExecutor) {
         PluginCommand cmd = Bukkit.getPluginCommand(commandName);
-        if(cmd == null) {
+        if (cmd == null) {
             logger.warn("Failed to get command instance of {}", commandName);
             return null;
         }
 
-        if(commandExecutor != null) {
+        if (commandExecutor != null) {
             cmd.setExecutor(commandExecutor);
         }
         return cmd;
