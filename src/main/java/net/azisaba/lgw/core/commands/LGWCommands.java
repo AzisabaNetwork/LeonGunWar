@@ -1,6 +1,8 @@
 package net.azisaba.lgw.core.commands;
 
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.BukkitCommandCompletionContext;
+import co.aikar.commands.CommandCompletions;
 import co.aikar.commands.PaperCommandManager;
 import net.azisaba.lgw.core.LeonGunWar;
 import org.bukkit.Bukkit;
@@ -20,6 +22,7 @@ public class LGWCommands {
 
         // acf commands
         commandManager = new PaperCommandManager(plugin);
+        registerCompletions(commandManager.getCommandCompletions());
         commandManager.registerCommand(new LimitCommand());
 
         // normal commands
@@ -30,6 +33,10 @@ public class LGWCommands {
         registerCommand("lsyogo", new LSyogoCommand());
         registerCommand("spawn", new OverwriteCommand());
         registerCommand("noticewar", new SiaiTuutiCommand());
+    }
+
+    private void registerCompletions(CommandCompletions<BukkitCommandCompletionContext> commandCompletions) {
+        commandCompletions.registerCompletion("emblems", c -> plugin.getSyogoConfig().syogos.keySet().stream().toList());
     }
 
     private void register(BaseCommand command) {
