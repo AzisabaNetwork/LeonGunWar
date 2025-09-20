@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.db;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.azisaba.lgw.core.api.config.LGWConfig;
+import net.azisaba.lgw.core.api.db.EmblemDataRepository;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.jspecify.annotations.NullMarked;
@@ -11,7 +12,7 @@ import org.jspecify.annotations.NullMarked;
 public class Database {
     protected final HikariDataSource hikariDataSource;
     protected final Jdbi jdbi;
-    protected final SyogoDataRepository syogoDataRepository;
+    protected final EmblemDataRepository emblemDataRepository;
 
     // Todo: implement this when support new config
     public Database(LGWConfig.DatabaseConfig databaseConfig) {
@@ -29,7 +30,7 @@ public class Database {
 
         jdbi = Jdbi.create(hikariDataSource);
         jdbi.installPlugin(new SqlObjectPlugin());
-        syogoDataRepository = jdbi.onDemand(SyogoDataRepository.class);
+        emblemDataRepository = jdbi.onDemand(EmblemDataRepository.class);
 
         migrate();
     }
@@ -38,8 +39,8 @@ public class Database {
         hikariDataSource.close();
     }
 
-    public SyogoDataRepository syogoDataRepository() {
-        return syogoDataRepository;
+    public EmblemDataRepository syogoDataRepository() {
+        return emblemDataRepository;
     }
 
     public void migrate() {
