@@ -1,6 +1,9 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.api.limit.LimitActionAPI;
+import net.azisaba.lgw.core.commands.LimitCommand;
 import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -21,12 +24,14 @@ import java.util.UUID;
 /**
  * 運営の不必要な動きを制限するListener
  *
- * @author siloneco
+ * @author siloneco, sysnote8main
  */
 public class LimitActionListener implements Listener {
+    private final LeonGunWar plugin;
 
-    private final List<UUID> allowDropPlayers = new ArrayList<>();
-    private final List<UUID> allowBuildPlayers = new ArrayList<>();
+    public LimitActionListener(LeonGunWar plugin) {
+        this.plugin = plugin;
+    }
 
     // アイテムドロップ時
     @EventHandler
@@ -34,11 +39,9 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if (!p.hasPermission("leongunwar.command.limit")) {
-            return;
-        }
+        if(hasPermission(p)) return;
         // allowDropPlayersに含まれていない場合はキャンセル
-        if (!allowDropPlayers.contains(p.getUniqueId())) {
+        if (!limitActionAPI().isAllowedDrop(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&cアイテムをドロップするには /limit drop と入力"), p);
         }
@@ -50,11 +53,9 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if (!p.hasPermission("leongunwar.command.limit")) {
-            return;
-        }
+        if(hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if (!allowBuildPlayers.contains(p.getUniqueId())) {
+        if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -66,11 +67,9 @@ public class LimitActionListener implements Listener {
         Player p = e.getPlayer();
 
         // 権限がない場合return
-        if (!p.hasPermission("leongunwar.command.limit")) {
-            return;
-        }
+        if(hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if (!allowBuildPlayers.contains(p.getUniqueId())) {
+        if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -104,11 +103,9 @@ public class LimitActionListener implements Listener {
         }
 
         // 権限がない場合return
-        if (!p.hasPermission("leongunwar.command.limit")) {
-            return;
-        }
+        if(hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if (!allowBuildPlayers.contains(p.getUniqueId())) {
+        if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -125,11 +122,9 @@ public class LimitActionListener implements Listener {
         // プレイヤーを取得
 
         // 権限がない場合return
-        if (!p.hasPermission("leongunwar.command.limit")) {
-            return;
-        }
+        if(hasPermission(p)) return;
         // allowBuildPlayersに含まれていない場合はキャンセル
-        if (!allowBuildPlayers.contains(p.getUniqueId())) {
+        if (!limitActionAPI().isAllowedBuild(p.getUniqueId())) {
             e.setCancelled(true);
             JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
         }
@@ -138,27 +133,14 @@ public class LimitActionListener implements Listener {
     @EventHandler
     public void onLeft(PlayerQuitEvent e) {
         UUID id = e.getPlayer().getUniqueId();
-        allowDropPlayers.remove(id);
-        allowBuildPlayers.remove(id);
+        limitActionAPI().removePlayerData(id);
     }
 
-    public boolean toggleAllowDrop(Player player) {
-        if (allowDropPlayers.contains(player.getUniqueId())) {
-            allowDropPlayers.remove(player.getUniqueId());
-            return false;
-        } else {
-            allowDropPlayers.add(player.getUniqueId());
-            return true;
-        }
+    private boolean hasPermission(Player player) {
+        return player.hasPermission(LimitCommand.PERMISSION);
     }
 
-    public boolean toggleAllowBuild(Player player) {
-        if (allowBuildPlayers.contains(player.getUniqueId())) {
-            allowBuildPlayers.remove(player.getUniqueId());
-            return false;
-        } else {
-            allowBuildPlayers.add(player.getUniqueId());
-            return true;
-        }
+    private LimitActionAPI limitActionAPI() {
+        return plugin.getLimitActionAPI();
     }
 }

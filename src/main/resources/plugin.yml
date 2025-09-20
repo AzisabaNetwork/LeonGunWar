@@ -72,7 +72,7 @@ permissions:
     default: op
   leongunwar.adminchat.receive:
     default: op
-  leongunwar.command.limit:
+  leongunwar.cmd.limit:
     default: op
   leongunwar.command.syogo:
     default: true

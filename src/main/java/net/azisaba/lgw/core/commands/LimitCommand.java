@@ -1,47 +1,62 @@
 package net.azisaba.lgw.core.commands;
 
-import net.azisaba.lgw.core.listeners.others.LimitActionListener;
-import net.azisaba.lgw.core.util.Chat;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Dependency;
+import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Subcommand;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.MessageUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
-public class LimitCommand implements CommandExecutor {
+// you can use multiple alias with | ex. limit|limitaction
+@CommandAlias("limit")
+@CommandPermission(LimitCommand.PERMISSION)
+@SuppressWarnings("unused")
+public class LimitCommand extends BaseCommand {
+    public static final String PERMISSION = "leongunwar.cmd.limit";
 
-    private final LimitActionListener listener;
-
-    public LimitCommand(LimitActionListener listener) {
-        this.listener = listener;
+    @Default
+    private void onDefault(Player player) {
+        player.sendMessage(Component.text("Usage: /limit <mode>"));
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player p)) {
-            sender.sendMessage(Chat.f("&cこのコマンドはプレイヤーのみ実行可能です"));
-            return true;
+    @Subcommand("build")
+    @Description("Toggle build limit")
+    public static class Build extends BaseCommand {
+        @Dependency
+        private LeonGunWar plugin;
+
+        @Default
+        private void onDefault(Player player) {
+            toggle(player);
         }
 
-        if (args.length <= 0) {
-            p.sendMessage(Chat.f("&c使い方: /limit [&edrop&c/&ebuild&c]"));
-            return true;
+        @Subcommand("toggle")
+        private void toggle(Player player) {
+            boolean newState = plugin.getLimitActionAPI().toggleAllowBuild(player.getUniqueId());
+            player.sendMessage(MessageUtil.getAbleComponent("アイテムドロップ", newState));
+        }
+    }
+
+    @Subcommand("build")
+    @Description("Toggle drop limit")
+    public static class Drop extends BaseCommand {
+        @Dependency
+        private LeonGunWar plugin;
+
+        @Default
+        private void onDefault(Player player) {
+            toggle(player);
         }
 
-        if (args[0].equalsIgnoreCase("drop")) {
-            boolean now = listener.toggleAllowDrop(p);
-            if (now) {
-                p.sendMessage(Chat.f("&aアイテムドロップが可能になりました"));
-            } else {
-                p.sendMessage(Chat.f("&cアイテムドロップが不可能になりました"));
-            }
-        } else if (args[0].equalsIgnoreCase("build")) {
-            boolean now = listener.toggleAllowBuild(p);
-            if (now) {
-                p.sendMessage(Chat.f("&a建築が可能になりました"));
-            } else {
-                p.sendMessage(Chat.f("&c建築が不可能になりました"));
-            }
+        @Subcommand("toggle")
+        private void toggle(Player player) {
+            boolean newState = plugin.getLimitActionAPI().toggleAllowDrop(player.getUniqueId());
+            player.sendMessage(MessageUtil.getAbleComponent("建築", newState));
         }
-        return true;
     }
 }

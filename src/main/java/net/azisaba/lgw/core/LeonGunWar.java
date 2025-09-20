@@ -2,14 +2,9 @@ package net.azisaba.lgw.core;
 
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.api.limit.LimitActionAPI;
 import net.azisaba.lgw.core.battlesystem.MatchManager;
-import net.azisaba.lgw.core.commands.LSyogoCommand;
-import net.azisaba.lgw.core.commands.LgwAdminCommand;
-import net.azisaba.lgw.core.commands.LimitCommand;
-import net.azisaba.lgw.core.commands.MapVoteCommand;
-import net.azisaba.lgw.core.commands.SiaiTuutiCommand;
-import net.azisaba.lgw.core.commands.OverwriteCommand;
-import net.azisaba.lgw.core.commands.UAVCommand;
+import net.azisaba.lgw.core.commands.LGWCommands;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
 import net.azisaba.lgw.core.configs.DatabaseConfig;
 import net.azisaba.lgw.core.configs.ItemsConfig;
@@ -62,14 +57,11 @@ import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.LGWExpansion;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -99,6 +91,8 @@ public class LeonGunWar extends JavaPlugin {
     private final MatchManager manager = new MatchManager();
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
+    private final LimitActionAPI limitActionAPI = new LimitActionAPI();
+    private LGWCommands lgwCommands;
     private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
@@ -169,16 +163,10 @@ public class LeonGunWar extends JavaPlugin {
         sqlConnection = new SQLConnection(databaseConfig);
 
         // コマンドのインスタンスに渡す必要があるListener
-        LimitActionListener preventItemDropListener = new LimitActionListener();
+        LimitActionListener preventItemDropListener = new LimitActionListener(this);
 
         // コマンドの登録
-        registerCommand("leongunwaradmin", new LgwAdminCommand());
-        registerCommand("uav", new UAVCommand());
-        registerCommand("limit", new LimitCommand(preventItemDropListener));
-        registerCommand("mapvote", new MapVoteCommand());
-        registerCommand("lsyogo", new LSyogoCommand());
-        registerCommand("spawn", new OverwriteCommand());
-        registerCommand("noticewar", new SiaiTuutiCommand());
+        lgwCommands = new LGWCommands(this);
         plLogger.info("コマンドの登録完了しました。");
 
         // リスナーの登録
@@ -245,32 +233,14 @@ public class LeonGunWar extends JavaPlugin {
         }
     }
 
-    /**
-     * register command
-     * @param commandName name of command
-     * @param commandExecutor executor of command
-     * @return command instance. if failure, returns null.
-     */
-    @Nullable
-    public PluginCommand registerCommand(String commandName, @Nullable CommandExecutor commandExecutor) {
-        PluginCommand cmd = Bukkit.getPluginCommand(commandName);
-        if(cmd == null) {
-            plLogger.warn("Failed to get command instance of {}", commandName);
-            return null;
-        }
-
-        if(commandExecutor != null) {
-            cmd.setExecutor(commandExecutor);
-        }
-        return cmd;
-    }
-
     @Override
     public void onDisable() {
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
 
         this.sqlConnection.onDisable();
+
+        lgwCommands.onDisable();
 
         plLogger.info(Chat.f("{0} が無効化されました。", getName()));
     }
@@ -322,5 +292,9 @@ public class LeonGunWar extends JavaPlugin {
 
     public SQLConnection getSqlConnection() {
         return sqlConnection;
+    }
+
+    public LimitActionAPI getLimitActionAPI() {
+        return limitActionAPI;
     }
 }

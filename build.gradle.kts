@@ -28,6 +28,7 @@ repositories {
     maven("https://repo.glaremasters.me/repository/concuncan/")
     maven("https://repo.azisaba.net/repository/maven-public/")
     maven("https://repo.maven.apache.org/maven2/")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 dependencies {
@@ -47,6 +48,7 @@ dependencies {
     implementation(libs.mariaDBConnectorJ)
     implementation(libs.bundles.jdbi)
 
+    implementation(libs.acfPaper)
     implementation(libs.jsonMessage)
     implementation(libs.slimeworldmanagerApi)
 
@@ -143,6 +145,10 @@ tasks {
 
     javadoc {
         options.encoding = "UTF-8"
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
 
