@@ -76,21 +76,21 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
                 List<GameMap> correctMapList = LeonGunWar.getPlugin().getMapsConfig()
                         .getAllGameMap().stream()
-                        .filter(map -> map.getMapName().equalsIgnoreCase(mapName)
-                                || map.getMapName().equalsIgnoreCase(mapName.replace(" ", "_")))
+                        .filter(map -> map.mapName().equalsIgnoreCase(mapName)
+                                || map.mapName().equalsIgnoreCase(mapName.replace(" ", "_")))
                         .collect(Collectors.toList());
 
                 if (correctMapList.size() == 1) {
                     Location spawn = correctMapList.get(0).getSpawnPoint(BattleTeam.values()[0]);
                     p.teleport(spawn);
-                    p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", correctMapList.get(0).getMapName()));
+                    p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", correctMapList.get(0).mapName()));
                 } else if (correctMapList.size() > 1) {
                     p.sendMessage(Chat.f("&cマッチしたマップが2つあります"));
                     correctMapList.forEach(map -> {
                         Location spawn = map.getSpawnPoint(BattleTeam.values()[0]);
                         JSONMessage msg = JSONMessage.create(Chat.f(
                                 "&7 - &e{0}: &7{1}, {2}, {3} &7({4})",
-                                map.getMapName(), spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getWorld().getName()
+                                map.mapName(), spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getWorld().getName()
                         ));
                         msg.tooltip(Chat.f("&eクリックでテレポート"));
                         msg.runCommand(Chat.f("/essentials:tppos {0} {1} {2} {3} {4} {5}",
@@ -184,7 +184,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         if (args.length == 2 && Args.check(args, 0, "teleport", "tp")) {
             return Args.complete(args, 1,
                     LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
-                            .map(GameMap::getMapName)
+                            .map(GameMap::mapName)
                             .toArray(String[]::new));
         }
         return null;

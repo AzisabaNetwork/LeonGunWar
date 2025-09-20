@@ -181,7 +181,7 @@ public class DamageListener implements Listener {
         }
 
         // 試合中のワールドではない場合はreturn
-        if (p.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
+        if (p.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().world()) {
             return;
         }
 

@@ -48,7 +48,7 @@ public class MapVoteCommand implements CommandExecutor {
         LeonGunWar.getPlugin().getMapSelectCountdown().vote((Player) sender, index);
 
         // メッセージを送信
-        String mapName = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().get(index).getMapName();
+        String mapName = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().get(index).mapName();
         sender.sendMessage(Chat.f("{0} &e{1} &7に投票しました！", LeonGunWar.GAME_PREFIX, mapName));
         return true;
     }

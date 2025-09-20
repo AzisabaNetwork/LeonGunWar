@@ -58,7 +58,7 @@ public class ScoreboardDisplayer {
              */
 
             // マップ名を取得
-            String mapName = LeonGunWar.getPlugin().getManager().getCurrentGameMap().getMapName();
+            String mapName = LeonGunWar.getPlugin().getManager().getCurrentGameMap().mapName();
 
             // 残り時間
             int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().get();
@@ -129,7 +129,7 @@ public class ScoreboardDisplayer {
             messageList.add("");
 
             for (int i = 0, size = maps.size(); i < size; i++) {
-                messageList.add(Chat.f("&7{0}. &e{1}&7: &c{2}票", i + 1, maps.get(i).getMapName(), countdown.getVote(i)));
+                messageList.add(Chat.f("&7{0}. &e{1}&7: &c{2}票", i + 1, maps.get(i).mapName(), countdown.getVote(i)));
             }
 
             messageList.add("");

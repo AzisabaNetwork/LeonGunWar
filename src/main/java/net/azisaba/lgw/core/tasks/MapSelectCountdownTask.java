@@ -62,7 +62,7 @@ public class MapSelectCountdownTask extends BukkitRunnable {
 
             LeonGunWar.getPlugin().getManager().setCurrentGameMap(m);
             BroadcastUtils.broadcast(
-                    Chat.f("{0}&7Mapが &e{1} &7に決定！", LeonGunWar.GAME_PREFIX, m.getMapName()));
+                    Chat.f("{0}&7Mapが &e{1} &7に決定！", LeonGunWar.GAME_PREFIX, m.mapName()));
 
             /*
             // 一番票数が多かったものに決定
@@ -90,7 +90,7 @@ public class MapSelectCountdownTask extends BukkitRunnable {
                     .getDistributorName();
             String mapName = Optional.ofNullable(
                             LeonGunWar.getPlugin().getManager().getCurrentGameMap())
-                    .map(GameMap::getMapName).orElse("ランダム");
+                    .map(GameMap::mapName).orElse("ランダム");
 
             // メッセージを表示
             BroadcastUtils.broadcast(

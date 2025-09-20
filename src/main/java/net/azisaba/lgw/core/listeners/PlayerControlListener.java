@@ -95,7 +95,7 @@ public class PlayerControlListener implements Listener {
         }
 
         // Fromが試合のワールドではなかったらreturn
-        if (e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
+        if (e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().world()) {
             return;
         }
 

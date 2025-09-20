@@ -233,7 +233,7 @@ public class MatchModeSignListener implements Listener {
 
         List<GameMap> maps = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps();
         for (int i = 0, size = maps.size(); i < size; i++) {
-            msg = msg.then(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).getMapName()))
+            msg = msg.then(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).mapName()))
                     .runCommand("/leongunwar:mapvote " + (i + 1));
             if (i + 1 < size) {
                 msg = msg.then(" ");

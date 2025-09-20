@@ -182,7 +182,7 @@ public class MatchManager {
         // マップ名を表示
         BroadcastUtils.broadcast(
                 Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX,
-                        currentGameMap.getMapName()));
+                        currentGameMap.mapName()));
 
         // 参加プレイヤーを取得
         List<Player> entryPlayers = getEntryPlayers();
