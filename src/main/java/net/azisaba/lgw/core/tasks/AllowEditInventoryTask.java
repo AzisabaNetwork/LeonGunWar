@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.tasks;
 
 import lombok.RequiredArgsConstructor;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;

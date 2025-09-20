@@ -53,7 +53,7 @@ import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListene
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.LGWExpansion;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;

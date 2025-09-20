@@ -17,7 +17,7 @@ import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.task.LeaderSelectionTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.BroadcastUtils;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.ItemChangeValidator;

@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import lombok.Getter;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.BroadcastUtils;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.battlesystem.MatchMode;
 import net.azisaba.lgw.core.util.SecondOfDay;

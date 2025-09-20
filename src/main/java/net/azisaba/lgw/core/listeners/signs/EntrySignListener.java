@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.signs;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;

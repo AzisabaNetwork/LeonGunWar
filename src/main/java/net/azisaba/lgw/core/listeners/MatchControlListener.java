@@ -10,7 +10,7 @@ import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.util.BroadcastUtils;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.KDPlayerData;
 import net.azisaba.lgw.core.util.SecondOfDay;

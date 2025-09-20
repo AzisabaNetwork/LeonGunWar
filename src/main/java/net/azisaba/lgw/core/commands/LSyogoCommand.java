@@ -3,7 +3,7 @@ package net.azisaba.lgw.core.commands;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.SyogoData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

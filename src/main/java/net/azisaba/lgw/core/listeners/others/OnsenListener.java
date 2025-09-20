@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.ess3.api.events.AfkStatusChangeEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;

@@ -2,7 +2,7 @@ package net.azisaba.lgw.core.tasks;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.BroadcastUtils;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;

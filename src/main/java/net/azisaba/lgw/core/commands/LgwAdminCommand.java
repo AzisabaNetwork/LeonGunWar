@@ -5,7 +5,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.battlesystem.MatchManager;
 import net.azisaba.lgw.core.util.Args;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.battlesystem.MatchMode;
 import org.bukkit.Bukkit;

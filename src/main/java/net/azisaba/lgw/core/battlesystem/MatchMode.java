@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.battlesystem;
 
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 
 import java.time.Duration;
 import java.util.Arrays;

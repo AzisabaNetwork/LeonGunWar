@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core;
 
 import net.azisaba.lgw.core.util.BroadcastUtils;
-import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.battlesystem.MatchMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

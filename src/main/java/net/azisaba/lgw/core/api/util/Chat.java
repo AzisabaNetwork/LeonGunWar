@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.util;
+package net.azisaba.lgw.core.api.util;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
