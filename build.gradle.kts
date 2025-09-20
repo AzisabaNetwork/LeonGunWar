@@ -44,6 +44,7 @@ dependencies {
     compileOnly(fileTree("libs/"))
 
     implementation(libs.configLib)
+    implementation(libs.caffeine)
     implementation(libs.hikaricp)
     implementation(libs.mariaDBConnectorJ)
     implementation(libs.bundles.jdbi)

@@ -4,6 +4,7 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.api.integration.NameChangeAutomationAPI;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
@@ -42,9 +43,6 @@ public class DamageListener implements Listener {
     // 最初のHashMapはダメージを受けた側のプレイヤーであり、そのValueとなるHashMapにはどのプレイヤーが何秒にそのプレイヤーを攻撃したか
     // アシストの判定に使用される
     private final Map<Player, Map<Player, Long>> lastDamaged = new HashMap<>();
-
-    // 名前変更データ
-    private final Map<String, NameChangeInfoData> nameChangeData = new HashMap<>();
 
     /**
      * プレイヤーを殺したことを検知するリスナー 死亡したプレイヤーの処理は他のリスナーで行います
@@ -264,15 +262,9 @@ public class DamageListener implements Listener {
         if (loreComponents == null) {
             loreComponents = new ArrayList<>();
         }
-        NameChangeInfoIO nameInfo = new NameChangeInfoIO();
-        NameChangeInfoData nameInfoData = nameChangeData.get(nodes);
-        if (nameInfoData == null) {
-            nameInfoData = nameInfo.load(nodes);
-        }
-        nameChangeData.put(nodes, nameInfoData);
-        if (nameInfoData != null) {
+        String baseWeapon = NameChangeAutomationAPI.getApi().getBaseWeapon(nodes);
+        if (baseWeapon != null) {
             // 元武器のDisplayNameを取得
-            String baseWeapon = nameInfoData.getBaseWeapon();
             String itemName2 = crackshot.getString(baseWeapon + ".Item_Information.Item_Name");
             Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
             loreComponents.add(previouslore);
