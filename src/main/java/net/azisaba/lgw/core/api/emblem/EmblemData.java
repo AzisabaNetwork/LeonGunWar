@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.api.syogo;
+package net.azisaba.lgw.core.api.emblem;
 
 import java.util.UUID;
 

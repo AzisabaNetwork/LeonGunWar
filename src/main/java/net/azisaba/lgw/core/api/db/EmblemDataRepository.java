@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.api.db;
 
-import net.azisaba.lgw.core.api.syogo.EmblemData;
+import net.azisaba.lgw.core.api.emblem.EmblemData;
 import org.jdbi.v3.sqlobject.config.RegisterConstructorMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindFields;
