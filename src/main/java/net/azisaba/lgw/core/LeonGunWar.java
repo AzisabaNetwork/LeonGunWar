@@ -2,6 +2,7 @@ package net.azisaba.lgw.core;
 
 import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.api.integration.papi.PlaceHolderAPI;
 import net.azisaba.lgw.core.api.limit.LimitActionAPI;
 import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
@@ -54,7 +55,7 @@ import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
-import net.azisaba.lgw.core.util.LGWExpansion;
+import net.azisaba.lgw.core.api.integration.papi.LGWExpansion;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -125,10 +126,7 @@ public class LeonGunWar extends JavaPlugin {
                 .then(Chat.f("&6[途中参加]"))
                 .runCommand("/leongunwar:match rejoin");
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new LGWExpansion(this).register(); //
-        }
-
+        PlaceHolderAPI.getApi().register(new LGWExpansion(this));
 
         // 設定ファイルを読み込むクラスの初期化
         saveDefaultConfig();

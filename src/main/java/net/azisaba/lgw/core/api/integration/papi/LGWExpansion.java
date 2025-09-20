@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.util;
+package net.azisaba.lgw.core.api.integration.papi;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.azisaba.lgw.core.LeonGunWar;
@@ -17,7 +17,7 @@ public class LGWExpansion extends PlaceholderExpansion {
     @Override
     @NotNull
     public String getAuthor() {
-        return "Arisa9006";
+        return "AzisabaNetwork";
     }
 
     @Override
@@ -29,7 +29,7 @@ public class LGWExpansion extends PlaceholderExpansion {
     @Override
     @NotNull
     public String getVersion() {
-        return "1.0"; //
+        return "1.1"; //
     }
 
     @Override
