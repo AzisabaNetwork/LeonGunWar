@@ -117,8 +117,30 @@ tasks {
     runServer {
         minecraftVersion("1.16.5")
         ignoreUnsupportedJvm()
+        pluginJars(file("libs/Crackshot.jar"))
         downloadPlugins {
             modrinth("placeholderapi", libs.versions.placeholderApi.get())
+            url("https://download.luckperms.net/1596/bukkit/loader/LuckPerms-Bukkit-5.5.11.jar")
+            url("https://mediafilez.forgecdn.net/files/3342/964/worldguard-bukkit-7.0.5-dist.jar")
+            url("https://mediafilez.forgecdn.net/files/4793/142/worldedit-bukkit-7.2.17.jar")
+            github(
+                "AzisabaNetwork",
+                "LeonCSAddon",
+                "1.2d",
+                "LeonCSAddon-1.2D.jar",
+            )
+            github(
+                "AzisabaNetwork",
+                "NameChangeAutomation",
+                libs.versions.nameChangeAutomation.get(),
+                "NameChangeAutomation.jar",
+            )
+            github(
+                "EssentialsX",
+                "Essentials",
+                libs.versions.essentialsx.get(),
+                "EssentialsX-${libs.versions.essentialsx.get()}.jar",
+            )
             github(
                 "AzisabaNetwork",
                 "PlayerSettings",

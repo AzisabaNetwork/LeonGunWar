@@ -13,6 +13,9 @@
 * 試合の管理
 * (その他 非公開機能)
 
+## メモ
+- `./gradlew runServer`を実行するためには、run/pluginsフォルダにCrackShotPlus.jarを配置する必要があります。
+
 ## Contributors
 <a href="https://github.com/AzisabaNetwork/LeonGunWar/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=AzisabaNetwork/LeonGunWar" />
