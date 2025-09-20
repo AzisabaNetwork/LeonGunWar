@@ -1,17 +1,14 @@
 package net.azisaba.lgw.core.listeners;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.CSUtility;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.api.integration.CrackShotAPI;
 import net.azisaba.lgw.core.api.integration.NameChangeAutomationAPI;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
 import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.util.SyogoData;
-import net.azisaba.namechange.config.NameChangeInfoIO;
-import net.azisaba.namechange.data.NameChangeInfoData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -29,6 +26,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ import java.util.Objects;
 
 public class DamageListener implements Listener {
 
-    private final CSUtility crackShot = new CSUtility();
+    private static final Logger logger = LoggerFactory.getLogger(DamageListener.class);
 
     // 最初のHashMapはダメージを受けた側のプレイヤーであり、そのValueとなるHashMapにはどのプレイヤーが何秒にそのプレイヤーを攻撃したか
     // アシストの判定に使用される
@@ -203,23 +202,24 @@ public class DamageListener implements Listener {
         }
 
         Player killer = e.getEntity().getKiller();
+        if(killer == null) {
+            logger.warn("Killer is empty so skip task!");
+            return;
+        }
 
         // 殺したアイテム
         ItemStack item = killer.getInventory().getItemInMainHand();
 
-        // CrackShot Pluginを取得
-        CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
-
         // アイテム名を取得
         String itemName;
-        if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
+        if (item.getType() == Material.AIR) { // null または Air なら素手
             itemName = Chat.f("&6素手");
         } else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
 
             // 銃ID取得
-            String nodes = crackShot.getWeaponTitle(item);
+            String nodes = CrackShotAPI.getApi().getWeaponTitle(item);
             // DisplayNameを取得
-            itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
+            itemName = CrackShotAPI.getApi().getString(nodes + ".Item_Information.Item_Name");
 
             // DisplayNameがnullの場合は普通にアイテム名を取得
             if (itemName == null) {
@@ -255,28 +255,28 @@ public class DamageListener implements Listener {
                 .build();
 
         // 銃ID取得
-        String nodes = crackShot.getWeaponTitle(item);
+        String nodes = CrackShotAPI.getApi().getWeaponTitle(item);
 
         // LoreをComponentリストとして取得
         List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
         if (loreComponents == null) {
             loreComponents = new ArrayList<>();
         }
+
         String baseWeapon = NameChangeAutomationAPI.getApi().getBaseWeapon(nodes);
         if (baseWeapon != null) {
             // 元武器のDisplayNameを取得
-            String itemName2 = crackshot.getString(baseWeapon + ".Item_Information.Item_Name");
+            String itemName2 = CrackShotAPI.getApi().getString(baseWeapon + ".Item_Information.Item_Name");
             Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
             loreComponents.add(previouslore);
         }
 
         // Loreを一つのComponentにまとめる
         TextComponent.Builder loreTextBuilder = Component.text();
-        if (loreComponents != null) {
-            for (Component loreLine : loreComponents) {
-                loreTextBuilder.append(loreLine).append(Component.text("\n"));
-            }
+        for (Component loreLine : loreComponents) {
+            loreTextBuilder.append(loreLine).append(Component.text("\n"));
         }
+
         // ホバーイベントの作成（Loreを含む）
         HoverEvent<Component> hoverEvent = HoverEvent.showText(
                 Component.text()
