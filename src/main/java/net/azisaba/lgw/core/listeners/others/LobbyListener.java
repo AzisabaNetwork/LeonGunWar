@@ -1,9 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.model.user.User;
+import net.azisaba.lgw.core.api.integration.LuckPermsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,17 +22,16 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        LuckPerms lp = LuckPermsProvider.get();
-        User user = lp.getUserManager().getUser(player.getUniqueId());
-        Group group = lp.getGroupManager().getGroup(user.getPrimaryGroup());
-        String prefix = user.getCachedData().getMetaData().getPrefix();
-        String teamName = group.getName();
-        if (prefix == null) {
-            prefix = "";
-        }
-        if (player.hasPermission("group.nitro")) {
-            teamName = player.getName();
-        }
+        String prefix = LuckPermsAPI.getApi().getUserPrefix(player.getUniqueId());
+        String teamName = LuckPermsAPI.getApi().getGroupName(player.getUniqueId());
+
+        // handle null
+        if (prefix == null) prefix = "";
+
+        // if user has nitro, set teamName as player's name
+        if (player.hasPermission("group.nitro")) teamName = player.getName();
+
+
         Team team = scoreboard.getTeam(teamName);
         if (team == null) {
             team = scoreboard.registerNewTeam(teamName);
