@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.util;
+package net.azisaba.lgw.core.api.killstreak;
 
 import java.util.Date;
 

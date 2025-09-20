@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.TimeCondition;
+import net.azisaba.lgw.core.api.killstreak.TimeCondition;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
