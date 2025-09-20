@@ -26,7 +26,7 @@ public class LimitCommand extends BaseCommand {
 
     @Subcommand("build")
     @Description("Toggle build limit")
-    public static class Build extends BaseCommand {
+    public class Build extends BaseCommand {
         @Dependency
         private LeonGunWar plugin;
 
@@ -44,7 +44,7 @@ public class LimitCommand extends BaseCommand {
 
     @Subcommand("build")
     @Description("Toggle drop limit")
-    public static class Drop extends BaseCommand {
+    public class Drop extends BaseCommand {
         @Dependency
         private LeonGunWar plugin;
 
