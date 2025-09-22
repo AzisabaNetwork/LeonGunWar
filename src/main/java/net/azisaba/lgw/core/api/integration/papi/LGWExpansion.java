@@ -6,6 +6,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Placeholder expansion for LGW
+ */
 public class LGWExpansion extends PlaceholderExpansion {
     private final LeonGunWar plugin;
 
@@ -38,7 +41,8 @@ public class LGWExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer player, @NotNull String params) {//
+    public String onRequest(OfflinePlayer player, @NotNull String params) {
+        // Todo: No more NPE in this method
         //各チームに所属していたらプレースホルダに対応したカラーコードを表示させる所属していなかったら白
         if (player.getPlayer().getScoreboard().getEntryTeam(player.getName()) == null) {
             return "";

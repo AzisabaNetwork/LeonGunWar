@@ -5,6 +5,9 @@ import org.bukkit.Bukkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Entrypoint of PlaceholderAPI integration
+ */
 public class PlaceHolderAPI {
     public static final String PL_ID = "PlaceholderAPI";
     private static final PlaceHolderAPI API = new PlaceHolderAPI();
@@ -14,6 +17,10 @@ public class PlaceHolderAPI {
         return API;
     }
 
+    /**
+     * Is PlaceholderAPI Loaded
+     * @return is loaded
+     */
     public boolean isLoaded() {
         return Bukkit.getPluginManager().isPluginEnabled(PL_ID);
     }

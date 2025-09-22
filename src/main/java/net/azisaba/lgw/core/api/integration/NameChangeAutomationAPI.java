@@ -8,6 +8,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 
+/**
+ * Entrypoint of NameChangeAutomation integration
+ */
 public class NameChangeAutomationAPI {
     private static final NameChangeAutomationAPI API = new NameChangeAutomationAPI();
 

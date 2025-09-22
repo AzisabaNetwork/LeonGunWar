@@ -8,6 +8,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 
+/**
+ * Entrypoint of CrackShot integration
+ */
 public class CrackShotAPI {
     private static final CrackShotAPI API = new CrackShotAPI();
 
@@ -25,10 +28,18 @@ public class CrackShotAPI {
     protected CrackShotAPI() {
     }
 
+    /**
+     * Is CrackShot Loaded
+     * @return is loaded
+     */
     public boolean isLoaded() {
         return Bukkit.getPluginManager().isPluginEnabled(CRACKSHOT_PL);
     }
 
+    /**
+     * Get CSDirector Instance
+     * @return {@link CSDirector}. If failure, null.
+     */
     @Nullable
     public CSDirector crackShot() {
         return (CSDirector) Bukkit.getPluginManager().getPlugin(CRACKSHOT_PL);
