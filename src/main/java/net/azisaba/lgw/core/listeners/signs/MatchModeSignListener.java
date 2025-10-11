@@ -47,7 +47,7 @@ public class MatchModeSignListener implements Listener {
 
     public MatchModeSignListener() {
         defaultItem = create(Material.EMERALD_BLOCK, Chat.f("&e通常のチーム分け&aで開始！"));
-        kdItem = create(Material.DIAMOND_BLOCK, Chat.f("&cK/Dのチーム分け&aで開始！"));
+        kdItem = create(Material.DIAMOND_BLOCK, Chat.f("&cK/Dのチーム分け&aで開始！(無効化中)"));
     }
 
     /**
@@ -195,7 +195,7 @@ public class MatchModeSignListener implements Listener {
         if (clicked.isSimilar(defaultItem)) {
             distributor = new DefaultTeamDistributor();
         } else if (clicked.isSimilar(kdItem)) {
-            distributor = new KDTeamDistributor();
+            distributor = new DefaultTeamDistributor();
         }
 
         if (distributor == null) {

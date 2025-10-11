@@ -4,6 +4,7 @@ version: ${version}
 authors: ["siloneco", "YukiLeafX", "matsu1213", "Arisa9006", "sysnote8main"]
 description: ${description}
 website: ${websiteUrl}
+load: POSTWORLD
 depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "NameChangeAutomation", "LuckPerms"]
 softdepend: ["Multiverse-Core", "PlaceholderAPI"]
 api-version: 1.16
