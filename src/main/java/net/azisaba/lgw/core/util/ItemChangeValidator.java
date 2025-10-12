@@ -55,12 +55,11 @@ public class ItemChangeValidator {
             return true;
         }
 
-        List<Entity> entities = p.getNearbyEntities(MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE);
-        for (Entity e : entities) {
-            if (e instanceof Vindicator) {
-                return true;
-            }
+        List<Entity> nearEntities = p.getNearbyEntities(MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE);
+        if(nearEntities.stream().anyMatch(e -> e instanceof Vindicator)) {
+            return true;
         }
+
         return false;
     }
 
