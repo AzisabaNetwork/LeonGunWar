@@ -1,6 +1,8 @@
 package net.azisaba.lgw.core.configs;
 
 import net.azisaba.lgw.core.api.config.LGWConfig;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jspecify.annotations.NonNull;
@@ -11,6 +13,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -100,6 +103,27 @@ public class ConfigMigrator {
 
         LGWConfig.SyogoConfig newConfig = new LGWConfig.SyogoConfig();
         newConfig.syogos = syogos;
+
+        return newConfig;
+    }
+
+    // "configs/spawns.yml"
+    public static LGWConfig.@NonNull SpawnsConfig spawnsConfig(File file, Function<String, World> worldGetter) throws RuntimeException {
+        final YamlConfiguration config = loadConfig(file);
+        HashMap<String, Location> spawns = new HashMap<>();
+        for (String spawnName : config.getValues(false).keySet()) {
+            Location spawn = new Location(
+                    worldGetter.apply(config.getString(spawnName + ".world")),
+                    config.getDouble(spawnName + ".x"),
+                    config.getDouble(spawnName + ".y"),
+                    config.getDouble(spawnName + ".z"),
+                    (float) config.getDouble(spawnName + ".yaw"),
+                    (float) config.getDouble(spawnName + ".pitch"));
+            spawns.put(spawnName, spawn);
+        }
+
+        LGWConfig.SpawnsConfig newConfig = new LGWConfig.SpawnsConfig();
+        newConfig.spawns = spawns;
 
         return newConfig;
     }

@@ -15,7 +15,7 @@ public class OverwriteCommand implements CommandExecutor {
         if (!(sender instanceof Player)) return true;
 
         if (LeonGunWar.getPlugin().config().mainConfig.isLobby) {
-            ((Player) sender).teleport(LeonGunWar.getPlugin().config().spawnsConfig.lobby);
+            ((Player) sender).teleport(LeonGunWar.getPlugin().config().spawnsConfig.lobby());
         } else {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Connect");

@@ -38,7 +38,7 @@ public class OnsenListener implements Listener {
             return;
         }
 
-        Location onsen = LeonGunWar.getPlugin().config().spawnsConfig.onsen;
+        Location onsen = LeonGunWar.getPlugin().config().spawnsConfig.onsen();
 
         // 温泉が見つからないか、プレイヤーのワールドが温泉のワールドと同じではない場合はreturn
         if (onsen == null || onsen.getWorld() != player.getWorld()) {

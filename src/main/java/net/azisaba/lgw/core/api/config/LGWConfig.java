@@ -1,7 +1,6 @@
 package net.azisaba.lgw.core.api.config;
 
 import de.exlll.configlib.Configuration;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -42,8 +41,14 @@ public class LGWConfig {
     @Configuration
     public static class SpawnsConfig {
         public Map<String, Location> spawns = new HashMap<>();
-        public Location lobby = new Location(Bukkit.getWorld("world"), 0, 0, 0);
-        public Location onsen = new Location(Bukkit.getWorld("world"), 0, 0, 0);
+
+        public Location lobby() {
+            return spawns.get("lobby");
+        }
+
+        public Location onsen() {
+            return spawns.get("onsen");
+        }
     }
 
     @Configuration

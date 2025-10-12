@@ -112,7 +112,7 @@ public class MatchControlListener implements Listener {
             }
 
             // スポーンにTP
-            p.teleport(LeonGunWar.getPlugin().config().spawnsConfig.lobby);
+            p.teleport(LeonGunWar.getPlugin().config().spawnsConfig.lobby());
 
             // アーマー削除
             p.getInventory().setChestplate(null);

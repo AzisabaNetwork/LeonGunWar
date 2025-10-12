@@ -434,7 +434,7 @@ public class MatchManager {
         leavePlayer(p);
 
         // スポーンにTP
-        p.teleport(LeonGunWar.getPlugin().config().spawnsConfig.lobby);
+        p.teleport(LeonGunWar.getPlugin().config().spawnsConfig.lobby());
     }
 
     public void leavePlayer(Player p) {
@@ -797,7 +797,7 @@ public class MatchManager {
             // メッセージを表示
             p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
             // スポーンにTP
-            Location spawn = LeonGunWar.getPlugin().config().spawnsConfig.lobby;
+            Location spawn = LeonGunWar.getPlugin().config().spawnsConfig.lobby();
             if (spawn != null && spawn.getWorld() != null) {
                 p.teleport(spawn);
             }
@@ -916,7 +916,7 @@ public class MatchManager {
 
         // 試合をしていなければlobbySpawnを返す
         if (!isMatching) {
-            return LeonGunWar.getPlugin().config().spawnsConfig.lobby;
+            return LeonGunWar.getPlugin().config().spawnsConfig.lobby();
         }
 
         // チームを取得
@@ -931,7 +931,7 @@ public class MatchManager {
 
         // それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
         if (spawnPoint == null) {
-            spawnPoint = LeonGunWar.getPlugin().config().spawnsConfig.lobby;
+            spawnPoint = LeonGunWar.getPlugin().config().spawnsConfig.lobby();
         }
 
         return spawnPoint;
