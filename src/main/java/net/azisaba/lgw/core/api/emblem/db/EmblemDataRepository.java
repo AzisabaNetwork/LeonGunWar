@@ -1,4 +1,4 @@
-package net.azisaba.lgw.core.api.db;
+package net.azisaba.lgw.core.api.emblem.db;
 
 import net.azisaba.lgw.core.api.emblem.EmblemData;
 import org.jdbi.v3.sqlobject.config.RegisterConstructorMapper;
