@@ -16,7 +16,7 @@ public class SiaiTuutiCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String lavel, String[] args) {
 
-        if (!LeonGunWar.getPlugin().getMainConfig().isLobby) {
+        if (!LeonGunWar.getPlugin().config().mainConfig.isLobby) {
             return false;
         }
 

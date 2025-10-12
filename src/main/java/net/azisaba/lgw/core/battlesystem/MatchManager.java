@@ -22,6 +22,7 @@ import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.ItemChangeValidator;
 import net.azisaba.lgw.core.util.KillDeathCounter;
+import net.azisaba.lgw.core.util.LgwLog;
 import net.azisaba.lgw.core.util.RespawnProtection;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import net.kyori.adventure.text.Component;
@@ -40,6 +41,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +62,7 @@ import java.util.stream.Collectors;
  */
 @Data
 public class MatchManager {
+    private static final Logger logger = LgwLog.getLogger(MatchManager.class);
     /**
      * 非同期処理にできそうな部分に
      * //Tag:Async
@@ -250,12 +253,12 @@ public class MatchManager {
                 .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
         //試合開始をほかサーバーに通知(要SyncCommandExec) -> todo:RedisのStreamで通知させよう Regliaにサーバー間通知機能持たせてもいいかも
-        if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv1")) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv1");
-        } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv2")) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv2");
-        } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv3")) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv3");
+        String serverName = LeonGunWar.getPlugin().config().mainConfig.serverName;
+        if(serverName.startsWith("sv")) {
+            String cmd = "syncomma notice" + serverName;
+            if(!Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd)) {
+                logger.warn("コマンドの実行に失敗しました -> {}", cmd);
+            }
         }
 
 

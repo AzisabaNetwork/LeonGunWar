@@ -1,6 +1,8 @@
 package net.azisaba.lgw.core;
 
+import de.exlll.configlib.YamlConfigurations;
 import lombok.Getter;
+import net.azisaba.lgw.core.api.config.LGWConfig;
 import net.azisaba.lgw.core.api.integration.papi.LGWExpansion;
 import net.azisaba.lgw.core.api.integration.papi.PlaceHolderAPI;
 import net.azisaba.lgw.core.api.limit.LimitActionAPI;
@@ -69,6 +71,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,6 +99,8 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final LimitActionAPI limitActionAPI = new LimitActionAPI();
+    private File configFile;
+    private LGWConfig config;
     private LGWCommands lgwCommands;
     private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
@@ -147,6 +152,14 @@ public class LeonGunWar extends JavaPlugin {
 
         // 設定ファイルを読み込むクラスの初期化
         saveDefaultConfig();
+        plLogger.info("設定ファイルを読み込み中です...");
+        if(tryLoadConfig()) {
+            plLogger.error("設定ファイルを編集してから、再度有効化してください。");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        } else {
+            plLogger.info("設定ファイルの読み込みが完了しました。");
+        }
         mainConfig = new MainConfig(this);
         killStreaksConfig = new KillStreaksConfig(this);
         assistStreaksConfig = new AssistStreaksConfig(this);
@@ -217,7 +230,7 @@ public class LeonGunWar extends JavaPlugin {
                 new DisableChangeItemListener(),
                 new FixStrikesCooldownListener(),
                 new DisableBlockInteractListener());
-        if (this.mainConfig.isLobby) {
+        if (this.config.mainConfig.isLobby) {
             registerEvents(new OnsenListener());
             registerEvents(new LobbyListener());
             plLogger.info("ロビー用のリスナーを登録しました。");
@@ -260,22 +273,47 @@ public class LeonGunWar extends JavaPlugin {
         plLogger.info(Chat.f("{0} が無効化されました。", getName()));
     }
 
+    /**
+     * Try to load config
+     * @return is succeeded
+     */
+    public boolean tryLoadConfig() {
+        configFile = new File(getDataFolder(), "config.yml");
+        configFile.mkdirs();
+
+        if(!configFile.exists()) {
+            YamlConfigurations.save(configFile.toPath(), LGWConfig.class, new LGWConfig());
+            return false;
+        }
+
+        config = YamlConfigurations.load(configFile.toPath(), LGWConfig.class);
+        return true;
+    }
+
     public MatchManager getManager() {
         return manager;
     }
 
+    public LGWConfig config() {
+        return config;
+    }
+
+    @Deprecated(forRemoval = true, since = "4.1.0")
     public MainConfig getMainConfig() {
         return mainConfig;
     }
 
+    @Deprecated(forRemoval = true, since = "4.1.0")
     public MapsConfig getMapsConfig() {
         return mapsConfig;
     }
 
+    @Deprecated(forRemoval = true, since = "4.1.0")
     public SpawnsConfig getSpawnsConfig() {
         return spawnsConfig;
     }
 
+    @Deprecated(forRemoval = true, since = "4.1.0")
     public SyogoConfig getSyogoConfig() {
         return syogoConfig;
     }
@@ -284,6 +322,7 @@ public class LeonGunWar extends JavaPlugin {
         return matchStartCountdown;
     }
 
+    @Deprecated(forRemoval = true, since = "4.1.0")
     public AssistStreaksConfig getAssistStreaksConfig() {
         return assistStreaksConfig;
     }
@@ -296,6 +335,7 @@ public class LeonGunWar extends JavaPlugin {
         return killStreaks;
     }
 
+    @Deprecated(forRemoval = true, since = "4.1.0")
     public KillStreaksConfig getKillStreaksConfig() {
         return killStreaksConfig;
     }

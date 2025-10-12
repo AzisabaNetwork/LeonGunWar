@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
+// Todo: move this to LGWConfig
 @Getter
 @Deprecated(forRemoval = true, since = "4.1.0")
 public class MapsConfig extends Config {

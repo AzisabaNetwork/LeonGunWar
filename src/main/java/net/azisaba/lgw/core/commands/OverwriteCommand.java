@@ -14,8 +14,8 @@ public class OverwriteCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) return true;
 
-        if (LeonGunWar.getPlugin().getMainConfig().isLobby) {
-            ((Player) sender).teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
+        if (LeonGunWar.getPlugin().config().mainConfig.isLobby) {
+            ((Player) sender).teleport(LeonGunWar.getPlugin().config().spawnsConfig.lobby);
         } else {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Connect");
