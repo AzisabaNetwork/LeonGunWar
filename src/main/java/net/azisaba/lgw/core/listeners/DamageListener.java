@@ -6,6 +6,7 @@ import net.azisaba.lgw.core.api.integration.CrackShotAPI;
 import net.azisaba.lgw.core.api.integration.NameChangeAutomationAPI;
 import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.battlesystem.BattleTeam;
+import net.azisaba.lgw.core.battlesystem.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.lgw.core.util.SyogoData;
@@ -26,6 +27,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,8 @@ public class DamageListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onKill(PlayerDeathEvent e) {
         // 試合中でなければreturn
-        if (!LeonGunWar.getPlugin().getManager().isMatching()) {
+        MatchManager matchManager = LeonGunWar.getPlugin().getManager();
+        if (!matchManager.isMatching()) {
             return;
         }
 
@@ -62,7 +65,7 @@ public class DamageListener implements Listener {
         }
 
         // チームを取得
-        BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
+        BattleTeam killerTeam = matchManager.getBattleTeam(killer);
 
         // killerTeamがnullの場合return
         if (killerTeam == null) {
@@ -70,13 +73,13 @@ public class DamageListener implements Listener {
         }
 
         // 個人キルを追加
-        LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
+        matchManager.getKillDeathCounter().addKill(killer);
         // ポイントを追加
-        LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+        matchManager.addTeamPoint(killerTeam);
 
-        if (LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(killer)) {
-            BattleTeam battleTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
-            LeonGunWar.getPlugin().getManager().scheduleOrExtend(battleTeam, LeonGunWar.getPlugin(), 20L * 30);
+        if (matchManager.getLDMLeaderMap().containsValue(killer)) {
+            BattleTeam battleTeam = matchManager.getBattleTeam(killer);
+            matchManager.scheduleOrExtend(battleTeam, LeonGunWar.getPlugin(), 20L * 30);
         }
 
 
@@ -96,7 +99,9 @@ public class DamageListener implements Listener {
         Player deader = e.getEntity();
 
         // チームを取得
-        BattleTeam deaderTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(deader);
+        LeonGunWar plugin = LeonGunWar.getPlugin();
+        MatchManager matchManager = plugin.getManager();
+        BattleTeam deaderTeam = matchManager.getBattleTeam(deader);
 
         // deaderTeamがnullの場合return
         if (deaderTeam == null) {
@@ -104,7 +109,7 @@ public class DamageListener implements Listener {
         }
 
         // 死亡数を追加
-        LeonGunWar.getPlugin().getManager().getKillDeathCounter().addDeath(deader);
+        matchManager.getKillDeathCounter().addDeath(deader);
 
         // 殺したプレイヤーを取得
         Player killer = deader.getKiller();
@@ -118,12 +123,12 @@ public class DamageListener implements Listener {
                 .filter(assist -> assist != killer)
                 .forEach(assist -> {
                     // アシスト追加
-                    LeonGunWar.getPlugin().getManager().getKillDeathCounter().addAssist(assist);
+                    matchManager.getKillDeathCounter().addAssist(assist);
 
                     // タイトルを表示
                     assist.sendTitle("", Chat.f("&e+1 &7Assist"), 0, 10, 10);
-                    int streaks = LeonGunWar.getPlugin().getAssistStreaks().get(assist).get();
-                    Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> assist.sendTitle("", Chat.f("&a{0} &7Assist Streaks", streaks), 0, 20, 20), 20);
+                    int streaks = plugin.getAssistStreaks().get(assist).get();
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> assist.sendTitle("", Chat.f("&a{0} &7Assist Streaks", streaks), 0, 20, 20), 20);
                     // 音を鳴らす
                     assist.playSound(assist.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
                 });
@@ -132,9 +137,9 @@ public class DamageListener implements Listener {
         lastDamaged.remove(deader);
 
         // 連続キルを停止
-        LeonGunWar.getPlugin().getKillStreaks().removedBy(deader, killer);
+        plugin.getKillStreaks().removedBy(deader, killer);
         // 連続アシストを停止
-        LeonGunWar.getPlugin().getAssistStreaks().removedBy(deader, killer);
+        plugin.getAssistStreaks().removedBy(deader, killer);
     }
 
     /**
@@ -176,12 +181,13 @@ public class DamageListener implements Listener {
         Player p = e.getEntity();
 
         // 試合中ではない場合はreturn
-        if (!LeonGunWar.getPlugin().getManager().isMatching()) {
+        MatchManager matchManager = LeonGunWar.getPlugin().getManager();
+        if (!matchManager.isMatching()) {
             return;
         }
 
         // 試合中のワールドではない場合はreturn
-        if (p.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().world()) {
+        if (p.getWorld() != matchManager.getCurrentGameMap().world()) {
             return;
         }
 
@@ -211,25 +217,7 @@ public class DamageListener implements Listener {
         ItemStack item = killer.getInventory().getItemInMainHand();
 
         // アイテム名を取得
-        String itemName;
-        if (item.getType() == Material.AIR) { // null または Air なら素手
-            itemName = Chat.f("&6素手");
-        } else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
-
-            // 銃ID取得
-            String nodes = CrackShotAPI.getApi().getWeaponTitle(item);
-            // DisplayNameを取得
-            itemName = CrackShotAPI.getApi().getString(nodes + ".Item_Information.Item_Name");
-
-            // DisplayNameがnullの場合は普通にアイテム名を取得
-            if (itemName == null) {
-                itemName = item.getItemMeta().getDisplayName();
-            }
-
-            Bukkit.getPluginManager().callEvent(new PlayerKillEvent(killer, nodes));
-        } else { // それ以外
-            itemName = Chat.f("&6{0}", item.getType().name());
-        }
+        String itemName = getItemName(item, killer);
 
         // メッセージ削除
         e.deathMessage(null);
@@ -295,6 +283,29 @@ public class DamageListener implements Listener {
         Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
 
 
+    }
+
+    private static @NotNull String getItemName(ItemStack item, Player killer) {
+        String itemName;
+        if (item.getType() == Material.AIR) { // null または Air なら素手
+            itemName = Chat.f("&6素手");
+        } else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
+
+            // 銃ID取得
+            String nodes = CrackShotAPI.getApi().getWeaponTitle(item);
+            // DisplayNameを取得
+            itemName = CrackShotAPI.getApi().getString(nodes + ".Item_Information.Item_Name");
+
+            // DisplayNameがnullの場合は普通にアイテム名を取得
+            if (itemName == null) {
+                itemName = item.getItemMeta().getDisplayName();
+            }
+
+            Bukkit.getPluginManager().callEvent(new PlayerKillEvent(killer, nodes));
+        } else { // それ以外
+            itemName = Chat.f("&6{0}", item.getType().name());
+        }
+        return itemName;
     }
 
     @EventHandler

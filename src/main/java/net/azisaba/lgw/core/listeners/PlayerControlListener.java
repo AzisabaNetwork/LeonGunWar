@@ -108,25 +108,16 @@ public class PlayerControlListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void sendQuickMessage(PlayerJoinEvent e) {
-        Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                SyogoData.getSyogoData(e.getPlayer().getUniqueId());
-            }
-        });
+        var matchManager = LeonGunWar.getPlugin().getManager();
+        Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), () -> SyogoData.getSyogoData(e.getPlayer().getUniqueId()));
 
         //LeonGunWar.getQuickBar().send(e.getPlayer());
         if (!LeonGunWar.getPlugin().config().mainConfig.isLobby) {
-            if (LeonGunWar.getPlugin().getManager().isMatching()) {
-                Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(e.getPlayer());
-                    }
-                }, 5L);
+            if (matchManager.isMatching()) {
+                Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> matchManager.addPlayerIntoBattle(e.getPlayer()), 5L);
 
             } else {
-                LeonGunWar.getPlugin().getManager().addEntryPlayer(e.getPlayer());
+                matchManager.addEntryPlayer(e.getPlayer());
             }
 
         }

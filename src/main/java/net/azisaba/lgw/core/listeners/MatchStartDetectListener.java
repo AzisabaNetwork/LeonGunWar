@@ -18,13 +18,14 @@ public class MatchStartDetectListener implements Listener {
      */
     @EventHandler
     public void matchStarter(PlayerEntryMatchEvent e) {
+        var matchManager = LeonGunWar.getPlugin().getManager();
         // すでに試合中ならreturn
-        if (LeonGunWar.getPlugin().getManager().isMatching()) {
+        if (matchManager.isMatching()) {
             return;
         }
 
         // エントリーしているプレイヤーを取得
-        List<Player> entryPlayers = LeonGunWar.getPlugin().getManager().getEntryPlayers();
+        List<Player> entryPlayers = matchManager.getEntryPlayers();
 
         // 人数が2人未満ならreturn
         if (entryPlayers.size() < 2) {
@@ -32,7 +33,7 @@ public class MatchStartDetectListener implements Listener {
         }
 
         // モードがnullの場合return
-        if (LeonGunWar.getPlugin().getManager().getMatchMode() == null) {
+        if (matchManager.getMatchMode() == null) {
             return;
         }
 
@@ -47,13 +48,14 @@ public class MatchStartDetectListener implements Listener {
      */
     @EventHandler
     public void matchStarter(PlayerLeaveEntryMatchEvent e) {
+        var matchManager = LeonGunWar.getPlugin().getManager();
         // すでに試合中ならreturn
-        if (LeonGunWar.getPlugin().getManager().isMatching()) {
+        if (matchManager.isMatching()) {
             return;
         }
 
         // エントリーしているプレイヤーを取得
-        List<Player> entryPlayers = LeonGunWar.getPlugin().getManager().getEntryPlayers();
+        List<Player> entryPlayers = matchManager.getEntryPlayers();
 
         // 人数が2人以上ならreturn
         if (entryPlayers.size() >= 2) {

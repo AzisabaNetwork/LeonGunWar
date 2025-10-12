@@ -13,6 +13,7 @@ import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.KDPlayerData;
+import net.azisaba.lgw.core.util.KillDeathCounter;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -30,6 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MatchControlListener implements Listener {
@@ -80,14 +82,16 @@ public class MatchControlListener implements Listener {
         List<Player> allPlayers = e.getAllTeamPlayers();
 
         // MVPのプレイヤーを取得
-        List<KDPlayerData> mvpPlayers = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getMVPPlayer();
+        MatchManager matchManager = LeonGunWar.getPlugin().getManager();
+        KillDeathCounter killDeathCounter = matchManager.getKillDeathCounter();
+        List<KDPlayerData> mvpPlayers = killDeathCounter.getMVPPlayer();
         // MVPプレイヤーのメッセージ
         List<String> resultMessages = new ArrayList<>(
                 Collections.singletonList(Chat.f("&d=== Team Point Information ===")));
 
-        // 各チームのポイントを表示
+        // 各チームのポイントを表示7
         for (BattleTeam team : BattleTeam.values()) {
-            int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
+            int point = matchManager.getCurrentTeamPoint(team);
             resultMessages.add(Chat.f("{0} &c{1} Point(s)", team.getTeamName(), point));
         }
 
@@ -118,9 +122,9 @@ public class MatchControlListener implements Listener {
             p.getInventory().setChestplate(null);
 
             // 各記録を取得
-            int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
-            int deaths = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDeaths(p);
-            int assists = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getAssists(p);
+            int kills = killDeathCounter.getKills(p);
+            int deaths = killDeathCounter.getDeaths(p);
+            int assists = killDeathCounter.getAssists(p);
 
             // プレイヤーの戦績を表示
             p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
@@ -132,50 +136,65 @@ public class MatchControlListener implements Listener {
         }
 
         // 勝ったチームがあれば勝者の証を付与
-        if (e.getWinners().size() >= 1) {
-
+        if (!e.getWinners().isEmpty()) {
             // 各チームに勝者の証を付与
             e.getWinners().forEach(wonTeam -> {
-                // チームメンバーを取得
-                List<Player> winnerPlayers = e.getTeamPlayers(wonTeam);
-
-                CSUtility csUtility = new CSUtility();
-                List<String> victoryItemCrackShotIds = LeonGunWar.getPlugin().config().itemsConfig.victoryItemCrackShotIds;
-
-                for (Player p : winnerPlayers) {
-                    // 勝利アイテムを付与
-                    if (victoryItemCrackShotIds == null) {
-                        // 勝者の証を付与
-                        long now = System.currentTimeMillis();
-                        if (isOverSixMinutes(now, LeonGunWar.matchJoin.get(p.getUniqueId())) || LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20) {
-                            p.getInventory().addItem(CustomItem.getWonItem());
-                            if (LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20) {
-                                p.sendMessage("試合参加時間が6分未満でしたが、20キルを超えているため勝利報酬が付与されました");
-                            }
-                        } else {
-                            p.sendMessage("試合参加時間が6分未満だったため勝利報酬は付与されませんでした");
-                        }
-                    } else {
-                        for (String crackShotId : victoryItemCrackShotIds) {
-                            ItemStack item = csUtility.generateWeapon(crackShotId);
-                            if (item != null) {
-                                p.getInventory().addItem(item);
-                            }
-                        }
-                    }
-                    LeonGunWar.matchJoin.clear();
-                    // 勝利タイトルを表示
-                    p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
-
-                    // 音を鳴らす
-                    p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
-                }
-
-                // 勝利メッセージを送信
-                BroadcastUtils.broadcast(
-                        Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX,
-                                wonTeam.getTeamName()));
+                handleWonTeam(wonTeam, killDeathCounter, e::getTeamPlayers);
             });
+        }
+    }
+
+    private void handleWonTeam(BattleTeam wonTeam, KillDeathCounter killDeathCounter, Function<BattleTeam, List<Player>> teamPlayerGetter) {
+        // チームメンバーを取得
+        List<Player> winnerPlayers = teamPlayerGetter.apply(wonTeam);
+
+        CSUtility csUtility = new CSUtility();
+        List<String> victoryItemCrackShotIds = LeonGunWar.getPlugin().config().itemsConfig.victoryItemCrackShotIds;
+
+        for (Player p : winnerPlayers) {
+            // 勝利アイテムを付与
+            if (victoryItemCrackShotIds == null) {
+                // 勝者の証を付与
+                giveCustomItemReward(p, killDeathCounter);
+            } else {
+                for (String crackShotId : victoryItemCrackShotIds) {
+                    ItemStack item = csUtility.generateWeapon(crackShotId);
+                    if (item != null) {
+                        p.getInventory().addItem(item);
+                    }
+                }
+            }
+            LeonGunWar.matchJoin.clear();
+            // 勝利タイトルを表示
+            p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
+
+            // 音を鳴らす
+            p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+        }
+
+        // 勝利メッセージを送信
+        BroadcastUtils.broadcast(
+                Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX,
+                        wonTeam.getTeamName()));
+    }
+
+    /**
+     * 勝者の証を付与
+     * @param player 対象のプレイヤー
+     * @param killDeathCounter K/Dカウンター
+     */
+    private void giveCustomItemReward(Player player, KillDeathCounter killDeathCounter) {
+        long now = System.currentTimeMillis();
+        if(isOverSixMinutes(now, LeonGunWar.matchJoin.get(player.getUniqueId()))) {
+            player.getInventory().addItem(CustomItem.getWonItem());
+        } else {
+            // 6分未満
+            if (killDeathCounter.getKills(player) >= 20) {
+                player.getInventory().addItem(CustomItem.getWonItem());
+                player.sendMessage("試合参加時間が6分未満でしたが、20キルを超えているため勝利報酬が付与されました");
+            } else {
+                player.sendMessage("試合参加時間が6分未満だったため勝利報酬は付与されませんでした");
+            }
         }
     }
 

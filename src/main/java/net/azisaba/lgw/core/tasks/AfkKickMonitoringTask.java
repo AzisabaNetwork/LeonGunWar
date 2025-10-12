@@ -8,6 +8,7 @@ import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -32,19 +33,7 @@ public final class AfkKickMonitoringTask extends BukkitRunnable {
         // 1) 同期で“必要最小限の情報だけ”をスナップショット
         List<Candidate> snapshot = null;
         try {
-            snapshot = Bukkit.getScheduler().callSyncMethod(plugin, () -> {
-                var mgr = LeonGunWar.getPlugin().getManager();
-                List<Candidate> list = new ArrayList<>();
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    boolean matching = mgr.isPlayerMatching(p);
-                    boolean entrying = mgr.isEntryPlayer(p);
-                    // “試合/エントリに関係ないプレイヤー”は最初から除外しておく
-                    if (!matching && !entrying) continue;
-                    if (!matching) continue;
-                    list.add(new Candidate(p.getUniqueId(), matching, entrying));
-                }
-                return list;
-            }).get();
+            snapshot = Bukkit.getScheduler().callSyncMethod(plugin, AfkKickMonitoringTask::getCandidateList).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -85,6 +74,20 @@ public final class AfkKickMonitoringTask extends BukkitRunnable {
                 logger.info(Chat.f("{0} を試合から退出させました", p.getName()));
             }
         });
+    }
+
+    private static @NotNull List<Candidate> getCandidateList() {
+        var mgr = LeonGunWar.getPlugin().getManager();
+        List<Candidate> list = new ArrayList<>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            boolean matching = mgr.isPlayerMatching(p);
+            boolean entrying = mgr.isEntryPlayer(p);
+            // “試合/エントリに関係ないプレイヤー”は最初から除外しておく
+            if (!matching && !entrying) continue;
+            if (!matching) continue;
+            list.add(new Candidate(p.getUniqueId(), matching, entrying));
+        }
+        return list;
     }
 
     private record Candidate(UUID id, boolean matching, boolean entrying) {
