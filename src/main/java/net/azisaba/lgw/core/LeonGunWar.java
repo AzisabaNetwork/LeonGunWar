@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core;
 
 import lombok.Getter;
-import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.api.integration.papi.LGWExpansion;
 import net.azisaba.lgw.core.api.integration.papi.PlaceHolderAPI;
 import net.azisaba.lgw.core.api.limit.LimitActionAPI;
 import net.azisaba.lgw.core.api.util.Chat;
@@ -55,8 +55,12 @@ import net.azisaba.lgw.core.listeners.signs.MatchModeSignListener;
 import net.azisaba.lgw.core.listeners.weaponcontrols.LimitOneShotPerMatchListener;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.tasks.CrackShotLagFixTask;
-import net.azisaba.lgw.core.api.integration.papi.LGWExpansion;
+import net.azisaba.lgw.core.util.LGWComponent;
 import net.azisaba.lgw.core.util.LgwLog;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Listener;
@@ -85,7 +89,6 @@ public class LeonGunWar extends JavaPlugin {
     public static Map<BattleTeam, BukkitTask> leaderSelectionTaskMap = new HashMap<>();
     // plugin
     private static LeonGunWar plugin;
-    private static JSONMessage quickBar;
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
@@ -105,8 +108,14 @@ public class LeonGunWar extends JavaPlugin {
     private ItemsConfig itemsConfig;
     private SQLConnection sqlConnection;
 
-    public static JSONMessage getQuickBar() {
-        return quickBar;
+    /**
+     * Get quick bar component
+     * For developer: It's deprecated. Use {@link LGWComponent#QUICK_BAR}
+     * @return Component for quick bar
+     */
+    @Deprecated(forRemoval = true, since = "4.2.0")
+    public static Component getQuickBar() {
+        return LGWComponent.QUICK_BAR;
     }
 
     public static LeonGunWar getPlugin() {
@@ -116,15 +125,23 @@ public class LeonGunWar extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        quickBar = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
-                .then(Chat.f("&a[エントリー]"))
-                .runCommand("/leongunwar:match entry")
-                .then(" ")
-                .then(Chat.f("&c[エントリー解除]"))
-                .runCommand("/leongunwar:match leave")
-                .then(" ")
-                .then(Chat.f("&6[途中参加]"))
-                .runCommand("/leongunwar:match rejoin");
+        Component.join(
+                JoinConfiguration.spaces(),
+                LGWComponent.surrounded(
+                        NamedTextColor.GRAY,
+                        Component.text("Quick").color(NamedTextColor.AQUA)
+                ),
+                Component.text("ここをクリック →"),
+                Component.text("[エントリー]")
+                        .color(NamedTextColor.GREEN)
+                        .clickEvent(ClickEvent.runCommand("/leongunwar:match entry")),
+                Component.text("[エントリー解除]")
+                        .color(NamedTextColor.RED)
+                        .clickEvent(ClickEvent.runCommand("/leongunwar:match leave")),
+                Component.text("[途中参加]")
+                        .color(NamedTextColor.GOLD)
+                        .clickEvent(ClickEvent.runCommand("/leongunwar:match rejoin"))
+        );
 
         PlaceHolderAPI.getApi().register(new LGWExpansion(this));
 
