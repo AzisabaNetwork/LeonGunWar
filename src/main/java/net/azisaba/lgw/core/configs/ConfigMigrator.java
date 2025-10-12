@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.configs;
 import net.azisaba.lgw.core.api.config.LGWConfig;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jspecify.annotations.NonNull;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -124,6 +126,27 @@ public class ConfigMigrator {
 
         LGWConfig.SpawnsConfig newConfig = new LGWConfig.SpawnsConfig();
         newConfig.spawns = spawns;
+
+        return newConfig;
+    }
+
+    // "configs/weaponControl.yml"
+    public static LGWConfig.@NonNull WeaponControlConfig weaponControlConfig(File file) throws RuntimeException {
+        final YamlConfiguration config = loadConfig(file);
+
+        Map<String, Integer> rateLimitedWeapons;
+        ConfigurationSection section = config.getConfigurationSection("rateLimitedWeapons");
+        if (section == null) {
+            rateLimitedWeapons = Collections.emptyMap();
+        } else {
+            rateLimitedWeapons = new HashMap<>();
+            for (String key : section.getKeys(false)) {
+                rateLimitedWeapons.put(key, section.getInt(key));
+            }
+        }
+
+        LGWConfig.WeaponControlConfig newConfig = new LGWConfig.WeaponControlConfig();
+        newConfig.rateLimitedWeapons = rateLimitedWeapons;
 
         return newConfig;
     }
