@@ -12,7 +12,7 @@ import org.jspecify.annotations.NullMarked;
 public class Database {
     protected final HikariDataSource hikariDataSource;
     protected final Jdbi jdbi;
-    protected final EmblemDataRepository emblemDataRepository;
+    public final EmblemDataRepository emblemDataRepository;
 
     // Todo: implement this when support new config
     public Database(LGWConfig.DatabaseConfig databaseConfig) {
@@ -37,10 +37,6 @@ public class Database {
 
     public void shutdown() {
         hikariDataSource.close();
-    }
-
-    public EmblemDataRepository syogoDataRepository() {
-        return emblemDataRepository;
     }
 
     public void migrate() {
