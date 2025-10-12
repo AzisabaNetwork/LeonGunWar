@@ -181,7 +181,7 @@ public class MatchManager {
         }
 
         // 投票をリセット
-        LeonGunWar.getPlugin().getMapSelectCountdown().resetAllVotes();
+        LeonGunWar.getPlugin().mapSelectCountdown.resetAllVotes();
         // マップ名を表示
         BroadcastUtils.broadcast(
                 Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX,

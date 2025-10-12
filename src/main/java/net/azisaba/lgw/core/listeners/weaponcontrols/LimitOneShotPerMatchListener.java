@@ -25,8 +25,7 @@ public class LimitOneShotPerMatchListener implements Listener {
             return;
         }
 
-        int allowedCount = LeonGunWar.getPlugin().getWeaponControlConfig()
-                .getMaxUseCount(e.getWeaponTitle());
+        int allowedCount = LeonGunWar.getPlugin().config().weaponControlConfig.rateLimitedWeapons.getOrDefault(e.getWeaponTitle(), -1);
 
         if (allowedCount < 0) {
             return;

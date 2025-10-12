@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * Moved to {@link net.azisaba.lgw.core.db.Database}
  */
-@Deprecated(forRemoval = true, since = "4.1.0")
+@Deprecated(forRemoval = true, since = "4.0.0")
 public class SQLConnection {
 
     private static final int CURRENT_DATABASE_VERSION = 1;

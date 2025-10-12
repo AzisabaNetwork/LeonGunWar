@@ -20,7 +20,7 @@ import java.util.List;
  * @author Mr_IK
  */
 @RequiredArgsConstructor
-@Deprecated(forRemoval = true, since = "4.1.0")
+@Deprecated(forRemoval = true, since = "4.0.0")
 public class KDTeamDistributor implements TeamDistributor {
 
     private static KDStatusReloaded kdsPlugin;

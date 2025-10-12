@@ -16,7 +16,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Getter
-@Deprecated(forRemoval = true, since = "4.1.0")
 public class AssistStreaksConfig extends Config {
 
     private Map<Integer, Map.Entry<List<String>, List<String>>> levels;

@@ -140,8 +140,7 @@ public class MatchControlListener implements Listener {
                 List<Player> winnerPlayers = e.getTeamPlayers(wonTeam);
 
                 CSUtility csUtility = new CSUtility();
-                List<String> victoryItemCrackShotIds = LeonGunWar.getPlugin().getItemsConfig()
-                        .getVictoryItemCrackShotIds();
+                List<String> victoryItemCrackShotIds = LeonGunWar.getPlugin().config().itemsConfig.victoryItemCrackShotIds;
 
                 for (Player p : winnerPlayers) {
                     // 勝利アイテムを付与

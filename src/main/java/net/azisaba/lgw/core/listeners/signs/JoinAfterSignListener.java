@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Deprecated(forRemoval = true, since = "4.1.0")
+@Deprecated(forRemoval = true, since = "4.0.0")
 public class JoinAfterSignListener implements Listener {
 
     private final Map<UUID, Long> lastClicked = new HashMap<>();

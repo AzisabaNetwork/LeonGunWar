@@ -241,7 +241,7 @@ public class DamageListener implements Listener {
         SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
         String syogo = "";
         if (data != null) {
-            syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "") + "&r ";
+            syogo = LeonGunWar.getPlugin().config().syogoConfig.syogos.getOrDefault(data.getSyogo(), "") + "&r ";
         }
 
         TextComponent msg2 = Component.text()

@@ -7,7 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@Deprecated(forRemoval = true, since = "4.1.0")
+@Deprecated(forRemoval = true, since = "4.0.0")
 public class MapVoteCommand implements CommandExecutor {
 
     @Override
@@ -19,7 +19,7 @@ public class MapVoteCommand implements CommandExecutor {
         }
 
         // 投票が行われていない場合はreturn
-        if (!LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
+        if (!LeonGunWar.getPlugin().mapSelectCountdown.isRunning()) {
             sender.sendMessage(Chat.f("&c現在マップ投票は行われていません！"));
             return true;
         }
@@ -40,16 +40,16 @@ public class MapVoteCommand implements CommandExecutor {
         }
 
         // 値が0以下の場合や投票できる最大番号より大きい場合はreturn
-        if (index < 0 || index >= LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().size()) {
+        if (index < 0 || index >= LeonGunWar.getPlugin().mapSelectCountdown.getMaps().size()) {
             sender.sendMessage(Chat.f("&c有効な数字を指定してください！"));
             return true;
         }
 
         // 投票を反映
-        LeonGunWar.getPlugin().getMapSelectCountdown().vote((Player) sender, index);
+        LeonGunWar.getPlugin().mapSelectCountdown.vote((Player) sender, index);
 
         // メッセージを送信
-        String mapName = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps().get(index).mapName();
+        String mapName = LeonGunWar.getPlugin().mapSelectCountdown.getMaps().get(index).mapName();
         sender.sendMessage(Chat.f("{0} &e{1} &7に投票しました！", LeonGunWar.GAME_PREFIX, mapName));
         return true;
     }

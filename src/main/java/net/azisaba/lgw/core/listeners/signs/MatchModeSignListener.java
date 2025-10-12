@@ -40,7 +40,7 @@ import java.util.Set;
  *
  * @author siloneco
  */
-@Deprecated(forRemoval = true, since = "4.1.0")
+@Deprecated(forRemoval = true, since = "4.0.0")
 public class MatchModeSignListener implements Listener {
     private final Logger logger = LgwLog.getLogger(this.getClass());
 
@@ -180,7 +180,7 @@ public class MatchModeSignListener implements Listener {
 
         // モードを指定
         if (LeonGunWar.getPlugin().getManager().getMatchMode() != null
-                || LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
+                || LeonGunWar.getPlugin().mapSelectCountdown.isRunning()) {
             p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
             p.closeInventory();
             return;
@@ -216,7 +216,7 @@ public class MatchModeSignListener implements Listener {
 
         // ランダムなマップを4つ抽選
         Set<GameMap> randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomMaps(4);
-        LeonGunWar.getPlugin().getMapSelectCountdown().startCountdown(randomMaps, mode);
+        LeonGunWar.getPlugin().mapSelectCountdown.startCountdown(randomMaps, mode);
 
         // 音を鳴らす
         BroadcastUtils.getOnlinePlayers()
@@ -232,7 +232,7 @@ public class MatchModeSignListener implements Listener {
             put(3, ChatColor.AQUA);
         }};
 
-        List<GameMap> maps = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps();
+        List<GameMap> maps = LeonGunWar.getPlugin().mapSelectCountdown.getMaps();
         for (int i = 0, size = maps.size(); i < size; i++) {
             msg = msg.then(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).mapName()))
                     .runCommand("/leongunwar:mapvote " + (i + 1));

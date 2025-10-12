@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated(forRemoval = true, since = "4.1.0")
+@Deprecated(forRemoval = true, since = "4.0.0")
 public class LSyogoCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
@@ -28,11 +28,11 @@ public class LSyogoCommand implements TabExecutor {
 //                        return true;
 //                    }
 //                    if(args.length >= 3) {
-//                        if(LeonGunWar.getPlugin().getSyogoConfig().exist(args[1])){
+//                        if(LeonGunWar.getPlugin().config().syogoConfig.exist(args[1])){
 //                            sender.sendMessage(Chat.f("&c称号 {0} はすでに存在します！",args[1]));
 //                            return true;
 //                        }
-//                        LeonGunWar.getPlugin().getSyogoConfig().add(args[1],args[2]);
+//                        LeonGunWar.getPlugin().config().syogoConfig.add(args[1],args[2]);
 //                        sender.sendMessage(Chat.f("&b称号 {0}({1}&r) を追加しました。",args[1],args[2]));
 //                    }else {
 //                        sender.sendMessage(Chat.f("使い方: /lsyogo add <称号ID> <表示される称号>"));
@@ -44,7 +44,7 @@ public class LSyogoCommand implements TabExecutor {
                         return true;
                     }
                     if (args.length >= 3) {
-                        if (!LeonGunWar.getPlugin().getSyogoConfig().exist(args[2])) {
+                        if (!LeonGunWar.getPlugin().config().syogoConfig.syogos.containsKey(args[2])) {
                             sender.sendMessage(Chat.f("&c称号 {0} は存在しません。", args[2]));
                             return true;
                         }
@@ -52,7 +52,7 @@ public class LSyogoCommand implements TabExecutor {
                         if (player != null) {
                             if (SyogoData.getSyogoDataFromCache(player.getUniqueId()) == null) {
                                 SyogoData data = new SyogoData(player.getUniqueId(), player.getName(), args[2]);
-                                String display = LeonGunWar.getPlugin().getSyogoConfig().syogos.get(args[2]);
+                                String display = LeonGunWar.getPlugin().config().syogoConfig.syogos.get(args[2]);
                                 sender.sendMessage(Chat.f("&e処理中です...お待ち下さい..."));
                                 Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), new Runnable() {
                                     @Override
@@ -71,7 +71,7 @@ public class LSyogoCommand implements TabExecutor {
                                 @Override
                                 public void run() {
                                     SyogoData data = SyogoData.getSyogoData(args[1]);
-                                    String display = LeonGunWar.getPlugin().getSyogoConfig().syogos.get(args[2]);
+                                    String display = LeonGunWar.getPlugin().config().syogoConfig.syogos.get(args[2]);
                                     if (data == null) {
                                         Essentials essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
                                         User user = essentials.getUser(args[1]);
@@ -182,7 +182,8 @@ public class LSyogoCommand implements TabExecutor {
                     }
                 } else if (args[0].equalsIgnoreCase("reload")) {
                     try {
-                        LeonGunWar.getPlugin().getSyogoConfig().loadConfig();
+//                        LeonGunWar.getPlugin().config().syogoConfig.loadConfig();
+                        // Todo: reload syogo config
                         sender.sendMessage(Chat.f("&a称号データをリロードしました！"));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -194,11 +195,11 @@ public class LSyogoCommand implements TabExecutor {
 //                        return true;
 //                    }
 //                    if(args.length >= 2) {
-//                        if(!LeonGunWar.getPlugin().getSyogoConfig().exist(args[1])){
+//                        if(!LeonGunWar.getPlugin().config().syogoConfig.exist(args[1])){
 //                            sender.sendMessage(Chat.f("&c称号 {0} は存在しません。",args[1]));
 //                            return true;
 //                        }
-//                        LeonGunWar.getPlugin().getSyogoConfig().delete(args[1]);
+//                        LeonGunWar.getPlugin().config().syogoConfig.delete(args[1]);
 //                        sender.sendMessage(Chat.f("&b称号 &c{1} &bを削除しました。",args[1]));
 //                    }
 //                }

@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import java.util.UUID;
 
 @Data
-@Deprecated(forRemoval = true, since = "4.1.0")
+@Deprecated(forRemoval = true, since = "4.0.0")
 public class SignData {
 
     private final Location location;

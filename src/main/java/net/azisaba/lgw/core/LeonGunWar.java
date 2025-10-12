@@ -1,7 +1,6 @@
 package net.azisaba.lgw.core;
 
 import de.exlll.configlib.YamlConfigurations;
-import lombok.Getter;
 import net.azisaba.lgw.core.api.config.LGWConfig;
 import net.azisaba.lgw.core.api.integration.papi.LGWExpansion;
 import net.azisaba.lgw.core.api.integration.papi.PlaceHolderAPI;
@@ -79,7 +78,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Getter
 public class LeonGunWar extends JavaPlugin {
     private final Logger plLogger = LgwLog.getLogger(this.getClass());
     public static final String PL_ID = "leongunwar";
@@ -93,7 +91,7 @@ public class LeonGunWar extends JavaPlugin {
     // plugin
     private static LeonGunWar plugin;
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
-    private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
+    public final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
     private final MatchManager manager = new MatchManager();
     private final AssistStreaks assistStreaks = new AssistStreaks();
@@ -298,22 +296,21 @@ public class LeonGunWar extends JavaPlugin {
         return config;
     }
 
-    @Deprecated(forRemoval = true, since = "4.1.0")
+    @Deprecated(forRemoval = true, since = "4.0.0")
     public MainConfig getMainConfig() {
         return mainConfig;
     }
 
-    @Deprecated(forRemoval = true, since = "4.1.0")
     public MapsConfig getMapsConfig() {
         return mapsConfig;
     }
 
-    @Deprecated(forRemoval = true, since = "4.1.0")
+    @Deprecated(forRemoval = true, since = "4.0.0")
     public SpawnsConfig getSpawnsConfig() {
         return spawnsConfig;
     }
 
-    @Deprecated(forRemoval = true, since = "4.1.0")
+    @Deprecated(forRemoval = true, since = "4.0.0")
     public SyogoConfig getSyogoConfig() {
         return syogoConfig;
     }
@@ -322,7 +319,6 @@ public class LeonGunWar extends JavaPlugin {
         return matchStartCountdown;
     }
 
-    @Deprecated(forRemoval = true, since = "4.1.0")
     public AssistStreaksConfig getAssistStreaksConfig() {
         return assistStreaksConfig;
     }
@@ -335,7 +331,6 @@ public class LeonGunWar extends JavaPlugin {
         return killStreaks;
     }
 
-    @Deprecated(forRemoval = true, since = "4.1.0")
     public KillStreaksConfig getKillStreaksConfig() {
         return killStreaksConfig;
     }

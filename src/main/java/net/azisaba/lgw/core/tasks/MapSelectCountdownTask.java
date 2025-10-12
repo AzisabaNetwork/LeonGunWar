@@ -41,7 +41,7 @@ public class MapSelectCountdownTask extends BukkitRunnable {
         // 0の場合カウントダウン終了処理
         if (timeLeft.get() <= 0) {
             // カウントダウンを停止
-            LeonGunWar.getPlugin().getMapSelectCountdown().stopCountdown();
+            LeonGunWar.getPlugin().mapSelectCountdown.stopCountdown();
 
             //票数に応じてランダムにマップを決定
             List<GameMap> random = new ArrayList<>();

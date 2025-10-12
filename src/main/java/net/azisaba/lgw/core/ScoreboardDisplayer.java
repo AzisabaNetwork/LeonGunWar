@@ -98,7 +98,7 @@ public class ScoreboardDisplayer {
         }
 
         // Map選択中の場合
-        if (LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
+        if (LeonGunWar.getPlugin().mapSelectCountdown.isRunning()) {
             /*
 
               マップ投票中
@@ -114,7 +114,7 @@ public class ScoreboardDisplayer {
               azisaba.net で今すぐ遊べ！
              */
             // カウントダウンを取得
-            MapSelectCountdown countdown = LeonGunWar.getPlugin().getMapSelectCountdown();
+            MapSelectCountdown countdown = LeonGunWar.getPlugin().mapSelectCountdown;
             // マップListを取得
             List<GameMap> maps = countdown.getMaps();
             // 残り時間を取得
