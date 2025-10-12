@@ -13,14 +13,8 @@ import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TDMNoLimitListe
 import net.azisaba.lgw.core.battlesystem.gamemode.teamdeathmatch.TeamDeathMatchListener;
 import net.azisaba.lgw.core.commands.LGWCommands;
 import net.azisaba.lgw.core.configs.AssistStreaksConfig;
-import net.azisaba.lgw.core.configs.DatabaseConfig;
-import net.azisaba.lgw.core.configs.ItemsConfig;
 import net.azisaba.lgw.core.configs.KillStreaksConfig;
-import net.azisaba.lgw.core.configs.MainConfig;
 import net.azisaba.lgw.core.configs.MapsConfig;
-import net.azisaba.lgw.core.configs.SpawnsConfig;
-import net.azisaba.lgw.core.configs.SyogoConfig;
-import net.azisaba.lgw.core.configs.WeaponControlConfig;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -100,15 +94,9 @@ public class LeonGunWar extends JavaPlugin {
     private File configFile;
     private LGWConfig config;
     private LGWCommands lgwCommands;
-    private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
-    private SpawnsConfig spawnsConfig;
     private MapsConfig mapsConfig;
-    private DatabaseConfig databaseConfig;
-    private SyogoConfig syogoConfig;
-    private WeaponControlConfig weaponControlConfig;
-    private ItemsConfig itemsConfig;
     private SQLConnection sqlConnection;
 
     /**
@@ -158,26 +146,14 @@ public class LeonGunWar extends JavaPlugin {
         } else {
             plLogger.info("設定ファイルの読み込みが完了しました。");
         }
-        mainConfig = new MainConfig(this);
         killStreaksConfig = new KillStreaksConfig(this);
         assistStreaksConfig = new AssistStreaksConfig(this);
-        spawnsConfig = new SpawnsConfig(this);
         mapsConfig = new MapsConfig(this);
-        databaseConfig = new DatabaseConfig(this);
-        syogoConfig = new SyogoConfig(this);
-        weaponControlConfig = new WeaponControlConfig(this);
-        itemsConfig = new ItemsConfig(this);
         // 設定ファイルを読み込む
         try {
-            mainConfig.loadConfig();
             killStreaksConfig.loadConfig();
             assistStreaksConfig.loadConfig();
-            spawnsConfig.loadConfig();
             mapsConfig.loadConfig();
-            databaseConfig.loadConfig();
-            syogoConfig.loadConfig();
-            weaponControlConfig.loadConfig();
-            itemsConfig.loadConfig();
         } catch (IOException | InvalidConfigurationException exception) {
             plLogger.error("Failed to load config", exception);
         }
@@ -185,8 +161,7 @@ public class LeonGunWar extends JavaPlugin {
         // 初期化が必要なファイルを初期化する
         manager.initialize();
         plLogger.info("ファイルの準備が完了しました。");
-        ;
-        sqlConnection = new SQLConnection(databaseConfig);
+        sqlConnection = new SQLConnection(config.database);
 
         // コマンドのインスタンスに渡す必要があるListener
         LimitActionListener preventItemDropListener = new LimitActionListener(this);
@@ -296,23 +271,8 @@ public class LeonGunWar extends JavaPlugin {
         return config;
     }
 
-    @Deprecated(forRemoval = true, since = "4.0.0")
-    public MainConfig getMainConfig() {
-        return mainConfig;
-    }
-
     public MapsConfig getMapsConfig() {
         return mapsConfig;
-    }
-
-    @Deprecated(forRemoval = true, since = "4.0.0")
-    public SpawnsConfig getSpawnsConfig() {
-        return spawnsConfig;
-    }
-
-    @Deprecated(forRemoval = true, since = "4.0.0")
-    public SyogoConfig getSyogoConfig() {
-        return syogoConfig;
     }
 
     public MatchStartCountdown getMatchStartCountdown() {

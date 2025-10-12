@@ -2,7 +2,7 @@ package net.azisaba.lgw.core.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.azisaba.lgw.core.configs.DatabaseConfig;
+import net.azisaba.lgw.core.api.config.LGWConfig;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,19 +23,19 @@ public class SQLConnection {
     private final boolean enabled;
     private HikariDataSource dataSource;
 
-    public SQLConnection(DatabaseConfig config) {
+    public SQLConnection(LGWConfig.DatabaseConfig config) {
 
-        if (!config.isEnabled()) {
+        if (config == null) {
             enabled = false;
             return;
         }
 
         HikariConfig hConfig = new HikariConfig();
 
-        hConfig.setJdbcUrl("jdbc:mysql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase() + "?autoReconnect=true");
+        hConfig.setJdbcUrl("jdbc:mysql://" + config.host + ":" + config.port + "/" + config.database + "?autoReconnect=true");
 
-        hConfig.setUsername(config.getUser());
-        hConfig.setPassword(config.getPassword());
+        hConfig.setUsername(config.username);
+        hConfig.setPassword(config.password);
 
         hConfig.addDataSourceProperty("cachePrepStmts", "true");
         hConfig.addDataSourceProperty("prepStmtCacheSize", "250");
