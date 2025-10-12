@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConfigMigrator {
     private static YamlConfiguration loadConfig(File file) {
@@ -18,7 +19,7 @@ public class ConfigMigrator {
 
         // load config from file
         if (Files.isRegularFile(file.toPath())) {
-            try(var lines = Files.lines(file.toPath())) {
+            try(Stream<String> lines = Files.lines(file.toPath())) {
                 config.loadFromString(lines.collect(Collectors.joining(System.lineSeparator())));
             } catch (InvalidConfigurationException | IOException e) {
                 throw new RuntimeException(e);
@@ -27,6 +28,20 @@ public class ConfigMigrator {
             throw new RuntimeException("Failed to load config");
         }
         return config;
+    }
+
+    // "configs/main.yml"
+    public static LGWConfig.@NonNull MainConfig mainConfig(File file) throws RuntimeException {
+        final YamlConfiguration config = loadConfig(file);
+
+        boolean isLobby = config.getBoolean("isLobby", true);
+        String serverName = config.getString("servername", "lobby");
+
+        LGWConfig.MainConfig newConfig = new LGWConfig.MainConfig();
+        newConfig.isLobby = isLobby;
+        newConfig.serverName = serverName;
+
+        return newConfig;
     }
 
     // "configs/items.yml"
@@ -49,6 +64,7 @@ public class ConfigMigrator {
         return newConfig;
     }
 
+    // "configs/database.yml"
     public static LGWConfig.@NonNull DatabaseConfig databaseConfig(File file) throws RuntimeException {
         final YamlConfiguration config = loadConfig(file);
 
