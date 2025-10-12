@@ -10,6 +10,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+// We will move this to MatchNotifyCommand
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class SiaiTuutiCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String lavel, String[] args) {

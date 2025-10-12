@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  *
  * @author siloneco
  */
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class EntrySignListener implements Listener {
 
     /**

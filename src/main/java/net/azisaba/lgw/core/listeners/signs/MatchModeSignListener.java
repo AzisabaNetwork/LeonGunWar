@@ -40,6 +40,7 @@ import java.util.Set;
  *
  * @author siloneco
  */
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class MatchModeSignListener implements Listener {
     private final Logger logger = LgwLog.getLogger(this.getClass());
 
