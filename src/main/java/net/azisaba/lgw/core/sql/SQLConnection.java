@@ -25,7 +25,7 @@ public class SQLConnection {
 
     public SQLConnection(LGWConfig.DatabaseConfig config) {
 
-        if (config == null) {
+        if (config == null || !config.enabled) {
             enabled = false;
             return;
         }

@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConfigMigrator {
-    // "configs/items.yml"
-    public static LGWConfig.@NonNull ItemsConfig itemsConfig(File file) throws RuntimeException {
+    private static YamlConfiguration loadConfig(File file) {
         final YamlConfiguration config = new YamlConfiguration();
 
         // load config from file
@@ -27,6 +26,12 @@ public class ConfigMigrator {
         } else {
             throw new RuntimeException("Failed to load config");
         }
+        return config;
+    }
+
+    // "configs/items.yml"
+    public static LGWConfig.@NonNull ItemsConfig itemsConfig(File file) throws RuntimeException {
+        final YamlConfiguration config = loadConfig(file);
 
         // load old config data
         List<String> victoryItemCrackShotIds;
@@ -40,6 +45,29 @@ public class ConfigMigrator {
         // move data to new instance
         LGWConfig.ItemsConfig newConfig = new LGWConfig.ItemsConfig();
         newConfig.victoryItemCrackShotIds = victoryItemCrackShotIds;
+
+        return newConfig;
+    }
+
+    public static LGWConfig.@NonNull DatabaseConfig databaseConfig(File file) throws RuntimeException {
+        final YamlConfiguration config = loadConfig(file);
+
+        // load old
+        boolean enabled = config.getBoolean("enable", false);
+        String host = config.getString("host", "HOST");
+        int port = config.getInt("port", 3306);
+        String database = config.getString("database", "conflict");
+        String user = config.getString("user", "conflict");
+        String password = config.getString("password", "password");
+
+        // write new
+        LGWConfig.DatabaseConfig newConfig = new LGWConfig.DatabaseConfig();
+        newConfig.enabled = enabled;
+        newConfig.host = host;
+        newConfig.port = port;
+        newConfig.database = database;
+        newConfig.username = user;
+        newConfig.password = password;
 
         return newConfig;
     }

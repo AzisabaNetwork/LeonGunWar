@@ -26,6 +26,7 @@ public class LGWConfig {
 
     @Configuration
     public static class DatabaseConfig {
+        public boolean enabled = false;
         public String host = "127.0.0.1";
         public int port = 3306;
         public String database = "leongunwar";
