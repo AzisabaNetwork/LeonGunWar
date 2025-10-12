@@ -36,7 +36,7 @@ public class LGWCommands {
     }
 
     private void registerCompletions(CommandCompletions<BukkitCommandCompletionContext> commandCompletions) {
-        commandCompletions.registerCompletion("emblems", c -> plugin.getSyogoConfig().syogos.keySet().stream().toList());
+        commandCompletions.registerCompletion("emblems", c -> plugin.config().syogoConfig.syogos.keySet().stream().toList());
     }
 
     private void register(BaseCommand command) {

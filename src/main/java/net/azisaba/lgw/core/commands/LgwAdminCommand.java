@@ -111,7 +111,6 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             case "reload", "rl" -> {
                 try {
                     LeonGunWar.getPlugin().getMapsConfig().loadConfig();
-                    LeonGunWar.getPlugin().getSpawnsConfig().loadConfig();
                     LeonGunWar.getPlugin().getKillStreaksConfig().loadConfig();
                     LeonGunWar.getPlugin().getAssistStreaksConfig().loadConfig();
                 } catch (IOException | InvalidConfigurationException exception) {
@@ -137,8 +136,6 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
                 for (BattleTeam team : manager.getTeamPlayers().keySet()) {
                     int playerCount = manager.getTeamPlayers().get(team).size();
-                    int teampowerlevel = manager.getTeamPowerLevel(manager.getScoreboardTeam(team));
-                    int teamacepowerlevel = manager.getTeamAcePowerLevel(manager.getScoreboardTeam(team));
                     int matchpoint = manager.getCurrentTeamPoint(team);
 
                     String leadername = Chat.f("&4NOT_LEADER_DEATH_MATCH");
@@ -152,12 +149,10 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Chat.f(
                             "{0} {1}&e データ\n" +
                                     "{0}&eチーム人数: §6{2}人\n" +
-                                    "{0}&eチームパワーレベル: §6{3}\n" +
-                                    "{0}&eチームエースパワーレベル: §6{4}\n" +
-                                    "{0}&e現在のポイント: §6{5}\n" +
-                                    "{0}&eチームリーダー: §6{6}\n",
+                                    "{0}&e現在のポイント: §6{3}\n" +
+                                    "{0}&eチームリーダー: §6{4}\n",
                             LeonGunWar.GAME_PREFIX, team.getTeamName(),
-                            playerCount, teampowerlevel, teamacepowerlevel, matchpoint, leadername
+                            playerCount, matchpoint, leadername
                     ));
                 }
                 sender.sendMessage(Chat.f("{0}&cMatch Data: {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));

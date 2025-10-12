@@ -6,7 +6,6 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.battlesystem.MatchMode;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
-import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.GameMap;
@@ -192,11 +191,12 @@ public class MatchModeSignListener implements Listener {
             return;
         }
 
-        TeamDistributor distributor = null;
+        TeamDistributor distributor = new DefaultTeamDistributor();
         if (clicked.isSimilar(defaultItem)) {
             distributor = new DefaultTeamDistributor();
         } else if (clicked.isSimilar(kdItem)) {
-            distributor = new KDTeamDistributor();
+            // Todo: remove kd team distributor settings remove from gui
+//            distributor = new KDTeamDistributor();
         }
 
         if (distributor == null) {

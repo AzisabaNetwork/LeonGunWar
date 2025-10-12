@@ -8,7 +8,6 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.api.util.Chat;
 import net.azisaba.lgw.core.battlesystem.gamemode.leaderdeathmatch.task.LeaderSelectionTask;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
-import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
 import net.azisaba.lgw.core.events.PlayerEntryMatchEvent;
@@ -935,91 +934,6 @@ public class MatchManager {
         }
 
         return spawnPoint;
-    }
-
-    /**
-     * チームの戦力レベルを取得します
-     * <p>
-     * 全プレイヤーのパワーレベル合計 + 人数x1000
-     *
-     * @param team 対象のチーム
-     * @return レベル
-     */
-    //
-    //Tag:Deprecated
-    public int getTeamPowerLevel(Team team) {
-        int tpl = 0;
-        // チームのエントリーリストを取得
-        for (String pn : team.getEntries()) {
-            Player p = Bukkit.getPlayer(pn);
-            // (ないとは思うが)一応オンライン確認
-            if (p == null) {
-                // オフラインの場合スキップ
-                continue;
-            }
-            // チームパワーレベルに代入
-            tpl = tpl + KDTeamDistributor.getPlayerPowerLevel(p) + 1000;
-        }
-        return tpl;
-    }
-
-    /**
-     * チームにいるAceの人数とパワーを取得します
-     * <p>
-     * Aceプレイヤーのパワーレベル合計 + 人数x1000
-     *
-     * @param team 対象のチーム
-     * @return レベル
-     */
-    //Tag:Deprecated
-    public int getTeamAcePowerLevel(Team team) {
-        int tpl = 0;
-        // チームのエントリーリストを取得
-        for (String pn : team.getEntries()) {
-            Player p = Bukkit.getPlayer(pn);
-            // (ないとは思うが)一応オンライン確認
-            if (p == null) {
-                // オフラインの場合スキップ
-                continue;
-            }
-            // Aceではないなら
-            if (!KDTeamDistributor.isACE(p)) {
-                continue;
-            }
-            // チームパワーレベルに代入
-            tpl = tpl + KDTeamDistributor.getPlayerPowerLevel(p) + 1000;
-        }
-        return tpl;
-    }
-
-    /**
-     * パワーレベルでどちらが大きいかを判断します
-     *
-     * @param team1,team2 チームのパワーレベル
-     * @return 1=チーム1が大きい 2=チーム2が大きい 0=等しい
-     */
-    //Tag:Deprecated
-    public int getPowerLevelComparison(int team1, int team2) {
-        if (team1 > team2) {
-            return 1;
-        } else if (team1 < team2) {
-            return 2;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * パワーレベルでバランスがいいかを判断します
-     * <p>
-     * team1からteam2が±1500ならtrue それ以外ならfalse
-     *
-     * @param team1,team2 チームのパワーレベル
-     * @return true = バランスがいい false = バランスが悪い
-     */
-    //Tag:Deprecated
-    public boolean getPowerLevelBalance(int team1, int team2) {
-        return team1 + 1500 >= team2 && team1 - 1500 <= team2;
     }
 
     public boolean isMatching() {

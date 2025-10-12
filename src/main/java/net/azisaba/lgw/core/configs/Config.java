@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Deprecated(since = "4.0.0")
 public class Config {
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
