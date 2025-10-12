@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,6 +85,21 @@ public class ConfigMigrator {
         newConfig.database = database;
         newConfig.username = user;
         newConfig.password = password;
+
+        return newConfig;
+    }
+
+    // "configs/syogo.yml"
+    public static LGWConfig.@NonNull SyogoConfig syogoConfig(File file) throws RuntimeException {
+        final YamlConfiguration config = loadConfig(file);
+
+        HashMap<String, String> syogos = new HashMap<>();
+        for (String syogo : config.getValues(false).keySet()) {
+            syogos.put(syogo, config.getString(syogo));
+        }
+
+        LGWConfig.SyogoConfig newConfig = new LGWConfig.SyogoConfig();
+        newConfig.syogos = syogos;
 
         return newConfig;
     }
