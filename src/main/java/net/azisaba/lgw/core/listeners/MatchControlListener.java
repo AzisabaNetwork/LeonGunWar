@@ -95,8 +95,8 @@ public class MatchControlListener implements Listener {
         if (!mvpPlayers.isEmpty()) {
             for (KDPlayerData data : mvpPlayers) {
                 resultMessages.add(Chat.f("&c[MVP] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)",
-                        data.getPlayerName(),
-                        data.getKills(), data.getDeaths(), data.getAssists()));
+                        data.playerName(),
+                        data.kills(), data.deaths(), data.assists()));
             }
         }
 
