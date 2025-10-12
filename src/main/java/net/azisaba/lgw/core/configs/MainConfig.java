@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import net.azisaba.lgw.core.LeonGunWar;
 
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class MainConfig extends Config {
 
     public boolean isLobby = true;

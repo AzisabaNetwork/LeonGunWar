@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.Set;
 
 @Getter
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class MapsConfig extends Config {
     private final Logger logger = LgwLog.getLogger(this.getClass());
 

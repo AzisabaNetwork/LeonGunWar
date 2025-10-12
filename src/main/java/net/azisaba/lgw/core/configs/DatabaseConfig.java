@@ -6,6 +6,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
 
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class DatabaseConfig extends Config {
 
     private boolean enabled;

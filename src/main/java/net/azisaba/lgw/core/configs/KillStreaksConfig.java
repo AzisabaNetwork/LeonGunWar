@@ -19,6 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Getter
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class KillStreaksConfig extends Config {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");

@@ -3,7 +3,7 @@ package net.azisaba.lgw.core.db;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.azisaba.lgw.core.api.config.LGWConfig;
-import net.azisaba.lgw.core.api.db.EmblemDataRepository;
+import net.azisaba.lgw.core.api.emblem.db.EmblemDataRepository;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.jspecify.annotations.NullMarked;

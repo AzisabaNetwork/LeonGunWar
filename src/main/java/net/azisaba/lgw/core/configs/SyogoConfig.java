@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.util.HashMap;
 
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class SyogoConfig extends Config {
     private final Logger logger = LgwLog.getLogger(this.getClass());
 

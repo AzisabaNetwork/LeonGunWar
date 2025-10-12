@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class WeaponControlConfig extends Config {
 
     private Map<String, Integer> rateLimitedWeapons;

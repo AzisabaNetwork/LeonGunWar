@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class SpawnsConfig extends Config {
 
     private Map<String, Location> spawns;

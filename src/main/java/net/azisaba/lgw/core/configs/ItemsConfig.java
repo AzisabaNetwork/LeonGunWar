@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
+@Deprecated(forRemoval = true, since = "4.1.0")
 public class ItemsConfig extends Config {
 
     private List<String> victoryItemCrackShotIds;
