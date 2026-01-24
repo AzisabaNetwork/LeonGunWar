@@ -38,7 +38,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -78,14 +78,6 @@ public class LeonGunWar extends JavaPlugin {
     private SyogoConfig syogoConfig;
     private WeaponControlConfig weaponControlConfig;
     private ItemsConfig itemsConfig;
-
-    private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
-    private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
-    private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
-    private final MatchManager manager = new MatchManager();
-    private final AssistStreaks assistStreaks = new AssistStreaks();
-    private final KillStreaks killStreaks = new KillStreaks();
-    private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
 
     private SQLConnection sqlConnection;
 
