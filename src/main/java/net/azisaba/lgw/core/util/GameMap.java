@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
@@ -21,11 +23,13 @@ public class GameMap {
     private final World world;
     // 各チームのスポーン地点
     private final Map<BattleTeam, Location> spawnMap;
+    private final List<Area3D> hijackAreas;
 
-    public GameMap(String mapName, World world, Map<BattleTeam, Location> spawnMap) {
+    public GameMap(String mapName, World world, Map<BattleTeam, Location> spawnMap, List<Area3D> hijackAreas) {
         this.mapName = mapName;
         this.world = world;
         this.spawnMap = spawnMap;
+        this.hijackAreas = hijackAreas != null ? hijackAreas : new ArrayList<>();
     }
 
     public Location getSpawnPoint(BattleTeam team) {

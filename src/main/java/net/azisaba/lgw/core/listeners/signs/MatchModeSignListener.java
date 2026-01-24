@@ -213,7 +213,12 @@ public class MatchModeSignListener implements Listener {
             Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         // ランダムなマップを4つ抽選
-        Set<GameMap> randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomMaps(4);
+        Set<GameMap> randomMaps;
+        if (mode == MatchMode.HIJACK) {
+            randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomHijackMaps(4);
+        } else {
+            randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomMaps(4);
+        }
         LeonGunWar.getPlugin().getMapSelectCountdown().startCountdown(randomMaps, mode);
 
         // 音を鳴らす

@@ -43,7 +43,15 @@ public enum MatchMode {
             Chat.f("&bCDM"),
             Chat.f("&7募集時にかかれていた条件を達成で勝利"),
             Duration.ofMinutes(10),
-            Arrays.asList("cdm", "customdeathmatch", "custom"));
+            Arrays.asList("cdm", "customdeathmatch", "custom")),
+
+    HIJACK(
+            Chat.f("&cハイジャック"),
+            Chat.f("&cHIJACK"),
+            Chat.f("&7終了時に &cキャプチャーポイント &7が多いチームの勝利"),
+            Duration.ofMinutes(10),
+            Arrays.asList("hijack", "hj")
+    );
 
 
     private final String modeName;

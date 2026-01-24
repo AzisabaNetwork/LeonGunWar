@@ -26,12 +26,7 @@ import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.GameMap;
-import net.azisaba.lgw.core.util.ItemChangeValidator;
-import net.azisaba.lgw.core.util.KillDeathCounter;
-import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.util.RespawnProtection;
+import net.azisaba.lgw.core.util.*;
 import net.azisaba.lgw.core.utils.BroadcastUtils;
 import net.azisaba.lgw.core.utils.Chat;
 import net.azisaba.lgw.core.utils.CustomItem;
@@ -105,6 +100,8 @@ public class MatchManager {
 
     // リーダーマッチかどうか
     private boolean leaderMatch = false;
+
+    private List<Area3D> hijackAreas = new ArrayList<>();
 
     /**
      * 初期化メソッド Pluginが有効化されたときのみ呼び出されることを前提としています
@@ -217,6 +214,10 @@ public class MatchManager {
                     leaderMatch = true;
                     break;
                 }
+            case HIJACK:
+                hijackAreas = currentGameMap.getHijackAreas();
+                leaderMatch = false;
+                break;
             default:
                 leaderMatch = false;
         }

@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
+import net.azisaba.lgw.core.util.Area3D;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,6 +26,7 @@ import net.azisaba.lgw.core.util.GameMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.bukkit.util.Vector;
 
 @Getter
 public class MapsConfig extends Config {
@@ -63,7 +65,15 @@ public class MapsConfig extends Config {
                 }
             }
 
-            GameMap gameMap = new GameMap(mapName, world, spawnMap);
+            List<Area3D> areas = new ArrayList<>();
+            for (String area : mapSection.getConfigurationSection("areas").getKeys(false)) {
+                ConfigurationSection areaSection = mapSection.getConfigurationSection("areas." + area);
+                Vector min = getLocation(areaSection.getConfigurationSection("min"));
+                Vector max = getLocation(areaSection.getConfigurationSection("max"));
+                areas.add(new Area3D(min, max));
+            }
+
+            GameMap gameMap = new GameMap(mapName, world, spawnMap, areas);
             allGameMap.add(gameMap);
 
             plugin.getLogger().info("マップ " + mapName + " をロードしました。");
@@ -99,7 +109,30 @@ public class MapsConfig extends Config {
         return new HashSet<>(shuffleList.subList(0, count));
     }
 
+    public Set<GameMap> getRandomHijackMaps(int count) {
+        List<GameMap> hijackMaps = new ArrayList<>();
+        for (GameMap map : allGameMap) {
+            if (!map.getHijackAreas().isEmpty()) {
+                hijackMaps.add(map);
+            }
+        }
+        if ( count > hijackMaps.size() || count <= 0 ) {
+            throw new IllegalArgumentException("Hijack Mapを" + count + "個抽選することはできません！ (ロードされているHijack Mapの数: " + hijackMaps.size() + " )");
+        }
+        List<GameMap> shuffleList = new ArrayList<>(hijackMaps);
+        Collections.shuffle(shuffleList);
+
+        return new HashSet<>(shuffleList.subList(0, count));
+    }
+
     public List<GameMap> getAllGameMap() {
         return allGameMap;
+    }
+
+    private Vector getLocation(ConfigurationSection section) {
+        double x = section.getDouble("x");
+        double y = section.getDouble("y");
+        double z = section.getDouble("z");
+        return new Vector(x, y, z);
     }
 }

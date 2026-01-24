@@ -5,16 +5,13 @@ import lombok.Getter;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
+import net.azisaba.lgw.core.listeners.modes.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
 import net.azisaba.lgw.core.listeners.PlayerControlListener;
-import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
-import net.azisaba.lgw.core.listeners.modes.LeaderDeathMatchListener;
-import net.azisaba.lgw.core.listeners.modes.TDMNoLimitListener;
-import net.azisaba.lgw.core.listeners.modes.TeamDeathMatchListener;
 import net.azisaba.lgw.core.listeners.others.*;
 import net.azisaba.lgw.core.listeners.signs.CustomMatchSignListener;
 import net.azisaba.lgw.core.listeners.signs.EntrySignListener;
@@ -160,6 +157,7 @@ public class LeonGunWar extends JavaPlugin {
 
         // リスナーの登録 (modes)
         Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
+        Bukkit.getPluginManager().registerEvents(new HijackListener(), this);
         Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
         Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomTDMListener(), this);
