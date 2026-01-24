@@ -2,17 +2,6 @@ package net.azisaba.lgw.core;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.NonNull;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
@@ -25,6 +14,7 @@ import net.azisaba.lgw.core.events.PlayerLeaveEntryMatchEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.events.TeamPointIncreasedEvent;
 import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
+import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.*;
 import net.azisaba.lgw.core.utils.BroadcastUtils;
@@ -33,6 +23,16 @@ import net.azisaba.lgw.core.utils.CustomItem;
 import net.azisaba.lgw.core.utils.SecondOfDay;
 import net.azisaba.playersettings.PlayerSettings;
 import net.azisaba.playersettings.util.SettingsData;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.CustomItem;
+import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.ItemChangeValidator;
+import net.azisaba.lgw.core.util.KillDeathCounter;
+import net.azisaba.lgw.core.util.MatchMode;
+import net.azisaba.lgw.core.util.RespawnProtection;
+import net.azisaba.lgw.core.util.SecondOfDay;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -50,6 +50,18 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
  * ゲームを司るコアクラス
  *
@@ -58,17 +70,25 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 @Data
 public class MatchManager {
 
+    // 試合の残り時間
+    private final AtomicInteger timeLeft = new AtomicInteger(0);
+    // スコアボードチーム
+    private final Map<BattleTeam, Team> teams = new HashMap<>();
+    // 試合に参加するプレイヤーのリスト
+    private final List<Player> entryPlayers = new ArrayList<>();
+    // チェストプレート
+    private final Map<BattleTeam, ItemStack> chestplates = new HashMap<>();
+    // ポイントを集計するHashMap
+    private final Map<BattleTeam, Integer> pointMap = new HashMap<>();
+    // チームのリーダー
+    private final Map<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
     private boolean initialized = false;
-
     // チーム分けを行うクラス
     private TeamDistributor teamDistributor;
-
     // ゲーム中かどうかの判定
     private boolean isMatching = false;
     // 現在のマップ
     private GameMap currentGameMap = null;
-    // 試合の残り時間
-    private final AtomicInteger timeLeft = new AtomicInteger(0);
     // 試合を動かすタスク
     private BukkitTask matchTask;
     // KDカウンター
@@ -77,24 +97,10 @@ public class MatchManager {
     private RespawnProtection respawnProtection;
     // インベントリの変更を制限するクラス
     private ItemChangeValidator itemChangeValidator;
-
     // マッチで使用するスコアボード
     private Scoreboard scoreboard;
-    // スコアボードチーム
-    private final Map<BattleTeam, Team> teams = new HashMap<>();
-    // 試合に参加するプレイヤーのリスト
-    private final List<Player> entryPlayers = new ArrayList<>();
-    // チェストプレート
-    private final Map<BattleTeam, ItemStack> chestplates = new HashMap<>();
-
-    // ポイントを集計するHashMap
-    private final Map<BattleTeam, Integer> pointMap = new HashMap<>();
-
     // 試合の種類
     private MatchMode matchMode = null;
-    // チームのリーダー
-    private final Map<BattleTeam, Player> ldmLeaderMap = new HashMap<>();
-
     // 試合時間を表示するボスバー
     private BossBar bossBar = null;
 
@@ -173,8 +179,8 @@ public class MatchManager {
         LeonGunWar.getPlugin().getMapSelectCountdown().resetAllVotes();
         // マップ名を表示
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX,
-                currentGameMap.getMapName()));
+                Chat.f("{0}&7今回のマップは &b{1} &7です！", LeonGunWar.GAME_PREFIX,
+                        currentGameMap.getMapName()));
 
         // 参加プレイヤーを取得
         List<Player> entryPlayers = getEntryPlayers();
@@ -183,17 +189,17 @@ public class MatchManager {
 
         // 各プレイヤーにチームに沿った処理を行う
         // エントリー削除したときにgetEntries()の中身が変わってエラーを起こさないように新しいリストを作成してfor文を使用する
-        for ( BattleTeam team : BattleTeam.values() ) {
+        for (BattleTeam team : BattleTeam.values()) {
             Team scoreboardTeam = getScoreboardTeam(team);
-            if ( scoreboardTeam == null ) {
+            if (scoreboardTeam == null) {
                 continue;
             }
 
-            for ( String entry : new ArrayList<>(scoreboardTeam.getEntries()) ) {
+            for (String entry : new ArrayList<>(scoreboardTeam.getEntries())) {
                 Player player = Bukkit.getPlayerExact(entry);
 
                 // プレイヤーが見つからない場合はエントリーから削除してcontinue
-                if ( player == null ) {
+                if (player == null) {
                     scoreboardTeam.removeEntry(entry);
                     continue;
                 }
@@ -204,13 +210,13 @@ public class MatchManager {
         }
 
         // LDM/CDMのリーダーマッチならリーダーを抽選
-        switch ( matchMode ) {
+        switch (matchMode) {
             case LEADER_DEATH_MATCH:
             case LEADER_DEATH_MATCH_POINT:
                 leaderMatch = true;
                 break;
             case CUSTOM_DEATH_MATCH:
-                if ( CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader ) {
+                if (CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader) {
                     leaderMatch = true;
                     break;
                 }
@@ -222,7 +228,7 @@ public class MatchManager {
                 leaderMatch = false;
         }
 
-        if ( leaderMatch ) {
+        if (leaderMatch) {
             // チームとそのプレイヤーを取得
             Map<BattleTeam, List<Player>> playerMap = getTeamPlayers();
 
@@ -234,27 +240,29 @@ public class MatchManager {
 
         // 全プレイヤーに音を鳴らす
         BroadcastUtils.getOnlinePlayers()
-            .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
+                .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
         // 開始メッセージ
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+                Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         BroadcastUtils.broadcast(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX,
-            SecondOfDay.f(matchMode.getDuration().getSeconds())));
-        // 勝利条件を発表
+                SecondOfDay.f(matchMode.getDuration().getSeconds())));
+        // 勝利条件を発表z
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
+                Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+                Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         Bukkit.getPluginManager()
-            .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
+                .callEvent(new MatchStartedEvent(currentGameMap, getTeamPlayers()));
 
         //試合開始をほかサーバーに通知(要SyncCommandExec)
-        if(LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv1")){
+        if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv1")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv1");
         } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv2")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv2");
+        } else if (LeonGunWar.getPlugin().getMainConfig().serverName.equals("sv3")) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "syncomma noticesv3");
         }
 
 
@@ -268,17 +276,26 @@ public class MatchManager {
         //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
-    public List<Player> getEntryPlayers() { return entryPlayers; }
+    public List<Player> getEntryPlayers() {
+        return entryPlayers;
+    }
 
     /**
      * ゲーム終了時に行う処理を書きます
      */
     public void finalizeMatch() {
         // タスクの終了
-        if ( matchTask != null ) {
+        if (matchTask != null) {
             matchTask.cancel();
             matchTask = null;
         }
+        for (BattleTeam team : BattleTeam.values()) {
+            BukkitTask task = LeonGunWar.leaderSelectionTaskMap.get(team);
+            if (task != null) {
+                task.cancel();
+            }
+        }
+
 
         // 残り時間を0に
         timeLeft.set(0);
@@ -292,8 +309,6 @@ public class MatchManager {
         // インベントリ変更制限クラスを初期化
         itemChangeValidator = new ItemChangeValidator();
 
-        // サイドバーを削除
-        LeonGunWar.getPlugin().getScoreboardDisplayer().clearSideBar();
         // 全プレイヤーのdisplayNameを初期化
         Bukkit.getOnlinePlayers().forEach(p -> {
 
@@ -332,14 +347,14 @@ public class MatchManager {
      */
     public boolean addEntryPlayer(Player p) {
         // すでに参加している場合はreturn false
-        if ( entryPlayers.contains(p) ) {
+        if (entryPlayers.contains(p)) {
             return false;
         }
 
         // エントリー追加
         entryPlayers.add(p);
         // 名前がデフォルトの場合
-        if ( !isPlayerMatching(p) ) {
+        if (!isPlayerMatching(p)) {
             // 名前の色を変更
             p.setPlayerListName(Chat.f("&a{0}", p.getName()));
         }
@@ -358,7 +373,7 @@ public class MatchManager {
      */
     public boolean removeEntryPlayer(Player p) {
         // 参加していない場合はreturn false
-        if ( !entryPlayers.contains(p) ) {
+        if (!entryPlayers.contains(p)) {
             return false;
         }
 
@@ -366,7 +381,7 @@ public class MatchManager {
         entryPlayers.remove(p);
 
         // DisplayNameが緑で始まっていたら元に戻す
-        if ( !isPlayerMatching(p) ) {
+        if (!isPlayerMatching(p)) {
             // 名前リセット
             p.setPlayerListName(p.getName());
         }
@@ -394,7 +409,7 @@ public class MatchManager {
      */
     private void runMatchTask() {
         // 試合中ならreturn
-        if ( isMatching ) {
+        if (isMatching) {
             return;
         }
 
@@ -416,7 +431,7 @@ public class MatchManager {
     public void leavePlayer(Player p) {
 
         // 試合中でない場合はreturn
-        if ( !isMatching ) {
+        if (!isMatching) {
             return;
         }
 
@@ -486,13 +501,13 @@ public class MatchManager {
      */
     public BattleTeam getBattleTeam(Player p) {
         // 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
-        for ( BattleTeam team : BattleTeam.values() ) {
+        for (BattleTeam team : BattleTeam.values()) {
 
             // スコアボードのTeamを取得
             Team scoreboardTeam = getScoreboardTeam(team);
 
             // 殺したプレイヤーが含まれていればplayerTeamに代入してbreak
-            if ( scoreboardTeam.getEntries().contains(p.getName()) ) {
+            if (scoreboardTeam.getEntries().contains(p.getName())) {
                 return team;
             }
         }
@@ -508,13 +523,13 @@ public class MatchManager {
      */
     public BattleTeam getBattleTeam(Team team) {
         // 各チームのプレイヤーリストを取得し、リスポーンするプレイヤーが含まれていればbreak
-        for ( BattleTeam battleTeam : BattleTeam.values() ) {
+        for (BattleTeam battleTeam : BattleTeam.values()) {
 
             // スコアボードのTeamを取得
             Team scoreboardTeam = getScoreboardTeam(battleTeam);
 
             // 同じならreturn
-            if ( scoreboardTeam == team ) {
+            if (scoreboardTeam == team) {
                 return battleTeam;
             }
         }
@@ -570,7 +585,7 @@ public class MatchManager {
         BattleTeam battleTeam = getBattleTeam(team);
 
         // 変換失敗なら0を返す
-        if ( battleTeam == null ) {
+        if (battleTeam == null) {
             return 0;
         }
 
@@ -607,14 +622,14 @@ public class MatchManager {
      * @throws NullPointerException teamがnullの場合
      */
     public void addTeamPoint(@NonNull BattleTeam team, int amount) {
-        for ( int i = 0; i < amount; i++ ) {
+        for (int i = 0; i < amount; i++) {
             addTeamPoint(team);
         }
     }
 
     public boolean addPlayerIntoBattle(Player p) {
         // すでに参加している場合はreturn
-        if ( getAllTeamPlayers().contains(p) ) {
+        if (getAllTeamPlayers().contains(p)) {
             return false;
         }
 
@@ -628,7 +643,7 @@ public class MatchManager {
                 .orElse(null);
         BattleTeam team = entry != null ? entry.getKey() : null;
 
-        if ( team == null ) {
+        if (team == null) {
             return false;
         }
 
@@ -636,7 +651,7 @@ public class MatchManager {
         setUpPlayer(p, team);
 
         Player leader = getLDMLeader(team);
-        if ( leader != null ) {
+        if (leader != null) {
             p.sendMessage(Chat.f("{0}&7所属チームのリーダーは &r{1} &7です！", LeonGunWar.GAME_PREFIX, leader.getPlayerListName()));
         }
 
@@ -648,7 +663,7 @@ public class MatchManager {
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         BroadcastUtils.broadcast(
-            Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
+                Chat.f("{0}{1} &7が途中参加しました！", LeonGunWar.GAME_PREFIX, p.getPlayerListName()));
 
         // 途中参加イベントを呼び出し
         Bukkit.getPluginManager().callEvent(new PlayerRejoinMatchEvent(p));
@@ -656,7 +671,7 @@ public class MatchManager {
         // 設定でエントリーするようになっていればエントリーする
         // Pluginが無効化されていたらreturn
         Plugin playerSettingsPlugin = Bukkit.getPluginManager().getPlugin("PlayerSettings");
-        if ( playerSettingsPlugin == null || !playerSettingsPlugin.isEnabled() ) {
+        if (playerSettingsPlugin == null || !playerSettingsPlugin.isEnabled()) {
             return true;
         }
 
@@ -665,9 +680,9 @@ public class MatchManager {
         boolean enableEntry = true;//data.isSet("LeonGunWar.EntryOnRejoin") && data.getBoolean("LeonGunWar.EntryOnRejoin");
 
         // 有効ならエントリーする
-        if ( enableEntry ) {
+        if (enableEntry) {
 
-            if ( !entryPlayers.contains(p) ) {
+            if (!entryPlayers.contains(p)) {
                 // エントリー追加
                 entryPlayers.add(p);
 
@@ -690,7 +705,7 @@ public class MatchManager {
      */
     public Player getLDMLeader(BattleTeam team) {
         // 試合のモードがLDMでなければreturn null
-        if ( !leaderMatch ) {
+        if (!leaderMatch) {
             return null;
         }
 
@@ -705,7 +720,7 @@ public class MatchManager {
      */
     public Map<BattleTeam, Player> getLDMLeaderMap() {
         // 試合のモードがLDMでなければreturn null
-        if ( !leaderMatch ) {
+        if (!leaderMatch) {
             return new HashMap<>();
         }
 
@@ -720,6 +735,14 @@ public class MatchManager {
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
 
+        BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        BukkitTask leaderSelectionTask = new LeaderSelectionTask(team)
+                .runTaskLater(LeonGunWar.getPlugin(), 600);
+        LeonGunWar.leaderSelectionTaskMap.put(team, leaderSelectionTask);
         // シャッフル
         Collections.shuffle(plist);
         // 先頭のプレイヤーを取得
@@ -728,8 +751,8 @@ public class MatchManager {
         // チームのリーダーに設定
         ldmLeaderMap.put(team, target);
         BroadcastUtils.broadcast(
-            Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX,
-                team.getTeamName()));
+                Chat.f("{0}{1} &7のリーダーが新しいプレイヤーに更新されました！", LeonGunWar.GAME_PREFIX,
+                        team.getTeamName()));
 
         // メッセージを表示
         plist.forEach(p -> p.sendMessage(
@@ -740,22 +763,9 @@ public class MatchManager {
         target.sendTitle(Chat.f("&cあなたがリーダーです！"), " ", 0, 20, 10);
     }
 
-    public void setMatchMode(MatchMode mode) {
-        // 既に設定されていればIllegalStateExceptionを出す
-        Preconditions.checkState(matchMode == null, "The mode is already set.");
-
-        // モードを設定
-        matchMode = mode;
-
-        // すでに人数が集まっている場合はカウントダウンを開始
-        if ( getEntryPlayers().size() >= 2 ) {
-            LeonGunWar.getPlugin().getMatchStartCountdown().startCountdown();
-        }
-    }
-
     protected void onDisablePlugin() {
         // 試合をしていなければreturn
-        if ( !isMatching ) {
+        if (!isMatching) {
             return;
         }
 
@@ -769,7 +779,7 @@ public class MatchManager {
             p.sendMessage(Chat.f("{0}&c試合は強制終了されました", LeonGunWar.GAME_PREFIX));
             // スポーンにTP
             Location spawn = LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
-            if ( spawn != null && spawn.getWorld() != null ) {
+            if (spawn != null && spawn.getWorld() != null) {
                 p.teleport(spawn);
             }
 
@@ -818,6 +828,10 @@ public class MatchManager {
         p.removeScoreboardTag("red");
         p.removeScoreboardTag("blue");
         p.addScoreboardTag(team.getEngTeamName());
+        if (!LeonGunWar.matchJoin.containsKey(p.getUniqueId())) {
+            LeonGunWar.matchJoin.put(p.getUniqueId(), System.currentTimeMillis());
+        }
+
     }
 
     /**
@@ -825,16 +839,16 @@ public class MatchManager {
      */
     private void initializeTeams() {
         // すでに初期化されている場合はreturn
-        if ( initialized ) {
+        if (initialized) {
             return;
         }
 
-        for ( BattleTeam team : BattleTeam.values() ) {
+        for (BattleTeam team : BattleTeam.values()) {
             String teamName = team.getTeamName();
 
             // チーム取得(なかったら作成)
             Team scoreboardTeam = scoreboard.getTeam(teamName);
-            if ( scoreboardTeam == null ) {
+            if (scoreboardTeam == null) {
                 // チーム作成
                 scoreboardTeam = scoreboard.registerNewTeam(teamName);
                 // チームの色を指定
@@ -854,6 +868,18 @@ public class MatchManager {
         }
     }
 
+    public void scheduleOrExtend(BattleTeam team, Plugin plugin, long delayTicks) {
+        // 既存のタスクがあればキャンセル
+        BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        // 新しいタスクを作ってスケジュール
+        BukkitTask newTask = new LeaderSelectionTask(team).runTaskLater(plugin, delayTicks);
+        LeonGunWar.leaderSelectionTaskMap.put(team, newTask);
+    }
+
     /**
      * プレイヤーのリスポーン地点を取得します
      *
@@ -863,7 +889,7 @@ public class MatchManager {
     public Location getRespawnLocation(Player p) {
 
         // 試合をしていなければlobbySpawnを返す
-        if ( !isMatching ) {
+        if (!isMatching) {
             return LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
         }
 
@@ -873,12 +899,12 @@ public class MatchManager {
         Location spawnPoint = null;
 
         // チームがnullではないならそのチームのスポーン地点にTPする
-        if ( playerTeam != null ) {
+        if (playerTeam != null) {
             spawnPoint = currentGameMap.getSpawnPoint(playerTeam);
         }
 
         // それでもまだspawnPointがnullの場合lobbyのスポーン地点を指定
-        if ( spawnPoint == null ) {
+        if (spawnPoint == null) {
             spawnPoint = LeonGunWar.getPlugin().getSpawnsConfig().getLobby();
         }
 
@@ -896,10 +922,10 @@ public class MatchManager {
     public int getTeamPowerLevel(Team team) {
         int tpl = 0;
         // チームのエントリーリストを取得
-        for ( String pn : team.getEntries() ) {
+        for (String pn : team.getEntries()) {
             Player p = Bukkit.getPlayer(pn);
             // (ないとは思うが)一応オンライン確認
-            if ( p == null ) {
+            if (p == null) {
                 // オフラインの場合スキップ
                 continue;
             }
@@ -920,15 +946,15 @@ public class MatchManager {
     public int getTeamAcePowerLevel(Team team) {
         int tpl = 0;
         // チームのエントリーリストを取得
-        for ( String pn : team.getEntries() ) {
+        for (String pn : team.getEntries()) {
             Player p = Bukkit.getPlayer(pn);
             // (ないとは思うが)一応オンライン確認
-            if ( p == null ) {
+            if (p == null) {
                 // オフラインの場合スキップ
                 continue;
             }
             // Aceではないなら
-            if ( !KDTeamDistributor.isACE(p) ) {
+            if (!KDTeamDistributor.isACE(p)) {
                 continue;
             }
             // チームパワーレベルに代入
@@ -944,9 +970,9 @@ public class MatchManager {
      * @return 1=チーム1が大きい 2=チーム2が大きい 0=等しい
      */
     public int getPowerLevelComparison(int team1, int team2) {
-        if ( team1 > team2 ) {
+        if (team1 > team2) {
             return 1;
-        } else if ( team1 < team2 ) {
+        } else if (team1 < team2) {
             return 2;
         } else {
             return 0;
@@ -969,7 +995,9 @@ public class MatchManager {
         return isMatching;
     }
 
-    public GameMap getCurrentGameMap() { return currentGameMap; }
+    public GameMap getCurrentGameMap() {
+        return currentGameMap;
+    }
 
     public AtomicInteger getTimeLeft() {
         return timeLeft;
@@ -977,6 +1005,19 @@ public class MatchManager {
 
     public MatchMode getMatchMode() {
         return matchMode;
+    }
+
+    public void setMatchMode(MatchMode mode) {
+        // 既に設定されていればIllegalStateExceptionを出す
+        Preconditions.checkState(matchMode == null, "The mode is already set.");
+
+        // モードを設定
+        matchMode = mode;
+
+        // すでに人数が集まっている場合はカウントダウンを開始
+        if (getEntryPlayers().size() >= 2) {
+            LeonGunWar.getPlugin().getMatchStartCountdown().startCountdown();
+        }
     }
 
     public TeamDistributor getTeamDistributor() {

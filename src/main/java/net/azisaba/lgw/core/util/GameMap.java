@@ -1,13 +1,10 @@
 package net.azisaba.lgw.core.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import lombok.Data;
+import java.util.Map;
 
 /**
  *
@@ -37,5 +34,7 @@ public class GameMap {
         return spawnMap.getOrDefault(team, null);
     }
 
-    public String getMapName() { return mapName; }
+    public String getMapName() {
+        return mapName;
+    }
 }

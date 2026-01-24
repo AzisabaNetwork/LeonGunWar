@@ -1,12 +1,14 @@
 package net.azisaba.lgw.core.listeners;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import net.azisaba.lgw.core.util.SyogoData;
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.CSUtility;
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.namechange.config.NameChangeInfoIO;
 import net.azisaba.namechange.data.NameChangeInfoData;
 import net.kyori.adventure.text.Component;
@@ -27,14 +29,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.CSUtility;
-import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.utils.Chat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class DamageListener implements Listener {
 
@@ -53,7 +52,7 @@ public class DamageListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onKill(PlayerDeathEvent e) {
         // 試合中でなければreturn
-        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (!LeonGunWar.getPlugin().getManager().isMatching()) {
             return;
         }
 
@@ -61,7 +60,7 @@ public class DamageListener implements Listener {
         Player killer = e.getEntity().getKiller();
 
         // 殺したプレイヤーがいない場合はreturn
-        if ( killer == null ) {
+        if (killer == null) {
             return;
         }
 
@@ -69,7 +68,7 @@ public class DamageListener implements Listener {
         BattleTeam killerTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
 
         // killerTeamがnullの場合return
-        if ( killerTeam == null ) {
+        if (killerTeam == null) {
             return;
         }
 
@@ -77,6 +76,12 @@ public class DamageListener implements Listener {
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
         // ポイントを追加
         LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+
+        if (LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(killer)) {
+            BattleTeam battleTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
+            LeonGunWar.getPlugin().getManager().scheduleOrExtend(battleTeam, LeonGunWar.getPlugin(), 20L * 30);
+        }
+
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);
@@ -97,7 +102,7 @@ public class DamageListener implements Listener {
         BattleTeam deaderTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(deader);
 
         // deaderTeamがnullの場合return
-        if ( deaderTeam == null ) {
+        if (deaderTeam == null) {
             return;
         }
 
@@ -145,19 +150,17 @@ public class DamageListener implements Listener {
         Player attacker = e.getPlayer();
 
         // ダメージを受けたEntityがPlayerでなければreturn
-        if ( !(e.getVictim() instanceof Player) ) {
+        if (!(e.getVictim() instanceof Player victim)) {
             return;
         }
 
-        Player victim = (Player) e.getVictim();
-
         // 同じプレイヤーならreturn
-        if ( attacker == victim ) {
+        if (attacker == victim) {
             return;
         }
 
         // 同じチームならreturn
-        if ( LeonGunWar.getPlugin().getManager().isSameBattleTeam(attacker, victim) ) {
+        if (LeonGunWar.getPlugin().getManager().isSameBattleTeam(attacker, victim)) {
             return;
         }
 
@@ -176,17 +179,17 @@ public class DamageListener implements Listener {
         Player p = e.getEntity();
 
         // 試合中ではない場合はreturn
-        if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (!LeonGunWar.getPlugin().getManager().isMatching()) {
             return;
         }
 
         // 試合中のワールドではない場合はreturn
-        if ( p.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld() ) {
+        if (p.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
             return;
         }
 
         // 殺したEntityが居ない場合か、同じプレイヤーの場合自滅とする
-        if ( p.getKiller() == null || p.getKiller() == p ) {
+        if (p.getKiller() == null || p.getKiller() == p) {
 
             // メッセージ削除
             e.deathMessage(null);
@@ -211,9 +214,9 @@ public class DamageListener implements Listener {
 
         // アイテム名を取得
         String itemName;
-        if ( item == null || item.getType() == Material.AIR ) { // null または Air なら素手
+        if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
             itemName = Chat.f("&6素手");
-        } else if ( item.hasItemMeta() && item.getItemMeta().hasDisplayName() ) { // DisplayNameが指定されている場合
+        } else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
 
             // 銃ID取得
             String nodes = crackShot.getWeaponTitle(item);
@@ -221,7 +224,7 @@ public class DamageListener implements Listener {
             itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
 
             // DisplayNameがnullの場合は普通にアイテム名を取得
-            if ( itemName == null ) {
+            if (itemName == null) {
                 itemName = item.getItemMeta().getDisplayName();
             }
 
@@ -233,17 +236,17 @@ public class DamageListener implements Listener {
         // メッセージ削除
         e.deathMessage(null);
         // メッセージ作成
-       // String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
+        // String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
         //        itemName,
-         //       p.getPlayerListName());
-      
+        //       p.getPlayerListName());
+
         SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
         String syogo = "";
-        if(data != null) {
+        if (data != null) {
             syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "") + "&r ";
         }
 
-        TextComponent msg2 =Component.text()
+        TextComponent msg2 = Component.text()
                 .append(Component.text(LeonGunWar.GAME_PREFIX))
                 .append(Component.text(Chat.f(syogo)))
                 .append(Component.text(killer.getPlayerListName()))
@@ -253,18 +256,21 @@ public class DamageListener implements Listener {
                 .append(Component.text(p.getPlayerListName()))
                 .build();
 
-            // 銃ID取得
-            String nodes = crackShot.getWeaponTitle(item);
+        // 銃ID取得
+        String nodes = crackShot.getWeaponTitle(item);
 
         // LoreをComponentリストとして取得
         List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
+        if (loreComponents == null) {
+            loreComponents = new ArrayList<>();
+        }
         NameChangeInfoIO nameInfo = new NameChangeInfoIO();
         NameChangeInfoData nameInfoData = nameChangeData.get(nodes);
-        if(nameInfoData == null) {
+        if (nameInfoData == null) {
             nameInfoData = nameInfo.load(nodes);
         }
         nameChangeData.put(nodes, nameInfoData);
-        if(nameInfoData != null) {
+        if (nameInfoData != null) {
             // 元武器のDisplayNameを取得
             String baseWeapon = nameInfoData.getBaseWeapon();
             String itemName2 = crackshot.getString(baseWeapon + ".Item_Information.Item_Name");
@@ -279,22 +285,22 @@ public class DamageListener implements Listener {
                 loreTextBuilder.append(loreLine).append(Component.text("\n"));
             }
         }
-            // ホバーイベントの作成（Loreを含む）
-            HoverEvent<Component> hoverEvent = HoverEvent.showText(
-                    Component.text()
-                            .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
-                            .append(Component.newline())
-                            .append(loreTextBuilder.build())
-            );
+        // ホバーイベントの作成（Loreを含む）
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(
+                Component.text()
+                        .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
+                        .append(Component.newline())
+                        .append(loreTextBuilder.build())
+        );
 
-            // ホバーイベントをメインメッセージに追加
-            TextComponent messageWithTooltip = msg2.hoverEvent(hoverEvent);
+        // ホバーイベントをメインメッセージに追加
+        TextComponent messageWithTooltip = msg2.hoverEvent(hoverEvent);
 
-            // メッセージ送信
-            p.getWorld().getPlayers().forEach(player -> player.sendMessage(messageWithTooltip));
+        // メッセージ送信
+        p.getWorld().getPlayers().forEach(player -> player.sendMessage(messageWithTooltip));
 
-            // コンソールに出力
-            Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
+        // コンソールに出力
+        Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
 
 
     }
@@ -302,17 +308,17 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onFireworksDamage(EntityDamageByEntityEvent e) {
         // Entitiyによる爆発ではない場合はreturn
-        if ( e.getCause() != DamageCause.ENTITY_EXPLOSION ) {
+        if (e.getCause() != DamageCause.ENTITY_EXPLOSION) {
             return;
         }
 
         // ダメージを受けたEntityがPlayerでなければreturn
-        if ( !(e.getEntity() instanceof Player) ) {
+        if (!(e.getEntity() instanceof Player)) {
             return;
         }
 
         // ダメージを与えたEntityが花火でなければreturn
-        if ( !(e.getDamager() instanceof Firework) ) {
+        if (!(e.getDamager() instanceof Firework)) {
             return;
         }
 
@@ -326,7 +332,7 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onMatchFinished(MatchFinishedEvent e) {
 
-        if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (LeonGunWar.getPlugin().getManager().isMatching()) {
             lastDamaged.clear();
         }
     }

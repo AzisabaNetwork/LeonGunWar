@@ -1,15 +1,14 @@
 package net.azisaba.lgw.core.distributors;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
+
+import java.util.List;
 
 /**
  * プレイヤーをチームに振り分けるクラスのためのインターフェース
  *
  * @author siloneco
- *
  */
 public interface TeamDistributor {
 

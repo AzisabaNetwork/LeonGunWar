@@ -1,5 +1,19 @@
 package net.azisaba.lgw.core.configs;
 
+import com.google.common.base.Enums;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.LgwLog;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +44,7 @@ import org.bukkit.util.Vector;
 
 @Getter
 public class MapsConfig extends Config {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private List<GameMap> allGameMap;
 
@@ -37,23 +52,23 @@ public class MapsConfig extends Config {
         super(plugin, "configs/maps.yml", "maps.yml");
     }
 
-    @SneakyThrows(value = { Exception.class })
+    @SneakyThrows(value = {Exception.class})
     @Override
     public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();
 
         allGameMap = new ArrayList<>();
-        for ( String mapName : config.getValues(false).keySet() ) {
+        for (String mapName : config.getValues(false).keySet()) {
             ConfigurationSection mapSection = config.getConfigurationSection(mapName);
             ConfigurationSection spawnsSection = mapSection.getConfigurationSection("spawns");
 
             World world = plugin.getServer().getWorld(mapSection.getString("world"));
 
             Map<BattleTeam, Location> spawnMap = new HashMap<>();
-            for ( String teamName : spawnsSection.getValues(false).keySet() ) {
+            for (String teamName : spawnsSection.getValues(false).keySet()) {
                 Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
 
-                if ( battleTeam.isPresent() ) {
+                if (battleTeam.isPresent()) {
                     Location spawn = new Location(
                             plugin.getServer().getWorld(spawnsSection.getString(teamName + ".world")),
                             spawnsSection.getDouble(teamName + ".x"),
@@ -76,9 +91,9 @@ public class MapsConfig extends Config {
             GameMap gameMap = new GameMap(mapName, world, spawnMap, areas);
             allGameMap.add(gameMap);
 
-            plugin.getLogger().info("マップ " + mapName + " をロードしました。");
+            logger.info("マップ {} をロードしました。", mapName);
         }
-        plugin.getLogger().info(allGameMap.size() + " 個のマップをロードしました。");
+        logger.info("{} 個のマップをロードしました。", allGameMap.size());
     }
 
     /**
@@ -96,11 +111,11 @@ public class MapsConfig extends Config {
     /**
      * ロードされているすべてのマップから指定した数だけランダムで抽選します
      *
-     * @throws IllegalArgumentException 0以下またはロードされているマップの数よりも多い数が指定された場合
      * @return 指定した数のランダムなマップのHashSetを返す
+     * @throws IllegalArgumentException 0以下またはロードされているマップの数よりも多い数が指定された場合
      */
     public Set<GameMap> getRandomMaps(int count) {
-        if ( count > allGameMap.size() || count <= 0 ) {
+        if (count > allGameMap.size() || count <= 0) {
             throw new IllegalArgumentException("Mapを" + count + "個抽選することはできません！ (ロードされているMapの数: " + allGameMap.size() + " )");
         }
         List<GameMap> shuffleList = new ArrayList<>(allGameMap);

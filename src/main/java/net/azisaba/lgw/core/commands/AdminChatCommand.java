@@ -1,22 +1,20 @@
 package net.azisaba.lgw.core.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.azisaba.lgw.core.utils.Chat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Modとかにも聞こえるAdminChat
  *
  * @author siloneco
- *
  */
 public class AdminChatCommand implements CommandExecutor {
 
@@ -27,19 +25,18 @@ public class AdminChatCommand implements CommandExecutor {
     }
 
     public void setAdminChat(Player p, boolean value) {
-        if ( value && !adminChats.contains(p.getUniqueId()) ) {
+        if (value && !adminChats.contains(p.getUniqueId())) {
             adminChats.add(p.getUniqueId());
-        } else if ( !value ) {
+        } else if (!value) {
             adminChats.remove(p.getUniqueId());
         }
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if ( args.length <= 0 ) {
-            if ( sender instanceof Player ) {
-                Player p = (Player) sender;
-                if ( adminChats.contains(p.getUniqueId()) ) {
+        if (args.length <= 0) {
+            if (sender instanceof Player p) {
+                if (adminChats.contains(p.getUniqueId())) {
                     adminChats.remove(p.getUniqueId());
                     p.sendMessage(Chat.f("&dAdminChat を&c無効化&dしました"));
                 } else {
@@ -58,10 +55,10 @@ public class AdminChatCommand implements CommandExecutor {
         sender.sendMessage(format);
 
         Bukkit.getOnlinePlayers().forEach(p -> {
-            if ( !p.hasPermission("leongunwar.adminchat.receive") ) {
+            if (!p.hasPermission("leongunwar.adminchat.receive")) {
                 return;
             }
-            if ( sender.equals(p) ) {
+            if (sender.equals(p)) {
                 return;
             }
 

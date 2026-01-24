@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
  * アイテムの耐久地が減ることを無効化します 釣り竿は釣りで使用されるため耐久値は減ります
  *
  * @author siloneco
- *
  */
 public class DisableItemDamageListener implements Listener {
 
@@ -24,12 +23,12 @@ public class DisableItemDamageListener implements Listener {
         ItemStack item = e.getItem();
 
         // アイテムがnullの場合return
-        if ( item == null ) {
+        if (item == null) {
             return;
         }
 
         // 釣り竿だった場合return
-        if ( item.getType() == Material.FISHING_ROD ) {
+        if (item.getType() == Material.FISHING_ROD) {
             return;
         }
 

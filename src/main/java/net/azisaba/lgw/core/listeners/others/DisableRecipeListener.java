@@ -1,7 +1,5 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.HashMap;
-
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -10,6 +8,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
 
 // レシピを無効化するリスナー
 public class DisableRecipeListener implements Listener {
@@ -25,22 +25,22 @@ public class DisableRecipeListener implements Listener {
         ItemStack result = e.getInventory().getResult();
 
         // クラフト結果がない場合は無視
-        if ( result == null ) {
+        if (result == null) {
             return;
         }
 
         // クラフト後のアイテムにカスタム名がある場合は無視
-        if ( result.hasItemMeta() && result.getItemMeta().hasDisplayName() ) {
+        if (result.hasItemMeta() && result.getItemMeta().hasDisplayName()) {
             return;
         }
 
         // クラフト後のアイテムがダイヤかエメラルドの場合は無視
-        if ( result.getType() == Material.DIAMOND || result.getType() == Material.EMERALD ) {
+        if (result.getType() == Material.DIAMOND || result.getType() == Material.EMERALD) {
             return;
         }
 
         // クラフト後のアイテムがダイヤブロックかエメラルドブロックの場合は無視
-        if ( result.getType() == Material.DIAMOND_BLOCK || result.getType() == Material.EMERALD_BLOCK ) {
+        if (result.getType() == Material.DIAMOND_BLOCK || result.getType() == Material.EMERALD_BLOCK) {
             return;
         }
 
@@ -65,7 +65,7 @@ public class DisableRecipeListener implements Listener {
         Player p = (Player) e.getWhoClicked();
 
         // mapにプレイヤーが含まれている場合アイテムをセット
-        if ( cancelPlayerMap.containsKey(p) ) {
+        if (cancelPlayerMap.containsKey(p)) {
             e.getInventory().setResult(cancelPlayerMap.get(p));
 
             // 削除

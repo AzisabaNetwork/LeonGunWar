@@ -1,17 +1,15 @@
 package net.azisaba.lgw.core.listeners.weaponcontrols;
 
-import java.util.Arrays;
-
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.utils.Chat;
+import java.util.Arrays;
 
 public class DisablePvEsDuringMatchListener implements Listener {
 
@@ -21,20 +19,20 @@ public class DisablePvEsDuringMatchListener implements Listener {
     public void onWeaponPrepareShoot(WeaponPrepareShootEvent event) {
         Player player = event.getPlayer();
 
-        if ( !LeonGunWar.getPlugin().getManager().isPlayerMatching(player) ) {
+        if (!LeonGunWar.getPlugin().getManager().isPlayerMatching(player)) {
             return;
         }
 
         String weapon = event.getWeaponTitle();
         String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
 
-        if ( ctrl == null ) {
+        if (ctrl == null) {
             return;
         }
 
         String[] groups = ctrl.replaceAll(" ", "").split(",");
 
-        if ( Arrays.asList(groups).contains("PVE_Weapons") ) {
+        if (Arrays.asList(groups).contains("PVE_Weapons")) {
             player.sendMessage(Chat.f("{0}&c試合中にこのアイテムは使用できません！", LeonGunWar.GAME_PREFIX));
             event.setCancelled(true);
         }

@@ -1,10 +1,9 @@
 package net.azisaba.lgw.core.tasks;
 
-import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MatchCountdownTask extends BukkitRunnable {
 
@@ -18,7 +17,7 @@ public class MatchCountdownTask extends BukkitRunnable {
         Bukkit.getPluginManager().callEvent(event);
 
         // 0になったらストップ
-        if ( timeLeft == 0 ) {
+        if (timeLeft == 0) {
             cancel();
         }
     }

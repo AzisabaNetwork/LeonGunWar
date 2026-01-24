@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class LGWExpansion extends PlaceholderExpansion {
     private final LeonGunWar plugin;
 
-    public LGWExpansion(LeonGunWar plugin){
+    public LGWExpansion(LeonGunWar plugin) {
         this.plugin = plugin;
     }
 
@@ -40,15 +40,14 @@ public class LGWExpansion extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {//
         //各チームに所属していたらプレースホルダに対応したカラーコードを表示させる所属していなかったら白
-        if(player.getPlayer().getScoreboard().getEntryTeam(player.getName()) == null){
-            return  "";
+        if (player.getPlayer().getScoreboard().getEntryTeam(player.getName()) == null) {
+            return "";
         }
-        if(player.getPlayer().getScoreboard().getEntryTeam(player.getName()).getColor() == ChatColor.DARK_RED){
+        if (player.getPlayer().getScoreboard().getEntryTeam(player.getName()).getColor() == ChatColor.DARK_RED) {
             return "§4";
-        }else
-        if(player.getPlayer().getScoreboard().getEntryTeam(player.getName()).getColor() == ChatColor.BLUE){
+        } else if (player.getPlayer().getScoreboard().getEntryTeam(player.getName()).getColor() == ChatColor.BLUE) {
             return "§9";
-        }else {
+        } else {
             return "§f";
         }
     }

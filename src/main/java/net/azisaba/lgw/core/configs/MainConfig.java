@@ -3,12 +3,8 @@ package net.azisaba.lgw.core.configs;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import net.azisaba.lgw.core.LeonGunWar;
-import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Collections;
-import java.util.HashMap;
-
-public class MainConfig extends Config{
+public class MainConfig extends Config {
 
     public boolean isLobby = true;
     public String serverName;
@@ -24,7 +20,7 @@ public class MainConfig extends Config{
 
         isLobby = config.getBoolean("isLobby", true);
         //sv1かsv2かlobby
-        serverName = config.getString("servername","lobby");
+        serverName = config.getString("servername", "lobby");
     }
 
 }

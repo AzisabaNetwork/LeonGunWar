@@ -1,19 +1,16 @@
 package net.azisaba.lgw.core.listeners.signs;
 
 import com.google.common.base.Strings;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
+import net.azisaba.lgw.core.util.LgwLog;
 import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.BroadcastUtils;
-import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,22 +27,27 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.slf4j.Logger;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
- *
  * 次に実行する試合の種類を指定する看板 ACTIVEとINACTIVEを切り替えるときはスニークをしながら右クリックで可能
  * 破壊するときはスニークしながら左クリックで可能
  *
  * @author siloneco
- *
  */
 public class MatchModeSignListener implements Listener {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private final ItemStack defaultItem, kdItem;
 
     public MatchModeSignListener() {
         defaultItem = create(Material.EMERALD_BLOCK, Chat.f("&e通常のチーム分け&aで開始！"));
-        kdItem = create(Material.DIAMOND_BLOCK, Chat.f("&cK/Dのチーム分け&aで開始！"));
+        kdItem = create(Material.DIAMOND_BLOCK, Chat.f("&cK/Dのチーム分け&aで開始！(無効化中)"));
     }
 
     /**
@@ -54,7 +56,7 @@ public class MatchModeSignListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClickSign(PlayerInteractEvent e) {
         // ブロックをクリックしていなければreturn
-        if ( e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK ) {
+        if (e.getAction() != Action.LEFT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
@@ -63,12 +65,12 @@ public class MatchModeSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // 権限を持っており スニーク + クリックならreturn
-        if ( p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking() ) {
+        if (p.hasPermission("leongunwar.entrysign.changestate") && p.isSneaking()) {
             return;
         }
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
+        if (clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN) {
             return;
         }
 
@@ -76,12 +78,12 @@ public class MatchModeSignListener implements Listener {
         Sign sign = (Sign) clickedBlock.getState();
 
         // 1行目が [mode] でなければreturn
-        if ( !Chat.r(sign.getLine(0)).equalsIgnoreCase("[mode]") ) {
+        if (!Chat.r(sign.getLine(0)).equalsIgnoreCase("[mode]")) {
             return;
         }
 
         // 4行目が[ACTIVE]でなければreturn
-        if ( !sign.getLine(3).equals(LeonGunWar.SIGN_ACTIVE) ) {
+        if (!sign.getLine(3).equals(LeonGunWar.SIGN_ACTIVE)) {
             return;
         }
 
@@ -93,12 +95,12 @@ public class MatchModeSignListener implements Listener {
         MatchMode mode = MatchMode.getFromString(line2);
 
         // modeがnullの場合return
-        if ( mode == null ) {
+        if (mode == null) {
             return;
         }
 
         // モードを指定
-        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != null ) {
+        if (LeonGunWar.getPlugin().getManager().getMatchMode() != null) {
             p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
             return;
         }
@@ -109,7 +111,7 @@ public class MatchModeSignListener implements Listener {
     @EventHandler
     public void changeSignState(PlayerInteractEvent e) {
         // ブロックをシフト + 右クリックしていなければreturn
-        if ( e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking() ) {
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !e.getPlayer().isSneaking()) {
             return;
         }
 
@@ -118,7 +120,7 @@ public class MatchModeSignListener implements Listener {
         Block clickedBlock = e.getClickedBlock();
 
         // ブロックが看板でなければreturn
-        if ( clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN ) {
+        if (clickedBlock.getType() != Material.OAK_WALL_SIGN && clickedBlock.getType() != Material.OAK_SIGN) {
             return;
         }
 
@@ -126,12 +128,12 @@ public class MatchModeSignListener implements Listener {
         Sign sign = (Sign) clickedBlock.getState();
 
         // 1行目が [entry] または [leave] でなければreturn
-        if ( !Chat.r(sign.getLine(0)).equalsIgnoreCase("[mode]") ) {
+        if (!Chat.r(sign.getLine(0)).equalsIgnoreCase("[mode]")) {
             return;
         }
 
         // 権限がなければreturn
-        if ( !p.hasPermission("leongunwar.entrysign.changestate") ) {
+        if (!p.hasPermission("leongunwar.entrysign.changestate")) {
             return;
         }
 
@@ -144,7 +146,7 @@ public class MatchModeSignListener implements Listener {
         String edit;
 
         // 4行目の編集
-        if ( line4.equals(LeonGunWar.SIGN_INACTIVE) ) { // [INACTIVE] の場合
+        if (line4.equals(LeonGunWar.SIGN_INACTIVE)) { // [INACTIVE] の場合
             edit = LeonGunWar.SIGN_ACTIVE;
         } else { // それ以外の場合は [INACITVE]に変更
             edit = LeonGunWar.SIGN_INACTIVE;
@@ -158,43 +160,42 @@ public class MatchModeSignListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        if ( !(e.getWhoClicked() instanceof Player) ) {
+        if (!(e.getWhoClicked() instanceof Player p)) {
             return;
         }
 
-        Player p = (Player) e.getWhoClicked();
         Inventory openingInv = e.getInventory();
 
-        if ( !Chat.r(e.getView().getTitle()).startsWith("Distribute Selector - ") ) {
+        if (!Chat.r(e.getView().getTitle()).startsWith("Distribute Selector - ")) {
             return;
         }
 
         e.setCancelled(true);
 
         ItemStack clicked = e.getCurrentItem();
-        if ( clicked == null || clicked.getType() == Material.AIR ) {
+        if (clicked == null || clicked.getType() == Material.AIR) {
             return;
         }
 
         // モードを指定
-        if ( LeonGunWar.getPlugin().getManager().getMatchMode() != null
-                || LeonGunWar.getPlugin().getMapSelectCountdown().isRunning() ) {
+        if (LeonGunWar.getPlugin().getManager().getMatchMode() != null
+                || LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
             p.sendMessage(Chat.f("{0}&7すでに設定されているためモード変更ができません！", LeonGunWar.GAME_PREFIX));
             p.closeInventory();
             return;
         }
 
         MatchMode mode = MatchMode.getFromString(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
-        if ( mode == null ) {
-            Bukkit.getLogger().info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
+        if (mode == null) {
+            logger.info(e.getView().getTitle().substring(e.getView().getTitle().indexOf(Chat.f("&e")) + 2));
             return;
         }
 
         TeamDistributor distributor = null;
-        if ( clicked.isSimilar(defaultItem) ) {
+        if (clicked.isSimilar(defaultItem)) {
             distributor = new DefaultTeamDistributor();
         } else if (clicked.isSimilar(kdItem)) {
-            distributor = new KDTeamDistributor();
+            distributor = new DefaultTeamDistributor();
         }
 
         if (distributor == null) {
@@ -203,14 +204,14 @@ public class MatchModeSignListener implements Listener {
 
         LeonGunWar.getPlugin().getManager().setTeamDistributor(distributor);
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+                Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
+                Chat.f("{0}&7モード   {1}", LeonGunWar.GAME_PREFIX, mode.getModeName()));
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX, distributor.getDistributorName()));
+                Chat.f("{0}&7振り分け  {1}", LeonGunWar.GAME_PREFIX, distributor.getDistributorName()));
         BroadcastUtils.broadcast(Chat.f("{0}&7Map投票を開始します", LeonGunWar.GAME_PREFIX));
         BroadcastUtils.broadcast(
-            Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
+                Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         // ランダムなマップを4つ抽選
         Set<GameMap> randomMaps;
@@ -223,7 +224,7 @@ public class MatchModeSignListener implements Listener {
 
         // 音を鳴らす
         BroadcastUtils.getOnlinePlayers()
-            .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
+                .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
         // 投票用のJSONMessageを作成
         JSONMessage msg = JSONMessage.create(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));
@@ -236,10 +237,10 @@ public class MatchModeSignListener implements Listener {
         }};
 
         List<GameMap> maps = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps();
-        for ( int i = 0, size = maps.size(); i < size; i++ ) {
+        for (int i = 0, size = maps.size(); i < size; i++) {
             msg = msg.then(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).getMapName()))
                     .runCommand("/leongunwar:mapvote " + (i + 1));
-            if ( i + 1 < size ) {
+            if (i + 1 < size) {
                 msg = msg.then(" ");
             }
         }
@@ -252,7 +253,7 @@ public class MatchModeSignListener implements Listener {
 
     private Inventory getDistributeSelectInventory(MatchMode mode) {
         StringBuilder shortModeName = new StringBuilder();
-        for ( String s : mode.name().split("_") ) {
+        for (String s : mode.name().split("_")) {
             shortModeName.append(s, 0, 1);
         }
         Inventory inv = Bukkit.createInventory(null, 9, Chat.f("&cDistribute Selector - &e{0}", shortModeName.toString()));
@@ -265,7 +266,7 @@ public class MatchModeSignListener implements Listener {
         ItemStack item = new ItemStack(type);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(title);
-        if ( lore.length > 0 ) {
+        if (lore.length > 0) {
             meta.setLore(Arrays.asList(lore));
         }
         item.setItemMeta(meta);

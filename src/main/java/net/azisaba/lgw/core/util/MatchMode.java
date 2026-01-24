@@ -4,8 +4,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
-import net.azisaba.lgw.core.utils.Chat;
-
 //@Getter
 //@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum MatchMode {
@@ -60,7 +58,7 @@ public enum MatchMode {
     private final Duration duration;
     private final List<String> suggests;
 
-    MatchMode(String modeName,String shortModeName,String description,Duration duration,List<String> suggests) {
+    MatchMode(String modeName, String shortModeName, String description, Duration duration, List<String> suggests) {
         this.modeName = modeName;
         this.shortModeName = shortModeName;
         this.description = description;
@@ -76,11 +74,17 @@ public enum MatchMode {
                 .orElse(null);
     }
 
-    public Duration getDuration() { return duration; }
+    public Duration getDuration() {
+        return duration;
+    }
 
-    public Object getDescription() { return description; }
+    public Object getDescription() {
+        return description;
+    }
 
-    public String getShortModeName() { return shortModeName; }
+    public String getShortModeName() {
+        return shortModeName;
+    }
 
     public String getModeName() {
         return modeName;

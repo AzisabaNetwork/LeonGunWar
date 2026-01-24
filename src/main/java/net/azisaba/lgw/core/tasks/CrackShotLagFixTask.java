@@ -1,14 +1,16 @@
 package net.azisaba.lgw.core.tasks;
 
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import net.azisaba.lgw.core.LeonGunWar;
+import org.slf4j.Logger;
 
 public class CrackShotLagFixTask extends BukkitRunnable {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     @Override
     public void run() {
@@ -23,9 +25,9 @@ public class CrackShotLagFixTask extends BukkitRunnable {
                 // カウント
                 .count();
         // 削除したエンティティがいる場合
-        if ( removed > 0 ) {
+        if (removed > 0) {
             // ログに出力
-            LeonGunWar.getPlugin().getLogger().info("定期 -> 不要な " + removed + " 体のエンティティが削除されました。");
+            logger.info("定期 -> 不要な {} 体のエンティティが削除されました。", removed);
         }
     }
 }

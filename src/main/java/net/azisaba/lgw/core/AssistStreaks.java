@@ -1,14 +1,15 @@
 package net.azisaba.lgw.core;
 
+import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.Chat;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.azisaba.lgw.core.utils.BroadcastUtils;
-import net.azisaba.lgw.core.utils.Chat;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public class AssistStreaks {
 
@@ -38,11 +39,11 @@ public class AssistStreaks {
 
         // アシストストリークをお知らせ
         LeonGunWar.getPlugin().getAssistStreaksConfig().getLevels().entrySet().stream()
-            .filter(entry -> streaks % entry.getKey() == 0)
-            .map(Map.Entry::getValue)
-            .map(Map.Entry::getKey)
-            .flatMap(List::stream)
-            .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
-            .forEach(BroadcastUtils::broadcast);
+                .filter(entry -> streaks % entry.getKey() == 0)
+                .map(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .flatMap(List::stream)
+                .map(message -> Chat.f(message, LeonGunWar.GAME_PREFIX, player.getPlayerListName()))
+                .forEach(BroadcastUtils::broadcast);
     }
 }

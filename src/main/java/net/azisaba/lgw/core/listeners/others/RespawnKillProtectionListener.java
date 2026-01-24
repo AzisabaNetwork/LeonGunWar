@@ -1,12 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import com.google.common.util.concurrent.RateLimiter;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
 import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
@@ -24,6 +18,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class RespawnKillProtectionListener implements Listener {
 
@@ -45,11 +46,9 @@ public class RespawnKillProtectionListener implements Listener {
             return;
         }
         // ダメージを受けたEntityがプレイヤーでなければreturn
-        if (!(e.getEntity() instanceof Player)) {
+        if (!(e.getEntity() instanceof Player victim)) {
             return;
         }
-
-        Player victim = (Player) e.getEntity();
 
         // リスポーンから5秒以内ならキャンセル
         if (LeonGunWar.getPlugin().getManager().getRespawnProtection().isProtected(victim)) {
@@ -64,11 +63,9 @@ public class RespawnKillProtectionListener implements Listener {
             return;
         }
         // ダメージを受けたEntityがプレイヤーでなければreturn
-        if (!(e.getEntity() instanceof Player)) {
+        if (!(e.getEntity() instanceof Player victim)) {
             return;
         }
-
-        Player victim = (Player) e.getEntity();
 
         // リスポーンから5秒以内ならキャンセル
         if (LeonGunWar.getPlugin().getManager().getRespawnProtection().isProtected(victim)) {
@@ -90,9 +87,9 @@ public class RespawnKillProtectionListener implements Listener {
             }
 
             // attackerがnullではない場合、メッセージを送信
-            if ( attacker != null ) {
+            if (attacker != null) {
                 LeonGunWar.getPlugin().getManager().getRespawnProtection()
-                    .sendVictimProtected(attacker, victim);
+                        .sendVictimProtected(attacker, victim);
             }
         }
     }
@@ -142,14 +139,14 @@ public class RespawnKillProtectionListener implements Listener {
     @EventHandler
     public void onMatchStarted(MatchStartedEvent e) {
         e.getAllTeamPlayers()
-            .forEach(p -> LeonGunWar.getPlugin().getManager().getRespawnProtection().respawned(p));
+                .forEach(p -> LeonGunWar.getPlugin().getManager().getRespawnProtection().respawned(p));
     }
 
     // 途中参加時にカウントダウンを開始
     @EventHandler
     public void onPlayerRejoinMatch(PlayerRejoinMatchEvent e) {
         Optional.of(e.getPlayer())
-            .ifPresent(
-                p -> LeonGunWar.getPlugin().getManager().getRespawnProtection().respawned(p));
+                .ifPresent(
+                        p -> LeonGunWar.getPlugin().getManager().getRespawnProtection().respawned(p));
     }
 }

@@ -1,9 +1,10 @@
 package net.azisaba.lgw.core.commands;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,13 +12,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.slf4j.Logger;
 
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.utils.Chat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UAVCommand implements CommandExecutor {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private final double uavRadius = 60d;
     private final double uavSeconds = 2d;
@@ -27,13 +29,13 @@ public class UAVCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         // コンソールではない場合はreturn
-        if ( sender instanceof Player ) {
+        if (sender instanceof Player) {
             sender.sendMessage(Chat.f("&cこのコマンドはConsoleでのみ実行可能です。"));
             return true;
         }
 
         // UAVを使用したプレイヤーが指定されていない場合はreturn
-        if ( args.length == 0 ) {
+        if (args.length == 0) {
             sender.sendMessage(Chat.f("&cUsage: {0}", cmd.getUsage().replace("{LABEL}", label)));
             return true;
         }
@@ -42,13 +44,13 @@ public class UAVCommand implements CommandExecutor {
         Player shooter = Bukkit.getPlayerExact(args[0]);
 
         // プレイヤーが存在しない場合はメッセージを表示してreturn
-        if ( shooter == null ) {
+        if (shooter == null) {
             sender.sendMessage(Chat.f("&cプレイヤーが見つかりません。"));
             return true;
         }
 
         // 前に実行した時間から1秒経っていない場合はreturn
-        if ( lastExecuted.getOrDefault(shooter, 0L) + 1000 > System.currentTimeMillis() ) {
+        if (lastExecuted.getOrDefault(shooter, 0L) + 1000 > System.currentTimeMillis()) {
             return true;
         }
 
@@ -61,31 +63,31 @@ public class UAVCommand implements CommandExecutor {
         Map<BattleTeam, List<Player>> teamPlayerMap = manager.getTeamPlayers();
 
         // プレイヤーがチームに所属していない場合はメッセージを表示
-        if ( !allPlayers.contains(shooter) ) {
-            LeonGunWar.getPlugin().getLogger().warning(shooter.getName() + " はどのチームにも所属していません。");
+        if (!allPlayers.contains(shooter)) {
+            logger.warn("{} はどのチームにも所属していません。", shooter.getName());
             shooter.sendMessage(Chat.f("&cあなたはどのチームにも所属していません。"));
             return true;
         }
 
         // 各チームのプレイヤーを取得し、発行を付与する
-        for ( BattleTeam team : teamPlayerMap.keySet() ) {
+        for (BattleTeam team : teamPlayerMap.keySet()) {
             // プレイヤーリスト取得
             List<Player> players = teamPlayerMap.get(team);
 
             // 使用したプレイヤーが含まれている場合return
-            if ( players.contains(shooter) ) {
+            if (players.contains(shooter)) {
                 continue;
             }
 
             // 各プレイヤーに発行を付与する
             players.forEach(target -> {
                 // ワールドが違う場合はreturn
-                if ( target.getLocation().getWorld() != shooter.getLocation().getWorld() ) {
+                if (target.getLocation().getWorld() != shooter.getLocation().getWorld()) {
                     return;
                 }
 
                 // 距離がConfigで指定された距離よりも遠い場合はreturn
-                if ( target.getLocation().distance(shooter.getLocation()) > uavRadius ) {
+                if (target.getLocation().distance(shooter.getLocation()) > uavRadius) {
                     return;
                 }
 
@@ -94,8 +96,7 @@ public class UAVCommand implements CommandExecutor {
                 int amp = 1;
 
                 // ログを出力
-                LeonGunWar.getPlugin().getLogger()
-                        .info(target.getName() + "にGLOWINGを付与 (time=" + l + "ticks, level=" + amp + ")");
+                logger.info("{}にGLOWINGを付与 (time={}ticks, level={})", target.getName(), l, amp);
 
                 // 発行を付与
                 target.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, l, amp, false, false));
@@ -103,7 +104,7 @@ public class UAVCommand implements CommandExecutor {
         }
 
         // 完了ログを出力
-        LeonGunWar.getPlugin().getLogger().info("正常に " + shooter.getName() + " のUAVを実行しました。");
+        logger.info("正常に {} のUAVを実行しました。", shooter.getName());
         return true;
     }
 }

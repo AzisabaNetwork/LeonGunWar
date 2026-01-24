@@ -1,12 +1,11 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.stream.IntStream;
-
+import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
-import net.azisaba.lgw.core.utils.Chat;
+import java.util.stream.IntStream;
 
 public class SignWithColorListener implements Listener {
 

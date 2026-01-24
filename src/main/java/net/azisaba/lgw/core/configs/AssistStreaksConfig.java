@@ -1,5 +1,11 @@
 package net.azisaba.lgw.core.configs;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import net.azisaba.lgw.core.LeonGunWar;
+import org.bukkit.configuration.InvalidConfigurationException;
+
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -8,14 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.bukkit.configuration.InvalidConfigurationException;
-
-import net.azisaba.lgw.core.LeonGunWar;
-
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.SneakyThrows;
 
 @Getter
 public class AssistStreaksConfig extends Config {
@@ -26,7 +24,7 @@ public class AssistStreaksConfig extends Config {
         super(plugin, "configs/assistStreaks.yml", "assistStreaks.yml");
     }
 
-    @SneakyThrows(value = { Exception.class })
+    @SneakyThrows(value = {Exception.class})
     @Override
     public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();

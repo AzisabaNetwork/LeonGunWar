@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.Arrays;
-
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Projectile;
@@ -9,10 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.slf4j.Logger;
 
-import net.azisaba.lgw.core.LeonGunWar;
+import java.util.Arrays;
 
 public class CrackShotLagFixListener implements Listener {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
     private long removeLagEntities(Entity[] entities) {
         return Arrays.stream(entities)
@@ -29,9 +31,9 @@ public class CrackShotLagFixListener implements Listener {
         // 不要なラグエンティティを削除
         long removed = removeLagEntities(e.getChunk().getEntities());
         // 削除したエンティティがいる場合
-        if ( removed > 0 ) {
+        if (removed > 0) {
             // ログに出力
-            LeonGunWar.getPlugin().getLogger().info("チャンクロード -> 不要な " + removed + " 体のエンティティが削除されました。");
+            logger.info("チャンクロード -> 不要な " + removed + " 体のエンティティが削除されました。");
         }
     }
 
@@ -40,9 +42,9 @@ public class CrackShotLagFixListener implements Listener {
         // 不要なラグエンティティを削除
         long removed = removeLagEntities(e.getChunk().getEntities());
         // 削除したエンティティがいる場合
-        if ( removed > 0 ) {
+        if (removed > 0) {
             // ログに出力
-            LeonGunWar.getPlugin().getLogger().info("チャンクアンロード -> 不要な " + removed + " 体のエンティティが削除されました。");
+            logger.info("チャンクアンロード -> 不要な " + removed + " 体のエンティティが削除されました。");
         }
     }
 }

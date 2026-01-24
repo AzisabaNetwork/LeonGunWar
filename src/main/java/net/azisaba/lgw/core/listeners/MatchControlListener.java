@@ -1,13 +1,6 @@
 package net.azisaba.lgw.core.listeners;
 
 import com.shampaggon.crackshot.CSUtility;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
@@ -16,11 +9,11 @@ import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.tasks.RemoveBossBarTask;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.KDPlayerData;
-import net.azisaba.lgw.core.utils.BroadcastUtils;
-import net.azisaba.lgw.core.utils.Chat;
-import net.azisaba.lgw.core.utils.CustomItem;
-import net.azisaba.lgw.core.utils.SecondOfDay;
+import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -31,6 +24,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class MatchControlListener implements Listener {
 
     /**
@@ -39,7 +40,7 @@ public class MatchControlListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
         // 時間を取得して0じゃなかったらreturn
-        if ( e.getTimeLeft() > 0 ) {
+        if (e.getTimeLeft() > 0) {
             return;
         }
 
@@ -64,7 +65,7 @@ public class MatchControlListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void setMatchingListener(MatchFinishedEvent e) {
         // 試合中ならfalseにする
-        if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+        if (LeonGunWar.getPlugin().getManager().isMatching()) {
             LeonGunWar.getPlugin().getManager().setMatching(false);
         }
     }
@@ -85,7 +86,7 @@ public class MatchControlListener implements Listener {
                 Collections.singletonList(Chat.f("&d=== Team Point Information ===")));
 
         // 各チームのポイントを表示
-        for ( BattleTeam team : BattleTeam.values() ) {
+        for (BattleTeam team : BattleTeam.values()) {
             int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
             resultMessages.add(Chat.f("{0} &c{1} Point(s)", team.getTeamName(), point));
         }
@@ -94,8 +95,8 @@ public class MatchControlListener implements Listener {
         if (!mvpPlayers.isEmpty()) {
             for (KDPlayerData data : mvpPlayers) {
                 resultMessages.add(Chat.f("&c[MVP] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)",
-                    data.getPlayerName(),
-                    data.getKills(), data.getDeaths(), data.getAssists()));
+                        data.getPlayerName(),
+                        data.getKills(), data.getDeaths(), data.getAssists()));
             }
         }
 
@@ -131,7 +132,7 @@ public class MatchControlListener implements Listener {
         }
 
         // 勝ったチームがあれば勝者の証を付与
-        if ( e.getWinners().size() >= 1 ) {
+        if (e.getWinners().size() >= 1) {
 
             // 各チームに勝者の証を付与
             e.getWinners().forEach(wonTeam -> {
@@ -140,13 +141,21 @@ public class MatchControlListener implements Listener {
 
                 CSUtility csUtility = new CSUtility();
                 List<String> victoryItemCrackShotIds = LeonGunWar.getPlugin().getItemsConfig()
-                    .getVictoryItemCrackShotIds();
+                        .getVictoryItemCrackShotIds();
 
                 for (Player p : winnerPlayers) {
                     // 勝利アイテムを付与
                     if (victoryItemCrackShotIds == null) {
                         // 勝者の証を付与
-                        p.getInventory().addItem(CustomItem.getWonItem());
+                        long now = System.currentTimeMillis();
+                        if (isOverSixMinutes(now, LeonGunWar.matchJoin.get(p.getUniqueId())) || LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20) {
+                            p.getInventory().addItem(CustomItem.getWonItem());
+                            if (LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20) {
+                                p.sendMessage("試合参加時間が6分未満でしたが、20キルを超えているため勝利報酬が付与されました");
+                            }
+                        } else {
+                            p.sendMessage("試合参加時間が6分未満だったため勝利報酬は付与されませんでした");
+                        }
                     } else {
                         for (String crackShotId : victoryItemCrackShotIds) {
                             ItemStack item = csUtility.generateWeapon(crackShotId);
@@ -155,7 +164,7 @@ public class MatchControlListener implements Listener {
                             }
                         }
                     }
-
+                    LeonGunWar.matchJoin.clear();
                     // 勝利タイトルを表示
                     p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
 
@@ -165,10 +174,16 @@ public class MatchControlListener implements Listener {
 
                 // 勝利メッセージを送信
                 BroadcastUtils.broadcast(
-                    Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX,
-                        wonTeam.getTeamName()));
+                        Chat.f("{0}{1} &7が &6勝利 &7しました！", LeonGunWar.GAME_PREFIX,
+                                wonTeam.getTeamName()));
             });
         }
+    }
+
+    public boolean isOverSixMinutes(long time1, long time2) {
+        long diffMillis = Math.abs(time1 - time2);
+        long sixMinutesInMillis = 6 * 60 * 1000; // 6分 = 360,000ミリ秒
+        return diffMillis >= sixMinutesInMillis;
     }
 
     /**
@@ -189,7 +204,7 @@ public class MatchControlListener implements Listener {
     @EventHandler
     public void scoreboardUpdater(MatchTimeChangedEvent e) {
         // スコアボードをアップデート
-        LeonGunWar.getPlugin().getScoreboardDisplayer().updateScoreboard();
+        LeonGunWar.getPlugin().getScoreboardDisplayer().tickScoreboard();
     }
 
     /**
@@ -201,12 +216,12 @@ public class MatchControlListener implements Listener {
         List<Player> players = LeonGunWar.getPlugin().getManager().getAllTeamPlayers();
 
         // アクションバーをアップデート
-        for ( Player p : players ) {
+        for (Player p : players) {
             // 表示するメッセージを取得
             String actionBar = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getActionBar(p);
 
             // nullの場合はデフォルトの内容を表示する
-            if ( actionBar == null ) {
+            if (actionBar == null) {
                 actionBar = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDefaultActionBar(p);
             }
 
@@ -223,8 +238,8 @@ public class MatchControlListener implements Listener {
         Map<BattleTeam, List<Player>> playerMap = manager.getTeamPlayers();
 
         // もし0人のチームがある場合は試合を強制終了
-        for ( List<Player> playerList : playerMap.values() ) {
-            if ( playerList.size() <= 0 ) {
+        for (List<Player> playerList : playerMap.values()) {
+            if (playerList.size() <= 0) {
 
                 // イベント作成
                 MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), new ArrayList<>(),
@@ -241,15 +256,15 @@ public class MatchControlListener implements Listener {
         int timeLeft = e.getTimeLeft();
 
         // 残り時間が指定された時間の場合チャット欄でお知らせ
-        if ( Arrays.asList(60, 30, 10, 5, 4, 3, 2, 1).contains(timeLeft) ) {
+        if (Arrays.asList(60, 30, 10, 5, 4, 3, 2, 1).contains(timeLeft)) {
             BroadcastUtils.broadcast(
-                Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, SecondOfDay.f(timeLeft)));
+                    Chat.f("{0}&7残り &c{1}&7！", LeonGunWar.GAME_PREFIX, SecondOfDay.f(timeLeft)));
         }
 
         // 5秒以下なら音を鳴らす
-        if ( Arrays.asList(5, 4, 3, 2, 1).contains(timeLeft) ) {
+        if (Arrays.asList(5, 4, 3, 2, 1).contains(timeLeft)) {
             BroadcastUtils.getOnlinePlayers()
-                .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1));
+                    .forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1));
         }
     }
 
@@ -259,7 +274,7 @@ public class MatchControlListener implements Listener {
         final BossBar progressBar;
 
         // progressBarがnullならバーを作成
-        if ( LeonGunWar.getPlugin().getManager().getBossBar() == null ) {
+        if (LeonGunWar.getPlugin().getManager().getBossBar() == null) {
             // 名前は後で設定するので空欄
             progressBar = LeonGunWar.getPlugin().getManager().createEmptyBossBar();
             // 設定
@@ -278,7 +293,7 @@ public class MatchControlListener implements Listener {
         Bukkit.getOnlinePlayers().forEach(p -> {
 
             // プレイヤーにボスバーが表示されていなかったら表示
-            if ( !progressBar.getPlayers().contains(p) ) {
+            if (!progressBar.getPlayers().contains(p)) {
                 progressBar.addPlayer(p);
             }
         });

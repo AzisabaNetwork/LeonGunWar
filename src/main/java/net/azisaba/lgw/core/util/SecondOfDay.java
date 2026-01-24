@@ -1,10 +1,10 @@
-package net.azisaba.lgw.core.utils;
+package net.azisaba.lgw.core.util;
+
+import lombok.experimental.UtilityClass;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SecondOfDay {

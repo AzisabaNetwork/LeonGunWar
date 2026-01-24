@@ -11,21 +11,17 @@ import java.sql.SQLException;
 
 public class SQLConnection {
 
-    private final boolean enabled;
-
     private static final int CURRENT_DATABASE_VERSION = 1;
-
     private static final String SELECT_DATABASE_VERSION = "SELECT value FROM settings WHERE tag='database_version'";
     private static final String INSERT_DATABASE_VERSION = "INSERT INTO settings (tag,value) VALUES ('database_version',?)";
-
     private static final String CREATE_VERSION_TABLE = "CREATE TABLE IF NOT EXISTS settings (tag VARCHAR(64) NOT NULL, value INT DEFAULT 0)";
     private static final String CREATE_SYOGO_TABLE = "CREATE TABLE IF NOT EXISTS syogos (uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(32) NOT NULL, syogo VARCHAR(64) NOT NULL)";
-
+    private final boolean enabled;
     private HikariDataSource dataSource;
 
-    public SQLConnection(DatabaseConfig config){
+    public SQLConnection(DatabaseConfig config) {
 
-        if(!config.isEnabled()){
+        if (!config.isEnabled()) {
             enabled = false;
             return;
         }
@@ -61,7 +57,7 @@ public class SQLConnection {
 
     }
 
-    public void init(){
+    public void init() {
         try (Connection con = dataSource.getConnection()) {
 
             //テーブルのバージョン
@@ -74,20 +70,20 @@ public class SQLConnection {
                 statement.execute();
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void update() throws SQLException {
-        try(ResultSet s = this.executeQuery(SELECT_DATABASE_VERSION)){
+        try (ResultSet s = this.executeQuery(SELECT_DATABASE_VERSION)) {
             int version = s.next() ? s.getInt(1) : -1;
-            if(version > CURRENT_DATABASE_VERSION){
+            if (version > CURRENT_DATABASE_VERSION) {
                 throw new IllegalStateException("Invalid database version");
             }
-            if(version < CURRENT_DATABASE_VERSION){
-                if(version == -1){
-                    executeUpdate(INSERT_DATABASE_VERSION,CURRENT_DATABASE_VERSION);
+            if (version < CURRENT_DATABASE_VERSION) {
+                if (version == -1) {
+                    executeUpdate(INSERT_DATABASE_VERSION, CURRENT_DATABASE_VERSION);
                     //return;
                 }
                 //処理
@@ -95,15 +91,15 @@ public class SQLConnection {
         }
     }
 
-    public void onDisable(){
+    public void onDisable() {
         this.dataSource.close();
     }
 
-    public ResultSet executeQuery(String query, Object... args){
-        try (Connection con = dataSource.getConnection()){
+    public ResultSet executeQuery(String query, Object... args) {
+        try (Connection con = dataSource.getConnection()) {
             PreparedStatement statement = con.prepareStatement(query);
             for (int index = 0; index < args.length; index++) {
-                statement.setObject(index + 1,args[index]);
+                statement.setObject(index + 1, args[index]);
             }
             return statement.executeQuery();
         } catch (SQLException e) {
@@ -112,11 +108,11 @@ public class SQLConnection {
         return null;
     }
 
-    public boolean executeUpdate(String query, Object... args){
-        try (Connection con = dataSource.getConnection()){
-            try(PreparedStatement statement = con.prepareStatement(query)){
+    public boolean executeUpdate(String query, Object... args) {
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(query)) {
                 for (int index = 0; index < args.length; index++) {
-                    statement.setObject(index + 1,args[index]);
+                    statement.setObject(index + 1, args[index]);
                 }
                 return statement.execute();
             }

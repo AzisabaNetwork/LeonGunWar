@@ -1,13 +1,14 @@
 package net.azisaba.lgw.core.configs;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import net.azisaba.lgw.core.LeonGunWar;
 import org.bukkit.configuration.InvalidConfigurationException;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 public class ItemsConfig extends Config {
@@ -27,7 +28,7 @@ public class ItemsConfig extends Config {
             victoryItemCrackShotIds = null;
         } else {
             victoryItemCrackShotIds = Collections.unmodifiableList(
-                config.getStringList("victoryItems"));
+                    config.getStringList("victoryItems"));
         }
     }
 }

@@ -1,16 +1,13 @@
 package net.azisaba.lgw.core.commands;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
+import net.azisaba.lgw.core.util.Args;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.Args;
-import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -20,6 +17,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
     // ミスって本家で実行してしまうとまずいので/lgw debug_startにロックをかけれるように
@@ -28,28 +29,28 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         // TODO helpメッセージ実装
-        if ( Args.isEmpty(args) ) {
+        if (Args.isEmpty(args)) {
             return true;
         }
 
         // debug_startなら
-        if ( Args.check(args, 0, "debug_start") ) {
+        if (Args.check(args, 0, "debug_start")) {
 
             // allowDebugがfalseならreturn
-            if ( !ALLOW_DEBUG ) {
+            if (!ALLOW_DEBUG) {
                 sender.sendMessage(Chat.f("&cこの引数は現在無効化されているため実行できません！"));
                 return true;
             }
 
             // 試合中ならreturn
-            if ( LeonGunWar.getPlugin().getManager().isMatching() ) {
+            if (LeonGunWar.getPlugin().getManager().isMatching()) {
                 return true;
             }
             // サーバー内のプレイヤーを試合に参加
             Bukkit.getOnlinePlayers().forEach(p -> LeonGunWar.getPlugin().getManager().addEntryPlayer(p));
 
             // モード指定されてなければTDMに指定
-            if ( LeonGunWar.getPlugin().getManager().getMatchMode() == null ) {
+            if (LeonGunWar.getPlugin().getManager().getMatchMode() == null) {
                 LeonGunWar.getPlugin().getManager().setMatchMode(MatchMode.TEAM_DEATH_MATCH);
             }
 
@@ -62,18 +63,16 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         // teleportかtpなら
-        if ( Args.check(args, 0, "teleport", "tp") ) {
+        if (Args.check(args, 0, "teleport", "tp")) {
 
             // senderがプレイヤーではない場合はreturn
-            if ( !(sender instanceof Player) ) {
+            if (!(sender instanceof Player p)) {
                 sender.sendMessage(Chat.f("&cこのコマンドはプレイヤーのみ有効です！"));
                 return true;
             }
 
-            Player p = (Player) sender;
-
             // マップ名が指定されていない場合はreturn
-            if ( args.length <= 1 ) {
+            if (args.length <= 1) {
                 p.sendMessage(Chat.f("&cマップ名を指定してください！"));
                 return true;
             }
@@ -88,12 +87,12 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
 
             // サイズが1ならテレポート
-            if ( correctMapList.size() == 1 ) {
+            if (correctMapList.size() == 1) {
                 p.teleport(correctMapList.get(0).getSpawnPoint(BattleTeam.values()[0]));
                 p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", correctMapList.get(0).getMapName()));
 
                 // 1より多い場合
-            } else if ( correctMapList.size() > 1 ) {
+            } else if (correctMapList.size() > 1) {
                 p.sendMessage(Chat.f("&cマッチしたマップが2つあります"));
 
                 // 各マップのJSONMessageを表示
@@ -118,7 +117,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         // reloadなら
-        if ( Args.check(args, 0, "reload", "rl") ) {
+        if (Args.check(args, 0, "reload", "rl")) {
 
             try {
                 // マップの再読み込み
@@ -132,7 +131,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 LeonGunWar.getPlugin().getAssistStreaksConfig().loadConfig();
                 LeonGunWar.getPlugin().getWeaponControlConfig().loadConfig();
                 LeonGunWar.getPlugin().getItemsConfig().loadConfig();
-            } catch ( IOException | InvalidConfigurationException exception ) {
+            } catch (IOException | InvalidConfigurationException exception) {
                 exception.printStackTrace();
             }
 
@@ -141,10 +140,10 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         // 1つ目の引数がshowdataの場合
-        if ( Args.check(args, 0, "showdata") ) {
+        if (Args.check(args, 0, "showdata")) {
 
             // 試合中ではない場合return
-            if ( !LeonGunWar.getPlugin().getManager().isMatching() ) {
+            if (!LeonGunWar.getPlugin().getManager().isMatching()) {
                 sender.sendMessage(Chat.f("{0}&7現在試合をしていないためマッチデータの閲覧はできません。", LeonGunWar.GAME_PREFIX));
                 return true;
             }
@@ -158,7 +157,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(Chat.f("{0}&cMatch Data: {1}\n", LeonGunWar.GAME_PREFIX, mode.getModeName()));
 
             // バトルチームのデータ取得
-            for ( BattleTeam team : manager.getTeamPlayers().keySet() ) {
+            for (BattleTeam team : manager.getTeamPlayers().keySet()) {
 
                 // プレイヤーの数を取得
                 int playerCount = manager.getTeamPlayers().get(team).size();
@@ -175,13 +174,13 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 // (もしリーダーデスマッチなら)リーダーの名前を取得
                 String leadername = Chat.f("&4NOT_LEADER_DEATH_MATCH");
 
-                if ( manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH ) {
+                if (manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH) {
 
                     // リーダーを取得
                     Player leader = manager.getLDMLeader(team);
 
                     // リーダーが存在するなら
-                    if ( leader != null ) {
+                    if (leader != null) {
                         leadername = leader.getDisplayName();
                     }
                 }
@@ -202,10 +201,10 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if ( args.length == 1 ) {
+        if (args.length == 1) {
             return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
         }
-        if ( args.length == 2 && Args.check(args, 0, "teleport", "tp") ) {
+        if (args.length == 2 && Args.check(args, 0, "teleport", "tp")) {
             return Args.complete(args, 1, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
                     .map(GameMap::getMapName)
                     .toArray(String[]::new));

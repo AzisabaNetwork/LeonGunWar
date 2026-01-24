@@ -14,7 +14,7 @@ public class DisableOpenInventoryListener implements Listener {
     public void onInventoryOpen(InventoryOpenEvent e) {
         Player p = (Player) e.getPlayer();
 
-        if ( e.getInventory().getType() == InventoryType.ANVIL ) {
+        if (e.getInventory().getType() == InventoryType.ANVIL) {
             // 金床だった場合はキャンセル
             e.setCancelled(true);
 
@@ -22,7 +22,7 @@ public class DisableOpenInventoryListener implements Listener {
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
         }
 
-        if ( e.getInventory().getType() == InventoryType.FURNACE ) {
+        if (e.getInventory().getType() == InventoryType.FURNACE) {
             // かまどならキャンセル
             e.setCancelled(true);
 

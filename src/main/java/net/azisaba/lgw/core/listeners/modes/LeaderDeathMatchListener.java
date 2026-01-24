@@ -1,27 +1,26 @@
 package net.azisaba.lgw.core.listeners.modes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.utils.BroadcastUtils;
-import net.azisaba.lgw.core.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * LDMの処理を行うListener
  *
  * @author siloneco
- *
  */
 public class LeaderDeathMatchListener implements Listener {
 
@@ -30,7 +29,7 @@ public class LeaderDeathMatchListener implements Listener {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
         // LDMではなければreturn
-        if ( manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH && manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH_POINT ) {
+        if (manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH && manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH_POINT) {
             return;
         }
 
@@ -38,7 +37,7 @@ public class LeaderDeathMatchListener implements Listener {
         Player death = e.getEntity();
 
         // 死んだプレイヤーと殺したプレイヤーが同じ (またはnull) ならreturn
-        if ( death.getKiller() == null || death == death.getKiller() ) {
+        if (death.getKiller() == null || death == death.getKiller()) {
             return;
         }
 
@@ -51,24 +50,24 @@ public class LeaderDeathMatchListener implements Listener {
         Map<BattleTeam, Player> leaders = manager.getLDMLeaderMap();
 
         // 死んだプレイヤーがリーダーだった場合、試合を終了する
-        for ( BattleTeam team : leaders.keySet() ) {
+        for (BattleTeam team : leaders.keySet()) {
 
             // リーダーではない場合continue
-            if ( leaders.get(team) != death ) {
+            if (leaders.get(team) != death) {
                 continue;
             }
 
             BroadcastUtils.broadcast(Chat.f("{0}{1} &7が {2} &7のリーダーの {3} &7をキル！",
-                LeonGunWar.GAME_PREFIX,
-                killer.getPlayerListName(),
-                team.getTeamName(),
-                death.getPlayerListName()));
+                    LeonGunWar.GAME_PREFIX,
+                    killer.getPlayerListName(),
+                    team.getTeamName(),
+                    death.getPlayerListName()));
 
             // ポイント制の場合は試合を終了せずに再抽選
-            if ( manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH_POINT ) {
+            if (manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH_POINT) {
                 BroadcastUtils.broadcast(Chat.f("{0}{1} &7が &e10ポイント &7を獲得！",
-                    LeonGunWar.GAME_PREFIX,
-                    killerTeam.getTeamName()));
+                        LeonGunWar.GAME_PREFIX,
+                        killerTeam.getTeamName()));
                 manager.addTeamPoint(killerTeam, 10);
 
                 manager.setLeaderAtRandom(team);

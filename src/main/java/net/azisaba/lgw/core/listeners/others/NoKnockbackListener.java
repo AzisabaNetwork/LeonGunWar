@@ -1,18 +1,15 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.shampaggon.crackshot.CSDirector;
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,14 +20,13 @@ import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ノックバックを無効化するためのクラス
  *
  * @author siloneco
- *
  */
 public class NoKnockbackListener implements Listener {
 
@@ -47,14 +43,13 @@ public class NoKnockbackListener implements Listener {
      */
     @EventHandler
     public void onExplosionKnockback(EntityExplodeEvent e) {
-        if ( e.getEntity() instanceof Explosive ) {
+        if (e.getEntity() instanceof Explosive explosive) {
             // TNTを爆発させない
             e.setCancelled(true);
 
-            Explosive explosive = (Explosive) e.getEntity();
             float power = explosive.getYield();
             double radius = 2 * power;
-            e.getEntity().getWorld().playSound(e.getLocation(), Sound.ENTITY_GENERIC_EXPLODE,1f,1f);
+            e.getEntity().getWorld().playSound(e.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f);
 
             // パーティクルを表示
             Particle explode = power >= 1 ? power >= 2 ? Particle.EXPLOSION_HUGE : Particle.EXPLOSION_LARGE : Particle.EXPLOSION_NORMAL;
@@ -65,47 +60,51 @@ public class NoKnockbackListener implements Listener {
                     .map(target -> (Damageable) target)
                     .collect(Collectors.toList());
 
-            for ( Damageable target : targets ) {
+            for (Damageable target : targets) {
                 double damage = 20;
                 double distance = explosive.getLocation().toVector().distance(target.getLocation().toVector());
 
-                damage *= (radius - distance) / (2 * 4);
+                double falloff = (radius - distance) / (2 * 4);
+                if (falloff < 0) falloff = 0;
+                damage *= falloff;
 
                 // 障害物が間にある場合は軽減
                 Vector period = target.getLocation().toVector().subtract(explosive.getLocation().toVector()).normalize().multiply(0.1);
                 Location next = explosive.getLocation().clone();
                 int obstacle = 0;
-                for ( int i = 0; i < distance * 10; i++ ) {
-                    if ( next.getBlock().getType().isSolid() ) {
+                for (int i = 0; i < distance * 10; i++) {
+                    if (next.getBlock().getType().isSolid()) {
                         obstacle++;
                     }
                     next.add(period);
                 }
-                damage = Math.max(1, damage * (1 - obstacle * 0.061));
+                double obstacleFactor = 1 - obstacle * 0.061;
+                if (obstacleFactor < 0) obstacleFactor = 0;
+                damage = Math.max(1, damage * obstacleFactor);
 
                 Player shooter = null;
                 CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
 
                 // 攻撃者を設定
-                if ( explosive.hasMetadata("CS_pName") ) {
+                if (explosive.hasMetadata("CS_pName")) {
                     // CrackShotからTNTの作成者を取得
                     String shooterName = explosive.getMetadata("CS_pName").get(0).asString();
                     shooter = Bukkit.getPlayerExact(shooterName);
 
                     // 自分にダメージが当たらないバグを直す
-                    if ( shooter == target ) {
-                        shooter = null;
+                    if (shooter != null && shooter.equals(target)) {
+                        continue;
                     }
                 }
 
                 // ダメージを計算
-                if ( explosive.hasMetadata("CS_potex") ) {
+                if (explosive.hasMetadata("CS_potex")) {
                     // 銃の名前を取得
                     String weaponTitle = explosive.getMetadata("CS_potex").get(0).asString();
                     String multiString = cs.getString(weaponTitle + ".Explosions.Damage_Multiplier");
 
                     // 銃の設定からパーセント計算
-                    if ( multiString != null ) {
+                    if (multiString != null) {
                         double multiplier = Double.parseDouble(multiString) * 0.01;
                         damage *= multiplier;
                     }
@@ -113,23 +112,23 @@ public class NoKnockbackListener implements Listener {
 
 
                 // ターゲットが無敵の場合はダメージを無くす
-                if ( target.isInvulnerable() ) {
+                if (target.isInvulnerable()) {
                     damage = 0;
                 }
 
                 // 攻撃者とターゲットが同じチームかつ、フレンドリーファイヤーが許可されていない場合はダメージを無くす
-                if ( shooter != null ) {
+                if (shooter != null) {
 
                     // どこにも参加していない場合はダメージを無効化する
-                    if ( target instanceof Player && getJoiningTeam((Player) target).size() <= 0 ) {
+                    if (target instanceof Player && getJoiningTeam((Player) target).size() <= 0) {
                         damage = 0;
                     } else {
-                        for ( Team team : shooter.getScoreboard().getTeams() ) {
-                            if ( team.allowFriendlyFire() ) {
+                        for (Team team : shooter.getScoreboard().getTeams()) {
+                            if (team.allowFriendlyFire()) {
                                 continue;
                             }
 
-                            if ( team.hasEntry(shooter.getName()) && team.hasEntry(target.getName()) ) {
+                            if (team.hasEntry(shooter.getName()) && team.hasEntry(target.getName())) {
                                 damage = 0;
                             }
                         }
@@ -149,7 +148,7 @@ public class NoKnockbackListener implements Listener {
 
     @EventHandler
     public void onExplosionDamage(EntityDamageByEntityEvent e) {
-        if ( e.getDamager() instanceof Explosive ) {
+        if (e.getDamager() instanceof Explosive) {
             e.setCancelled(true);
         }
     }
@@ -157,7 +156,7 @@ public class NoKnockbackListener implements Listener {
     @EventHandler
     public void onWeaponArmorStandKnockback(WeaponDamageEntityEvent e) {
         Entity victim = e.getVictim();
-        if ( victim instanceof ArmorStand ) {
+        if (victim instanceof ArmorStand) {
             victim.setVelocity(new Vector());
         }
     }

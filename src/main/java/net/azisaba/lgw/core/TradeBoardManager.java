@@ -1,5 +1,13 @@
 package net.azisaba.lgw.core;
 
+import net.azisaba.lgw.core.util.LgwLog;
+import net.azisaba.lgw.core.util.SignData;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.slf4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,19 +18,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import net.azisaba.lgw.core.util.SignData;
-
 public class TradeBoardManager {
+    private final Logger logger = LgwLog.getLogger(this.getClass());
 
-    // 看板の情報を保存するフォルダ
-    private File dataFolder;
     // 座標に対応する看板データを保存するMap
     private final Map<Location, SignData> signs = new HashMap<>();
+    // 看板の情報を保存するフォルダ
+    private File dataFolder;
 
     /**
      * 保存されている看板の情報をファイルからロードします。
@@ -32,58 +34,59 @@ public class TradeBoardManager {
         dataFolder = new File(LeonGunWar.getPlugin().getDataFolder(), "Signs");
 
         // フォルダーが存在しない場合はマップデータが0なのでreturn
-        if ( !dataFolder.exists() ) {
+        if (!dataFolder.exists()) {
             return;
         }
 
         // ファイルであり最後が.ymlか.yamlで終わるファイルのみ読み込む
         Arrays.stream(Objects.requireNonNull(dataFolder.listFiles()))
                 .filter(file -> file.isFile() && (file.getName().endsWith(".yml") || file.getName().endsWith(".yaml")))
-                .forEach(file -> {
+                .forEach(this::loadSignLocationFromFile);
 
-                    // ファイル名から座標を読み込む
-                    String locStr = file.getName().substring(0, file.getName().length() - 4);
-                    Location loc = locationFromString(locStr);
+        logger.info("{} 個の看板をロードしました。", signs.size());
+    }
 
-                    // ロードできなかった場合はログを出してreturn
-                    if ( loc == null ) {
-                        Bukkit.getLogger().warning("Error trying parsing location \"" + file.getName() + "\"");
-                        return;
-                    }
+    private void loadSignLocationFromFile(File file) {
+        // ファイル名から座標を読み込む
+        String locStr = file.getName().substring(0, file.getName().length() - 4);
+        Location loc = locationFromString(locStr);
 
-                    // YamlConfigurationでロード
-                    YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
+        // ロードできなかった場合はログを出してreturn
+        if (loc == null) {
+            logger.warn("Error trying parsing location \"{}\"", file.getName());
+            return;
+        }
 
-                    // 各情報を取得
-                    long expire = conf.getLong("Expire", 0L);
-                    String playerName = conf.getString("PlayerName", null);
-                    String uuidStr = conf.getString("UUID", null);
-                    UUID uuid = null;
-                    try {
-                        uuid = UUID.fromString(uuidStr);
-                    } catch ( Exception ex ) {
-                        // pass
-                    }
+        // YamlConfigurationでロード
+        YamlConfiguration conf = YamlConfiguration.loadConfiguration(file);
 
-                    // 人に読みやすい形式に変更
-                    locStr = loc.getWorld().getName() + " - " + loc.toVector().toBlockVector();
+        // 各情報を取得
+        long expire = conf.getLong("Expire", 0L);
+        String playerName = conf.getString("PlayerName", null);
+        String uuidStr = conf.getString("UUID", null);
+        UUID uuid = null;
+        try {
+            uuid = UUID.fromString(uuidStr);
+        } catch (Exception ex) {
+            // pass
+        }
 
-                    // uuidもplayerNameもnullの場合return
-                    if ( uuid != null && playerName != null ) {
-                        // インスタンス作成
-                        SignData data = new SignData(loc, playerName, uuid, expire);
-                        // signsに追加
-                        signs.put(loc, data);
+        // 人に読みやすい形式に変更
+        locStr = loc.getWorld().getName() + " - " + loc.toVector().toBlockVector();
 
-                        // ログを出力
-                        LeonGunWar.getPlugin().getLogger().fine(locStr + " の看板をロードしました。");
-                    } else {
-                        // 失敗したログを出力
-                        LeonGunWar.getPlugin().getLogger().warning(locStr + " の看板はロードされませんでした。");
-                    }
-                });
+        // uuidもplayerNameもnullの場合return
+        if (uuid != null && playerName != null) {
+            // インスタンス作成
+            SignData data = new SignData(loc, playerName, uuid, expire);
+            // signsに追加
+            signs.put(loc, data);
 
-        LeonGunWar.getPlugin().getLogger().info(signs.size() + " 個の看板をロードしました。");
+            // ログを出力
+            logger.info("{} の看板をロードしました。", locStr);
+        } else {
+            // 失敗したログを出力
+            logger.warn("{} の看板はロードされませんでした。", locStr);
+        }
     }
 
     /**
@@ -112,12 +115,11 @@ public class TradeBoardManager {
      * @param authorName 看板を設置したプレイヤーの名前
      * @param authorUUID 作成したプレイヤーのUUID
      * @param breakAt    有効期限が切れるミリ秒
-     *
      * @return 成功したらtrue、すでに存在している場合はfalse
      */
     public boolean addSignData(Location loc, String authorName, UUID authorUUID, long breakAt) {
         // すでに登録されていたらfalseを返す
-        if ( signs.containsKey(loc) ) {
+        if (signs.containsKey(loc)) {
             return false;
         }
 
@@ -143,7 +145,7 @@ public class TradeBoardManager {
     protected void saveAll() {
 
         // フォルダが存在しない場合は作成
-        if ( !dataFolder.exists() ) {
+        if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
 
@@ -170,7 +172,7 @@ public class TradeBoardManager {
             // セーブ
             try {
                 conf.save(file);
-            } catch ( IOException ex ) {
+            } catch (IOException ex) {
                 // 失敗したらエラーを出力する
                 ex.printStackTrace();
             }
@@ -190,7 +192,7 @@ public class TradeBoardManager {
             World world = Bukkit.getWorld(split[0]);
             loc = new Location(world, Integer.parseInt(split[1]), Integer.parseInt(split[2]),
                     Integer.parseInt(split[3]));
-        } catch ( Exception ex ) {
+        } catch (Exception ex) {
             return null;
         }
 

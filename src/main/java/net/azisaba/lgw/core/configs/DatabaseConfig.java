@@ -6,7 +6,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
 
-public class DatabaseConfig extends Config{
+public class DatabaseConfig extends Config {
 
     private boolean enabled;
     private String host;
@@ -19,20 +19,20 @@ public class DatabaseConfig extends Config{
         super(plugin, "configs/database.yml", "database.yml");
     }
 
-    @SneakyThrows(value = { Exception.class })
+    @SneakyThrows(value = {Exception.class})
     @Override
     public void loadConfig() throws IOException, InvalidConfigurationException {
         super.loadConfig();
 
-        this.enabled = config.getBoolean("enable",false);
-        this.host = config.getString("host","HOST");
-        this.port = config.getInt("port",3306);
-        this.database = config.getString("database","conflict");
-        this.user = config.getString("user","conflict");
-        this.password = config.getString("password","password");
+        this.enabled = config.getBoolean("enable", false);
+        this.host = config.getString("host", "HOST");
+        this.port = config.getInt("port", 3306);
+        this.database = config.getString("database", "conflict");
+        this.user = config.getString("user", "conflict");
+        this.password = config.getString("password", "password");
     }
 
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return this.enabled;
     }
 

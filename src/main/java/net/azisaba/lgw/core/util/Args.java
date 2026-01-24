@@ -1,10 +1,10 @@
-package net.azisaba.lgw.core.utils;
+package net.azisaba.lgw.core.util;
+
+import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import lombok.experimental.UtilityClass;
 
 /**
  * コマンドの引数チェックを超簡単に！ タブ補完にも対応！

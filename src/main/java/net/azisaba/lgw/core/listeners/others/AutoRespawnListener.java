@@ -1,5 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
+import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.tasks.PlayPlayerHealingAnimationTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -8,9 +10,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-
-import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.tasks.PlayPlayerHealingAnimationTask;
 
 public class AutoRespawnListener implements Listener {
 
@@ -32,7 +31,7 @@ public class AutoRespawnListener implements Listener {
         Player p = e.getPlayer();
 
         Location location = LeonGunWar.getPlugin().getManager().getRespawnLocation(p);
-        if ( location != null && location.getWorld() != null ) {
+        if (location != null && location.getWorld() != null) {
             e.setRespawnLocation(location);
         }
 

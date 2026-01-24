@@ -1,22 +1,18 @@
 package net.azisaba.lgw.core.util;
 
+import lombok.Getter;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * チームを表現するためだけに作られたEnumクラス
  *
  * @author siloneco
- *
  */
 public enum BattleTeam {
 
-    RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED, NamedTextColor.DARK_RED , "red"),
+    RED("赤チーム", Color.fromRGB(0x930000), ChatColor.DARK_RED, NamedTextColor.DARK_RED, "red"),
     BLUE("青チーム", Color.fromRGB(0x0000A0), ChatColor.BLUE, NamedTextColor.BLUE, "blue");
 
     private final String name;
