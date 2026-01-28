@@ -92,7 +92,9 @@ public class SQLConnection {
     }
 
     public void onDisable() {
-        this.dataSource.close();
+        if (this.dataSource != null) {
+            this.dataSource.close();
+        }
     }
 
     public ResultSet executeQuery(String query, Object... args) {

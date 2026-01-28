@@ -181,11 +181,13 @@ public class LeonGunWar extends JavaPlugin {
                 new PlayerControlListener());
 
         // リスナーの登録 (modes)
-        Bukkit.getPluginManager().registerEvents(new TeamDeathMatchListener(), this);
-        Bukkit.getPluginManager().registerEvents(new HijackListener(), this);
-        Bukkit.getPluginManager().registerEvents(new TDMNoLimitListener(), this);
-        Bukkit.getPluginManager().registerEvents(new LeaderDeathMatchListener(), this);
-        Bukkit.getPluginManager().registerEvents(new CustomTDMListener(), this);
+        registerEvents(
+                new TeamDeathMatchListener(),
+                new HijackListener(),
+                new TDMNoLimitListener(),
+                new LeaderDeathMatchListener(),
+                new CustomTDMListener()
+        );
 
         // リスナーの登録 (others)
         registerEvents(new NoArrowGroundListener(),

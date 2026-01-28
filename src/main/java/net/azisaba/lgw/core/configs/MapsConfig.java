@@ -81,11 +81,13 @@ public class MapsConfig extends Config {
             }
 
             List<Area3D> areas = new ArrayList<>();
-            for (String area : mapSection.getConfigurationSection("areas").getKeys(false)) {
-                ConfigurationSection areaSection = mapSection.getConfigurationSection("areas." + area);
-                Vector min = getLocation(areaSection.getConfigurationSection("min"));
-                Vector max = getLocation(areaSection.getConfigurationSection("max"));
-                areas.add(new Area3D(min, max));
+            if (mapSection.getConfigurationSection("areas") != null) {
+                for (String area : mapSection.getConfigurationSection("areas").getKeys(false)) {
+                    ConfigurationSection areaSection = mapSection.getConfigurationSection("areas." + area);
+                    Vector min = getLocation(areaSection.getConfigurationSection(".min"));
+                    Vector max = getLocation(areaSection.getConfigurationSection(".max"));
+                    areas.add(new Area3D(min, max));
+                }
             }
 
             GameMap gameMap = new GameMap(mapName, world, spawnMap, areas);
@@ -120,6 +122,7 @@ public class MapsConfig extends Config {
         }
         List<GameMap> shuffleList = new ArrayList<>(allGameMap);
         Collections.shuffle(shuffleList);
+        shuffleList.removeIf(map -> !map.getHijackAreas().isEmpty());
 
         return new HashSet<>(shuffleList.subList(0, count));
     }
@@ -145,9 +148,9 @@ public class MapsConfig extends Config {
     }
 
     private Vector getLocation(ConfigurationSection section) {
-        double x = section.getDouble("x");
-        double y = section.getDouble("y");
-        double z = section.getDouble("z");
+        double x = section.getDouble(".x");
+        double y = section.getDouble(".y");
+        double z = section.getDouble(".z");
         return new Vector(x, y, z);
     }
 }
