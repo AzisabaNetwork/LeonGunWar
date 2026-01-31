@@ -49,6 +49,14 @@ public enum MatchMode {
             Chat.f("&7終了時に &cキャプチャーポイント &7が多いチームの勝利"),
             Duration.ofMinutes(10),
             Arrays.asList("hijack", "hj", "h")
+    ),
+
+    RANDOM(
+            Chat.f("&7ランダム"),
+            Chat.f("&7RANDOM"),
+            Chat.f("&7ランダムでモードを選択"),
+            Duration.ofMinutes(10),
+            Arrays.asList("random", "r")
     );
 
 
@@ -67,7 +75,9 @@ public enum MatchMode {
     }
 
     public static MatchMode getFromString(String text) {
-        if (text.equalsIgnoreCase("[random]") || text.equalsIgnoreCase("r")) {
+        String suggest = text.replace(" ", "").toLowerCase();
+
+        if (text.equalsIgnoreCase("r")) {
             int rand = (int) (Math.random() * 2);
             if (rand == 0) {
                 return LEADER_DEATH_MATCH_POINT;
@@ -76,7 +86,6 @@ public enum MatchMode {
             }
         }
 
-        String suggest = text.replace(" ", "").toLowerCase();
         return Arrays.stream(values())
                 .filter(mode -> mode.suggests.contains(suggest))
                 .findAny()
