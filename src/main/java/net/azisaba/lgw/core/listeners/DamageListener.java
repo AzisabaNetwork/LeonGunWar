@@ -8,6 +8,7 @@ import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.namechange.config.NameChangeInfoIO;
 import net.azisaba.namechange.data.NameChangeInfoData;
@@ -74,14 +75,16 @@ public class DamageListener implements Listener {
 
         // 個人キルを追加
         LeonGunWar.getPlugin().getManager().getKillDeathCounter().addKill(killer);
-        // ポイントを追加
-        LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+
+        if (LeonGunWar.getPlugin().getManager().getMatchMode() != MatchMode.HIJACK) {
+            // ポイントを追加
+            LeonGunWar.getPlugin().getManager().addTeamPoint(killerTeam);
+        }
 
         if (LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(killer)) {
             BattleTeam battleTeam = LeonGunWar.getPlugin().getManager().getBattleTeam(killer);
             LeonGunWar.getPlugin().getManager().scheduleOrExtend(battleTeam, LeonGunWar.getPlugin(), 20L * 30);
         }
-
 
         // タイトルを表示
         killer.sendTitle("", Chat.f("&c+1 &7Kill"), 0, 10, 10);
