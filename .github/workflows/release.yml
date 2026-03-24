@@ -27,7 +27,7 @@ jobs:
         uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
 
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew shadowJar
         env:
           VERSION: ${{ github.event.inputs.version }}
 
