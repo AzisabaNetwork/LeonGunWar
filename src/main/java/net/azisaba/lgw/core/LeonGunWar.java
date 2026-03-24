@@ -236,7 +236,7 @@ public class LeonGunWar extends JavaPlugin {
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
-        doubleRewardEnable = ClockMachine.isWithinRewardTime();
+        doubleRewardEnable = getConfig().getBoolean("DoubleRewardTaskEnable", false) && ClockMachine.isWithinRewardTime();
         if (getConfig().getBoolean("DoubleRewardTaskEnable", false)) {
             new ClockMachine().doubleRewardTaskStarter();
         }
