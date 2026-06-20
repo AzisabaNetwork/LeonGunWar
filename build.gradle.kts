@@ -8,9 +8,10 @@ plugins {
     alias(libs.plugins.runPaper)
     alias(libs.plugins.lombok)
     alias(libs.plugins.download)
+    alias(libs.plugins.paperweight)
 }
 
-val targetJavaVersion = 17
+val targetJavaVersion = 21
 version = System.getenv("VERSION") ?: "0.1.0-indev"
 
 // plugin metadata
@@ -31,7 +32,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly(libs.paperApi)
+    // Paper API is provided by the paperweight dev bundle
+    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
+
     compileOnly(libs.worldeditCore)
     compileOnly(libs.placeholderApi)
     compileOnly(libs.worldguardBukkit)
@@ -59,9 +62,7 @@ java {
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
 }
 
 val libsDir = layout.projectDirectory.dir("libs")
@@ -106,12 +107,11 @@ tasks {
         minimize()
         mergeServiceFiles()
         enableAutoRelocation = true
-        relocationPrefix = "net.azisaba.rankingdisplayer.libs"
+        relocationPrefix = "net.azisaba.lgw.libs"
     }
 
     runServer {
-        minecraftVersion("1.16.5")
-        ignoreUnsupportedJvm()
+        minecraftVersion("1.21.11")
         downloadPlugins {
             modrinth("placeholderapi", libs.versions.placeholderApi.get())
             github(
@@ -131,12 +131,6 @@ tasks {
 
     compileJava {
         options.encoding = "UTF-8"
-
-        if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-            options.release.set(targetJavaVersion)
-        }
-
-        dependsOn(verifyFile)
     }
 
     javadoc {

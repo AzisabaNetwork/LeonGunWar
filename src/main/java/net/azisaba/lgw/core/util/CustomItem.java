@@ -2,16 +2,16 @@ package net.azisaba.lgw.core.util;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
+import net.kyori.adventure.key.Key;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 // 動的にフレッシュなアイテムを提供するクラス
 @UtilityClass
@@ -34,9 +34,9 @@ public class CustomItem {
         meta.setDisplayName(team.getTeamName());
         meta.setColor(team.getColor());
         meta.setUnbreakable(true);
-        meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), "generic.armor", 0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST));
+        meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(Key.key("leongunwar", "armor"), 0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.CHEST));
         item.setItemMeta(meta);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
+        item.addUnsafeEnchantment(Enchantment.UNBREAKING, 10);
         item.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
         return item;
     }

@@ -3,13 +3,14 @@
 
 [versions]
 # plugin
-shadow = "9.1.0"
-runPaper = "3.0.0"
+shadow = "9.4.2"
+runPaper = "3.0.2"
 lombok = "8.14.2"
 download = "5.6.0"
+paperweight = "2.0.0-beta.21"
 
 # library
-paperApi = "1.16.5-R0.1-SNAPSHOT"
+paperApi = "1.21.11-R0.1-SNAPSHOT"
 configLib = "4.6.1"
 caffeine = "3.2.2"
 kdStatusReloaded = "2.2.0"
@@ -33,10 +34,11 @@ shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
 download = { id = "de.undercouch.download", version.ref = "download" }
+paperweight = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
 
 [libraries]
 # system
-paperApi = { module = "com.destroystokyo.paper:paper-api", version.ref = "paperApi" }
+paperApi = { module = "io.papermc.paper:paper-api", version.ref = "paperApi" }
 
 # config
 configLib = { module = "de.exlll:configlib-yaml", version.ref = "configLib" }

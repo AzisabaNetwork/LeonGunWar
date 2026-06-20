@@ -127,7 +127,7 @@ public class MatchControlListener implements Listener {
                     deaths, assists));
 
             // 回復
-            p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
+            p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getDefaultValue());
             p.setFoodLevel(40);
         }
 

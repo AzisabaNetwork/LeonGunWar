@@ -7,7 +7,7 @@ website: ${websiteUrl}
 load: POSTWORLD
 depend: ["CrackShot", "Essentials", "WorldGuard", "PlayerSettings", "KDStatusReloaded", "NameChangeAutomation", "LuckPerms"]
 softdepend: ["Multiverse-Core", "PlaceholderAPI"]
-api-version: 1.16
+api-version: 1.21
 commands:
   leongunwaradmin:
     description: Nothing
