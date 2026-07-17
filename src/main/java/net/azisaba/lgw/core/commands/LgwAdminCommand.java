@@ -5,6 +5,7 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.Args;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
@@ -24,12 +25,24 @@ import java.util.stream.Collectors;
 public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
     // ミスって本家で実行してしまうとまずいので/lgw debug_startにロックをかけれるように
-    private static final boolean ALLOW_DEBUG = false;
+    private static final boolean ALLOW_DEBUG = true;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         // TODO helpメッセージ実装
         if (Args.isEmpty(args)) {
+            return true;
+        }
+
+        // cancel_mapvoteならマップ投票をキャンセル
+        if (Args.check(args, 0, "cancel_mapvote", "cancelmapvote")) {
+            if (!LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
+                sender.sendMessage(Chat.f("{0}&c現在マップ投票は行われていません。", LeonGunWar.GAME_PREFIX));
+                return true;
+            }
+
+            LeonGunWar.getPlugin().getMapSelectCountdown().stopCountdown();
+            BroadcastUtils.broadcast(Chat.f("{0}&eマップ投票をキャンセルしました。", LeonGunWar.GAME_PREFIX));
             return true;
         }
 
@@ -202,7 +215,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
+            return Args.complete(args, 0, "debug_start", "cancel_mapvote", "teleport", "tp", "reload", "rl");
         }
         if (args.length == 2 && Args.check(args, 0, "teleport", "tp")) {
             return Args.complete(args, 1, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
