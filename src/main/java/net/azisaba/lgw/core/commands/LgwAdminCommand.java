@@ -59,19 +59,25 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             if (LeonGunWar.getPlugin().getManager().isMatching()) {
                 return true;
             }
-            // サーバー内のプレイヤーを試合に参加
-            Bukkit.getOnlinePlayers().forEach(p -> LeonGunWar.getPlugin().getManager().addEntryPlayer(p));
 
-            // モード指定されてなければTDMに指定
-            if (LeonGunWar.getPlugin().getManager().getMatchMode() == null) {
-                LeonGunWar.getPlugin().getManager().setMatchMode(MatchMode.TEAM_DEATH_MATCH);
-            }
+            MatchManager manager = LeonGunWar.getPlugin().getManager();
+            // 前回のモードやチーム情報を破棄して、デバッグ試合をTDMで開始する
+            LeonGunWar.getPlugin().getMapSelectCountdown().stopCountdown();
+            manager.finalizeMatch();
+            manager.setCurrentGameMap(null);
+            manager.getEntryPlayers().clear();
+
+            // サーバー内のプレイヤーを試合に参加
+            Bukkit.getOnlinePlayers().forEach(manager::addEntryPlayer);
+
+            // デバッグ試合は常にTDM
+            manager.setMatchMode(MatchMode.TEAM_DEATH_MATCH);
 
             // カウントダウン終了
             LeonGunWar.getPlugin().getMatchStartCountdown().stopCountdown();
 
             // 試合開始
-            LeonGunWar.getPlugin().getManager().startMatch();
+            manager.startMatch();
             return true;
         }
 

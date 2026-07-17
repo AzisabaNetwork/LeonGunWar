@@ -737,6 +737,11 @@ public class MatchManager {
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
 
+        // ソロデバッグなどで空チームになっている場合はリーダーを選出できないためスキップ
+        if (plist.isEmpty()) {
+            return;
+        }
+
         BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
         if (existingTask != null) {
             existingTask.cancel();
