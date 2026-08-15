@@ -8,7 +8,6 @@ import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.KillLogUtils;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.azisaba.namechange.config.NameChangeInfoIO;
@@ -199,10 +198,7 @@ public class DamageListener implements Listener {
             e.deathMessage(null);
 
             // メッセージを作成
-            Component msg = LegacyComponentSerializer.legacySection()
-                    .deserialize(Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX,
-                            p.getPlayerListName()))
-                    .hoverEvent(HoverEvent.showText(KillLogUtils.createDistanceText(null, p)));
+            String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
             // メッセージ送信
             p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 
@@ -298,7 +294,6 @@ public class DamageListener implements Listener {
                         .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
                         .append(Component.newline())
                         .append(loreTextBuilder.build())
-                        .append(KillLogUtils.createDistanceText(killer, p))
         );
 
         // ホバーイベントをメインメッセージに追加

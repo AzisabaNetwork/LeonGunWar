@@ -5,7 +5,6 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.Args;
 import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
@@ -25,24 +24,12 @@ import java.util.stream.Collectors;
 public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
     // ミスって本家で実行してしまうとまずいので/lgw debug_startにロックをかけれるように
-    private static final boolean ALLOW_DEBUG = true;
+    private static final boolean ALLOW_DEBUG = false;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         // TODO helpメッセージ実装
         if (Args.isEmpty(args)) {
-            return true;
-        }
-
-        // cancel_mapvoteならマップ投票をキャンセル
-        if (Args.check(args, 0, "cancel_mapvote", "cancelmapvote")) {
-            if (!LeonGunWar.getPlugin().getMapSelectCountdown().isRunning()) {
-                sender.sendMessage(Chat.f("{0}&c現在マップ投票は行われていません。", LeonGunWar.GAME_PREFIX));
-                return true;
-            }
-
-            LeonGunWar.getPlugin().getMapSelectCountdown().stopCountdown();
-            BroadcastUtils.broadcast(Chat.f("{0}&eマップ投票をキャンセルしました。", LeonGunWar.GAME_PREFIX));
             return true;
         }
 
@@ -59,25 +46,19 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             if (LeonGunWar.getPlugin().getManager().isMatching()) {
                 return true;
             }
-
-            MatchManager manager = LeonGunWar.getPlugin().getManager();
-            // 前回のモードやチーム情報を破棄して、デバッグ試合をTDMで開始する
-            LeonGunWar.getPlugin().getMapSelectCountdown().stopCountdown();
-            manager.finalizeMatch();
-            manager.setCurrentGameMap(null);
-            manager.getEntryPlayers().clear();
-
             // サーバー内のプレイヤーを試合に参加
-            Bukkit.getOnlinePlayers().forEach(manager::addEntryPlayer);
+            Bukkit.getOnlinePlayers().forEach(p -> LeonGunWar.getPlugin().getManager().addEntryPlayer(p));
 
-            // デバッグ試合は常にTDM
-            manager.setMatchMode(MatchMode.TEAM_DEATH_MATCH);
+            // モード指定されてなければTDMに指定
+            if (LeonGunWar.getPlugin().getManager().getMatchMode() == null) {
+                LeonGunWar.getPlugin().getManager().setMatchMode(MatchMode.TEAM_DEATH_MATCH);
+            }
 
             // カウントダウン終了
             LeonGunWar.getPlugin().getMatchStartCountdown().stopCountdown();
 
             // 試合開始
-            manager.startMatch();
+            LeonGunWar.getPlugin().getManager().startMatch();
             return true;
         }
 
@@ -221,7 +202,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Args.complete(args, 0, "debug_start", "cancel_mapvote", "teleport", "tp", "reload", "rl");
+            return Args.complete(args, 0, "debug_start", "teleport", "tp", "reload", "rl");
         }
         if (args.length == 2 && Args.check(args, 0, "teleport", "tp")) {
             return Args.complete(args, 1, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()

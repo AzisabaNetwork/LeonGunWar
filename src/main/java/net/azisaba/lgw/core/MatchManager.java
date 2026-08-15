@@ -205,12 +205,6 @@ public class MatchManager {
             }
         }
 
-        // 試合開始時にマップ名とゲームモードを約2秒間表示する
-        String mapTitle = Chat.f("&b&l{0}", currentGameMap.getMapName());
-        String modeSubtitle = matchMode.getModeName();
-        getAllTeamPlayers().forEach(player ->
-                player.sendTitle(mapTitle, modeSubtitle, 10, 10, 20));
-
         // LDM/CDMのリーダーマッチならリーダーを抽選
         switch (matchMode) {
             case LEADER_DEATH_MATCH:
@@ -736,11 +730,6 @@ public class MatchManager {
      */
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
-
-        // ソロデバッグなどで空チームになっている場合はリーダーを選出できないためスキップ
-        if (plist.isEmpty()) {
-            return;
-        }
 
         BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
         if (existingTask != null) {
