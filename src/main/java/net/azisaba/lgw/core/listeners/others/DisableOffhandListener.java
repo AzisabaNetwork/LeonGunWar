@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import com.shampaggon.crackshot.CSUtility;
+import net.azisaba.crackshot.CSUtility;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

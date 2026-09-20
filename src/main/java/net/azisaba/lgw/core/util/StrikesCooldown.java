@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.util;
 
-import com.shampaggon.crackshot.CSDirector;
+import net.azisaba.crackshot.CrackShot;
 import lombok.Data;
 import org.bukkit.Bukkit;
 
@@ -14,9 +14,9 @@ public class StrikesCooldown {
 
     public long getStrikesCooldown() {
         if (Bukkit.getPluginManager().isPluginEnabled("CrackShot")) {
-            CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+            CrackShot cs = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
             String cooldownNode = weaponTitle + ".Airstrikes.Multiple_Strikes.Delay_Between_Strikes";
-            int cooldown = cs.getInt(cooldownNode);
+            int cooldown = cs.data.getInt(cooldownNode);
             return Duration.ofSeconds(cooldown).toMillis();
         } else {
             return -1;

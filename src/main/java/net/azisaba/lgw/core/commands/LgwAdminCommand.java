@@ -88,8 +88,13 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
             // サイズが1ならテレポート
             if (correctMapList.size() == 1) {
-                p.teleport(correctMapList.get(0).getSpawnPoint(BattleTeam.values()[0]));
-                p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", correctMapList.get(0).getMapName()));
+                GameMap gameMap = correctMapList.get(0);
+                Location spawn = getTeleportSpawn(p, gameMap);
+                if (spawn == null) {
+                    return true;
+                }
+                p.teleport(spawn);
+                p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", gameMap.getMapName()));
 
                 // 1より多い場合
             } else if (correctMapList.size() > 1) {
@@ -97,7 +102,10 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
                 // 各マップのJSONMessageを表示
                 correctMapList.forEach(map -> {
-                    Location spawn = map.getSpawnPoint(BattleTeam.values()[0]);
+                    Location spawn = getTeleportSpawn(p, map);
+                    if (spawn == null) {
+                        return;
+                    }
                     JSONMessage msg = JSONMessage.create(Chat.f("&7 - &e{0}: &7{1}, {2}, {3} &7({4})", map.getMapName(),
                             spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getWorld().getName()));
                     msg.tooltip(Chat.f("&eクリックでテレポート"));
@@ -197,6 +205,20 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         return true;
+    }
+
+    private Location getTeleportSpawn(CommandSender sender, GameMap gameMap) {
+        Location spawn = gameMap.getSpawnPoint(BattleTeam.RED);
+        if (spawn == null) {
+            sender.sendMessage(Chat.f("&cマップ {0} の赤チームスポーンが設定されていません。", gameMap.getMapName()));
+            return null;
+        }
+        if (spawn.getWorld() == null) {
+            sender.sendMessage(Chat.f("&cマップ {0} のワールドが読み込まれていません。maps.ymlとワールド管理設定を確認してください。",
+                    gameMap.getMapName()));
+            return null;
+        }
+        return spawn;
     }
 
     @Override

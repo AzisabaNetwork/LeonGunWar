@@ -1,9 +1,9 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.CSUtility;
-import com.shampaggon.crackshot.events.WeaponPreShootEvent;
-import com.shampaggon.crackshot.events.WeaponShootEvent;
+import net.azisaba.crackshot.CrackShot;
+import net.azisaba.crackshot.CSUtility;
+import net.azisaba.crackshot.events.WeaponPreShootEvent;
+import net.azisaba.crackshot.events.WeaponShootEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
@@ -44,7 +44,7 @@ public class DisableChangeItemListener implements Listener {
     private final Map<Player, Instant> remainTimes = new HashMap<>();
     private final Map<Player, BukkitTask> taskMap = new HashMap<>();
     private final Map<Player, BossBar> bossBars = new HashMap<>();
-    private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+    private final CrackShot cs = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
     private final CSUtility csUtil = new CSUtility();
     // 有効なホットバーであるか
     private final Map<Player, Boolean> validHotbar = new HashMap<>();
@@ -146,7 +146,7 @@ public class DisableChangeItemListener implements Listener {
 
             for (ItemStack item : hotbar) {
                 String weapon = csUtil.getWeaponTitle(item);
-                String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
+                String ctrl = cs.data.getString(weapon + ".Item_Information.Inventory_Control");
 
                 if (ctrl == null) {
                     continue;
@@ -199,7 +199,7 @@ public class DisableChangeItemListener implements Listener {
 
         for (ItemStack after : afters) {
             String weapon = csUtil.getWeaponTitle(after);
-            String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
+            String ctrl = cs.data.getString(weapon + ".Item_Information.Inventory_Control");
 
             if (ctrl == null) {
                 continue;
@@ -210,11 +210,11 @@ public class DisableChangeItemListener implements Listener {
             Map<String, String> restore = Arrays.stream(groups)
                     .flatMap(
                             group -> Stream.of(group + ".Message_Exceeded", group + ".Sounds_Exceeded"))
-                    .filter(group -> CSDirector.strings.containsKey(group))
-                    .collect(Collectors.toMap(group -> group, CSDirector.strings::remove));
+                    .filter(group -> cs.data.strings.containsKey(group))
+                    .collect(Collectors.toMap(group -> group, cs.data.strings::remove));
             valid &= cs.validHotbar(holder, weapon);
             checked++;
-            CSDirector.strings.putAll(restore);
+            cs.data.strings.putAll(restore);
         }
 
         validHotbar.put(holder, valid);

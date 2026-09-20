@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.listeners;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.CSUtility;
-import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import net.azisaba.crackshot.CrackShot;
+import net.azisaba.crackshot.CSUtility;
+import net.azisaba.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
@@ -10,8 +10,6 @@ import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.SyogoData;
-import net.azisaba.namechange.config.NameChangeInfoIO;
-import net.azisaba.namechange.data.NameChangeInfoData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -28,13 +26,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class DamageListener implements Listener {
 
@@ -44,8 +45,8 @@ public class DamageListener implements Listener {
     // アシストの判定に使用される
     private final Map<Player, Map<Player, Long>> lastDamaged = new HashMap<>();
 
-    // 名前変更データ
-    private final Map<String, NameChangeInfoData> nameChangeData = new HashMap<>();
+    // 名前変更前の武器ID。既存のNameChangeAutomationデータがあれば引き続き利用する。
+    private final Map<String, Optional<String>> baseWeaponIds = new HashMap<>();
 
     /**
      * プレイヤーを殺したことを検知するリスナー 死亡したプレイヤーの処理は他のリスナーで行います
@@ -213,7 +214,7 @@ public class DamageListener implements Listener {
         ItemStack item = killer.getInventory().getItemInMainHand();
 
         // CrackShot Pluginを取得
-        CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+        CrackShot crackshot = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
 
         // アイテム名を取得
         String itemName;
@@ -224,7 +225,7 @@ public class DamageListener implements Listener {
             // 銃ID取得
             String nodes = crackShot.getWeaponTitle(item);
             // DisplayNameを取得
-            itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
+            itemName = crackshot.data.getString(nodes + ".Item_Information.Item_Name");
 
             // DisplayNameがnullの場合は普通にアイテム名を取得
             if (itemName == null) {
@@ -267,18 +268,15 @@ public class DamageListener implements Listener {
         if (loreComponents == null) {
             loreComponents = new ArrayList<>();
         }
-        NameChangeInfoIO nameInfo = new NameChangeInfoIO();
-        NameChangeInfoData nameInfoData = nameChangeData.get(nodes);
-        if (nameInfoData == null) {
-            nameInfoData = nameInfo.load(nodes);
-        }
-        nameChangeData.put(nodes, nameInfoData);
-        if (nameInfoData != null) {
+        Optional<String> baseWeaponId = getBaseWeaponId(nodes);
+        if (baseWeaponId.isPresent()) {
             // 元武器のDisplayNameを取得
-            String baseWeapon = nameInfoData.getBaseWeapon();
-            String itemName2 = crackshot.getString(baseWeapon + ".Item_Information.Item_Name");
-            Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD).append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
-            loreComponents.add(previouslore);
+            String itemName2 = crackshot.data.getString(baseWeaponId.get() + ".Item_Information.Item_Name");
+            if (itemName2 != null) {
+                Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD)
+                        .append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
+                loreComponents.add(previouslore);
+            }
         }
 
         // Loreを一つのComponentにまとめる
@@ -306,6 +304,29 @@ public class DamageListener implements Listener {
         Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
 
 
+    }
+
+    private Optional<String> getBaseWeaponId(String weaponId) {
+        if (weaponId == null || weaponId.isEmpty()) {
+            return Optional.empty();
+        }
+        return baseWeaponIds.computeIfAbsent(weaponId, this::loadBaseWeaponId);
+    }
+
+    private Optional<String> loadBaseWeaponId(String weaponId) {
+        if (weaponId.contains("..") || weaponId.contains("/") || weaponId.contains("\\")) {
+            return Optional.empty();
+        }
+
+        File pluginsFolder = LeonGunWar.getPlugin().getDataFolder().getParentFile();
+        File infoFolder = new File(new File(pluginsFolder, "NameChangeAutomation"), "NameChangeInfo");
+        File infoFile = new File(infoFolder, weaponId + ".yml");
+        if (!infoFile.isFile()) {
+            return Optional.empty();
+        }
+
+        YamlConfiguration info = YamlConfiguration.loadConfiguration(infoFile);
+        return Optional.ofNullable(info.getString(weaponId + ".PreviousID"));
     }
 
     @EventHandler

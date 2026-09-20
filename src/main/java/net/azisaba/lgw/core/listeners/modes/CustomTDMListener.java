@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.modes;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import net.azisaba.crackshot.CrackShot;
+import net.azisaba.crackshot.events.WeaponPrepareShootEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class CustomTDMListener implements Listener {
     public final static String SUB_WEAPON = "sub_weapons";
     public final static String GRENADE = "grenade_weapons";
     // CrackShotAPI
-    private final static CSDirector director = JavaPlugin.getPlugin(CSDirector.class);
+    private final static CrackShot director = JavaPlugin.getPlugin(CrackShot.class);
     // プレイヤーが変更可能の設定
     private static int matchpoint = 50;
     private static TDMType matchtype = TDMType.point;
@@ -110,7 +110,7 @@ public class CustomTDMListener implements Listener {
         int var9 = groupList.length;
 
         for (String invGroup : groupList) {
-            int groupLimit = director.getInt(invGroup + ".Limit");
+            int groupLimit = director.data.getInt(invGroup + ".Limit");
             if (customLimit.containsKey(invGroup)) {
                 groupLimit = customLimit.get(invGroup);
             }
@@ -121,7 +121,7 @@ public class CustomTDMListener implements Listener {
                 if (checkItem != null && director.itemIsSafe(checkItem)) {
                     String[] checkParent = director.itemParentNode(checkItem, shooter);
                     if (checkParent != null) {
-                        String groupCheck = director.getString(checkParent[0] + ".Item_Information.Inventory_Control");
+                        String groupCheck = director.data.getString(checkParent[0] + ".Item_Information.Inventory_Control");
                         if (groupCheck != null && groupCheck.contains(invGroup)) {
                             ++groupCount;
                         }
@@ -236,7 +236,7 @@ public class CustomTDMListener implements Listener {
         if (group == null) {
             return;
         }
-        String groups = director.getString(group + ".Item_Information.Inventory_Control");
+        String groups = director.data.getString(group + ".Item_Information.Inventory_Control");
         if (groups == null) {
             return;
         }

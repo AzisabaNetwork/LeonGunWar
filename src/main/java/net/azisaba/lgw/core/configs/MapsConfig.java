@@ -62,15 +62,25 @@ public class MapsConfig extends Config {
             ConfigurationSection mapSection = config.getConfigurationSection(mapName);
             ConfigurationSection spawnsSection = mapSection.getConfigurationSection("spawns");
 
-            World world = plugin.getServer().getWorld(mapSection.getString("world"));
+            String worldName = mapSection.getString("world");
+            World world = plugin.getServer().getWorld(worldName);
+            if (world == null) {
+                logger.warn("マップ {} のワールド {} が読み込まれていません。", mapName, worldName);
+            }
 
             Map<BattleTeam, Location> spawnMap = new HashMap<>();
             for (String teamName : spawnsSection.getValues(false).keySet()) {
                 Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
 
                 if (battleTeam.isPresent()) {
+                    String spawnWorldName = spawnsSection.getString(teamName + ".world");
+                    World spawnWorld = plugin.getServer().getWorld(spawnWorldName);
+                    if (spawnWorld == null) {
+                        logger.warn("マップ {} の {} スポーン用ワールド {} が読み込まれていません。",
+                                mapName, teamName, spawnWorldName);
+                    }
                     Location spawn = new Location(
-                            plugin.getServer().getWorld(spawnsSection.getString(teamName + ".world")),
+                            spawnWorld,
                             spawnsSection.getDouble(teamName + ".x"),
                             spawnsSection.getDouble(teamName + ".y"),
                             spawnsSection.getDouble(teamName + ".z"),

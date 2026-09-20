@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.CSUtility;
+import net.azisaba.crackshot.CrackShot;
+import net.azisaba.crackshot.CSUtility;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
@@ -36,12 +36,12 @@ public class PlayerDeathListener implements Listener {
                 itemName = Chat.f("&6素手");
             } else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
                 // CrackShot Pluginを取得
-                CSDirector crackshot = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+                CrackShot crackshot = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
 
                 // 銃ID取得
                 String nodes = crackShot.getWeaponTitle(item);
                 // DisplayNameを取得
-                itemName = crackshot.getString(nodes + ".Item_Information.Item_Name");
+                itemName = crackshot.data.getString(nodes + ".Item_Information.Item_Name");
 
                 // DisplayNameがnullの場合は普通にアイテム名を取得
                 if (itemName == null) {

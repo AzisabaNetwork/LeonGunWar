@@ -6,22 +6,19 @@
 shadow = "9.1.0"
 runPaper = "3.0.0"
 lombok = "8.14.2"
-download = "5.6.0"
 
 # library
 paperApi = "1.21.11-R0.1-SNAPSHOT"
 configLib = "4.6.1"
 caffeine = "3.2.2"
 kdStatusReloaded = "2.4.1"
-playerSettings = "1.1.0"
 slimeworldmanagerApi = "2.2.1"
-crackshot = "0.98.13"
+crackshot = "1.0.1"
 worldeditCore = "7.4.2"
 worldguardBukkit = "7.0.16"
 hikaricp = "4.0.3"
 placeholderApi = "2.12.3"
 jsonMessage = "1.3.1"
-nameChangeAutomation = "2.1.0"
 essentialsx = "2.21.2"
 luckpermsApi = "5.5"
 mysqlConnectorJ = "9.4.0"
@@ -32,7 +29,6 @@ junit = "5.13.4"
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
-download = { id = "de.undercouch.download", version.ref = "download" }
 
 [libraries]
 # system
@@ -53,13 +49,10 @@ jsonMessage = { module = "me.rayzr522:jsonmessage", version.ref = "jsonMessage" 
 
 # plugin
 kdStatusReloaded = { module = "com.github.AzisabaNetwork:KDStatusReloaded", version.ref = "kdStatusReloaded" }
-playerSettings = { module = "com.github.AzisabaNetwork:PlayerSettings", version.ref = "playerSettings" }
 slimeworldmanagerApi = { module = "com.grinderwolf:slimeworldmanager-api", version.ref = "slimeworldmanagerApi" }
-crackshot = { module = "com.shampaggon:CrackShot", version.ref = "crackshot" }
 worldeditCore = { module = "com.sk89q.worldedit:worldedit-core", version.ref = "worldeditCore" }
 worldguardBukkit = { module = "com.sk89q.worldguard:worldguard-bukkit", version.ref = "worldguardBukkit" }
 placeholderApi = { module = "me.clip:placeholderapi", version.ref = "placeholderApi" }
-nameChangeAutomation = { module = "net.azisaba:NameChangeAutomation", version.ref = "nameChangeAutomation" }
 essentialsx = { module = "net.essentialsx:EssentialsX", version.ref = "essentialsx" }
 luckpermsApi = { module = "net.luckperms:api", version.ref = "luckpermsApi" }
 

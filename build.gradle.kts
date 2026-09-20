@@ -1,13 +1,9 @@
-import de.undercouch.gradle.tasks.download.Download
-import de.undercouch.gradle.tasks.download.Verify
-
 plugins {
     `java-library`
     `maven-publish`
     alias(libs.plugins.shadow)
     alias(libs.plugins.runPaper)
     alias(libs.plugins.lombok)
-    alias(libs.plugins.download)
 }
 
 val targetJavaVersion = 21
@@ -30,18 +26,15 @@ repositories {
     maven("https://repo.maven.apache.org/maven2/")
 }
 
-val libsDir = layout.projectDirectory.dir("libs")
-val crackShotJar = libsDir.file("CrackShot-${libs.versions.crackshot.get()}.jar")
+val crackShotJar = layout.projectDirectory.file("../CrackShot/build/libs/CrackShot-${libs.versions.crackshot.get()}.jar")
 
 dependencies {
     compileOnly(libs.paperApi)
     compileOnly(libs.worldeditCore)
     compileOnly(libs.placeholderApi)
     compileOnly(libs.worldguardBukkit)
-    compileOnly(libs.playerSettings)
     compileOnly(libs.kdStatusReloaded)
     compileOnly(libs.essentialsx)
-    compileOnly(libs.nameChangeAutomation)
     compileOnly(libs.luckpermsApi)
     compileOnly(files(crackShotJar))
 
@@ -68,21 +61,6 @@ java {
 }
 
 tasks {
-    val downloadFile =
-        register<Download>("downloadFile") {
-            src("https://mediafilez.forgecdn.net/files/6635/698/CrackShot.jar")
-            dest(crackShotJar)
-            overwrite(false)
-        }
-
-    val verifyFile =
-        register<Verify>("verifyFile") {
-            src(crackShotJar)
-            algorithm("SHA-256")
-            checksum("1ddec3241fbb24d7fd26109cf95cde039d9eedfab1c8486a020cfcb08a17a136")
-            dependsOn(downloadFile)
-        }
-
     jar {
         dependsOn(shadowJar)
     }
@@ -119,25 +97,6 @@ tasks {
             modrinth("worldguard", "EZl3moba")
             modrinth("essentialsx", "nY6VN1XH")
             modrinth("luckperms", "b0mk8uS6")
-            // The latest GitHub release is tagged 2.0.1, but its JAR reports plugin version 2.1.0.
-            github(
-                "AzisabaNetwork",
-                "NameChangeAutomation",
-                "2.0.1",
-                "NameChangeAutomation.jar",
-            )
-            github(
-                "AzisabaNetwork",
-                "LeonCSAddon",
-                "1.2d",
-                "LeonCSAddon-1.2D.jar",
-            )
-            github(
-                "AzisabaNetwork",
-                "PlayerSettings",
-                "v1.1.0",
-                "PlayerSettings.jar",
-            )
             github(
                 "AzisabaNetwork",
                 "KDStatusReloaded",
@@ -154,7 +113,6 @@ tasks {
             options.release.set(targetJavaVersion)
         }
 
-        dependsOn(verifyFile)
     }
 
     javadoc {

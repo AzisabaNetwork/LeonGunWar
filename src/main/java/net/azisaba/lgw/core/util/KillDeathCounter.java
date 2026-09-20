@@ -30,7 +30,6 @@ public class KillDeathCounter {
     private final Map<UUID, String> playerNameContainer = new HashMap<>();
 
     // 何もデータがない時のアクションバー
-    private final String defaultActionBar = Chat.f("&6&l0 &rKill(s) &7[ &r{0} &7] &6&l0 &rDeath(s) &7&l/ &6&l0 &rAssist(s)", Strings.repeat("┃", 50));
     private final String defaultActionBarWithRatio = Chat.f("&6&l0 &rKill(s) &7[ &r{0} &7] &6&l0 &rDeath(s) &7&l/ &6&l0 &rAssist(s) &7&l/ &3&l0.000 &rKD", Strings.repeat("┃", 50));
 
     /**
@@ -194,18 +193,8 @@ public class KillDeathCounter {
     }
 
     public String getDefaultActionBar(@NonNull Player player) {
-        // アクションバーにKDレートを表示するかどうかを個人設定から取得
-        //SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
-        boolean displayKDRatio = true;//data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
-
-        // 何度も個人設定を取得するのは非効率なので設定してからreturnする
-        if (displayKDRatio) {
-            actionBarMap.put(player.getUniqueId(), defaultActionBarWithRatio);
-            return defaultActionBarWithRatio;
-        } else {
-            actionBarMap.put(player.getUniqueId(), defaultActionBar);
-            return defaultActionBar;
-        }
+        actionBarMap.put(player.getUniqueId(), defaultActionBarWithRatio);
+        return defaultActionBarWithRatio;
     }
 
     /**
@@ -224,10 +213,6 @@ public class KillDeathCounter {
      * @param player 対象プレイヤー
      */
     private void updateActionbar(Player player) {
-
-        // アクションバーにKDレートを表示するかどうかを個人設定から取得
-        //SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(player);
-        boolean displayKDRatio = true;//data.isSet("LeonGunWar.ShowKDRatioOnActionBar") && data.getBoolean("LeonGunWar.ShowKDRatioOnActionBar");
 
         StringBuilder barBuilder = new StringBuilder();
         StringBuilder actionBar = new StringBuilder();
@@ -256,16 +241,12 @@ public class KillDeathCounter {
         // アシスト数とKDレートを表示
         actionBar.append(Chat.f(" &7&l/ &6&l{0} &rAssist(s)", assists));
 
-        // displayKDRatioがtrueの場合はKDレートを計算して表示
-        if (displayKDRatio) {
-            // KDレート算出
-            double kdRatio = kills;
-            if (deaths > 0) {
-                kdRatio = (double) kills / (double) deaths;
-            }
-
-            actionBar.append(Chat.f(" &7&l/ &3&l{0} &rKD", String.format("%.3f", kdRatio)));
+        // KDレート算出
+        double kdRatio = kills;
+        if (deaths > 0) {
+            kdRatio = (double) kills / (double) deaths;
         }
+        actionBar.append(Chat.f(" &7&l/ &3&l{0} &rKD", String.format("%.3f", kdRatio)));
 
         // HashMapに設定
         actionBarMap.put(player.getUniqueId(), actionBar.toString());

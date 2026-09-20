@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import net.azisaba.crackshot.events.WeaponPrepareShootEvent;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.StrikesCooldown;

@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import net.azisaba.crackshot.CrackShot;
+import net.azisaba.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -82,7 +82,7 @@ public class NoKnockbackListener implements Listener {
                 damage = Math.max(1, damage * obstacleFactor);
 
                 Player shooter = null;
-                CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+                CrackShot cs = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
 
                 // 攻撃者を設定
                 if (explosive.hasMetadata("CS_pName")) {
@@ -100,7 +100,7 @@ public class NoKnockbackListener implements Listener {
                 if (explosive.hasMetadata("CS_potex")) {
                     // 銃の名前を取得
                     String weaponTitle = explosive.getMetadata("CS_potex").get(0).asString();
-                    String multiString = cs.getString(weaponTitle + ".Explosions.Damage_Multiplier");
+                    String multiString = cs.data.getString(weaponTitle + ".Explosions.Damage_Multiplier");
 
                     // 銃の設定からパーセント計算
                     if (multiString != null) {

@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.listeners.weaponcontrols;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import net.azisaba.crackshot.CrackShot;
+import net.azisaba.crackshot.events.WeaponDamageEntityEvent;
+import net.azisaba.crackshot.events.WeaponPrepareShootEvent;
 import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class DisableNormalWeaponsInNewYearPvEListener implements Listener {
 
-    private final CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+    private final CrackShot cs = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
 
     @EventHandler
     public void onWeaponPrepareShoot(WeaponPrepareShootEvent event) {
@@ -26,7 +26,7 @@ public class DisableNormalWeaponsInNewYearPvEListener implements Listener {
         }
 
         String weapon = event.getWeaponTitle();
-        String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
+        String ctrl = cs.data.getString(weapon + ".Item_Information.Inventory_Control");
 
         if (ctrl == null) {
             return;
@@ -55,7 +55,7 @@ public class DisableNormalWeaponsInNewYearPvEListener implements Listener {
         }
 
         String weapon = event.getWeaponTitle();
-        String ctrl = cs.getString(weapon + ".Item_Information.Inventory_Control");
+        String ctrl = cs.data.getString(weapon + ".Item_Information.Inventory_Control");
 
         if (ctrl == null) {
             return;

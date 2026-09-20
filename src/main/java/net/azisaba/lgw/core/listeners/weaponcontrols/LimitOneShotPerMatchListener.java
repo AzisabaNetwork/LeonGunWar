@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.listeners.weaponcontrols;
 
-import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import net.azisaba.crackshot.events.WeaponPrepareShootEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchStartedEvent;
 import net.azisaba.lgw.core.util.Chat;

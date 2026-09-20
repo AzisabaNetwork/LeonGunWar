@@ -17,8 +17,6 @@ import net.azisaba.lgw.core.listeners.modes.CustomTDMListener;
 import net.azisaba.lgw.core.tasks.LeaderSelectionTask;
 import net.azisaba.lgw.core.tasks.MatchCountdownTask;
 import net.azisaba.lgw.core.util.*;
-import net.azisaba.playersettings.PlayerSettings;
-import net.azisaba.playersettings.util.SettingsData;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
@@ -664,30 +662,14 @@ public class MatchManager {
         // 途中参加イベントを呼び出し
         Bukkit.getPluginManager().callEvent(new PlayerRejoinMatchEvent(p));
 
-        // 設定でエントリーするようになっていればエントリーする
-        // Pluginが無効化されていたらreturn
-        Plugin playerSettingsPlugin = Bukkit.getPluginManager().getPlugin("PlayerSettings");
-        if (playerSettingsPlugin == null || !playerSettingsPlugin.isEnabled()) {
-            return true;
-        }
+        // 途中参加時は自動で試合にエントリーする
+        if (!entryPlayers.contains(p)) {
+            entryPlayers.add(p);
 
-        // 設定を取得
-        //SettingsData data = PlayerSettings.getPlugin().getManager().getSettingsData(p);
-        boolean enableEntry = true;//data.isSet("LeonGunWar.EntryOnRejoin") && data.getBoolean("LeonGunWar.EntryOnRejoin");
+            PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
+            Bukkit.getPluginManager().callEvent(event);
 
-        // 有効ならエントリーする
-        if (enableEntry) {
-
-            if (!entryPlayers.contains(p)) {
-                // エントリー追加
-                entryPlayers.add(p);
-
-                // イベント呼び出し
-                PlayerEntryMatchEvent event = new PlayerEntryMatchEvent(p);
-                Bukkit.getPluginManager().callEvent(event);
-
-                p.sendMessage(Chat.f("{0}&7設定に基づいて試合にエントリーしました", LeonGunWar.GAME_PREFIX));
-            }
+            p.sendMessage(Chat.f("{0}&7試合にエントリーしました", LeonGunWar.GAME_PREFIX));
         }
 
         return true;

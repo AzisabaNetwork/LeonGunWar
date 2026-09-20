@@ -1,8 +1,8 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
-import com.shampaggon.crackshot.events.WeaponPreShootEvent;
+import net.azisaba.crackshot.CrackShot;
+import net.azisaba.crackshot.events.WeaponDamageEntityEvent;
+import net.azisaba.crackshot.events.WeaponPreShootEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,10 +32,10 @@ public class CrackShotLimitListener implements Listener {
 
     // インスタンス作成時にナイフとライトニングストライクのクールダウン時間を取得する
     public CrackShotLimitListener() {
-        CSDirector cs = (CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+        CrackShot cs = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
 
-        knifeCooldown = cs.getDouble("Combat_Knife.Shooting.Delay_Between_Shots") / 20;
-        storoboCooldown = cs.getDouble("STOROBO2.Airstrikes.Multiple_Strikes.Delay_Between_Strikes") / 20;
+        knifeCooldown = cs.data.getDouble("Combat_Knife.Shooting.Delay_Between_Shots") / 20;
+        storoboCooldown = cs.data.getDouble("STOROBO2.Airstrikes.Multiple_Strikes.Delay_Between_Strikes") / 20;
     }
 
     /**
