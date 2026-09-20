@@ -2,7 +2,6 @@ package net.azisaba.lgw.core.listeners.others;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,10 +25,9 @@ public class LobbyListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         LuckPerms lp = LuckPermsProvider.get();
-        User user = lp.getUserManager().getUser(player.getUniqueId());
-        Group group = lp.getGroupManager().getGroup(user.getPrimaryGroup());
+        User user = lp.getPlayerAdapter(Player.class).getUser(player);
         String prefix = user.getCachedData().getMetaData().getPrefix();
-        String teamName = group.getName();
+        String teamName = user.getPrimaryGroup();
         if (prefix == null) {
             prefix = "";
         }
@@ -47,14 +45,14 @@ public class LobbyListener implements Listener {
                 team.setPrefix(color.toString());
             }
         }
-        scoreboard.getTeam(teamName).addEntry(player.getName());
+        team.addEntry(player.getName());
         player.setScoreboard(this.scoreboard);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        Team team = scoreboard.getTeam(player.getName());
+        Team team = scoreboard.getEntryTeam(player.getName());
         if (team != null) {
             team.removeEntry(player.getName());
         }

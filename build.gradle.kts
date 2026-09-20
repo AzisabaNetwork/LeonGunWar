@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.download)
 }
 
-val targetJavaVersion = 17
+val targetJavaVersion = 21
 version = System.getenv("VERSION") ?: "0.1.0-indev"
 
 // plugin metadata
@@ -30,6 +30,9 @@ repositories {
     maven("https://repo.maven.apache.org/maven2/")
 }
 
+val libsDir = layout.projectDirectory.dir("libs")
+val crackShotJar = libsDir.file("CrackShot-${libs.versions.crackshot.get()}.jar")
+
 dependencies {
     compileOnly(libs.paperApi)
     compileOnly(libs.worldeditCore)
@@ -40,7 +43,7 @@ dependencies {
     compileOnly(libs.essentialsx)
     compileOnly(libs.nameChangeAutomation)
     compileOnly(libs.luckpermsApi)
-    compileOnly(fileTree("libs/"))
+    compileOnly(files(crackShotJar))
 
     implementation(libs.hikaricp)
     implementation(libs.mysqlConnectorJ)
@@ -64,13 +67,10 @@ java {
     }
 }
 
-val libsDir = layout.projectDirectory.dir("libs")
-val crackShotJar = libsDir.file("Crackshot.jar")
-
 tasks {
     val downloadFile =
         register<Download>("downloadFile") {
-            src("https://mediafilez.forgecdn.net/files/3151/915/CrackShot.jar")
+            src("https://mediafilez.forgecdn.net/files/6635/698/CrackShot.jar")
             dest(crackShotJar)
             overwrite(false)
         }
@@ -79,7 +79,7 @@ tasks {
         register<Verify>("verifyFile") {
             src(crackShotJar)
             algorithm("SHA-256")
-            checksum("8bb80635778a88521ca6d1ab8ce42bfec67174953967abf849dd231be16c7963")
+            checksum("1ddec3241fbb24d7fd26109cf95cde039d9eedfab1c8486a020cfcb08a17a136")
             dependsOn(downloadFile)
         }
 
@@ -110,10 +110,28 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.16.5")
+        minecraftVersion("1.21.11")
         ignoreUnsupportedJvm()
+        pluginJars.from(crackShotJar)
         downloadPlugins {
-            modrinth("placeholderapi", libs.versions.placeholderApi.get())
+            modrinth("placeholderapi", "pIvQcXW8")
+            modrinth("worldedit", "p8T2aZ8U")
+            modrinth("worldguard", "EZl3moba")
+            modrinth("essentialsx", "nY6VN1XH")
+            modrinth("luckperms", "b0mk8uS6")
+            // The latest GitHub release is tagged 2.0.1, but its JAR reports plugin version 2.1.0.
+            github(
+                "AzisabaNetwork",
+                "NameChangeAutomation",
+                "2.0.1",
+                "NameChangeAutomation.jar",
+            )
+            github(
+                "AzisabaNetwork",
+                "LeonCSAddon",
+                "1.2d",
+                "LeonCSAddon-1.2D.jar",
+            )
             github(
                 "AzisabaNetwork",
                 "PlayerSettings",

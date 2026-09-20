@@ -95,9 +95,14 @@ public class Config {
                     exception.printStackTrace();
                 }
             });
-        } else if (!existsResource()) {
-            Files.createDirectories(getPath().getParent());
-            Files.copy(getResource(), getPath());
+        } else if (!exists()) {
+            try (InputStream resource = getResource()) {
+                if (resource == null) {
+                    return;
+                }
+                Files.createDirectories(getPath().getParent());
+                Files.copy(resource, getPath());
+            }
         }
     }
 

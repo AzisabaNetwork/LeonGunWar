@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.scoreboard.Team;
@@ -52,7 +51,7 @@ public class NoKnockbackListener implements Listener {
             e.getEntity().getWorld().playSound(e.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f);
 
             // パーティクルを表示
-            Particle explode = power >= 1 ? power >= 2 ? Particle.EXPLOSION_HUGE : Particle.EXPLOSION_LARGE : Particle.EXPLOSION_NORMAL;
+            Particle explode = power >= 1 ? power >= 2 ? Particle.EXPLOSION_EMITTER : Particle.EXPLOSION : Particle.POOF;
             e.getLocation().getWorld().spawnParticle(explode, e.getLocation(), 1);
 
             List<Damageable> targets = explosive.getNearbyEntities(radius, radius, radius).stream()
@@ -137,11 +136,11 @@ public class NoKnockbackListener implements Listener {
 
                 // 作成者の攻撃としてダメージを与える
                 // 作成者が自分の場合や、作成者がいない場合は強制的にダメージを与える
-                target.damage(damage);
-
-                @SuppressWarnings("deprecation")
-                EntityDamageByEntityEvent cause = new EntityDamageByEntityEvent(shooter, target, DamageCause.ENTITY_EXPLOSION, damage);
-                target.setLastDamageCause(cause);
+                if (shooter != null) {
+                    target.damage(damage, shooter);
+                } else {
+                    target.damage(damage);
+                }
             }
         }
     }

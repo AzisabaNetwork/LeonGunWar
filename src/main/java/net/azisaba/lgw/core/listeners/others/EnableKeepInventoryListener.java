@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners.others;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRules;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,12 +21,12 @@ public class EnableKeepInventoryListener implements Listener {
 
     public void setEnableKeepInventory(World world) {
         // 既にKeepInventoryがtrueになってる場合はreturn
-        if (world.getGameRuleValue("keepInventory").equals("true")) {
+        if (Boolean.TRUE.equals(world.getGameRuleValue(GameRules.KEEP_INVENTORY))) {
             return;
         }
 
         // KeepInventoryを有効化
-        world.setGameRuleValue("keepInventory", "true");
+        world.setGameRule(GameRules.KEEP_INVENTORY, true);
 
         // コンソールに有効化したよと表示
         logger.info(world.getName() + " ワールドの keepInventory を true に設定したよ(´・ω・`)");

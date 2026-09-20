@@ -43,7 +43,7 @@ public class CustomMatchSignListener implements Listener {
     private final ItemStack no_limit, matchpoint, main_limit, sub_limit, granade_limit, defaultItem, kdItem;
 
     public CustomMatchSignListener() {
-        no_limit = create(Material.LEGACY_WATCH, Chat.f("&eモード : &6NO LIMIT"));
+        no_limit = create(Material.CLOCK, Chat.f("&eモード : &6NO LIMIT"));
         matchpoint = create(Material.EMERALD, Chat.f("&eマッチ終了ポイント : &a50P"));
         main_limit = create(Material.SUGAR_CANE, Chat.f("&eメイン武器射撃 : &a可能"));
         sub_limit = create(Material.GOLDEN_HOE, Chat.f("&eサブ武器射撃 : &a可能"));
@@ -291,9 +291,9 @@ public class CustomMatchSignListener implements Listener {
             String itemname = clicked.getItemMeta().getDisplayName();
             if (e.getSlot() == 0) {
                 if (Chat.r(itemname).equalsIgnoreCase("モード : NO LIMIT")) {
-                    e.getClickedInventory().setItem(0, create(Material.LEGACY_WATCH, Chat.f("&eモード : &cLEADER")));
+                    e.getClickedInventory().setItem(0, create(Material.CLOCK, Chat.f("&eモード : &cLEADER")));
                 } else if (Chat.r(itemname).equalsIgnoreCase("モード : LEADER")) {
-                    e.getClickedInventory().setItem(0, create(Material.LEGACY_WATCH, Chat.f("&eモード : &aPOINT")));
+                    e.getClickedInventory().setItem(0, create(Material.CLOCK, Chat.f("&eモード : &aPOINT")));
                 } else if (Chat.r(itemname).equalsIgnoreCase("モード : POINT")) {
                     e.getClickedInventory().setItem(0, no_limit);
                 }

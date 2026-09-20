@@ -13,6 +13,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -124,7 +125,7 @@ public class TradeBoardListener implements Listener {
         }
 
         // 看板ではない場合はキャンセル
-        if (b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.LEGACY_WALL_SIGN) {
+        if (!(b.getState() instanceof Sign)) {
             e.setCancelled(true);
         }
     }
