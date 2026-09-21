@@ -41,7 +41,6 @@ dependencies {
     implementation(libs.hikaricp)
     implementation(libs.mysqlConnectorJ)
 
-    implementation(libs.jsonMessage)
     implementation(libs.slimeworldmanagerApi)
 
     // check

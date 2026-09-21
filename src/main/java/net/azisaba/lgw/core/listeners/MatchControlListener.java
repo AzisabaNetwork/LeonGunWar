@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners;
 
 import net.azisaba.crackshot.CSUtility;
-import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
@@ -194,8 +194,6 @@ public class MatchControlListener implements Listener {
 
         LeonGunWar.getPlugin().getManager().finalizeMatch();
 
-        // 全プレイヤーにQuickメッセージを送信
-        //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     /**
@@ -226,7 +224,7 @@ public class MatchControlListener implements Listener {
             }
 
             // アクションバーに表示
-            JSONMessage.create(actionBar).actionbar(p);
+            AdventureUtil.actionBar(p, actionBar);
         }
     }
 

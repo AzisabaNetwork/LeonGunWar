@@ -1,13 +1,16 @@
 package net.azisaba.lgw.core.commands;
 
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.util.Args;
+import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -100,20 +103,21 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
             } else if (correctMapList.size() > 1) {
                 p.sendMessage(Chat.f("&cマッチしたマップが2つあります"));
 
-                // 各マップのJSONMessageを表示
+                // 各マップへのテレポートリンクを表示
                 correctMapList.forEach(map -> {
                     Location spawn = getTeleportSpawn(p, map);
                     if (spawn == null) {
                         return;
                     }
-                    JSONMessage msg = JSONMessage.create(Chat.f("&7 - &e{0}: &7{1}, {2}, {3} &7({4})", map.getMapName(),
-                            spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getWorld().getName()));
-                    msg.tooltip(Chat.f("&eクリックでテレポート"));
-                    msg.runCommand(Chat.f("/essentials:tppos {0} {1} {2} {3} {4} {5}", spawn.getX(), spawn.getY(),
-                            spawn.getZ(), spawn.getYaw(), spawn.getPitch(), spawn.getWorld().getName()));
+                    Component msg = AdventureUtil.legacy(Chat.f("&7 - &e{0}: &7{1}, {2}, {3} &7({4})", map.getMapName(),
+                                    spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getWorld().getName()))
+                            .hoverEvent(HoverEvent.showText(AdventureUtil.legacy(Chat.f("&eクリックでテレポート"))))
+                            .clickEvent(ClickEvent.runCommand(Chat.f("/essentials:tppos {0} {1} {2} {3} {4} {5}",
+                                    spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getYaw(), spawn.getPitch(),
+                                    spawn.getWorld().getName())));
 
                     // メッセージを送信
-                    msg.send(p);
+                    p.sendMessage(msg);
                 });
 
                 // 1より少ない場合 (0以下の場合)
@@ -139,6 +143,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 LeonGunWar.getPlugin().getAssistStreaksConfig().loadConfig();
                 LeonGunWar.getPlugin().getWeaponControlConfig().loadConfig();
                 LeonGunWar.getPlugin().getItemsConfig().loadConfig();
+                LeonGunWar.getPlugin().getKillLogsConfig().loadConfig();
             } catch (IOException | InvalidConfigurationException exception) {
                 exception.printStackTrace();
             }
@@ -182,7 +187,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 // (もしリーダーデスマッチなら)リーダーの名前を取得
                 String leadername = Chat.f("&4NOT_LEADER_DEATH_MATCH");
 
-                if (manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH) {
+                if (manager.getMatchMode().isLeaderDeathMatch()) {
 
                     // リーダーを取得
                     Player leader = manager.getLDMLeader(team);

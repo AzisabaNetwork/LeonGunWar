@@ -1,7 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import net.azisaba.crackshot.events.WeaponPrepareShootEvent;
-import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.StrikesCooldown;
 import org.bukkit.entity.Player;
@@ -39,7 +39,7 @@ public class FixStrikesCooldownListener implements Listener {
 
         if (cooldown.isNowInCooldown()) {
             event.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&cこの武器はクールダウン中です！"), player);
+            AdventureUtil.actionBar(player, Chat.f("&cこの武器はクールダウン中です！"));
         } else if (cooldown.isEnabled()) {
             cooldown.setLastUsed(System.currentTimeMillis());
         }

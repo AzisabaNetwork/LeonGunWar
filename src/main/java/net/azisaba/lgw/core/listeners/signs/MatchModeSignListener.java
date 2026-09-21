@@ -1,16 +1,18 @@
 package net.azisaba.lgw.core.listeners.signs;
 
 import com.google.common.base.Strings;
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.distributors.DefaultTeamDistributor;
 import net.azisaba.lgw.core.distributors.KDTeamDistributor;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BroadcastUtils;
+import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.LgwLog;
 import net.azisaba.lgw.core.util.MatchMode;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -226,8 +228,7 @@ public class MatchModeSignListener implements Listener {
         BroadcastUtils.getOnlinePlayers()
                 .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
-        // 投票用のJSONMessageを作成
-        JSONMessage msg = JSONMessage.create(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));
+        Component msg = AdventureUtil.legacy(Chat.f("&7[&bMapVote&7] 投票するマップをクリック → "));
 
         HashMap<Integer, ChatColor> colors = new HashMap<Integer, ChatColor>() {{
             put(0, ChatColor.GREEN);
@@ -238,15 +239,15 @@ public class MatchModeSignListener implements Listener {
 
         List<GameMap> maps = LeonGunWar.getPlugin().getMapSelectCountdown().getMaps();
         for (int i = 0, size = maps.size(); i < size; i++) {
-            msg = msg.then(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).getMapName()))
-                    .runCommand("/leongunwar:mapvote " + (i + 1));
+            msg = msg.append(AdventureUtil.legacy(Chat.f("{0}[{1}]", colors.get(i), maps.get(i).getMapName()))
+                    .clickEvent(ClickEvent.runCommand("/leongunwar:mapvote " + (i + 1))));
             if (i + 1 < size) {
-                msg = msg.then(" ");
+                msg = msg.append(Component.space());
             }
         }
 
-        // JSONMessageを全員に表示
-        msg.send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
+        Component voteMessage = msg;
+        BroadcastUtils.getOnlinePlayers().forEach(player -> player.sendMessage(voteMessage));
 
         p.closeInventory();
     }

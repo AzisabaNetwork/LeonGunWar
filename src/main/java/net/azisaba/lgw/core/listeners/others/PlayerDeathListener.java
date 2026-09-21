@@ -3,7 +3,11 @@ package net.azisaba.lgw.core.listeners.others;
 import net.azisaba.crackshot.CrackShot;
 import net.azisaba.crackshot.CSUtility;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.KillLogUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -51,11 +55,13 @@ public class PlayerDeathListener implements Listener {
                 itemName = Chat.f("&6{0}", item.getType().name());
             }
             msg = Chat.f("&7&l[&c&lFFA&7&l]&f{0}&7---[&6{1}&7]-->&f{2}", p.getKiller().getName(), itemName, p.getName());
+            Component message = AdventureUtil.legacy(msg)
+                    .hoverEvent(HoverEvent.showText(KillLogUtils.createDistanceText(p.getKiller(), p)));
             // メッセージ送信
-            p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
+            p.getWorld().getPlayers().forEach(player -> player.sendMessage(message));
 
             // コンソールに出力
-            Bukkit.getConsoleSender().sendMessage(msg);
+            Bukkit.getConsoleSender().sendMessage(message);
         }
     }
 }

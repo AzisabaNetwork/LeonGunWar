@@ -89,3 +89,7 @@ permissions:
     default: op
   leongunwar.syogo.delete:
     default: op
+  leongunwar.killlog.event:
+    default: false
+  leongunwar.killlog.supporter:
+    default: false

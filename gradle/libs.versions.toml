@@ -18,7 +18,6 @@ worldeditCore = "7.4.2"
 worldguardBukkit = "7.0.16"
 hikaricp = "4.0.3"
 placeholderApi = "2.12.3"
-jsonMessage = "1.3.1"
 essentialsx = "2.21.2"
 luckpermsApi = "5.5"
 mysqlConnectorJ = "9.4.0"
@@ -43,9 +42,6 @@ caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "c
 # database
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 mysqlConnectorJ = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorJ" }
-
-# util
-jsonMessage = { module = "me.rayzr522:jsonmessage", version.ref = "jsonMessage" }
 
 # plugin
 kdStatusReloaded = { module = "com.github.AzisabaNetwork:KDStatusReloaded", version.ref = "kdStatusReloaded" }

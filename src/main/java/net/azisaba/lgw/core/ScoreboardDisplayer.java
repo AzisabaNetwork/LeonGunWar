@@ -80,9 +80,12 @@ public class ScoreboardDisplayer {
                 messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getTeamName(), point));
             }
 
-            if (mode == MatchMode.LEADER_DEATH_MATCH_POINT) {
+            if (mode.isLeaderDeathMatch()) {
                 for (BattleTeam team : BattleTeam.values()) {
-                    messageList.add(Chat.f("{0}&6のリーダー&a: &e{1} ", team.getTeamName(), LeonGunWar.getPlugin().getManager().getLDMLeader(team).getName()));
+                    String leaderName = LeonGunWar.getPlugin().getManager().getLDMLeader(team) == null
+                            ? "未選出"
+                            : LeonGunWar.getPlugin().getManager().getLDMLeader(team).getName();
+                    messageList.add(Chat.f("{0}&6のリーダー&a: &e{1} ", team.getTeamName(), leaderName));
                 }
             }
 

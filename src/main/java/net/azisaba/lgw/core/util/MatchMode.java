@@ -25,14 +25,14 @@ public enum MatchMode {
     LEADER_DEATH_MATCH(
             Chat.f("&dリーダーデスマッチ"),
             Chat.f("&dLDM"),
-            Chat.f("&7相手チームの &dリーダー &7を倒して勝利"),
+            Chat.f("&710分間で最多ポイントを獲得して勝利（リーダー撃破は合計11ポイント）"),
             Duration.ofMinutes(10),
             Arrays.asList("ldm", "leaderdeathmatch", "leader")),
 
     LEADER_DEATH_MATCH_POINT(
             Chat.f("&eポイント制リーダーデスマッチ"),
             Chat.f("&eLDM-POINT"),
-            Chat.f("&7終了時に &cポイントが多いチーム &7が勝利"),
+            Chat.f("&710分間で最多ポイントを獲得して勝利（リーダー撃破は合計11ポイント）"),
             Duration.ofMinutes(10),
             Arrays.asList("ldmp", "ldm-point", "leaderdeathmatchpoint", "leader-point")),
 
@@ -77,10 +77,10 @@ public enum MatchMode {
     public static MatchMode getFromString(String text) {
         String suggest = text.replace(" ", "").toLowerCase();
 
-        if (text.equalsIgnoreCase("r")) {
+        if (RANDOM.suggests.contains(suggest)) {
             int rand = (int) (Math.random() * 2);
             if (rand == 0) {
-                return LEADER_DEATH_MATCH_POINT;
+                return LEADER_DEATH_MATCH;
             } else {
                 return HIJACK;
             }
@@ -106,5 +106,9 @@ public enum MatchMode {
 
     public String getModeName() {
         return modeName;
+    }
+
+    public boolean isLeaderDeathMatch() {
+        return this == LEADER_DEATH_MATCH || this == LEADER_DEATH_MATCH_POINT;
     }
 }

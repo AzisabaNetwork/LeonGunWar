@@ -276,9 +276,6 @@ public class CustomMatchSignListener implements Listener {
             BroadcastUtils.getOnlinePlayers()
                     .forEach(player -> player.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1));
 
-            // 全プレイヤーにQuickメッセージを送信
-            //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
-
             p.closeInventory();
             return;
         }

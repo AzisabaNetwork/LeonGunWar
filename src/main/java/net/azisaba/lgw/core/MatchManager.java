@@ -208,18 +208,19 @@ public class MatchManager {
             case LEADER_DEATH_MATCH:
             case LEADER_DEATH_MATCH_POINT:
                 leaderMatch = true;
+                hijackAreas = new ArrayList<>();
                 break;
             case CUSTOM_DEATH_MATCH:
-                if (CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader) {
-                    leaderMatch = true;
-                    break;
-                }
+                leaderMatch = CustomTDMListener.getMatchType() == CustomTDMListener.TDMType.leader;
+                hijackAreas = new ArrayList<>();
+                break;
             case HIJACK:
                 hijackAreas = currentGameMap.getHijackAreas();
                 leaderMatch = false;
                 break;
             default:
                 leaderMatch = false;
+                hijackAreas = new ArrayList<>();
         }
 
         if (leaderMatch) {
@@ -266,8 +267,6 @@ public class MatchManager {
         // isMatchingをtrueに変更
         isMatching = true;
 
-        // 全プレイヤーにQuickメッセージを送信
-        //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
     public List<Player> getEntryPlayers() {
@@ -327,6 +326,7 @@ public class MatchManager {
 
         // リーダーを削除
         ldmLeaderMap.clear();
+        hijackAreas = new ArrayList<>();
         // モードをnullに設定
         matchMode = null;
 
@@ -712,6 +712,11 @@ public class MatchManager {
      */
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
+
+        if (plist.isEmpty()) {
+            ldmLeaderMap.remove(team);
+            return;
+        }
 
         BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
         if (existingTask != null) {

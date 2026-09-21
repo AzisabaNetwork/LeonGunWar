@@ -6,16 +6,18 @@ import net.azisaba.crackshot.events.WeaponDamageEntityEvent;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.PlayerKillEvent;
+import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.KillLogUtils;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.SyogoData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Firework;
@@ -180,7 +182,7 @@ public class DamageListener implements Listener {
      */
     @EventHandler
     public void deathMessageChanger(PlayerDeathEvent e) {
-        Player p = e.getEntity();
+        Player victim = e.getEntity();
 
         // 試合中ではない場合はreturn
         if (!LeonGunWar.getPlugin().getManager().isMatching()) {
@@ -188,61 +190,47 @@ public class DamageListener implements Listener {
         }
 
         // 試合中のワールドではない場合はreturn
-        if (p.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
+        if (LeonGunWar.getPlugin().getManager().getCurrentGameMap() == null
+                || victim.getWorld() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
             return;
         }
+
+        // バニラの死亡メッセージは常に抑止し、このリスナーでキルログを送信する
+        e.deathMessage(null);
 
         // 殺したEntityが居ない場合か、同じプレイヤーの場合自滅とする
-        if (p.getKiller() == null || p.getKiller() == p) {
-
-            // メッセージ削除
-            e.deathMessage(null);
-
-            // メッセージを作成
-            String msg = Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
-            // メッセージ送信
-            p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
+        Player killer = victim.getKiller();
+        if (killer == null || killer == victim) {
+            Component message = legacy(Chat.f("{0}{1} &7は自滅した！", LeonGunWar.GAME_PREFIX,
+                    victim.getPlayerListName()))
+                    .hoverEvent(HoverEvent.showText(KillLogUtils.createDistanceText(null, victim)));
+            victim.getWorld().getPlayers().forEach(player -> player.sendMessage(message));
 
             // コンソールに出力
-            Bukkit.getConsoleSender().sendMessage(msg);
+            Bukkit.getConsoleSender().sendMessage(message);
             return;
         }
-
-        Player killer = e.getEntity().getKiller();
 
         // 殺したアイテム
         ItemStack item = killer.getInventory().getItemInMainHand();
+        String weaponId = crackShot.getWeaponTitle(item);
 
         // CrackShot Pluginを取得
         CrackShot crackshot = (CrackShot) Bukkit.getPluginManager().getPlugin("CrackShot");
 
         // アイテム名を取得
         String itemName;
-        if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
+        if (item.getType() == Material.AIR) {
             itemName = Chat.f("&6素手");
-        } else if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) { // DisplayNameが指定されている場合
-
-            // 銃ID取得
-            String nodes = crackShot.getWeaponTitle(item);
-            // DisplayNameを取得
-            itemName = crackshot.data.getString(nodes + ".Item_Information.Item_Name");
-
-            // DisplayNameがnullの場合は普通にアイテム名を取得
+        } else if (weaponId != null && crackshot != null) {
+            itemName = crackshot.data.getString(weaponId + ".Item_Information.Item_Name");
             if (itemName == null) {
-                itemName = item.getItemMeta().getDisplayName();
+                itemName = getFallbackItemName(item);
             }
-
-            Bukkit.getPluginManager().callEvent(new PlayerKillEvent(killer, nodes));
-        } else { // それ以外
-            itemName = Chat.f("&6{0}", item.getType().name());
+            Bukkit.getPluginManager().callEvent(new PlayerKillEvent(killer, weaponId));
+        } else {
+            itemName = getFallbackItemName(item);
         }
-
-        // メッセージ削除
-        e.deathMessage(null);
-        // メッセージ作成
-        // String msg = Chat.f("{0}&r{1} &7━━━ [ &r{2} &7] ━━━> &r{3}", LeonGunWar.GAME_PREFIX, killer.getPlayerListName(),
-        //        itemName,
-        //       p.getPlayerListName());
 
         SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
         String syogo = "";
@@ -250,60 +238,63 @@ public class DamageListener implements Listener {
             syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "") + "&r ";
         }
 
-        TextComponent msg2 = Component.text()
-                .append(Component.text(LeonGunWar.GAME_PREFIX))
-                .append(Component.text(Chat.f(syogo)))
-                .append(Component.text(killer.getPlayerListName()))
-                .append(Component.text("━━━ [").color(NamedTextColor.GRAY))
-                .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
-                .append(Component.text("] ━━━>").color(NamedTextColor.GRAY))
-                .append(Component.text(p.getPlayerListName()))
-                .build();
-
-        // 銃ID取得
-        String nodes = crackShot.getWeaponTitle(item);
+        String killLog = LeonGunWar.getPlugin().getKillLogsConfig().getFormat(killer)
+                .replace("{prefix}", LeonGunWar.GAME_PREFIX)
+                .replace("{syogo}", syogo)
+                .replace("{killer}", killer.getPlayerListName())
+                .replace("{weapon}", itemName)
+                .replace("{victim}", victim.getPlayerListName());
+        Component message = legacy(killLog);
 
         // LoreをComponentリストとして取得
-        List<Component> loreComponents = p.getKiller().getInventory().getItemInMainHand().lore();
-        if (loreComponents == null) {
-            loreComponents = new ArrayList<>();
+        List<Component> loreComponents = new ArrayList<>();
+        if (item.lore() != null) {
+            loreComponents.addAll(item.lore());
         }
-        Optional<String> baseWeaponId = getBaseWeaponId(nodes);
-        if (baseWeaponId.isPresent()) {
+        Optional<String> baseWeaponId = getBaseWeaponId(weaponId);
+        if (baseWeaponId.isPresent() && crackshot != null) {
             // 元武器のDisplayNameを取得
             String itemName2 = crackshot.data.getString(baseWeaponId.get() + ".Item_Information.Item_Name");
             if (itemName2 != null) {
                 Component previouslore = Component.text("Original:").color(NamedTextColor.GOLD)
-                        .append(LegacyComponentSerializer.legacySection().deserialize(itemName2));
+                        .append(legacy(itemName2));
                 loreComponents.add(previouslore);
             }
         }
 
         // Loreを一つのComponentにまとめる
         TextComponent.Builder loreTextBuilder = Component.text();
-        if (loreComponents != null) {
-            for (Component loreLine : loreComponents) {
-                loreTextBuilder.append(loreLine).append(Component.text("\n"));
-            }
+        for (Component loreLine : loreComponents) {
+            loreTextBuilder.append(loreLine).append(Component.newline());
         }
         // ホバーイベントの作成（Loreを含む）
         HoverEvent<Component> hoverEvent = HoverEvent.showText(
                 Component.text()
-                        .append(LegacyComponentSerializer.legacySection().deserialize(itemName))
+                        .append(legacy(itemName))
                         .append(Component.newline())
                         .append(loreTextBuilder.build())
+                        .append(KillLogUtils.createDistanceText(killer, victim))
         );
 
         // ホバーイベントをメインメッセージに追加
-        TextComponent messageWithTooltip = msg2.hoverEvent(hoverEvent);
+        Component messageWithTooltip = message.hoverEvent(hoverEvent);
 
         // メッセージ送信
-        p.getWorld().getPlayers().forEach(player -> player.sendMessage(messageWithTooltip));
+        victim.getWorld().getPlayers().forEach(player -> player.sendMessage(messageWithTooltip));
 
         // コンソールに出力
         Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
+    }
 
+    private String getFallbackItemName(ItemStack item) {
+        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+            return item.getItemMeta().getDisplayName();
+        }
+        return Chat.f("&6{0}", item.getType().name());
+    }
 
+    private Component legacy(String text) {
+        return AdventureUtil.legacy(ChatColor.translateAlternateColorCodes('&', text));
     }
 
     private Optional<String> getBaseWeaponId(String weaponId) {

@@ -1,7 +1,6 @@
 package net.azisaba.lgw.core;
 
 import lombok.Getter;
-import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
 import net.azisaba.lgw.core.listeners.modes.*;
@@ -61,7 +60,6 @@ public class LeonGunWar extends JavaPlugin {
     public static Map<BattleTeam, BukkitTask> leaderSelectionTaskMap = new HashMap<>();
     // plugin
     private static LeonGunWar plugin;
-    private static JSONMessage quickBar;
     private final MatchStartCountdown matchStartCountdown = new MatchStartCountdown();
     private final MapSelectCountdown mapSelectCountdown = new MapSelectCountdown();
     private final ScoreboardDisplayer scoreboardDisplayer = new ScoreboardDisplayer();
@@ -78,12 +76,9 @@ public class LeonGunWar extends JavaPlugin {
     private SyogoConfig syogoConfig;
     private WeaponControlConfig weaponControlConfig;
     private ItemsConfig itemsConfig;
+    private KillLogsConfig killLogsConfig;
 
     private SQLConnection sqlConnection;
-
-    public static JSONMessage getQuickBar() {
-        return quickBar;
-    }
 
     public static LeonGunWar getPlugin() {
         return plugin;
@@ -92,16 +87,6 @@ public class LeonGunWar extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        quickBar = JSONMessage.create(Chat.f("&7[&bQuick&7] ここをクリック → "))
-                .then(Chat.f("&a[エントリー]"))
-                .runCommand("/leongunwar:match entry")
-                .then(" ")
-                .then(Chat.f("&c[エントリー解除]"))
-                .runCommand("/leongunwar:match leave")
-                .then(" ")
-                .then(Chat.f("&6[途中参加]"))
-                .runCommand("/leongunwar:match rejoin");
-
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LGWExpansion(this).register(); //
         }
@@ -118,6 +103,7 @@ public class LeonGunWar extends JavaPlugin {
         syogoConfig = new SyogoConfig(this);
         weaponControlConfig = new WeaponControlConfig(this);
         itemsConfig = new ItemsConfig(this);
+        killLogsConfig = new KillLogsConfig(this);
         // 設定ファイルを読み込む
         try {
             mainConfig.loadConfig();
@@ -129,6 +115,7 @@ public class LeonGunWar extends JavaPlugin {
             syogoConfig.loadConfig();
             weaponControlConfig.loadConfig();
             itemsConfig.loadConfig();
+            killLogsConfig.loadConfig();
         } catch (IOException | InvalidConfigurationException exception) {
             plLogger.error("Failed to load config", exception);
         }
@@ -334,5 +321,9 @@ public class LeonGunWar extends JavaPlugin {
 
     public SQLConnection getSqlConnection() {
         return sqlConnection;
+    }
+
+    public KillLogsConfig getKillLogsConfig() {
+        return killLogsConfig;
     }
 }

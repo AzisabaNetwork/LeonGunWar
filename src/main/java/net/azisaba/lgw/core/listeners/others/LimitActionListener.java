@@ -1,6 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
-import me.rayzr522.jsonmessage.JSONMessage;
+import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class LimitActionListener implements Listener {
         // allowDropPlayersに含まれていない場合はキャンセル
         if (!allowDropPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&cアイテムをドロップするには /limit drop と入力"), p);
+            AdventureUtil.actionBar(p, Chat.f("&cアイテムをドロップするには /limit drop と入力"));
         }
     }
 
@@ -56,7 +56,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            AdventureUtil.actionBar(p, Chat.f("&c建築をするには /limit build と入力"));
         }
     }
 
@@ -72,7 +72,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            AdventureUtil.actionBar(p, Chat.f("&c建築をするには /limit build と入力"));
         }
     }
 
@@ -110,7 +110,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            AdventureUtil.actionBar(p, Chat.f("&c建築をするには /limit build と入力"));
         }
     }
 
@@ -131,7 +131,7 @@ public class LimitActionListener implements Listener {
         // allowBuildPlayersに含まれていない場合はキャンセル
         if (!allowBuildPlayers.contains(p.getUniqueId())) {
             e.setCancelled(true);
-            JSONMessage.actionbar(Chat.f("&c建築をするには /limit build と入力"), p);
+            AdventureUtil.actionBar(p, Chat.f("&c建築をするには /limit build と入力"));
         }
     }
 

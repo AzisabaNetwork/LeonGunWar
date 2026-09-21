@@ -88,8 +88,8 @@ public class KillStreaks {
         }
         giveRewards(streaks, player);
 
-        if (LeonGunWar.getPlugin().getManager().getMatchMode()
-                == MatchMode.LEADER_DEATH_MATCH_POINT) {
+        MatchMode matchMode = LeonGunWar.getPlugin().getManager().getMatchMode();
+        if (matchMode != null && matchMode.isLeaderDeathMatch()) {
             if (LeonGunWar.getPlugin().getManager().getLDMLeaderMap().containsValue(player)) {
                 if (LeonGunWar.doubleRewardEnable) {
                     player.sendMessage(

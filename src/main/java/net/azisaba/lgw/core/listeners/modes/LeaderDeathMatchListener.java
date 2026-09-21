@@ -2,19 +2,14 @@ package net.azisaba.lgw.core.listeners.modes;
 
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
-import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.MatchMode;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +24,7 @@ public class LeaderDeathMatchListener implements Listener {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
         // LDMではなければreturn
-        if (manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH && manager.getMatchMode() != MatchMode.LEADER_DEATH_MATCH_POINT) {
+        if (manager.getMatchMode() == null || !manager.getMatchMode().isLeaderDeathMatch()) {
             return;
         }
 
@@ -45,11 +40,15 @@ public class LeaderDeathMatchListener implements Listener {
         Player killer = death.getKiller();
         // キルをしたプレイヤーのチーム
         BattleTeam killerTeam = manager.getBattleTeam(killer);
+        BattleTeam victimTeam = manager.getBattleTeam(death);
+        if (killerTeam == null || victimTeam == null || killerTeam == victimTeam) {
+            return;
+        }
 
         // 各チームのリーダーを取得
         Map<BattleTeam, Player> leaders = manager.getLDMLeaderMap();
 
-        // 死んだプレイヤーがリーダーだった場合、試合を終了する
+        // 死んだプレイヤーがリーダーだった場合、10ボーナスポイントを加えてリーダーを再抽選する
         for (BattleTeam team : leaders.keySet()) {
 
             // リーダーではない場合continue
@@ -63,29 +62,11 @@ public class LeaderDeathMatchListener implements Listener {
                     team.getTeamName(),
                     death.getPlayerListName()));
 
-            // ポイント制の場合は試合を終了せずに再抽選
-            if (manager.getMatchMode() == MatchMode.LEADER_DEATH_MATCH_POINT) {
-                BroadcastUtils.broadcast(Chat.f("{0}{1} &7が &e10ポイント &7を獲得！",
-                        LeonGunWar.GAME_PREFIX,
-                        killerTeam.getTeamName()));
-                manager.addTeamPoint(killerTeam, 10);
-
-                manager.setLeaderAtRandom(team);
-                break;
-            }
-
-            // その他のチームを取得
-            List<BattleTeam> teams = new ArrayList<>(leaders.keySet());
-            // 殺されたリーダーのチームを削除
-            teams.remove(team);
-
-            // このイベントの後にイベント作成、呼び出し
-            // 遅らせる理由は最後のキルが表示されないため
-            Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
-                MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
-                        manager.getTeamPlayers());
-                Bukkit.getPluginManager().callEvent(event);
-            }, 0L);
+            BroadcastUtils.broadcast(Chat.f("{0}{1} &7がリーダー撃破ボーナス &e10ポイント &7を獲得！",
+                    LeonGunWar.GAME_PREFIX,
+                    killerTeam.getTeamName()));
+            manager.addTeamPoint(killerTeam, 10);
+            manager.setLeaderAtRandom(team);
             break;
         }
     }

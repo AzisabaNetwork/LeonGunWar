@@ -1,0 +1,13 @@
+# 使用可能なプレースホルダー: {prefix}, {syogo}, {killer}, {weapon}, {victim}
+# 複数の権限を持つ場合は priority が最も高いスタイルが使用されます。
+default-format: "{prefix}{syogo}{killer}&7━━━ [&r{weapon}&7] ━━━>&r{victim}"
+
+styles:
+  event:
+    permission: "leongunwar.killlog.event"
+    priority: 200
+    format: "&6&l[EVENT] &r{syogo}{killer}&e ✦ [&r{weapon}&e] ✦➜ &r{victim}"
+  supporter:
+    permission: "leongunwar.killlog.supporter"
+    priority: 100
+    format: "&d&l[SUPPORTER] &r{syogo}{killer}&5 ✦ [&r{weapon}&5] ✦➜ &r{victim}"

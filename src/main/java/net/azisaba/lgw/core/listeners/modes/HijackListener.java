@@ -6,6 +6,7 @@ import net.azisaba.lgw.core.events.MatchFinishedEvent;
 import net.azisaba.lgw.core.events.MatchTimeChangedEvent;
 import net.azisaba.lgw.core.util.Area3D;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.MatchMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +19,10 @@ public class HijackListener implements Listener {
     @EventHandler
     public void onTime(MatchTimeChangedEvent e) {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
+        if (!manager.isMatching() || manager.getMatchMode() != MatchMode.HIJACK) {
+            return;
+        }
+
         BattleTeam team = null;
         rLoop:
         for (Player player : manager.getAllTeamPlayers()) {

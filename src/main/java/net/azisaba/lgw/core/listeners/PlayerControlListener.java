@@ -83,24 +83,34 @@ public class PlayerControlListener implements Listener {
     @EventHandler
     public void onChangeWorld(PlayerChangedWorldEvent e) {
         Player p = e.getPlayer();
+        MatchManager manager = LeonGunWar.getPlugin().getManager();
 
         // 試合中ではなかったらreturn
-        if (!LeonGunWar.getPlugin().getManager().isMatching()) {
+        if (!manager.isMatching() || manager.getCurrentGameMap() == null) {
             return;
         }
 
         // プレイヤーが試合をしていなかったらreturn
-        if (!LeonGunWar.getPlugin().getManager().getAllTeamPlayers().contains(p)) {
+        if (!manager.getAllTeamPlayers().contains(p)) {
             return;
         }
 
         // Fromが試合のワールドではなかったらreturn
-        if (e.getFrom() != LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()) {
+        if (e.getFrom() != manager.getCurrentGameMap().getWorld()) {
             return;
         }
 
-        // 退出
-        LeonGunWar.getPlugin().getManager().leavePlayer(p);
+        // リスポーン時の一時的なワールド移動を退出と誤判定しないよう、次tickで確定する
+        Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), () -> {
+            if (!manager.isMatching() || !manager.getAllTeamPlayers().contains(p)
+                    || manager.getCurrentGameMap() == null) {
+                return;
+            }
+            if (p.getWorld() == manager.getCurrentGameMap().getWorld()) {
+                return;
+            }
+            manager.leavePlayer(p);
+        });
     }
 
     /**
@@ -115,7 +125,6 @@ public class PlayerControlListener implements Listener {
             }
         });
 
-        //LeonGunWar.getQuickBar().send(e.getPlayer());
         if (!LeonGunWar.getPlugin().getMainConfig().isLobby) {
             if (LeonGunWar.getPlugin().getManager().isMatching()) {
                 Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {

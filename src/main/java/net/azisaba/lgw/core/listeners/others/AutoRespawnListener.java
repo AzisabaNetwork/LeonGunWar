@@ -33,6 +33,13 @@ public class AutoRespawnListener implements Listener {
         Location location = LeonGunWar.getPlugin().getManager().getRespawnLocation(p);
         if (location != null && location.getWorld() != null) {
             e.setRespawnLocation(location);
+            Location expectedLocation = location.clone();
+            Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), () -> {
+                if (LeonGunWar.getPlugin().getManager().isPlayerMatching(p)
+                        && p.getWorld() != expectedLocation.getWorld()) {
+                    p.teleport(expectedLocation);
+                }
+            });
         }
 
         // 消火！！
