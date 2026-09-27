@@ -67,6 +67,7 @@ public class LeonGunWar extends JavaPlugin {
     private final AssistStreaks assistStreaks = new AssistStreaks();
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
+    private PvPArenaManager pvPArenaManager;
     private MainConfig mainConfig;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
@@ -87,6 +88,7 @@ public class LeonGunWar extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        pvPArenaManager = new PvPArenaManager(this);
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new LGWExpansion(this).register(); //
         }
@@ -159,6 +161,7 @@ public class LeonGunWar extends JavaPlugin {
 
         // リスナーの登録
         registerEvents(new MatchControlListener(),
+                pvPArenaManager,
                 new EntrySignListener(),
                 new MatchModeSignListener(),
                 new JoinAfterSignListener(),

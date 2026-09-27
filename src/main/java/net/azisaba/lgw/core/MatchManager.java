@@ -203,6 +203,12 @@ public class MatchManager {
             }
         }
 
+        // 試合開始時に参加者へマップ名とモードを表示する
+        String mapTitle = Chat.f("&b&l{0}", currentGameMap.getMapName());
+        String modeSubtitle = matchMode.getModeName();
+        getAllTeamPlayers().forEach(player ->
+                player.sendTitle(mapTitle, modeSubtitle, 10, 10, 20));
+
         // LDM/CDMのリーダーマッチならリーダーを抽選
         switch (matchMode) {
             case LEADER_DEATH_MATCH:
