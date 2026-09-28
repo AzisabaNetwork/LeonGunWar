@@ -94,7 +94,13 @@ public class DamageListener implements Listener {
         int streaks = LeonGunWar.getPlugin().getKillStreaks().get(killer).get();
         Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> killer.sendTitle("", Chat.f("&b{0} &7Kill Streaks", streaks), 0, 20, 20), 20);
         // 音を鳴らす
-        killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
+        boolean customSoundWillPlay = LeonGunWar.getPlugin().getManager().getCurrentGameMap() != null
+                && e.getEntity().getWorld() == LeonGunWar.getPlugin().getManager().getCurrentGameMap().getWorld()
+                && LeonGunWar.getPlugin().getManager().getBattleTeam(e.getEntity()) != null
+                && LeonGunWar.getPlugin().getKillActionManager().hasCustomSound(killer);
+        if (!customSoundWillPlay) {
+            killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
+        }
     }
 
     /**
@@ -238,7 +244,11 @@ public class DamageListener implements Listener {
             syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "") + "&r ";
         }
 
-        String killLog = LeonGunWar.getPlugin().getKillLogsConfig().getFormat(killer)
+        boolean validMatchKill = LeonGunWar.getPlugin().getManager().getBattleTeam(killer) != null
+                && LeonGunWar.getPlugin().getManager().getBattleTeam(victim) != null;
+        String format = validMatchKill ? LeonGunWar.getPlugin().getKillActionManager().formatFor(killer)
+                : LeonGunWar.getPlugin().getKillLogsConfig().getFormat(killer);
+        String killLog = format
                 .replace("{prefix}", LeonGunWar.GAME_PREFIX)
                 .replace("{syogo}", syogo)
                 .replace("{killer}", killer.getPlayerListName())
@@ -284,6 +294,7 @@ public class DamageListener implements Listener {
 
         // コンソールに出力
         Bukkit.getConsoleSender().sendMessage(messageWithTooltip);
+        if (validMatchKill) LeonGunWar.getPlugin().getKillActionManager().playKillEffects(killer, victim);
     }
 
     private String getFallbackItemName(ItemStack item) {

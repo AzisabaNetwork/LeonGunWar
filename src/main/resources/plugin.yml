@@ -50,6 +50,10 @@ commands:
   toggledoublereward:
     usage: /toggledoublereward
     permission: leongunwar.command.leongunwaradmin
+  killaction:
+    usage: /killaction
+    description: ロビーでキル演出を選択
+    permission: leongunwar.command.killaction
 permissions:
   leongunwar.entrysign.changestate:
     default: op
@@ -93,3 +97,5 @@ permissions:
     default: false
   leongunwar.killlog.supporter:
     default: false
+  leongunwar.command.killaction:
+    default: true

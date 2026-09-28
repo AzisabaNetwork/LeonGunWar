@@ -1,0 +1,32 @@
+# shape: burst, ring, sphere, spiral, double_helix, heart, star, flower, crown,
+#        vortex, fountain, wave, comet, lightning, cube, points
+# origin: victim はキル地点、killer は動くキラーへ追従します。
+# points はキルからのtickと、基点からの相対座標 [x, y, z] を並べます。
+heart_burst:
+  Displayname: "&dハートバースト"
+  GUIicon: PINK_DYE
+  lore: "倒された地点にハートを描く|寄付報酬"
+  rarity: legendary
+  Unlock:
+    permission: "leongunwar.killaction.particle.heart_burst"
+    description: "寄付得点の報酬で解放"
+  Effects:
+    - Particle: DUST
+      shape: heart
+      origin: victim
+      startTick: 0
+      durationTick: 20
+      intervalTick: 2
+      count: 40
+      radius: 1.5
+      height: 1.5
+      color: "#FF55AA"
+      size: 1.0
+    - Particle: END_ROD
+      shape: points
+      origin: killer
+      frames:
+        - tick: 0
+          points: [[0, 0, 0], [0, 1, 0], [0, 2, 0]]
+        - tick: 5
+          points: [[-1, 1, 0], [0, 2, 0], [1, 1, 0]]

@@ -182,8 +182,11 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 LeonGunWar.getPlugin().getWeaponControlConfig().loadConfig();
                 LeonGunWar.getPlugin().getItemsConfig().loadConfig();
                 LeonGunWar.getPlugin().getKillLogsConfig().loadConfig();
+                LeonGunWar.getPlugin().getKillActionCatalog().reload();
             } catch (IOException | InvalidConfigurationException exception) {
                 exception.printStackTrace();
+                sender.sendMessage(Chat.f("{0}&c設定の再読み込みに失敗しました。ログを確認してください。", LeonGunWar.GAME_PREFIX));
+                return true;
             }
 
             sender.sendMessage(Chat.f("{0}&a設定とマップのリロードが完了しました。", LeonGunWar.GAME_PREFIX));

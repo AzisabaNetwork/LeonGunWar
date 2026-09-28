@@ -1,0 +1,11 @@
+# 形式: SOUND名-volume-pitch-キルからの遅延tick。カンマで複数指定でき、重複も再生されます。
+# Unlock.permission は寄付・イベント報酬側からLuckPermsへ付与してください。
+shulker_burst:
+  Displayname: "&dシュルカーバースト"
+  GUIicon: SHULKER_SHELL
+  lore: "キル地点で特殊な音を再生|イベント報酬"
+  rarity: epic
+  Unlock:
+    permission: "leongunwar.killaction.sound.shulker_burst"
+    description: "イベント報酬で解放"
+  Sounds: "ENTITY_SHULKER_HURT_CLOSED-2-1.8-0,ITEM_FIRECHARGE_USE-2-2-0,ITEM_FIRECHARGE_USE-2-2-0,ITEM_SHIELD_BLOCK-2-0.7-0"

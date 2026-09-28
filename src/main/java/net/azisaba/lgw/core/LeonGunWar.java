@@ -3,6 +3,10 @@ package net.azisaba.lgw.core;
 import lombok.Getter;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
+import net.azisaba.lgw.core.killaction.KillActionCatalog;
+import net.azisaba.lgw.core.killaction.KillActionGui;
+import net.azisaba.lgw.core.killaction.KillActionManager;
+import net.azisaba.lgw.core.killaction.KillActionStore;
 import net.azisaba.lgw.core.listeners.modes.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
 import net.azisaba.lgw.core.util.SyogoData;
@@ -78,6 +82,9 @@ public class LeonGunWar extends JavaPlugin {
     private WeaponControlConfig weaponControlConfig;
     private ItemsConfig itemsConfig;
     private KillLogsConfig killLogsConfig;
+    private KillActionCatalog killActionCatalog;
+    private KillActionStore killActionStore;
+    private KillActionManager killActionManager;
 
     private SQLConnection sqlConnection;
 
@@ -106,6 +113,7 @@ public class LeonGunWar extends JavaPlugin {
         weaponControlConfig = new WeaponControlConfig(this);
         itemsConfig = new ItemsConfig(this);
         killLogsConfig = new KillLogsConfig(this);
+        killActionCatalog = new KillActionCatalog(this);
         // 設定ファイルを読み込む
         try {
             mainConfig.loadConfig();
@@ -118,6 +126,7 @@ public class LeonGunWar extends JavaPlugin {
             weaponControlConfig.loadConfig();
             itemsConfig.loadConfig();
             killLogsConfig.loadConfig();
+            killActionCatalog.reload();
         } catch (IOException | InvalidConfigurationException exception) {
             plLogger.error("Failed to load config", exception);
         }
@@ -128,6 +137,9 @@ public class LeonGunWar extends JavaPlugin {
         plLogger.info("ファイルの準備が完了しました。");
 ;
         sqlConnection = new SQLConnection(databaseConfig);
+        killActionStore = new KillActionStore(this, sqlConnection);
+        killActionManager = new KillActionManager(this, killActionCatalog, killActionStore);
+        KillActionGui killActionGui = new KillActionGui(this, killActionManager);
 
         // コマンドのインスタンスに渡す必要があるListener
         LimitActionListener preventItemDropListener = new LimitActionListener();
@@ -145,6 +157,7 @@ public class LeonGunWar extends JavaPlugin {
         registerCommand("spawn", new SpawnCommand());
         registerCommand("noticewar", new SiaiTuutiCommand());
         registerCommand("toggledoublereward", new ToggleDoubleReward());
+        registerCommand("killaction", killActionGui);
         plLogger.info("コマンドの登録完了しました。");
 
         // タブ補完の登録
@@ -161,6 +174,8 @@ public class LeonGunWar extends JavaPlugin {
 
         // リスナーの登録
         registerEvents(new MatchControlListener(),
+                killActionManager,
+                killActionGui,
                 pvPArenaManager,
                 new EntrySignListener(),
                 new MatchModeSignListener(),
@@ -266,7 +281,9 @@ public class LeonGunWar extends JavaPlugin {
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
 
+        this.killActionStore.close();
         this.sqlConnection.onDisable();
+        this.killActionCatalog.close();
 
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();

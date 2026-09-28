@@ -97,6 +97,18 @@ public class SQLConnection {
         }
     }
 
+    /** Callers must close the returned connection (and its statements/results). */
+    public Connection openConnection() throws SQLException {
+        if (!enabled || dataSource == null) {
+            throw new SQLException("LeonGunWar MySQL is disabled");
+        }
+        return dataSource.getConnection();
+    }
+
+    public boolean isEnabled() {
+        return enabled && dataSource != null && !dataSource.isClosed();
+    }
+
     public ResultSet executeQuery(String query, Object... args) {
         try (Connection con = dataSource.getConnection()) {
             PreparedStatement statement = con.prepareStatement(query);

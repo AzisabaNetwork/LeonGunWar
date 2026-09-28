@@ -1,0 +1,9 @@
+event_glow:
+  Displayname: "&6イベントキルログ"
+  GUIicon: NAME_TAG
+  lore: "試合ワールドに特別なキルログを表示|イベント報酬"
+  rarity: special
+  Unlock:
+    permission: "leongunwar.killaction.log.event_glow"
+    description: "イベント報酬で解放"
+  Format: "&6&l[EVENT] &r{prefix}{syogo}{killer}&e ✦ [&r{weapon}&e] ✦➜ &r{victim}"

@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.jspecify)
     testImplementation(platform(libs.junitBom))
     testImplementation(libs.junitJupiter)
+    testImplementation(libs.paperApi)
     testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
@@ -60,6 +61,10 @@ java {
 }
 
 tasks {
+    test {
+        useJUnitPlatform()
+    }
+
     jar {
         dependsOn(shadowJar)
     }
@@ -80,7 +85,10 @@ tasks {
     }
 
     shadowJar {
-        minimize()
+        minimize {
+            // JDBC drivers are loaded through ServiceLoader, so bytecode analysis cannot see them.
+            exclude(dependency("com.mysql:mysql-connector-j:.*"))
+        }
         mergeServiceFiles()
         enableAutoRelocation = true
         relocationPrefix = "net.azisaba.rankingdisplayer.libs"
