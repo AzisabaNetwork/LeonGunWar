@@ -23,7 +23,6 @@ import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
@@ -34,6 +33,25 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         // TODO helpメッセージ実装
         if (Args.isEmpty(args)) {
+            return true;
+        }
+
+        if (Args.check(args, 0, "togglekilleffect")) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage(Chat.f("{0}&cプレイヤー専用コマンドです。", LeonGunWar.GAME_PREFIX));
+                return true;
+            }
+            if (!player.hasPermission("leongunwar.command.leongunwaradmin")) {
+                player.sendMessage(Chat.f("{0}&c/lgwadmin の権限が必要です。", LeonGunWar.GAME_PREFIX));
+                return true;
+            }
+            if (!LeonGunWar.getPlugin().getMainConfig().isLobby) {
+                player.sendMessage(Chat.f("{0}&cロビー鯖で実行してください。", LeonGunWar.GAME_PREFIX));
+                return true;
+            }
+            boolean enabled = LeonGunWar.getPlugin().getKillActionManager().toggleLobbyEffect(player);
+            player.sendMessage(Chat.f("{0}&eロビーのキル演出試用を{1}&eにしました。",
+                    LeonGunWar.GAME_PREFIX, enabled ? "&aON" : "&cOFF"));
             return true;
         }
 
@@ -75,13 +93,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            List<GameMap> availableMaps = LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
-                    .filter(map -> map.getWorld() != null
-                            && map.getSpawnPoint(BattleTeam.RED) != null
-                            && map.getSpawnPoint(BattleTeam.BLUE) != null
-                            && map.getSpawnPoint(BattleTeam.RED).getWorld() != null
-                            && map.getSpawnPoint(BattleTeam.BLUE).getWorld() != null)
-                    .collect(Collectors.toList());
+            List<GameMap> availableMaps = LeonGunWar.getPlugin().getMapsConfig().getReadyMaps();
             if (availableMaps.isEmpty()) {
                 sender.sendMessage(Chat.f("{0}&c読み込み済みワールドと両チームのスポーンが設定されたマップがありません。", LeonGunWar.GAME_PREFIX));
                 return true;
@@ -104,7 +116,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         // teleportかtpなら
-        if (Args.check(args, 0, "teleport", "tp")) {
+        if (Args.check(args, 0, "teleport", "tp", "setspawn")) {
 
             // senderがプレイヤーではない場合はreturn
             if (!(sender instanceof Player p)) {
@@ -112,38 +124,74 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            // マップ名が指定されていない場合はreturn
-            if (args.length <= 1) {
-                p.sendMessage(Chat.f("&cマップ名を指定してください！"));
+            boolean settingSpawn = Args.check(args, 0, "setspawn");
+            MapSpawnArguments.Selection selection;
+            try {
+                selection = MapSpawnArguments.resolve(args, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap(), settingSpawn);
+            } catch (IllegalArgumentException exception) {
+                p.sendMessage(Chat.f("&c{0}\n&e/lgwadmin {1} <map> {2}", exception.getMessage(),
+                        settingSpawn ? "setspawn" : "tp", settingSpawn ? "<red|blue>" : "[red|blue]"));
                 return true;
             }
+            List<GameMap> correctMapList = selection.maps();
+            BattleTeam team = selection.team();
 
-            // args[1]移行を取得
-            String mapName = String.join(" ", args).substring(args[0].length() + 1);
-
-            // 指定されたマップがない場合はreturn
-            List<GameMap> correctMapList = LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
-                    .filter(map -> map.getMapName().equalsIgnoreCase(mapName)
-                            || map.getMapName().equalsIgnoreCase(mapName.replace(" ", "_")))
-                    .collect(Collectors.toList());
+            if (settingSpawn && correctMapList.size() <= 1) {
+                GameMap gameMap;
+                Location spawn = p.getLocation();
+                try {
+                    if (correctMapList.isEmpty()) {
+                        gameMap = LeonGunWar.getPlugin().getMapsConfig().createMapWithSpawn(selection.mapName(), team, spawn);
+                    } else {
+                        gameMap = correctMapList.get(0);
+                        LeonGunWar.getPlugin().getMapsConfig().setSpawnPoint(gameMap, team, spawn);
+                    }
+                } catch (IOException | InvalidConfigurationException exception) {
+                    LeonGunWar.getPlugin().getLogger().log(java.util.logging.Level.SEVERE,
+                            "スポーン地点を maps.yml に保存できませんでした: " + selection.mapName(), exception);
+                    p.sendMessage(Chat.f("&c保存に失敗しました。maps.yml の書き込み権限とサーバーログを確認してください。"));
+                    return true;
+                } catch (IllegalArgumentException exception) {
+                    p.sendMessage(Chat.f("&c{0}", exception.getMessage()));
+                    return true;
+                }
+                if (correctMapList.isEmpty()) {
+                    p.sendMessage(Chat.f("&a新マップ {0} をワールド {1} に登録しました。", gameMap.getMapName(), spawn.getWorld().getName()));
+                }
+                p.sendMessage(Chat.f("&a{0} の {1}&aスポーンを保存しました。&7 X={2} Y={3} Z={4} / yaw={5} pitch={6}",
+                        gameMap.getMapName(), team.getTeamName(), spawn.getX(), spawn.getY(), spawn.getZ(),
+                        spawn.getYaw(), spawn.getPitch()));
+                if (!gameMap.isReady()) {
+                    p.sendMessage(Chat.f("&e赤・青のスポーンが両方そろうと試合候補に入ります。もう片方も /lgwadmin setspawn {0} <red|blue> で設定してください。",
+                            gameMap.getMapName()));
+                }
+                return true;
+            }
 
             // サイズが1ならテレポート
             if (correctMapList.size() == 1) {
                 GameMap gameMap = correctMapList.get(0);
-                Location spawn = getTeleportSpawn(p, gameMap);
+                Location spawn = getTeleportSpawn(p, gameMap, team);
                 if (spawn == null) {
                     return true;
                 }
-                p.teleport(spawn);
-                p.sendMessage(Chat.f("&e{0} &7にテレポートしました。", gameMap.getMapName()));
+                if (!p.teleport(spawn)) {
+                    p.sendMessage(Chat.f("&cテレポートがキャンセルされました。"));
+                    return true;
+                }
+                p.sendMessage(Chat.f("&e{0} の {1}&7スポーンへテレポートしました。&7 X={2} Y={3} Z={4}",
+                        gameMap.getMapName(), team.getTeamName(), spawn.getX(), spawn.getY(), spawn.getZ()));
 
                 // 1より多い場合
             } else if (correctMapList.size() > 1) {
-                p.sendMessage(Chat.f("&cマッチしたマップが2つあります"));
+                p.sendMessage(Chat.f("&c複数のマップが一致しました。maps.yml の正確なマップ名を指定してください。"));
+                if (settingSpawn) {
+                    return true;
+                }
 
                 // 各マップへのテレポートリンクを表示
                 correctMapList.forEach(map -> {
-                    Location spawn = getTeleportSpawn(p, map);
+                    Location spawn = getTeleportSpawn(p, map, team);
                     if (spawn == null) {
                         return;
                     }
@@ -182,6 +230,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 LeonGunWar.getPlugin().getWeaponControlConfig().loadConfig();
                 LeonGunWar.getPlugin().getItemsConfig().loadConfig();
                 LeonGunWar.getPlugin().getKillLogsConfig().loadConfig();
+                LeonGunWar.getPlugin().getSyogoConfig().loadConfig();
                 LeonGunWar.getPlugin().getKillActionCatalog().reload();
             } catch (IOException | InvalidConfigurationException exception) {
                 exception.printStackTrace();
@@ -253,10 +302,10 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private Location getTeleportSpawn(CommandSender sender, GameMap gameMap) {
-        Location spawn = gameMap.getSpawnPoint(BattleTeam.RED);
+    private Location getTeleportSpawn(CommandSender sender, GameMap gameMap, BattleTeam team) {
+        Location spawn = gameMap.getSpawnPoint(team);
         if (spawn == null) {
-            sender.sendMessage(Chat.f("&cマップ {0} の赤チームスポーンが設定されていません。", gameMap.getMapName()));
+            sender.sendMessage(Chat.f("&cマップ {0} の {1}&cスポーンが設定されていません。", gameMap.getMapName(), team.getTeamName()));
             return null;
         }
         if (spawn.getWorld() == null) {
@@ -270,15 +319,14 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Args.complete(args, 0, "debug_start", "cancel_mapvote", "cancelmapvote", "pvparena", "teleport", "tp", "reload", "rl", "showdata");
+            return Args.complete(args, 0, "debug_start", "cancel_mapvote", "cancelmapvote", "pvparena", "teleport", "tp", "setspawn", "reload", "rl", "showdata", "togglekilleffect");
         }
         if (Args.check(args, 0, "pvparena")) {
             return LeonGunWar.getPlugin().getPvPArenaManager().tabComplete(sender, args);
         }
-        if (args.length == 2 && Args.check(args, 0, "teleport", "tp")) {
-            return Args.complete(args, 1, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap().stream()
-                    .map(GameMap::getMapName)
-                    .toArray(String[]::new));
+        if (args.length >= 2 && Args.check(args, 0, "teleport", "tp", "setspawn")) {
+            return MapSpawnArguments.complete(args, LeonGunWar.getPlugin().getMapsConfig().getAllGameMap(),
+                    Args.check(args, 0, "setspawn"));
         }
         return null;
     }

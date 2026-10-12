@@ -1,0 +1,21 @@
+# 追加のキル音サンプル。/killaction ticket または bind の獲得券で解放できます。
+# Unlock.permission は既存のLP解放との互換用。DBの獲得券だけで運用する場合は省略できます。
+arcade_chime:
+  Displayname: "&aアーケードチャイム"
+  GUIicon: NOTE_BLOCK
+  lore: "音程が上がる短いチャイム|試用サンプル"
+  rarity: common
+  Unlock:
+    permission: "leongunwar.killaction.sound.arcade_chime"
+    description: "運営による解放"
+  Sounds: "ENTITY_EXPERIENCE_ORB_PICKUP-1-1.1-0,ENTITY_EXPERIENCE_ORB_PICKUP-1-1.5-3,ENTITY_EXPERIENCE_ORB_PICKUP-1-1.9-6"
+
+anvil_echo:
+  Displayname: "&6金床エコー"
+  GUIicon: ANVIL
+  lore: "金床の音を時間差で二回再生|試用サンプル"
+  rarity: uncommon
+  Unlock:
+    permission: "leongunwar.killaction.sound.anvil_echo"
+    description: "運営による解放"
+  Sounds: "BLOCK_ANVIL_LAND-1-1.7-0,BLOCK_ANVIL_LAND-0.7-1.1-7"

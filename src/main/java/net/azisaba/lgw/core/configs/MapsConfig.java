@@ -69,7 +69,7 @@ public class MapsConfig extends Config {
             }
 
             Map<BattleTeam, Location> spawnMap = new HashMap<>();
-            for (String teamName : spawnsSection.getValues(false).keySet()) {
+            for (String teamName : spawnsSection == null ? Set.<String>of() : spawnsSection.getKeys(false)) {
                 Optional<BattleTeam> battleTeam = Enums.getIfPresent(BattleTeam.class, teamName.toUpperCase()).toJavaUtil();
 
                 if (battleTeam.isPresent()) {
@@ -117,7 +117,8 @@ public class MapsConfig extends Config {
         // 登録されているマップが0この場合nullをreturn
         // 0からmapListのサイズ -1 までの値でランダムな数字を生成
         // リストから取得してreturn
-        return allGameMap.isEmpty() ? null : allGameMap.get(new Random().nextInt(allGameMap.size()));
+        List<GameMap> available = getReadyMaps();
+        return available.isEmpty() ? null : available.get(new Random().nextInt(available.size()));
     }
 
     /**
@@ -127,19 +128,19 @@ public class MapsConfig extends Config {
      * @throws IllegalArgumentException 0以下またはロードされているマップの数よりも多い数が指定された場合
      */
     public Set<GameMap> getRandomMaps(int count) {
-        if (count > allGameMap.size() || count <= 0) {
-            throw new IllegalArgumentException("Mapを" + count + "個抽選することはできません！ (ロードされているMapの数: " + allGameMap.size() + " )");
-        }
-        List<GameMap> shuffleList = new ArrayList<>(allGameMap);
-        Collections.shuffle(shuffleList);
+        List<GameMap> shuffleList = new ArrayList<>(getReadyMaps());
         shuffleList.removeIf(map -> !map.getHijackAreas().isEmpty());
+        if (count > shuffleList.size() || count <= 0) {
+            throw new IllegalArgumentException("Mapを" + count + "個抽選することはできません！ (使用可能な通常Mapの数: " + shuffleList.size() + " )");
+        }
+        Collections.shuffle(shuffleList);
 
         return new HashSet<>(shuffleList.subList(0, count));
     }
 
     public Set<GameMap> getRandomHijackMaps(int count) {
         List<GameMap> hijackMaps = new ArrayList<>();
-        for (GameMap map : allGameMap) {
+        for (GameMap map : getReadyMaps()) {
             if (!map.getHijackAreas().isEmpty()) {
                 hijackMaps.add(map);
             }
@@ -155,6 +156,40 @@ public class MapsConfig extends Config {
 
     public List<GameMap> getAllGameMap() {
         return allGameMap;
+    }
+
+    public List<GameMap> getReadyMaps() {
+        return allGameMap.stream().filter(GameMap::isReady).toList();
+    }
+
+    /** Registers a map in the player's current world after its first spawn is saved successfully. */
+    public GameMap createMapWithSpawn(String mapName, BattleTeam team, Location location)
+            throws IOException, InvalidConfigurationException {
+        location.checkFinite();
+        if (location.getWorld() == null) {
+            throw new IllegalArgumentException("現在のワールドを取得できませんでした。");
+        }
+        var updated = MapSpawnStorage.save(getPath(), config.saveToString(), mapName, team,
+                location.getWorld().getName(), location, true);
+        config.loadFromString(updated.saveToString());
+        Map<BattleTeam, Location> spawns = new HashMap<>();
+        spawns.put(team, location.clone());
+        GameMap map = new GameMap(mapName, location.getWorld(), spawns, new ArrayList<>());
+        allGameMap.add(map);
+        return map;
+    }
+
+    /** Saves only this team's spawn, then updates the existing map used by a running match. */
+    public void setSpawnPoint(GameMap map, BattleTeam team, Location location)
+            throws IOException, InvalidConfigurationException {
+        location.checkFinite();
+        if (!allGameMap.contains(map) || location.getWorld() == null || location.getWorld() != map.getWorld()) {
+            throw new IllegalArgumentException("設定するマップのワールド内で実行してください。");
+        }
+        var updated = MapSpawnStorage.save(getPath(), config.saveToString(), map.getMapName(), team,
+                location.getWorld().getName(), location);
+        config.loadFromString(updated.saveToString());
+        map.getSpawnMap().put(team, location.clone());
     }
 
     private Vector getLocation(ConfigurationSection section) {

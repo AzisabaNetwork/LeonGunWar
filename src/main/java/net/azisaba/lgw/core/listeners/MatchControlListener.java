@@ -13,10 +13,10 @@ import net.azisaba.lgw.core.util.BroadcastUtils;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.CustomItem;
 import net.azisaba.lgw.core.util.KDPlayerData;
+import net.azisaba.lgw.core.util.MatchPlayerReturn;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class MatchControlListener implements Listener {
@@ -40,7 +41,7 @@ public class MatchControlListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
         // 時間を取得して0じゃなかったらreturn
-        if (e.getTimeLeft() > 0) {
+        if (e.getTimeLeft() > 0 || !LeonGunWar.getPlugin().getManager().isMatching()) {
             return;
         }
 
@@ -64,9 +65,18 @@ public class MatchControlListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void setMatchingListener(MatchFinishedEvent e) {
-        // 試合中ならfalseにする
-        if (LeonGunWar.getPlugin().getManager().isMatching()) {
-            LeonGunWar.getPlugin().getManager().setMatching(false);
+        LeonGunWar plugin = LeonGunWar.getPlugin();
+        MatchManager manager = plugin.getManager();
+        // ワールド移動を試合離脱と判定させず、結果表示・報酬より先に全員を解除する。
+        manager.setMatching(false);
+        for (Player player : e.getAllTeamPlayers()) {
+            try {
+                MatchPlayerReturn.reset(player);
+                MatchPlayerReturn.returnToLobby(plugin, player, plugin.getSpawnsConfig().getLobby(),
+                        () -> !manager.isPlayerMatching(player));
+            } catch (RuntimeException exception) {
+                plugin.getLogger().log(Level.SEVERE, "試合終了時の状態解除に失敗: " + player.getName(), exception);
+            }
         }
     }
 
@@ -107,16 +117,6 @@ public class MatchControlListener implements Listener {
 
         for (Player p : allPlayers) {
 
-            if (p.isDead()) {
-                p.spigot().respawn();
-            }
-
-            // スポーンにTP
-            p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
-
-            // アーマー削除
-            p.getInventory().setChestplate(null);
-
             // 各記録を取得
             int kills = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p);
             int deaths = LeonGunWar.getPlugin().getManager().getKillDeathCounter().getDeaths(p);
@@ -126,9 +126,6 @@ public class MatchControlListener implements Listener {
             p.sendMessage(Chat.f("&7[Your Score] {0} {1} Kill(s), {2} Death(s), {3} Assist(s)", p.getName(), kills,
                     deaths, assists));
 
-            // 回復
-            p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getDefaultValue());
-            p.setFoodLevel(40);
         }
 
         // 勝ったチームがあれば勝者の証を付与
@@ -164,7 +161,6 @@ public class MatchControlListener implements Listener {
                             }
                         }
                     }
-                    LeonGunWar.matchJoin.clear();
                     // 勝利タイトルを表示
                     p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
 
@@ -180,8 +176,12 @@ public class MatchControlListener implements Listener {
         }
     }
 
+    public boolean isOverSixMinutes(long time1, Long time2) {
+        return time2 != null && isOverSixMinutes(time1, time2.longValue());
+    }
+
     public boolean isOverSixMinutes(long time1, long time2) {
-        long diffMillis = Math.abs(time1 - time2);
+        long diffMillis = time1 - time2;
         long sixMinutesInMillis = 6 * 60 * 1000; // 6分 = 360,000ミリ秒
         return diffMillis >= sixMinutesInMillis;
     }
@@ -232,6 +232,8 @@ public class MatchControlListener implements Listener {
     public void onPlayerKickedMatch(PlayerKickMatchEvent e) {
         MatchManager manager = LeonGunWar.getPlugin().getManager();
 
+        if (!manager.isMatching()) return;
+
         // 現在のプレイヤーを取得
         Map<BattleTeam, List<Player>> playerMap = manager.getTeamPlayers();
 
@@ -268,6 +270,9 @@ public class MatchControlListener implements Listener {
 
     @EventHandler
     public void remainTimeBossbar(MatchTimeChangedEvent e) {
+
+        if (!LeonGunWar.getPlugin().getManager().isMatching()
+                || LeonGunWar.getPlugin().getManager().getMatchMode() == null) return;
 
         final BossBar progressBar;
 

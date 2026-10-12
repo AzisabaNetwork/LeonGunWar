@@ -5,9 +5,13 @@ import net.azisaba.lgw.core.util.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class LimitCommand implements CommandExecutor {
+import java.util.List;
+import java.util.Locale;
+
+public class LimitCommand implements CommandExecutor, TabCompleter {
 
     private final LimitActionListener listener;
 
@@ -43,5 +47,12 @@ public class LimitCommand implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length != 1 || !sender.hasPermission("leongunwar.command.limit")) return List.of();
+        String prefix = args[0].toLowerCase(Locale.ROOT);
+        return List.of("drop", "build").stream().filter(option -> option.startsWith(prefix)).toList();
     }
 }

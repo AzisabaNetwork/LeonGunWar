@@ -1,0 +1,20 @@
+# 追加のキルログサンプル。Formatでは既存の五つの置換文字を使用できます。
+simple:
+  Displayname: "&aシンプルログ"
+  GUIicon: PAPER
+  lore: "短く見やすいキルログ|試用サンプル"
+  rarity: common
+  Unlock:
+    permission: "leongunwar.killaction.log.simple"
+    description: "運営による解放"
+  Format: "{prefix}&a{killer} &7→ &c{victim} &8({weapon})"
+
+lightning:
+  Displayname: "&eライトニングログ"
+  GUIicon: LIGHTNING_ROD
+  lore: "稲妻マークつきのキルログ|試用サンプル"
+  rarity: rare
+  Unlock:
+    permission: "leongunwar.killaction.log.lightning"
+    description: "運営による解放"
+  Format: "&e⚡ {prefix}{syogo}&e{killer} &7が &c{victim} &7を倒した &8[{weapon}]"

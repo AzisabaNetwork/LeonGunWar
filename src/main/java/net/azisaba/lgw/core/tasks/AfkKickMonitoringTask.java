@@ -1,22 +1,16 @@
 package net.azisaba.lgw.core.tasks;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import lombok.RequiredArgsConstructor;
 import net.azisaba.lgw.core.LeonGunWar;
-import net.azisaba.lgw.core.util.Chat;
-import net.azisaba.lgw.core.util.LgwLog;
+import net.azisaba.lgw.core.util.AfkMatchReturn;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.slf4j.Logger;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
 public class AfkKickMonitoringTask extends BukkitRunnable {
-    private final Logger logger = LgwLog.getLogger(this.getClass());
-
     private final Map<Player, Long> lastMoved;
 
     @Override
@@ -36,9 +30,9 @@ public class AfkKickMonitoringTask extends BukkitRunnable {
             }
 
             // プレイヤーが最後に動いた秒数を取得
-            long lastMovedMilliSecond = lastMoved.getOrDefault(p, 0L);
+            long lastMovedMilliSecond = lastMoved.computeIfAbsent(p, ignored -> System.currentTimeMillis());
 
-            // 30秒より少なければreturn
+            // 60秒より少なければreturn
             if (lastMovedMilliSecond + 1000 * 60 > System.currentTimeMillis()) {
                 return;
             }
@@ -49,16 +43,7 @@ public class AfkKickMonitoringTask extends BukkitRunnable {
             //}
 
             // 試合から退出 & エントリー解除
-            LeonGunWar.getPlugin().getManager().removeEntryPlayer(p);
-            LeonGunWar.getPlugin().getManager().kickPlayer(p);
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("Connect");
-            out.writeUTF("lgw2");
-            (p).sendPluginMessage(LeonGunWar.getPlugin(), "BungeeCord", out.toByteArray());
-
-            p.sendMessage(Chat.f("{0}&7放置と判定されたため試合から退出しました", LeonGunWar.GAME_PREFIX));
-
-            logger.info(Chat.f("{0} を試合から退出させました", p.getName()));
+            AfkMatchReturn.leave(LeonGunWar.getPlugin(), p);
         });
     }
 }

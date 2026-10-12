@@ -95,6 +95,13 @@ public final class KillActionCatalog {
                     if (example != null) Files.copy(example, new File(folder, "example.yml").toPath());
                 }
             }
+            // Add the same samples on lobby and match servers without overwriting operator files.
+            File samplePack = new File(folder, "sample-pack.yml");
+            if (!samplePack.exists()) {
+                try (InputStream example = plugin.getResource(category.folder + "/sample-pack.yml")) {
+                    if (example != null) Files.copy(example, samplePack.toPath());
+                }
+            }
             File[] files = folder.listFiles((dir, name) -> name.toLowerCase(Locale.ROOT).endsWith(".yml"));
             if (files == null) throw new IOException("Cannot list " + folder);
             Arrays.sort(files, Comparator.comparing(File::getName));
@@ -123,7 +130,7 @@ public final class KillActionCatalog {
         }
         for (Map<String, Entry> categoryEntries : loaded.values()) {
             for (Entry entry : categoryEntries.values()) {
-                if (Bukkit.getPluginManager().getPermission(entry.permission()) == null) {
+                if (!entry.permission().isBlank() && Bukkit.getPluginManager().getPermission(entry.permission()) == null) {
                     Bukkit.getPluginManager().addPermission(new Permission(entry.permission(), PermissionDefault.FALSE));
                     registeredPermissions.add(entry.permission());
                 }
@@ -158,7 +165,7 @@ public final class KillActionCatalog {
         Rarity rarity;
         try { rarity = Rarity.valueOf(required(section.getString("rarity"), "rarity").toUpperCase(Locale.ROOT)); }
         catch (IllegalArgumentException ex) { throw new IllegalArgumentException("invalid rarity", ex); }
-        String permission = required(section.getString("Unlock.permission"), "Unlock.permission");
+        String permission = section.getString("Unlock.permission", "").trim();
         String description = required(section.getString("Unlock.description"), "Unlock.description");
         String format = null;
         List<SoundCue> sounds = List.of();

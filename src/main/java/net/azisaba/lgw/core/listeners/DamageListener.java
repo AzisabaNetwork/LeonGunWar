@@ -11,7 +11,6 @@ import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.KillLogUtils;
 import net.azisaba.lgw.core.util.MatchMode;
-import net.azisaba.lgw.core.util.SyogoData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -99,7 +98,7 @@ public class DamageListener implements Listener {
                 && LeonGunWar.getPlugin().getManager().getBattleTeam(e.getEntity()) != null
                 && LeonGunWar.getPlugin().getKillActionManager().hasCustomSound(killer);
         if (!customSoundWillPlay) {
-            killer.playSound(killer.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
+            LeonGunWar.getPlugin().getKillActionManager().playDefaultKillSound(killer, e.getEntity());
         }
     }
 
@@ -238,11 +237,7 @@ public class DamageListener implements Listener {
             itemName = getFallbackItemName(item);
         }
 
-        SyogoData data = SyogoData.getSyogoDataFromCache(killer.getUniqueId());
-        String syogo = "";
-        if (data != null) {
-            syogo = LeonGunWar.getPlugin().getSyogoConfig().syogos.getOrDefault(data.getSyogo(), "") + "&r ";
-        }
+        String syogo = LeonGunWar.getPlugin().getSyogoManager().display(killer);
 
         boolean validMatchKill = LeonGunWar.getPlugin().getManager().getBattleTeam(killer) != null
                 && LeonGunWar.getPlugin().getManager().getBattleTeam(victim) != null;
@@ -357,9 +352,6 @@ public class DamageListener implements Listener {
      */
     @EventHandler
     public void onMatchFinished(MatchFinishedEvent e) {
-
-        if (LeonGunWar.getPlugin().getManager().isMatching()) {
-            lastDamaged.clear();
-        }
+        lastDamaged.clear();
     }
 }

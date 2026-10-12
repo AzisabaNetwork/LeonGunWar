@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners.others;
 import net.azisaba.crackshot.CSUtility;
 import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +27,7 @@ public class DisableOffhandListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
+        if (p.getGameMode() == GameMode.CREATIVE) return;
         PlayerInventory inventory = p.getInventory();
         ItemStack offhand = inventory.getItemInOffHand();
 

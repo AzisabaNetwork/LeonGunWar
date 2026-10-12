@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.listeners.others;
 import net.azisaba.crackshot.CrackShot;
 import net.azisaba.crackshot.CSUtility;
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.killaction.KillActionCatalog;
 import net.azisaba.lgw.core.util.AdventureUtil;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.KillLogUtils;
@@ -32,6 +33,13 @@ public class PlayerDeathListener implements Listener {
                 return;
             }
             Player p = e.getEntity().getPlayer();
+            Player killer = p.getKiller();
+            if (LeonGunWar.getPlugin().getMainConfig().isLobby
+                    && LeonGunWar.getPlugin().getKillActionManager().isLobbyEffectEnabled(killer)
+                    && LeonGunWar.getPlugin().getKillActionManager().active(killer,
+                    KillActionCatalog.Category.LOG) != null) {
+                return;
+            }
             e.deathMessage(null);
             String msg;
             ItemStack item = p.getKiller().getInventory().getItemInMainHand();

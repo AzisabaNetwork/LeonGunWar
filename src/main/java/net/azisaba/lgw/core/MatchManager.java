@@ -158,16 +158,20 @@ public class MatchManager {
         // すでにマッチ中の場合はIllegalStateException
         Preconditions.checkState(!isMatching, "A match is already started.");
 
+        if (currentGameMap == null) {
+            currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
+        }
+        if (currentGameMap == null || !currentGameMap.isReady()) {
+            BroadcastUtils.broadcast(Chat.f("{0}&c試合を開始できません。マップのワールドと赤・青のスポーンを確認してください。",
+                    LeonGunWar.GAME_PREFIX));
+            return;
+        }
+
         // timeLeftをdurationに変更
         timeLeft.set((int) matchMode.getDuration().getSeconds());
 
         // ボスバー作成
         bossBar = createEmptyBossBar();
-
-        // マップが決まっていない場合マップを抽選 (ありえないはず)
-        if (currentGameMap == null) {
-            currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
-        }
 
         // 投票をリセット
         LeonGunWar.getPlugin().getMapSelectCountdown().resetAllVotes();
@@ -335,6 +339,8 @@ public class MatchManager {
         hijackAreas = new ArrayList<>();
         // モードをnullに設定
         matchMode = null;
+        leaderMatch = false;
+        LeonGunWar.matchJoin.clear();
 
         // ゲーム終了
         isMatching = false;
@@ -424,30 +430,29 @@ public class MatchManager {
     public void kickPlayer(Player p) {
         leavePlayer(p);
 
-        // スポーンにTP
-        p.teleport(LeonGunWar.getPlugin().getSpawnsConfig().getLobby());
+        MatchPlayerReturn.returnToLobby(LeonGunWar.getPlugin(), p,
+                LeonGunWar.getPlugin().getSpawnsConfig().getLobby(), () -> !isPlayerMatching(p));
     }
 
     public void leavePlayer(Player p) {
 
         // 試合中でない場合はreturn
-        if (!isMatching) {
+        if (!isPlayerMatching(p)) {
             return;
         }
+
+        String previousListName = p.getPlayerListName();
 
         // チームに含まれていれば退出させる
         teams.values().stream()
                 .filter(scoreboardTeam -> scoreboardTeam.hasEntry(p.getName()))
                 .forEach(scoreboardTeam -> scoreboardTeam.removeEntry(p.getName()));
 
-        // 回復
-        p.setHealth(20);
-
-        // アーマー削除
-        p.getInventory().setChestplate(null);
+        MatchPlayerReturn.reset(p);
+        LeonGunWar.matchJoin.remove(p.getUniqueId());
 
         // 退出メッセージを全員に送信
-        String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, p.getPlayerListName());
+        String msg = Chat.f("{0}{1} &7が試合から離脱しました。", LeonGunWar.GAME_PREFIX, previousListName);
         BroadcastUtils.broadcast(msg);
 
         // DisplayNameとPlayerListName初期化
@@ -628,6 +633,7 @@ public class MatchManager {
     }
 
     public boolean addPlayerIntoBattle(Player p) {
+        if (!isMatching || !p.isOnline()) return false;
         // すでに参加している場合はreturn
         if (getAllTeamPlayers().contains(p)) {
             return false;
@@ -806,6 +812,7 @@ public class MatchManager {
         // DisplayNameとPlayerListNameを指定
         p.setDisplayName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
         p.setPlayerListName(Chat.f("{0}{1}&r", team.getChatColor(), p.getName()));
+        p.setScoreboard(scoreboard);
         // テレポート
         p.teleport(currentGameMap.getSpawnPoint(team));
         p.setGameMode(GameMode.SURVIVAL);
@@ -844,13 +851,15 @@ public class MatchManager {
                 scoreboardTeam.color(team.getNamedTextColor());
                 // フレンドリーファイアーを無効化
                 scoreboardTeam.setAllowFriendlyFire(false);
-                // 他チームからネームタグが見えるのを無効化
-                scoreboardTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
                 // 押し合いをなくす
                 scoreboardTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
                 // Prefixを設定
                 scoreboardTeam.prefix(Component.text("").color(team.getNamedTextColor()));
             }
+
+            // CraftTeamではFOR_OTHER_TEAMSがHIDE_FOR_OTHER_TEAMSに対応する。
+            // 既存チームを再利用する場合も敵から非表示・味方から表示に揃える。
+            scoreboardTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OTHER_TEAMS);
 
             // チームを保存
             teams.putIfAbsent(team, scoreboardTeam);

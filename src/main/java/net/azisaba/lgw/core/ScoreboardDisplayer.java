@@ -3,13 +3,13 @@ package net.azisaba.lgw.core;
 import com.google.common.base.Preconditions;
 import lombok.Data;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
+import net.azisaba.lgw.core.util.AnimatedVoteTitle;
 import net.azisaba.lgw.core.util.BattleTeam;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
 import net.azisaba.lgw.core.util.SecondOfDay;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -29,6 +29,7 @@ public class ScoreboardDisplayer {
     private List<String> lastDisplayLines = new ArrayList<>();
     // Objectiveを作成したいスコアボード
     private Scoreboard scoreBoard;
+    private int titleAnimationTick;
 
     /**
      * プレイヤーに表示するスコアボードのタイトルを取得します
@@ -36,7 +37,7 @@ public class ScoreboardDisplayer {
      * @return スコアボードのタイトル
      */
     private String scoreBoardTitle() {
-        return Chat.f("&6LeonGunWarII&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
+        return "LeonGunWarII v" + LeonGunWar.getPlugin().getDescription().getVersion() + "-another";
     }
 
     /**
@@ -219,6 +220,16 @@ public class ScoreboardDisplayer {
         updateScoreboardLines(boardLines());
     }
 
+    /** 本文やObjectiveを作り直さず、常時タイトルの色だけを2tickごとに更新する。 */
+    public void tickTitleAnimation() {
+        if (scoreBoard == null) return;
+        Objective obj = scoreBoard.getObjective("side");
+        if (obj == null) return;
+
+        obj.displayName(scoreBoardTitleComponent());
+        titleAnimationTick = (titleAnimationTick + 2) % AnimatedVoteTitle.PERIOD_TICKS;
+    }
+
     private void updateScoreboardLines(List<String> lines) {
         if (scoreBoard == null) return;
 
@@ -281,7 +292,7 @@ public class ScoreboardDisplayer {
     }
 
     private Component scoreBoardTitleComponent() {
-        return LegacyComponentSerializer.legacySection().deserialize(scoreBoardTitle());
+        return AnimatedVoteTitle.render(scoreBoardTitle(), titleAnimationTick);
     }
 
     private String makeUniqueLine(String base, Set<String> used) {

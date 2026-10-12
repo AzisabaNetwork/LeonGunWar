@@ -1,6 +1,8 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import net.azisaba.lgw.core.LeonGunWar;
+import net.azisaba.lgw.core.events.MatchStartedEvent;
+import net.azisaba.lgw.core.events.PlayerRejoinMatchEvent;
 import net.azisaba.lgw.core.tasks.AfkKickMonitoringTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -45,6 +47,17 @@ public class AfkKickEntryListener implements Listener {
      */
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        lastMoved.put(e.getPlayer(), System.currentTimeMillis());
+    }
+
+    @EventHandler
+    public void onMatchStarted(MatchStartedEvent e) {
+        long now = System.currentTimeMillis();
+        e.getAllTeamPlayers().forEach(player -> lastMoved.put(player, now));
+    }
+
+    @EventHandler
+    public void onMatchRejoin(PlayerRejoinMatchEvent e) {
         lastMoved.put(e.getPlayer(), System.currentTimeMillis());
     }
 

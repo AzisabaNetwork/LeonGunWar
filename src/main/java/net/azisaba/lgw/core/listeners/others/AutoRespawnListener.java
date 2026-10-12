@@ -21,7 +21,7 @@ public class AutoRespawnListener implements Listener {
             @Override
             public void run() {
                 // リスポーン
-                deader.spigot().respawn();
+                if (deader.isOnline() && deader.isDead()) deader.spigot().respawn();
             }
         });
     }
@@ -33,9 +33,13 @@ public class AutoRespawnListener implements Listener {
         Location location = LeonGunWar.getPlugin().getManager().getRespawnLocation(p);
         if (location != null && location.getWorld() != null) {
             e.setRespawnLocation(location);
-            Location expectedLocation = location.clone();
+            var manager = LeonGunWar.getPlugin().getManager();
+            var matchCounter = manager.getKillDeathCounter();
             Bukkit.getScheduler().runTask(LeonGunWar.getPlugin(), () -> {
-                if (LeonGunWar.getPlugin().getManager().isPlayerMatching(p)
+                if (!p.isOnline() || p.isDead() || manager.getKillDeathCounter() != matchCounter) return;
+                // 退出済みならロビー、試合中なら現在のチーム地点を使う。
+                Location expectedLocation = manager.getRespawnLocation(p);
+                if (expectedLocation != null && expectedLocation.getWorld() != null
                         && p.getWorld() != expectedLocation.getWorld()) {
                     p.teleport(expectedLocation);
                 }

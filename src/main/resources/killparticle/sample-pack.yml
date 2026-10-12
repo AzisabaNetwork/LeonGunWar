@@ -1,0 +1,38 @@
+# 追加のパーティクルサンプル。victimは死亡地点、killerは移動するキラーに追従します。
+flame_ring:
+  Displayname: "&6炎の輪"
+  GUIicon: BLAZE_POWDER
+  lore: "キル地点に炎の輪を描く|試用サンプル"
+  rarity: uncommon
+  Unlock:
+    permission: "leongunwar.killaction.particle.flame_ring"
+    description: "運営による解放"
+  Effects:
+    - Particle: FLAME
+      shape: ring
+      origin: victim
+      startTick: 0
+      durationTick: 18
+      intervalTick: 2
+      count: 32
+      radius: 1.8
+      height: 0.3
+
+ender_crown:
+  Displayname: "&dエンダークラウン"
+  GUIicon: ENDER_PEARL
+  lore: "倒した人を追う光の王冠|試用サンプル"
+  rarity: epic
+  Unlock:
+    permission: "leongunwar.killaction.particle.ender_crown"
+    description: "運営による解放"
+  Effects:
+    - Particle: END_ROD
+      shape: crown
+      origin: killer
+      startTick: 0
+      durationTick: 20
+      intervalTick: 2
+      count: 24
+      radius: 1.2
+      height: 1.7

@@ -204,6 +204,19 @@ public class MatchModeSignListener implements Listener {
             return;
         }
 
+        // A newly registered map becomes eligible once both team spawns are configured.
+        int availableMapCount = (int) LeonGunWar.getPlugin().getMapsConfig().getReadyMaps().stream()
+                .filter(map -> mode == MatchMode.HIJACK ? !map.getHijackAreas().isEmpty() : map.getHijackAreas().isEmpty())
+                .count();
+        if (availableMapCount == 0) {
+            p.sendMessage(Chat.f("&cこのモードで使えるマップがありません。赤・青のスポーンを設定してください。"));
+            return;
+        }
+        int mapCount = Math.min(4, availableMapCount);
+        Set<GameMap> randomMaps = mode == MatchMode.HIJACK
+                ? LeonGunWar.getPlugin().getMapsConfig().getRandomHijackMaps(mapCount)
+                : LeonGunWar.getPlugin().getMapsConfig().getRandomMaps(mapCount);
+
         LeonGunWar.getPlugin().getManager().setTeamDistributor(distributor);
         BroadcastUtils.broadcast(
                 Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
@@ -215,13 +228,7 @@ public class MatchModeSignListener implements Listener {
         BroadcastUtils.broadcast(
                 Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
-        // ランダムなマップを4つ抽選
-        Set<GameMap> randomMaps;
-        if (mode == MatchMode.HIJACK) {
-            randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomHijackMaps(4);
-        } else {
-            randomMaps = LeonGunWar.getPlugin().getMapsConfig().getRandomMaps(4);
-        }
+        // 使用可能なマップを最大4つ抽選
         LeonGunWar.getPlugin().getMapSelectCountdown().startCountdown(randomMaps, mode);
 
         // 音を鳴らす

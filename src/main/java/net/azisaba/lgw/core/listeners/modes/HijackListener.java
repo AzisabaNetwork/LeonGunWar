@@ -44,7 +44,9 @@ public class HijackListener implements Listener {
             manager.addTeamPoint(team);
             if (manager.getCurrentTeamPoint(team) >= 100) {
                 BattleTeam finalTeam = team;
+                var matchCounter = manager.getKillDeathCounter();
                 Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
+                    if (!manager.isMatching() || manager.getKillDeathCounter() != matchCounter) return;
                     MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), Arrays.asList(finalTeam),
                             manager.getTeamPlayers());
                     Bukkit.getPluginManager().callEvent(event);

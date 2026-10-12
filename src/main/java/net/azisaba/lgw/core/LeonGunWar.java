@@ -7,9 +7,16 @@ import net.azisaba.lgw.core.killaction.KillActionCatalog;
 import net.azisaba.lgw.core.killaction.KillActionGui;
 import net.azisaba.lgw.core.killaction.KillActionManager;
 import net.azisaba.lgw.core.killaction.KillActionStore;
+import net.azisaba.lgw.core.killaction.KillActionTicketStore;
+import net.azisaba.lgw.core.killaction.KillActionTickets;
+import net.azisaba.lgw.core.killaction.LobbyKillActionListener;
 import net.azisaba.lgw.core.listeners.modes.*;
 import net.azisaba.lgw.core.sql.SQLConnection;
-import net.azisaba.lgw.core.util.SyogoData;
+import net.azisaba.lgw.core.syogo.SyogoStore;
+import net.azisaba.lgw.core.syogo.SyogoManager;
+import net.azisaba.lgw.core.syogo.SyogoGui;
+import net.azisaba.lgw.core.syogo.SyogoTickets;
+import net.azisaba.lgw.core.syogo.RyuzuChatHook;
 import net.azisaba.lgw.core.listeners.DamageListener;
 import net.azisaba.lgw.core.listeners.MatchControlListener;
 import net.azisaba.lgw.core.listeners.MatchStartDetectListener;
@@ -36,6 +43,7 @@ import net.azisaba.lgw.core.util.LgwLog;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -84,9 +92,13 @@ public class LeonGunWar extends JavaPlugin {
     private KillLogsConfig killLogsConfig;
     private KillActionCatalog killActionCatalog;
     private KillActionStore killActionStore;
+    private KillActionTicketStore killActionTicketStore;
     private KillActionManager killActionManager;
+    private SyogoStore syogoStore;
+    private SyogoManager syogoManager;
 
     private SQLConnection sqlConnection;
+    private DebugInfoListener debugInfoListener;
 
     public static LeonGunWar getPlugin() {
         return plugin;
@@ -137,12 +149,21 @@ public class LeonGunWar extends JavaPlugin {
         plLogger.info("ファイルの準備が完了しました。");
 ;
         sqlConnection = new SQLConnection(databaseConfig);
+        syogoStore = new SyogoStore(sqlConnection);
+        syogoManager = new SyogoManager(this, syogoStore);
+        new RyuzuChatHook(this, syogoManager::display).register();
+        SyogoGui syogoGui = new SyogoGui(this, syogoManager);
+        SyogoTickets syogoTickets = new SyogoTickets(this, syogoManager);
         killActionStore = new KillActionStore(this, sqlConnection);
-        killActionManager = new KillActionManager(this, killActionCatalog, killActionStore);
-        KillActionGui killActionGui = new KillActionGui(this, killActionManager);
+        killActionTicketStore = new KillActionTicketStore(sqlConnection);
+        killActionManager = new KillActionManager(this, killActionCatalog, killActionStore, killActionTicketStore);
+        KillActionTickets killActionTickets = new KillActionTickets(this, killActionManager, killActionTicketStore);
+        KillActionGui killActionGui = new KillActionGui(this, killActionManager, killActionTickets);
 
         // コマンドのインスタンスに渡す必要があるListener
         LimitActionListener preventItemDropListener = new LimitActionListener();
+        SignEditListener signEditListener = new SignEditListener();
+        debugInfoListener = new DebugInfoListener(this);
 
         // コマンドの登録
         registerCommand("leongunwaradmin", new LgwAdminCommand());
@@ -152,8 +173,9 @@ public class LeonGunWar extends JavaPlugin {
         registerCommand("resourcepack", new ResourcePackCommand());
         registerCommand("adminchat", new AdminChatCommand());
         registerCommand("limit", new LimitCommand(preventItemDropListener));
+        registerCommand("toggle", new ToggleCommand(signEditListener));
         registerCommand("mapvote", new MapVoteCommand());
-        registerCommand("lsyogo", new LSyogoCommand());
+        registerCommand("lsyogo", new LSyogoCommand(this, syogoManager, syogoGui, syogoTickets));
         registerCommand("spawn", new SpawnCommand());
         registerCommand("noticewar", new SiaiTuutiCommand());
         registerCommand("toggledoublereward", new ToggleDoubleReward());
@@ -174,8 +196,13 @@ public class LeonGunWar extends JavaPlugin {
 
         // リスナーの登録
         registerEvents(new MatchControlListener(),
+                syogoManager,
+                syogoGui,
+                syogoTickets,
                 killActionManager,
                 killActionGui,
+                killActionTickets,
+                new LobbyKillActionListener(this, killActionManager),
                 pvPArenaManager,
                 new EntrySignListener(),
                 new MatchModeSignListener(),
@@ -205,12 +232,15 @@ public class LeonGunWar extends JavaPlugin {
                 new AutoRespawnListener(),
                 new PlayerDeathListener(),
                 new AfkKickEntryListener(),
+                new EssentialsAfkListener(this),
                 new StreaksListener(),
                 new DisableRecipeListener(),
                 new CrackShotLimitListener(),
                 new TradeBoardListener(),
                 new DisableTNTBlockDamageListener(),
                 new SignWithColorListener(),
+                signEditListener,
+                debugInfoListener,
                 new DisableChangeItemListener(),
                 new FixStrikesCooldownListener(),
                 new DisableBlockInteractListener());
@@ -241,6 +271,12 @@ public class LeonGunWar extends JavaPlugin {
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
+        Bukkit.getScheduler().runTaskTimer(this, scoreboardDisplayer::tickTitleAnimation, 0L, 2L);
+        debugInfoListener.start();
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            syogoManager.refreshOnline();
+            killActionManager.refreshOnline();
+        }, 1L, mainConfig.cosmeticsSyncIntervalTicks);
         doubleRewardEnable = getConfig().getBoolean("DoubleRewardTaskEnable", false) && ClockMachine.isWithinRewardTime();
         if (getConfig().getBoolean("DoubleRewardTaskEnable", false)) {
             new ClockMachine().doubleRewardTaskStarter();
@@ -264,7 +300,8 @@ public class LeonGunWar extends JavaPlugin {
      */
     @Nullable
     public PluginCommand registerCommand(String commandName, @Nullable CommandExecutor commandExecutor) {
-        PluginCommand cmd = Bukkit.getPluginCommand(commandName);
+        // 同名の他プラグインのコマンドへExecutorを設定しない。
+        PluginCommand cmd = getCommand(commandName);
         if(cmd == null) {
             plLogger.warn("Failed to get command instance of {}", commandName);
             return null;
@@ -272,18 +309,26 @@ public class LeonGunWar extends JavaPlugin {
 
         if(commandExecutor != null) {
             cmd.setExecutor(commandExecutor);
+            if (commandExecutor instanceof TabCompleter tabCompleter) cmd.setTabCompleter(tabCompleter);
+        }
+        if (commandName.equals("spawn")) {
+            // /spawn は常にLGWのロビー帰還を使用する。Essentials側の名前空間は維持する。
+            getServer().getCommandMap().getKnownCommands().put("spawn", cmd);
         }
         return cmd;
     }
 
     @Override
     public void onDisable() {
+        if (debugInfoListener != null) debugInfoListener.close();
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
 
-        this.killActionStore.close();
-        this.sqlConnection.onDisable();
-        this.killActionCatalog.close();
+        if (syogoStore != null) syogoStore.close();
+        if (killActionStore != null) killActionStore.close();
+        if (killActionTicketStore != null) killActionTicketStore.close();
+        if (sqlConnection != null) sqlConnection.onDisable();
+        if (killActionCatalog != null) killActionCatalog.close();
 
         // 武器交換掲示板の看板を保存
         tradeBoardManager.saveAll();

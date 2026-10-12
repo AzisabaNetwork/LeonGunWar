@@ -1,1 +1,5 @@
 isLobby: true
+# 試合鯖の /spawn (/lobby, /hub) とAFK退出時の帰還先。プロキシのサーバー名を指定する。
+lobby-server: lgw2
+# 称号・キル演出の選択を共通MySQLから読み直す間隔。20tick=1秒、変更後は再起動。
+cosmetics-sync-interval-ticks: 100

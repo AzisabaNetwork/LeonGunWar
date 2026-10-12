@@ -4,7 +4,6 @@ import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.MatchManager;
 import net.azisaba.lgw.core.events.PlayerKickMatchEvent;
 import net.azisaba.lgw.core.util.BattleTeam;
-import net.azisaba.lgw.core.util.SyogoData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +24,6 @@ public class PlayerControlListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        SyogoData.removeCache(p.getUniqueId());
 
         MatchManager manager = LeonGunWar.getPlugin().getManager();
         // プレイヤーが試合中でなければreturn
@@ -34,7 +32,7 @@ public class PlayerControlListener implements Listener {
         }
 
         // 試合から退出
-        manager.kickPlayer(p);
+        manager.leavePlayer(p);
     }
 
     /**
@@ -118,19 +116,15 @@ public class PlayerControlListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void sendQuickMessage(PlayerJoinEvent e) {
-        Bukkit.getScheduler().runTaskAsynchronously(LeonGunWar.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                SyogoData.getSyogoData(e.getPlayer().getUniqueId());
-            }
-        });
-
         if (!LeonGunWar.getPlugin().getMainConfig().isLobby) {
             if (LeonGunWar.getPlugin().getManager().isMatching()) {
                 Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), new Runnable() {
                     @Override
                     public void run() {
-                        LeonGunWar.getPlugin().getManager().addPlayerIntoBattle(e.getPlayer());
+                        if (!e.getPlayer().isOnline()) return;
+                        MatchManager manager = LeonGunWar.getPlugin().getManager();
+                        if (manager.isMatching()) manager.addPlayerIntoBattle(e.getPlayer());
+                        else manager.addEntryPlayer(e.getPlayer());
                     }
                 }, 5L);
 

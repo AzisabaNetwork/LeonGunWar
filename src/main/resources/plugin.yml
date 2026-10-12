@@ -6,7 +6,7 @@ description: ${description}
 website: ${websiteUrl}
 load: POSTWORLD
 depend: ["CrackShot", "Essentials", "WorldGuard", "KDStatusReloaded", "LuckPerms"]
-softdepend: ["Multiverse-Core", "PlaceholderAPI"]
+softdepend: ["Multiverse-Core", "PlaceholderAPI", "EssentialsSpawn", "RyuZUPluginChat"]
 api-version: '1.21.11'
 commands:
   leongunwaradmin:
@@ -38,12 +38,14 @@ commands:
   limit:
     usage: /limit [drop/build]
     permission: leongunwar.command.limit
+  toggle:
+    usage: /toggle sign
+    permission: leongunwar.command.leongunwaradmin
   lsyogo:
-    usage: /lsyogo <add/give/remove/delete/check>
+    usage: /lsyogo [gui | select <ID> | remove [player] | give/revoke <player|UUID> <ID> | ticket <player> <ID> [1-64] | bind <ID> | check <player|UUID> | reload]
     permission: leongunwar.command.syogo
   spawn:
     aliases: ["lobby", "hub"]
-    permission: leongunwar.command.spawn
   noticewar:
     usage: /noticewar
     permission: leongunwar.adminchat.send
@@ -51,8 +53,8 @@ commands:
     usage: /toggledoublereward
     permission: leongunwar.command.leongunwaradmin
   killaction:
-    usage: /killaction
-    description: ロビーでキル演出を選択
+    usage: /killaction [ticket <player> <sound|log|particle> <ID> [1-64] | bind <sound|log|particle> <ID>]
+    description: ロビーでキル演出を選択、試合鯖では現在の設定を確認
     permission: leongunwar.command.killaction
 permissions:
   leongunwar.entrysign.changestate:
@@ -91,6 +93,12 @@ permissions:
     default: op
   leongunwar.syogo.check:
     default: op
+  leongunwar.syogo.item:
+    default: op
+  leongunwar.syogo.revoke:
+    default: op
+  leongunwar.syogo.reload:
+    default: op
   leongunwar.syogo.delete:
     default: op
   leongunwar.killlog.event:
@@ -99,3 +107,5 @@ permissions:
     default: false
   leongunwar.command.killaction:
     default: true
+  leongunwar.killaction.item:
+    default: op

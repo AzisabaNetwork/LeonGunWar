@@ -1,7 +1,6 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,7 +47,7 @@ public class DisableRecipeListener implements Listener {
         e.setCancelled(true);
 
         // 音を鳴らす
-        p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+        p.playSound(p.getLocation(), "minecraft:entity.villager.no", 1, 1);
 
         // Priority MONITORで元のアイテムに戻すためにHashMapに追加
         ItemStack item = result.clone();

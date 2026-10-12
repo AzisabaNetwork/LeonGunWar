@@ -39,4 +39,14 @@ public class GameMap {
     public String getMapName() {
         return mapName;
     }
+
+    /** Both team spawns must be usable before this map can be selected for a match. */
+    public boolean isReady() {
+        if (world == null) return false;
+        for (BattleTeam team : BattleTeam.values()) {
+            Location spawn = spawnMap.get(team);
+            if (spawn == null || spawn.getWorld() == null) return false;
+        }
+        return true;
+    }
 }

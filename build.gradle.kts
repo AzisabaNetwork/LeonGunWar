@@ -7,7 +7,7 @@ plugins {
 }
 
 val targetJavaVersion = 21
-version = System.getenv("VERSION") ?: "0.1.0-indev"
+version = System.getenv("VERSION") ?: "1.2.1"
 
 // plugin metadata
 val plWebsiteUrl: String by project
@@ -48,6 +48,9 @@ dependencies {
     testImplementation(platform(libs.junitBom))
     testImplementation(libs.junitJupiter)
     testImplementation(libs.paperApi)
+    // AFK event contracts only; the actual Essentials plugin supplies its runtime dependencies.
+    testImplementation(libs.essentialsx) { isTransitive = false }
+    testImplementation("org.mockito:mockito-core:5.14.2")
     testRuntimeOnly(libs.junitPlatformLauncher)
 }
 

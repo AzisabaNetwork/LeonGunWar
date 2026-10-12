@@ -209,7 +209,9 @@ public class CustomTDMListener implements Listener {
 
             // このイベントの後にイベント作成、呼び出し
             // 遅らせる理由は最後のキルが表示されないため
+            var matchCounter = manager.getKillDeathCounter();
             Bukkit.getScheduler().runTaskLater(LeonGunWar.getPlugin(), () -> {
+                if (!manager.isMatching() || manager.getKillDeathCounter() != matchCounter) return;
                 MatchFinishedEvent event = new MatchFinishedEvent(manager.getCurrentGameMap(), teams,
                         manager.getTeamPlayers());
                 Bukkit.getPluginManager().callEvent(event);

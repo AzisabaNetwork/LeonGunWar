@@ -1,0 +1,15 @@
+# 両鯖へ同じ内容を配置してください。旧形式 ID: '&e表示名' も使用できます。
+# 所持・装備状態は共通MySQLに保存されます。定義の追加だけではプレイヤーに付与されません。
+# HEX色: '&x&B&5&D&F&E&8[称号]' / '&xB5DFE8[称号]' / '&#B5DFE8[称号]' に対応します。
+rookie:
+  Displayname: '&a[ルーキー]'
+  GUIicon: NAME_TAG
+  lore: '&7初めの一歩を踏み出した証。|&7称号獲得券から取得できます。'
+champion:
+  Displayname: '&6[チャンピオン]'
+  GUIicon: GOLDEN_HELMET
+  lore: '&e大会の勝者に贈る称号。'
+supporter:
+  Displayname: '&d[サポーター]'
+  GUIicon: DIAMOND
+  lore: '&7サーバーを支えてくれた証。'

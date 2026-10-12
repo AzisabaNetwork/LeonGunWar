@@ -134,6 +134,7 @@ public class DisableChangeItemListener implements Listener {
     public void disableShootOnInvalidHotbar(WeaponPreShootEvent e) {
         Player p = e.getPlayer();
 
+        if (p.getGameMode() == GameMode.CREATIVE) return;
         if (!LeonGunWar.getPlugin().getManager().isPlayerMatching(p)) {
             return;
         }
@@ -165,6 +166,11 @@ public class DisableChangeItemListener implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            hotbars.remove(event.getPlayer());
+            validHotbar.remove(event.getPlayer());
+            return;
+        }
         Inventory inventory = event.getInventory();
 
         if (inventory == null || inventory.getType() != InventoryType.CRAFTING) {

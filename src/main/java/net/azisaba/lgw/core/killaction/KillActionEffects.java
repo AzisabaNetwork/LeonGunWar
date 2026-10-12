@@ -3,6 +3,7 @@ package net.azisaba.lgw.core.killaction;
 import net.azisaba.lgw.core.LeonGunWar;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -27,14 +28,23 @@ public final class KillActionEffects {
                     if (preview.isOnline()) preview.playSound(preview.getLocation(), cue.sound(), cue.volume(), cue.pitch());
                     return;
                 }
-                double radiusSquared = (double) catalog.soundRadius() * catalog.soundRadius();
-                for (Player viewer : origin.getWorld().getPlayers()) {
-                    if (viewer.getLocation().distanceSquared(origin) <= radiusSquared)
-                        viewer.playSound(origin, cue.sound(), cue.volume(), cue.pitch());
-                }
+                playKillSound(killer, origin, cue.sound(), cue.volume(), cue.pitch());
             };
             if (cue.tick() == 0) play.run();
             else Bukkit.getScheduler().runTaskLater(plugin, play, cue.tick());
+        }
+    }
+
+    public void playKillSound(Player shooter, Location victimLocation, Sound sound, float volume, float pitch) {
+        double radiusSquared = (double) catalog.soundRadius() * catalog.soundRadius();
+        for (Player viewer : victimLocation.getWorld().getPlayers()) {
+            if (viewer == shooter) continue;
+            if (viewer.getLocation().distanceSquared(victimLocation) <= radiusSquared) {
+                viewer.playSound(victimLocation, sound, volume, pitch);
+            }
+        }
+        if (shooter.isOnline()) {
+            shooter.playSound(shooter.getLocation(), sound, volume, pitch);
         }
     }
 
