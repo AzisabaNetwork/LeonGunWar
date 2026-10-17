@@ -1,14 +1,13 @@
 package net.azisaba.lgw.core.hijack;
 
+import net.azisaba.lgw.core.util.AtomicConfigWriter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,13 +72,6 @@ public final class HijackConfig {
 
     private void save(YamlConfiguration yaml, HijackRules rules) throws IOException {
         rules.values().forEach(yaml::set);
-        Path target = Files.exists(file) ? file.toRealPath() : file.toAbsolutePath();
-        Files.createDirectories(target.getParent());
-        Path temporary = Files.createTempFile(target.getParent(), "hijack-", ".tmp");
-        try {
-            Files.writeString(temporary, yaml.saveToString(), StandardCharsets.UTF_8);
-            try { Files.move(temporary, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING); }
-            catch (AtomicMoveNotSupportedException exception) { Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING); }
-        } finally { Files.deleteIfExists(temporary); }
+        AtomicConfigWriter.write(file, "hijack-", yaml.saveToString());
     }
 }

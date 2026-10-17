@@ -26,9 +26,10 @@ class HijackCommandTest {
         when(controller.isRunning()).thenReturn(true);
         when(controller.getActive()).thenReturn(HijackRules.defaults());
         command.execute(sender, new String[]{"hijack", "set", "victory.target-points", "400"});
-        command.execute(sender, new String[]{"hijack", "show"});
+        command.execute(sender, new String[]{"hijack", "show", "all"});
         assertEquals(400, config.getPending().points());
-        verify(sender).sendMessage(startsWith("§6[適用中]")); verify(sender).sendMessage(startsWith("§6[次の試合]"));
+        verify(sender).sendMessage(startsWith("§6[適用中]")); verify(sender).sendMessage(startsWith("§6[保存済み設定]"));
+        verify(controller).applySettings();
         verify(sender).sendMessage(contains("未実装・無効"));
     }
     @Test void completionAndCommandRejectUnimplementedRewardActivation() {
@@ -65,5 +66,22 @@ class HijackCommandTest {
         assertTrue(command.complete(player, new String[]{"hijack", "pre"}).contains("preview"));
         assertEquals(java.util.List.of("active", "next", "stop"), command.complete(player, new String[]{"hijack", "preview", ""}));
         assertEquals(java.util.List.of("Shagger"), command.complete(player, new String[]{"hijack", "preview", "next", "Sh"}));
+    }
+
+    @Test void runningShowIsCompactWhileShowAllKeepsFullDiagnostics() {
+        var controller = mock(HijackController.class); when(controller.isRunning()).thenReturn(true);
+        when(controller.getActive()).thenReturn(HijackRules.defaults()); when(controller.getRemainingSeconds()).thenReturn(540);
+        var config = new HijackConfig(directory.resolve("hijack.yml")); when(controller.getConfig()).thenReturn(config);
+        var command = new HijackCommand(controller, mock(HijackAreaDisplay.class), mock(Logger.class));
+        var sender = mock(CommandSender.class); when(sender.hasPermission(anyString())).thenReturn(true);
+        command.execute(sender, new String[]{"hijack", "show"});
+        verify(sender).sendMessage(contains("勝利条件")); verify(sender).sendMessage(contains("通常耐性"));
+        verify(sender).sendMessage(contains("武器制限")); verify(sender).sendMessage(contains("show all"));
+        verify(sender, never()).sendMessage(contains("rewards.")); verify(sender, never()).sendMessage(contains("player-count.targets"));
+        verify(sender, never()).sendMessage(contains("保存済み設定"));
+        assertEquals(java.util.List.of("all"), command.complete(sender, new String[]{"hijack", "show", ""}));
+        clearInvocations(sender); command.execute(sender, new String[]{"hijack", "show", "all"});
+        verify(sender, atLeastOnce()).sendMessage(contains("rewards.area-kill.enabled"));
+        verify(sender).sendMessage(startsWith("§6[保存済み設定]"));
     }
 }

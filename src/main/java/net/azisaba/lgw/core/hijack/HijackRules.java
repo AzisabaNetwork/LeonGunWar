@@ -30,6 +30,7 @@ public record HijackRules(Map<String, Object> values) {
         defaults.put("victory.tie", "draw");
         defaults.put("victory.player-count.enabled", false);
         defaults.put("victory.player-count.targets", List.of("1:100", "6:150", "12:200"));
+        defaults.put("victory-item.enabled", true);
         defaults.put("victory-item.mode", "time_or_kills");
         defaults.put("victory-item.minimum-participation-seconds", 360);
         defaults.put("victory-item.minimum-kills", 20);
@@ -141,6 +142,7 @@ public record HijackRules(Map<String, Object> values) {
     }
     public VictoryItem victoryItem() { return VictoryItem.valueOf(values.get("victory-item.mode").toString().toUpperCase(Locale.ROOT)); }
     public boolean qualifiesForVictoryItem(long now, Long joinedAt, int kills) {
+        if (!flag("victory-item.enabled")) return true;
         boolean enoughTime = joinedAt != null && now >= joinedAt
                 && now - joinedAt >= (long) number("victory-item.minimum-participation-seconds") * 1000L;
         boolean enoughKills = kills >= number("victory-item.minimum-kills");
@@ -153,6 +155,7 @@ public record HijackRules(Map<String, Object> values) {
         };
     }
     public String victoryItemRequirement() {
+        if (!flag("victory-item.enabled")) return "勝利チーム全員（条件判定OFF）";
         String time = ((int) number("victory-item.minimum-participation-seconds")) + "秒以上参加";
         String kills = ((int) number("victory-item.minimum-kills")) + "キル以上";
         return switch (victoryItem()) {

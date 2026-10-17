@@ -28,10 +28,13 @@ class HijackConfigTest {
         config.reload();
         var old = config.getPending();
         config.set("victory.target-points", "321");
+        config.set("victory-item.enabled", "false");
         config.set("weapons.blocked-ids", "C4_Special, Grenade2");
         var reloaded = new HijackConfig(config.getPath());
         reloaded.reload();
         assertEquals(321, reloaded.getPending().points());
+        assertFalse(reloaded.getPending().flag("victory-item.enabled"));
+        assertTrue(old.flag("victory-item.enabled"));
         assertEquals(200, old.points());
         assertEquals(List.of("C4_Special", "Grenade2"), reloaded.getPending().blockedIds());
         config.set("weapons.blocked-ids", "[]");

@@ -153,4 +153,20 @@ public class MapsConfig extends Config {
         double z = section.getDouble(".z");
         return new Vector(x, y, z);
     }
+
+    public Map<String, Area3D> getHijackAreaEntries(GameMap map) {
+        return net.azisaba.lgw.core.hijack.HijackAreaStorage.readAreas(
+                (ConfigurationSection) config.getValues(false).get(map.getMapName()));
+    }
+
+    public void saveHijackArea(GameMap map, String id, Area3D area) throws IOException, InvalidConfigurationException {
+        if (!allGameMap.contains(map) || map.getWorld() == null) throw new IllegalArgumentException("マップのワールドをロードしてください。");
+        var updated = net.azisaba.lgw.core.hijack.HijackAreaStorage.save(
+                getPath(), map.getMapName(), map.getWorld().getName(), id, area);
+        config.loadFromString(updated.saveToString());
+        var entries = getHijackAreaEntries(map);
+        map.getHijackAreas().clear();
+        map.getHijackAreas().addAll(entries.values());
+        if (plugin instanceof LeonGunWar lgw && lgw.getHijackController() != null) lgw.getHijackController().refreshAreas(map);
+    }
 }

@@ -11,14 +11,16 @@ public class MatchCountdownTask extends BukkitRunnable {
     public void run() {
         // 1秒減らす
         var remaining = LeonGunWar.getPlugin().getManager().getTimeLeft();
-        int timeLeft = remaining.get() < 0 ? -1 : remaining.decrementAndGet();
+        var hijack = LeonGunWar.getPlugin().getHijackController();
+        int timeLeft = hijack != null && hijack.isRunning() ? hijack.tickClock()
+                : remaining.updateAndGet(value -> value < 0 ? -1 : Math.max(0, value - 1));
 
         // イベントを呼び出す
         MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);
         Bukkit.getPluginManager().callEvent(event);
 
         // 0になったらストップ
-        if (timeLeft == 0) {
+        if (timeLeft == 0 && remaining.get() == 0) {
             cancel();
         }
     }

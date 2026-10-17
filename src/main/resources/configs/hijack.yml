@@ -1,5 +1,5 @@
-# HIJACK専用設定。変更は /lgwadmin hijack reload 後、次の試合から適用。
-# コマンド: /lgwadmin hijack show | set <設定名> <値> | reload | preview [active|next <マップ名>|stop]
+# HIJACK専用設定。setやreloadの成功後、試合中なら現在の試合へ適用。
+# コマンド: /lgwadmin hijack show | set <設定名> <値> | reload | preview [active|next <マップ名>|stop] | area
 # この鯖のみ反映。両バージョンで同じキーを使用します。
 victory:
   # points_or_time / points（時間無制限） / time（点数上限なし）
@@ -9,11 +9,13 @@ victory:
   # draw（引き分け） / shared_win（両軍勝利）
   tie: draw
   player-count:
-    # 試合開始時の実参加人数で目標点を固定。途中参加・退出では変更しない。
+    # 開始時の実参加人数で目標点を決定。設定変更時も開始人数で再計算し、途中参加・退出だけでは変えない。
     enabled: false
     # "下限人数:目標点"。該当する下限の最大値を使い、該当なしはtarget-points。
     targets: ["1:100", "6:150", "12:200"]
 victory-item:
+  # falseなら時間・キル条件を判定せず勝者全員へ付与。アイテム配布自体を止める設定ではありません。
+  enabled: true
   # HIJACKの勝者の証と指定CrackShot勝利アイテムに適用。MSR報酬は対象外。
   # none / time / kills / time_or_kills / time_and_kills
   mode: time_or_kills

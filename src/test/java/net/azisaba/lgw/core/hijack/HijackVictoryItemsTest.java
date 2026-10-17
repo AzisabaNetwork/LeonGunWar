@@ -87,6 +87,23 @@ class HijackVictoryItemsTest {
         verify(first.getInventory()).addItem(reward);
         verify(second.getInventory()).addItem(reward);
     }
+    @Test void disabledConditionsAwardAllWinnersForDefaultAndCrackShotItemsWithoutLosingConfiguredConditions() {
+        rules("time_and_kills", 360, 20);
+        var values = new HashMap<>(controller.getActive().values()); values.put("victory-item.enabled", false);
+        var disabled = new HijackRules(values); when(controller.getActive()).thenReturn(disabled);
+        assertTrue(disabled.victoryItemRequirement().contains("条件判定OFF"));
+        finish();
+        verify(first.getInventory()).addItem(reward); verify(second.getInventory()).addItem(reward);
+        clearInvocations(first.getInventory(), second.getInventory());
+        when(items.getVictoryItemCrackShotIds()).thenReturn(List.of("WinToken")); finish();
+        verify(first.getInventory()).addItem(reward); verify(second.getInventory()).addItem(reward);
+        clearInvocations(first.getInventory(), second.getInventory());
+        values.put("victory-item.enabled", true); when(controller.getActive()).thenReturn(new HijackRules(values));
+        finish();
+        verify(first.getInventory(), never()).addItem(any(ItemStack[].class));
+        verify(second.getInventory(), never()).addItem(any(ItemStack[].class));
+    }
+
     @Test void timeRequirementUsesBothWinnersJoinTimesBeforeMatchFinalization() {
         rules("time", 10, 20);
         long joined = System.currentTimeMillis() - 20_000;

@@ -71,16 +71,21 @@ class HijackAreaDisplayTest {
         }).when(player).spawnParticle(eq(Particle.REDSTONE), any(Location.class), eq(1), eq(0d), eq(0d), eq(0d), eq(0d), any(Particle.DustOptions.class));
         return player;
     }
-    @Test void matchShowsOnlyFloorEdgesInTheCurrentTeamColorAndWhiteWhenUnoccupiedOrContested() {
+    @Test void matchFloorUsesRaisedBrightRedBlueWhiteAndYellowWithoutChangingBounds() {
         when(controller.activeAreaView()).thenReturn(view);
-        for (BattleTeam team : new BattleTeam[]{BattleTeam.RED, BattleTeam.BLUE, null}) {
-            when(controller.getCapturingTeam()).thenReturn(team);
+        var states = List.of(Map.<UUID, BattleTeam>of(UUID.randomUUID(), BattleTeam.RED),
+                Map.<UUID, BattleTeam>of(UUID.randomUUID(), BattleTeam.BLUE), Map.<UUID, BattleTeam>of(),
+                Map.of(UUID.randomUUID(), BattleTeam.RED, UUID.randomUUID(), BattleTeam.BLUE));
+        var colors = List.of(Color.fromRGB(255, 64, 64), Color.fromRGB(64, 144, 255), Color.WHITE, Color.fromRGB(255, 235, 32));
+        for (int i = 0; i < states.size(); i++) {
+            when(controller.occupants()).thenReturn(states.get(i));
             draws.clear(); display.pulse(); display.pulse();
             assertFalse(draws.isEmpty());
-            Color expected = team == null ? Color.WHITE : team.getColor();
-            assertTrue(draws.stream().allMatch(draw -> draw.location.getY() == 64 && draw.dust.getColor().equals(expected)));
-            assertTrue(draws.stream().allMatch(draw -> draw.dust.getSize() == .6f));
+            Color expected = colors.get(i);
+            assertTrue(draws.stream().allMatch(draw -> Math.abs(draw.location.getY() - 64.1) < 1e-8 && draw.dust.getColor().equals(expected)));
+            assertTrue(draws.stream().allMatch(draw -> draw.dust.getSize() == .9f));
         }
+        assertEquals(64, view.areas().get(0).getMin().getY());
         when(controller.activeAreaView()).thenReturn(null);
         draws.clear(); display.pulse(); assertTrue(draws.isEmpty());
     }
@@ -116,6 +121,19 @@ class HijackAreaDisplayTest {
         when(admin.hasPermission(anyString())).thenReturn(true);
         when(admin.getLocation()).thenReturn(new Location(world, 1000, 64, 1000));
         display.preview(admin, true, "Shagger");
+        draws.clear(); display.pulse(); assertTrue(draws.isEmpty());
+    }
+
+    @Test void activePreviewAndFloorFollowLiveGeometryAndStopWhenMatchEnds() {
+        when(controller.activeAreaView()).thenReturn(view);
+        display.preview(admin, false, ""); display.pulse();
+        var changed = new HijackController.AreaView(world.getUID(), "Shagger",
+                List.of(new Area3D(new Vector(-2, 64, -2), new Vector(2, 70, 2))));
+        when(controller.activeAreaView()).thenReturn(changed);
+        draws.clear(); display.pulse();
+        assertTrue(draws.stream().anyMatch(draw -> draw.location.getY() == 70));
+        assertTrue(draws.stream().allMatch(draw -> Math.abs(draw.location.getX()) <= 2 && Math.abs(draw.location.getZ()) <= 2));
+        when(controller.activeAreaView()).thenReturn(null);
         draws.clear(); display.pulse(); assertTrue(draws.isEmpty());
     }
     @Test void taskStartsOnceAndShutdownCancelsItAndClearsPreviews() {

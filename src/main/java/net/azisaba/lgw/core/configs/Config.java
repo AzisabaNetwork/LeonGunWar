@@ -59,7 +59,9 @@ public class Config {
 
     @SneakyThrows(value = {IOException.class})
     public String loadAsString() throws IOException {
-        return Files.lines(getPath()).collect(Collectors.joining(System.lineSeparator()));
+        try (var lines = Files.lines(getPath())) {
+            return lines.collect(Collectors.joining(System.lineSeparator()));
+        }
     }
 
     public String loadResourceAsString() {

@@ -74,6 +74,7 @@ public class LeonGunWar extends JavaPlugin {
     private HijackController hijackController;
     private HijackWeaponGuard hijackWeaponGuard;
     private HijackAreaDisplay hijackAreaDisplay;
+    private HijackAreaEditor hijackAreaEditor;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
@@ -198,7 +199,6 @@ public class LeonGunWar extends JavaPlugin {
         registerEvents(
                 new TeamDeathMatchListener(),
                 new HijackListener(this),
-                new HijackCombatListener(hijackController),
                 new TDMNoLimitListener(),
                 new LeaderDeathMatchListener(),
                 new CustomTDMListener()
@@ -242,7 +242,8 @@ public class LeonGunWar extends JavaPlugin {
         var crackShot = (com.shampaggon.crackshot.CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
         hijackWeaponGuard = new HijackWeaponGuard(hijackController, crackShotUtility::getWeaponTitle, path -> path.endsWith(".Enable") ? Boolean.toString(crackShot.getBoolean(path)) : crackShot.getString(path));
         hijackWeaponGuard.install();
-        registerEvents(hijackWeaponGuard);
+        // The guard re-registers CrackShot's HIGHEST damage handler. Apply resistance after it.
+        registerEvents(hijackWeaponGuard, new HijackCombatListener(hijackController));
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         registerEvents(new DisableToysDuringMatchListener(),
@@ -259,6 +260,9 @@ public class LeonGunWar extends JavaPlugin {
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
         hijackAreaDisplay = new HijackAreaDisplay(this, hijackController);
         hijackAreaDisplay.start();
+        hijackAreaEditor = new HijackAreaEditor(this, mapsConfig);
+        registerEvents(hijackAreaEditor);
+        getServer().getScheduler().runTaskTimer(this, scoreboardDisplayer::tickTitleAnimation, 0L, 2L);
         doubleRewardEnable = getConfig().getBoolean("DoubleRewardTaskEnable", false) && ClockMachine.isWithinRewardTime();
         if (getConfig().getBoolean("DoubleRewardTaskEnable", false)) {
             new ClockMachine().doubleRewardTaskStarter();
@@ -296,6 +300,7 @@ public class LeonGunWar extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (hijackAreaEditor != null) hijackAreaEditor.clear();
         if (hijackAreaDisplay != null) hijackAreaDisplay.close();
         if (hijackWeaponGuard != null) hijackWeaponGuard.close();
         if (sqlConnection == null) return;

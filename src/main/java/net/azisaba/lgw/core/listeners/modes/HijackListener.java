@@ -23,9 +23,11 @@ public class HijackListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onTime(MatchTimeChangedEvent event) {
         HijackController hijack = plugin.getHijackController();
-        if (!hijack.isRunning()) return;
+        if (!hijack.isRunning() || hijack.isFinishing()) return;
         MatchManager manager = plugin.getManager();
         HijackRules rules = hijack.getActive();
+        // A lowered limit can end the match before another capture point is awarded.
+        if (hijack.consumeLiveUpdate() && finishIfReached(rules, event.getTimeLeft())) return;
         BattleTeam scoringTeam = hijack.getCapturingTeam();
         if (scoringTeam != null) {
             hijack.setController(scoringTeam);
@@ -36,16 +38,21 @@ public class HijackListener implements Listener {
             if (players.stream().anyMatch(player -> player.isOnline())) participants.add(team);
         });
         hijack.publishCapture(scoringTeam, participants.size() > 1);
-        if (scoringTeam != null && rules.hasPointLimit() && manager.getCurrentTeamPoint(scoringTeam) >= rules.points()) {
-            finish(List.of(scoringTeam));
-        } else if (rules.hasTimeLimit() && event.getTimeLeft() <= 0) {
-            int max = Arrays.stream(BattleTeam.values()).mapToInt(manager::getCurrentTeamPoint).max().orElse(0);
-            List<BattleTeam> winners = Arrays.stream(BattleTeam.values())
-                    .filter(team -> manager.getCurrentTeamPoint(team) == max).toList();
-            finish(winners.size() > 1 && rules.drawOnTie() ? List.of() : winners);
-        }
+        if (!hijack.isRunning()) return;
+        // Capture event subscribers may have changed settings synchronously.
+        finishIfReached(hijack.getActive(), manager.getTimeLeft().get());
+    }
+    private boolean finishIfReached(HijackRules rules, int timeLeft) {
+        MatchManager manager = plugin.getManager();
+        int max = Arrays.stream(BattleTeam.values()).mapToInt(manager::getCurrentTeamPoint).max().orElse(0);
+        if (!(rules.hasPointLimit() && max >= rules.points()) && !(rules.hasTimeLimit() && timeLeft <= 0)) return false;
+        List<BattleTeam> winners = Arrays.stream(BattleTeam.values())
+                .filter(team -> manager.getCurrentTeamPoint(team) == max).toList();
+        finish(winners.size() > 1 && rules.drawOnTie() ? List.of() : winners);
+        return true;
     }
     private void finish(List<BattleTeam> winners) {
+        if (!plugin.getHijackController().requestFinish()) return;
         MatchManager manager = plugin.getManager();
         plugin.getServer().getPluginManager().callEvent(new MatchFinishedEvent(manager.getCurrentGameMap(), winners, manager.getTeamPlayers()));
     }

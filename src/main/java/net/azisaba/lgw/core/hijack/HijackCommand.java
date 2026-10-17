@@ -27,17 +27,25 @@ public final class HijackCommand {
         try {
             switch (action) {
                 case "show" -> {
+                    if (args.length > 3 || (args.length == 3 && !args[2].equalsIgnoreCase("all"))) {
+                        throw new IllegalArgumentException("/lgwadmin hijack show [all]");
+                    }
+                    if (controller.isRunning() && args.length < 3) {
+                        showCompact(sender);
+                        break;
+                    }
                     sender.sendMessage("§bHIJACK設定（この鯖のみ）: " + controller.getConfig().getPath());
                     if (controller.isRunning()) {
                         sender.sendMessage("§b試合開始時の参加人数: " + controller.getStartingPlayerCount() + "人（途中参加・退出では変更しません）");
                         show(sender, "適用中", controller.getActive());
                     }
-                    show(sender, controller.isRunning() ? "次の試合" : "開始時に適用", controller.getConfig().getPending());
+                    show(sender, "保存済み設定", controller.getConfig().getPending());
                     sender.sendMessage("§e報酬連携: 未実装・無効（倍率は将来用の予約値です）");
                 }
                 case "reload" -> {
                     controller.getConfig().reload();
-                    sender.sendMessage("§aHIJACK設定を読み込みました。この鯖の次の試合から適用します。");
+                    controller.applySettings();
+                    sender.sendMessage("§aHIJACK設定を読み込みました。試合中なら現在の試合へ適用します。");
                 }
                 case "preview" -> {
                     if (!(sender instanceof Player player)) throw new IllegalArgumentException("previewはプレイヤー専用です。");
@@ -52,10 +60,11 @@ public final class HijackCommand {
                 case "set" -> {
                     if (args.length < 4) throw new IllegalArgumentException("/lgwadmin hijack set <設定名> <値>");
                     controller.getConfig().set(args[2], String.join(" ", Arrays.copyOfRange(args, 3, args.length)));
+                    controller.applySettings();
                     sender.sendMessage("§a保存しました: " + args[2] + " = " + controller.getConfig().getPending().values().get(args[2])
-                            + " §7（この鯖の次の試合から適用）");
+                            + " §7（試合中なら現在の試合へ適用）");
                 }
-                default -> sender.sendMessage("§e/lgwadmin hijack <show|set <設定名> <値>|reload|preview [active|next <マップ名>|stop]>");
+                default -> sender.sendMessage("§e/lgwadmin hijack <show [all]|set <設定名> <値>|reload|preview [active|next <マップ名>|stop]|area>");
             }
         } catch (IllegalArgumentException exception) {
             sender.sendMessage("§c" + exception.getMessage());
@@ -65,6 +74,33 @@ public final class HijackCommand {
         }
         return true;
     }
+    private void showCompact(CommandSender sender) {
+        HijackRules rules = controller.getActive();
+        sender.sendMessage("§b[HIJACK / 試合中]");
+        sender.sendMessage("§e勝利条件: §f" + rules.description());
+        int remaining = controller.getRemainingSeconds();
+        sender.sendMessage("§e残り時間: §f" + (remaining < 0 ? "制限なし" : net.azisaba.lgw.core.util.SecondOfDay.f(remaining)));
+        if (rules.flag("victory.player-count.enabled")) sender.sendMessage("§e人数別目標: §f開始時 " + controller.getStartingPlayerCount() + "人で決定");
+        sender.sendMessage("§e勝利アイテム: §f" + rules.victoryItemRequirement());
+        sender.sendMessage("§e通常耐性: §f" + resistanceSummary(rules, "resistance"));
+        sender.sendMessage("§e爆発専用耐性: §f" + resistanceSummary(rules, "explosion-resistance")
+                + (rules.flag("explosion-resistance.enabled") ? " / 外周 " + rules.number("explosion-resistance.radius") + "ブロック" : ""));
+        sender.sendMessage("§e武器制限: §fグレ " + (rules.flag("weapons.block-grenades") ? "禁止" : "許可")
+                + " / C4 " + (rules.flag("weapons.block-c4") ? "禁止" : "許可")
+                + (rules.blockedIds().isEmpty() ? "" : " / 追加禁止 " + rules.blockedIds().size() + "件"));
+        sender.sendMessage("§7全項目・保存先: /lgwadmin hijack show all");
+    }
+
+    private String resistanceSummary(HijackRules rules, String prefix) {
+        if (!rules.flag(prefix + ".enabled")) return "OFF";
+        String target = switch (rules.target(prefix)) {
+            case ALL -> "両軍";
+            case CONTROLLER -> "最後に加点した側";
+            case CAPTURING -> "現在単独占領中の側";
+        };
+        return rules.number(prefix + ".percent") + "% / " + target;
+    }
+
     private void show(CommandSender sender, String title, HijackRules rules) {
         sender.sendMessage("§6[" + title + "] " + rules.description());
         sender.sendMessage("§7HIJACK勝利アイテム条件: §f" + rules.victoryItemRequirement());
@@ -73,7 +109,8 @@ public final class HijackCommand {
     public List<String> complete(CommandSender sender, String[] args) {
         if (!sender.hasPermission("leongunwar.command.leongunwaradmin")) return List.of();
         List<String> choices = new ArrayList<>();
-        if (args.length == 2) choices.addAll(List.of("show", "set", "reload", "preview"));
+        if (args.length == 2) choices.addAll(List.of("show", "set", "reload", "preview", "area"));
+        else if (args.length == 3 && args[1].equalsIgnoreCase("show")) choices.add("all");
         else if (args.length == 3 && args[1].equalsIgnoreCase("preview")) choices.addAll(List.of("active", "next", "stop"));
         else if (args.length == 4 && args[1].equalsIgnoreCase("preview") && args[2].equalsIgnoreCase("next")) choices.addAll(display.mapNames());
         else if (args.length == 3 && args[1].equalsIgnoreCase("set")) choices.addAll(HijackRules.defaultsMap().keySet());

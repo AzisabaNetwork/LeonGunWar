@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import lombok.Data;
 import net.azisaba.lgw.core.distributors.TeamDistributor;
 import net.azisaba.lgw.core.util.BattleTeam;
+import net.azisaba.lgw.core.util.BrightTitle;
 import net.azisaba.lgw.core.util.Chat;
 import net.azisaba.lgw.core.util.GameMap;
 import net.azisaba.lgw.core.util.MatchMode;
@@ -29,6 +30,7 @@ public class ScoreboardDisplayer {
     private List<String> lastDisplayLines = new ArrayList<>();
     // Objectiveを作成したいスコアボード
     private Scoreboard scoreBoard;
+    private int titleAnimationTick;
 
     /**
      * プレイヤーに表示するスコアボードのタイトルを取得します
@@ -36,7 +38,7 @@ public class ScoreboardDisplayer {
      * @return スコアボードのタイトル
      */
     private String scoreBoardTitle() {
-        return Chat.f("&6LeonGunWarII&a v{0}", LeonGunWar.getPlugin().getDescription().getVersion());
+        return "LeonGunWarII v0.2.0-bright";
     }
 
     /**
@@ -218,6 +220,15 @@ public class ScoreboardDisplayer {
         updateScoreboardLines(boardLines());
     }
 
+    /** Update only the title; keep scores and the sidebar objective intact. */
+    public void tickTitleAnimation() {
+        if (scoreBoard == null) return;
+        Objective objective = scoreBoard.getObjective("side");
+        if (objective == null) return;
+        objective.displayName(scoreBoardTitleComponent());
+        titleAnimationTick = (titleAnimationTick + 2) % BrightTitle.PERIOD_TICKS;
+    }
+
     private void updateScoreboardLines(List<String> lines) {
         if (scoreBoard == null) return;
 
@@ -280,7 +291,7 @@ public class ScoreboardDisplayer {
     }
 
     private Component scoreBoardTitleComponent() {
-        return LegacyComponentSerializer.legacySection().deserialize(scoreBoardTitle());
+        return BrightTitle.render(scoreBoardTitle(), titleAnimationTick);
     }
 
     private String makeUniqueLine(String base, Set<String> used) {

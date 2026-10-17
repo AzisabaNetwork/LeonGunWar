@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-/** All methods are used on the server thread. Match rules/geometry are frozen at start. */
+/** All methods are used on the server thread. Validated admin changes can update a running match. */
 public final class HijackController {
     public record AreaView(UUID worldId, String mapName, List<Area3D> areas) {
         public AreaView { areas = List.copyOf(areas); }
@@ -32,8 +32,11 @@ public final class HijackController {
     private List<Area3D> areas = List.of();
     private BattleTeam controller;
     private boolean resultPublished;
+    private boolean finishRequested;
     private int startingPlayerCount;
     private boolean playerCountFrozen;
+    private long elapsedSeconds;
+    private boolean liveUpdate;
     private final Set<UUID> explosions = new HashSet<>();
 
     public HijackController(LeonGunWar plugin, HijackConfig config) { this.plugin = plugin; this.config = config; }
@@ -54,8 +57,11 @@ public final class HijackController {
         areas = snapshotAreas(map);
         controller = null;
         resultPublished = false;
+        finishRequested = false;
         startingPlayerCount = 0;
         playerCountFrozen = false;
+        elapsedSeconds = 0;
+        liveUpdate = false;
     }
     /** Called once after team assignment, before the start announcement or first scoring tick. */
     public void freezeStartingPlayers(int count) {
@@ -65,6 +71,54 @@ public final class HijackController {
         playerCountFrozen = true;
     }
     public void clear() { active = null; areas = List.of(); controller = null; }
+
+    /** Preserve score, match identity, elapsed time and the original participation count. */
+    public void applySettings() {
+        if (!isRunning() || isFinishing()) return;
+        active = config.getPending().forPlayerCount(startingPlayerCount);
+        plugin.getManager().getTimeLeft().set(remainingSeconds());
+        liveUpdate = true;
+    }
+
+    public int tickClock() {
+        elapsedSeconds++;
+        int remaining = remainingSeconds();
+        plugin.getManager().getTimeLeft().set(remaining);
+        return remaining;
+    }
+
+    private int remainingSeconds() {
+        return active.hasTimeLimit() ? (int) Math.max(0L, active.seconds() - elapsedSeconds) : -1;
+    }
+    public int getRemainingSeconds() { return active == null ? 0 : remainingSeconds(); }
+
+    public boolean consumeLiveUpdate() {
+        boolean changed = liveUpdate;
+        liveUpdate = false;
+        return changed;
+    }
+
+    public boolean isFinishing() { return finishRequested || resultPublished; }
+    public boolean requestFinish() {
+        if (isFinishing()) return false;
+        finishRequested = true;
+        return true;
+    }
+
+    public void refreshAreas(GameMap map) {
+        if (!isRunning() || isFinishing() || !mapName.equals(map.getMapName()) || map.getWorld() == null
+                || !worldId.equals(map.getWorld().getUID())) return;
+        areas = snapshotAreas(map);
+    }
+
+    public void refreshCurrentAreas() {
+        if (!isRunning()) return;
+        var map = plugin.getMapsConfig().getAllGameMap().stream()
+                .filter(candidate -> mapName.equals(candidate.getMapName()) && candidate.getWorld() != null
+                        && worldId.equals(candidate.getWorld().getUID())).findFirst();
+        if (map.isPresent()) refreshAreas(map.get());
+        else plugin.getLogger().warning("実行中のHIJACKマップが未登録またはワールド変更のため、占領範囲は維持します: " + mapName);
+    }
 
     private static List<Area3D> snapshotAreas(GameMap map) {
         return map.getHijackAreas().stream().map(area -> new Area3D(area.getMin(), area.getMax())).toList();

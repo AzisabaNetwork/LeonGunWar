@@ -57,6 +57,7 @@ class HijackGameplayTest {
         when(server.getPluginManager()).thenReturn(pm);
         when(manager.isMatching()).thenReturn(true);
         when(manager.getMatchMode()).thenReturn(MatchMode.HIJACK);
+        when(manager.getTimeLeft()).thenReturn(new java.util.concurrent.atomic.AtomicInteger(600));
         world = mock(World.class);
         when(world.getUID()).thenReturn(UUID.randomUUID());
         map = new GameMap("objective", world, Map.of(), new ArrayList<>(List.of(new Area3D(new Vector(-1, 64, -1), new Vector(1, 66, 1)))));
@@ -94,7 +95,7 @@ class HijackGameplayTest {
     }
     void move(Player p, double x, double y, double z) { when(p.getLocation()).thenReturn(new Location(world, x, y, z)); }
     void set(String key, String value) throws Exception { config.set(key, value); controller.begin(map); }
-    void tick(int seconds) { new HijackListener(plugin).onTime(new MatchTimeChangedEvent(seconds)); }
+    void tick(int seconds) { manager.getTimeLeft().set(seconds); new HijackListener(plugin).onTime(new MatchTimeChangedEvent(seconds)); }
     List<MatchFinishedEvent> finishes() { return events.stream().filter(e -> e instanceof MatchFinishedEvent).map(e -> (MatchFinishedEvent) e).toList(); }
 
     @Test void mapsBoundsControlEveryAxisAndRetiredCaptureSettingsCannotOverrideThem() throws Exception {
@@ -191,7 +192,7 @@ class HijackGameplayTest {
         assertNull(detail.scoringTeam()); assertEquals(0, detail.pointsAwarded()); assertTrue(detail.bothTeamsPresent());
     }
 
-    @Test void rulesAndGeometryAreFrozenUntilNextMatch() throws Exception {
+    @Test void unpublishedRulesAndGeometryRemainSeparateUntilExplicitApplication() throws Exception {
         map.getHijackAreas().set(0, new Area3D(new Vector(-5, 64, -5), new Vector(5, 66, 5)));
         controller.begin(map);
         config.set("resistance.percent", "70");
@@ -308,6 +309,57 @@ class HijackGameplayTest {
         }
     }
 
+    @Test void wrappedCrackShotMustRunBeforeResistanceAndOnlyReduceTheFinalDamageOnce() throws Exception {
+        when(plugin.getName()).thenReturn("LeonGunWar");
+        when(blue.getInventory()).thenReturn(mock(org.bukkit.inventory.PlayerInventory.class));
+        var cs = mock(org.bukkit.plugin.Plugin.class);
+        when(cs.getName()).thenReturn("CrackShot"); when(cs.isEnabled()).thenReturn(true);
+        var listener = new org.bukkit.event.Listener() { };
+        var damageList = EntityDamageEvent.getHandlerList();
+        var csDamage = new org.bukkit.plugin.RegisteredListener(listener,
+                (ignored, event) -> ((EntityDamageEvent) event).setDamage(40), org.bukkit.event.EventPriority.HIGHEST, cs, false);
+        var combat = new HijackCombatListener(controller);
+        var resistance = new org.bukkit.plugin.RegisteredListener(combat,
+                (ignored, event) -> combat.onDamage((EntityDamageEvent) event), org.bukkit.event.EventPriority.HIGHEST, plugin, true);
+        var interactList = org.bukkit.event.player.PlayerInteractEvent.getHandlerList();
+        var placeList = org.bukkit.event.block.BlockPlaceEvent.getHandlerList();
+        interactList.register(new org.bukkit.plugin.RegisteredListener(listener, (ignored, event) -> {}, org.bukkit.event.EventPriority.NORMAL, cs, false));
+        placeList.register(new org.bukkit.plugin.RegisteredListener(listener, (ignored, event) -> {}, org.bukkit.event.EventPriority.NORMAL, cs, false));
+        damageList.register(csDamage); damageList.register(resistance);
+        var guard = new HijackWeaponGuard(controller, item -> null, key -> null);
+        var damage = new java.util.concurrent.atomic.AtomicReference<>(2.0);
+        var event = mock(org.bukkit.event.entity.EntityDamageByEntityEvent.class);
+        when(event.getEntity()).thenReturn(red); when(event.getDamager()).thenReturn(blue);
+        when(event.getCause()).thenReturn(EntityDamageEvent.DamageCause.PROJECTILE);
+        when(event.getDamage()).thenAnswer(ignored -> damage.get());
+        doAnswer(call -> { damage.set(call.getArgument(0)); return null; }).when(event).setDamage(anyDouble());
+        try {
+            set("resistance.percent", "100");
+            guard.install(); // The previous startup sequence moved CrackShot behind resistance.
+            for (var handler : damageList.getRegisteredListeners()) handler.callEvent(event);
+            assertEquals(40.0, damage.get(), "Reproduce the reported overwrite despite 100% resistance");
+            damageList.unregister(resistance); damageList.register(resistance); // Correct startup order.
+            for (var cause : List.of(EntityDamageEvent.DamageCause.PROJECTILE, EntityDamageEvent.DamageCause.ENTITY_ATTACK,
+                    EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
+                when(event.getCause()).thenReturn(cause);
+                for (int percent : List.of(15, 50, 100)) {
+                    config.set("resistance.percent", Integer.toString(percent)); controller.applySettings();
+                    damage.set(2.0);
+                    for (var handler : damageList.getRegisteredListeners()) handler.callEvent(event);
+                    assertEquals(40 * (1 - percent / 100.0), damage.get(), 1e-8);
+                }
+            }
+            move(red, 10, 64, 0);
+            for (var handler : damageList.getRegisteredListeners()) handler.callEvent(event);
+            assertEquals(40.0, damage.get());
+            move(red, 0, 64, 0); when(manager.getMatchMode()).thenReturn(MatchMode.TEAM_DEATH_MATCH);
+            for (var handler : damageList.getRegisteredListeners()) handler.callEvent(event);
+            assertEquals(40.0, damage.get());
+        } finally {
+            guard.close(); damageList.unregister(resistance); org.bukkit.event.HandlerList.unregisterAll(cs);
+        }
+    }
+
     @Test void realDamageListenerReducesSyntheticExplosionExactlyOnceAndPreservesVoid() throws Exception {
         set("explosion-resistance.enabled", "true");
         var listener = new HijackCombatListener(controller);
@@ -342,7 +394,8 @@ class HijackGameplayTest {
         assertEquals(1, finishes().size());
     }
 
-    @Test void unlimitedTimerKeepsPublishingTicksWithoutNegativeCountdown() {
+    @Test void unlimitedTimerKeepsPublishingTicksWithoutNegativeCountdown() throws Exception {
+        set("victory.mode", "points");
         var remaining = new java.util.concurrent.atomic.AtomicInteger(-1);
         when(manager.getTimeLeft()).thenReturn(remaining);
         try (var staticPlugin = mockStatic(LeonGunWar.class); var bukkit = mockStatic(org.bukkit.Bukkit.class)) {
@@ -391,5 +444,121 @@ class HijackGameplayTest {
         when(manager.getBattleTeam(blue)).thenReturn(BattleTeam.RED);
         controller.publishKill(red, blue);
         assertEquals(1, events.size());
+    }
+
+    @Test void liveSetChangesCombatWeaponsAndVictoryItemsWithoutResettingMatchOrOldSnapshots() throws Exception {
+        controller.freezeStartingPlayers(2);
+        controller.publishCapture(null, false);
+        UUID matchId = ((HijackObjectiveEvent) events.get(0)).getContext().matchId();
+        var oldRules = controller.getActive();
+        var command = new HijackCommand(controller, mock(HijackAreaDisplay.class), mock(java.util.logging.Logger.class));
+        when(red.hasPermission(anyString())).thenReturn(true);
+        command.execute(red, new String[]{"hijack", "set", "resistance.percent", "60"});
+        assertEquals(60, controller.reduction(red, false)); assertEquals(15, oldRules.number("resistance.percent"));
+        var guard = new HijackWeaponGuard(controller, item -> "test", key -> key.endsWith("Projectile_Type") ? "grenade" : "false");
+        assertTrue(guard.blocked("test"));
+        command.execute(red, new String[]{"hijack", "set", "weapons.block-grenades", "false"});
+        assertFalse(guard.blocked("test"));
+        command.execute(red, new String[]{"hijack", "set", "victory-item.mode", "none"});
+        assertTrue(controller.getActive().qualifiesForVictoryItem(10, null, 0));
+        command.execute(red, new String[]{"hijack", "set", "victory-item.mode", "time_and_kills"});
+        assertFalse(controller.getActive().qualifiesForVictoryItem(10, null, 0));
+        command.execute(red, new String[]{"hijack", "set", "victory-item.enabled", "false"});
+        assertTrue(controller.getActive().qualifiesForVictoryItem(10, null, 0));
+        command.execute(red, new String[]{"hijack", "set", "victory-item.enabled", "true"});
+        assertFalse(controller.getActive().qualifiesForVictoryItem(10, null, 0));
+        String saved = java.nio.file.Files.readString(config.getPath());
+        command.execute(red, new String[]{"hijack", "set", "resistance.percent", "999"});
+        assertEquals(60, controller.reduction(red, false)); assertEquals(saved, java.nio.file.Files.readString(config.getPath()));
+        controller.publishCapture(null, false);
+        assertEquals(matchId, ((HijackObjectiveEvent) events.get(events.size() - 1)).getContext().matchId());
+        assertEquals(2, controller.getStartingPlayerCount()); assertTrue(finishes().isEmpty());
+    }
+
+    @Test void dedicatedReloadAppliesValidRulesButFailedReloadKeepsLiveRulesAndClock() throws Exception {
+        controller.tickClock();
+        var command = new HijackCommand(controller, mock(HijackAreaDisplay.class), mock(java.util.logging.Logger.class));
+        when(red.hasPermission(anyString())).thenReturn(true);
+        java.nio.file.Files.writeString(config.getPath(), "resistance: {percent: 40}\nvictory: {time-limit-seconds: 900}\n");
+        command.execute(red, new String[]{"hijack", "reload"});
+        assertEquals(40, controller.reduction(red, false)); assertEquals(899, manager.getTimeLeft().get());
+        java.nio.file.Files.writeString(config.getPath(), "resistance: {percent: wrong}\n");
+        command.execute(red, new String[]{"hijack", "reload"});
+        assertEquals(40, controller.reduction(red, false)); assertEquals(899, manager.getTimeLeft().get());
+    }
+
+    @Test void timeChangesPreserveElapsedTimeAcrossUnlimitedModeAndDoNotRestartCountdown() throws Exception {
+        for (int i = 0; i < 60; i++) controller.tickClock();
+        assertEquals(540, manager.getTimeLeft().get());
+        config.set("victory.time-limit-seconds", "900"); controller.applySettings();
+        assertEquals(840, manager.getTimeLeft().get());
+        config.set("victory.mode", "points"); controller.applySettings();
+        assertEquals(-1, manager.getTimeLeft().get());
+        for (int i = 0; i < 30; i++) assertEquals(-1, controller.tickClock());
+        config.set("victory.mode", "time"); controller.applySettings();
+        assertEquals(810, manager.getTimeLeft().get());
+        config.set("victory.time-limit-seconds", "60"); controller.applySettings();
+        assertEquals(0, manager.getTimeLeft().get());
+        tick(controller.tickClock());
+        assertEquals(1, finishes().size()); assertEquals(0, points.getOrDefault(BattleTeam.RED, 0));
+        tick(0); assertEquals(1, finishes().size());
+    }
+
+    @Test void loweredTargetEndsContestedMatchWithoutAwardingExtraPointsOrRepeatingResult() throws Exception {
+        // Even if another finish handler delays finalization, the event and result must stay one-shot.
+        PluginManager pm = plugin.getServer().getPluginManager();
+        doAnswer(call -> {
+            Event event = call.getArgument(0); events.add(event);
+            if (event instanceof MatchFinishedEvent finish) new HijackCombatListener(controller).onFinish(finish);
+            return null;
+        }).when(pm).callEvent(any());
+        move(blue, 0, 64, 0);
+        points.put(BattleTeam.RED, 120); points.put(BattleTeam.BLUE, 110);
+        config.set("victory.target-points", "100"); controller.applySettings();
+        tick(599);
+        assertEquals(List.of(BattleTeam.RED), finishes().get(0).getWinners());
+        assertEquals(120, points.get(BattleTeam.RED)); assertEquals(110, points.get(BattleTeam.BLUE));
+        tick(598); assertEquals(1, finishes().size());
+        assertEquals(1, events.stream().filter(event -> event instanceof HijackObjectiveEvent objective
+                && objective.getDetail() instanceof HijackObjectiveEvent.Finished).count());
+    }
+
+    @Test void livePopulationChangesUseOriginalCountAndTiesUseUpdatedPolicy() throws Exception {
+        controller.freezeStartingPlayers(5);
+        config.set("victory.player-count.enabled", "true"); controller.applySettings();
+        assertEquals(100, controller.getActive().points());
+        players.clear();
+        config.set("victory.player-count.targets", "1:80,6:160"); controller.applySettings();
+        assertEquals(80, controller.getActive().points()); assertEquals(5, controller.getStartingPlayerCount());
+        points.put(BattleTeam.RED, 80); points.put(BattleTeam.BLUE, 80);
+        config.set("victory.tie", "shared_win"); controller.applySettings();
+        tick(599); assertEquals(2, finishes().get(0).getWinners().size());
+    }
+
+    @Test void areaSaveDeleteAndLoadedMapsUpdateTheCurrentObjectiveWithoutChangingWorldIdentity() throws Exception {
+        when(world.getName()).thenReturn("maps");
+        java.nio.file.Files.writeString(directory.resolve("maps.yml"), """
+                objective:
+                  world: maps
+                  spawns: {}
+                  areas:
+                    '1':
+                      min: {x: -1, y: 64, z: -1}
+                      max: {x: 1, y: 66, z: 1}
+                """);
+        when(plugin.getDataFolder()).thenReturn(directory.toFile()); when(plugin.getServer().getWorld("maps")).thenReturn(world);
+        var maps = new net.azisaba.lgw.core.configs.MapsConfig(plugin); when(plugin.getMapsConfig()).thenReturn(maps);
+        maps.loadConfig(); map = maps.getAllGameMap().get(0); when(manager.getCurrentGameMap()).thenReturn(map); controller.begin(map);
+        move(red, 4, 64, 0); assertFalse(controller.isInside(red));
+        maps.saveHijackArea(map, "1", new Area3D(new Vector(-5, 64, -5), new Vector(5, 66, 5)));
+        assertTrue(controller.isInside(red));
+        maps.saveHijackArea(map, "1", null); assertFalse(controller.isInside(red)); assertTrue(controller.activeAreaView().areas().isEmpty());
+        var yaml = new org.bukkit.configuration.file.YamlConfiguration(); yaml.load(directory.resolve("maps.yml").toFile());
+        yaml.set("objective.areas.1.min", Map.of("x", -6, "y", 64, "z", -6));
+        yaml.set("objective.areas.1.max", Map.of("x", 6, "y", 66, "z", 6)); yaml.save(directory.resolve("maps.yml").toFile());
+        maps.loadConfig(); controller.refreshCurrentAreas(); assertTrue(controller.isInside(red));
+        World other = mock(World.class); when(other.getUID()).thenReturn(UUID.randomUUID());
+        controller.refreshAreas(new GameMap("objective", other, Map.of(), List.of()));
+        assertEquals(world.getUID(), controller.activeAreaView().worldId()); assertTrue(controller.isInside(red));
     }
 }

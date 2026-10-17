@@ -36,6 +36,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
 
         if (Args.check(args, 0, "hijack")) {
             var plugin = LeonGunWar.getPlugin();
+            if (Args.check(args, 1, "area")) return plugin.getHijackAreaEditor().execute(sender, args);
             return new net.azisaba.lgw.core.hijack.HijackCommand(plugin.getHijackController(), plugin.getHijackAreaDisplay(), plugin.getLogger()).execute(sender, args);
         }
 
@@ -155,11 +156,17 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
                 LeonGunWar.getPlugin().getAssistStreaksConfig().loadConfig();
                 LeonGunWar.getPlugin().getWeaponControlConfig().loadConfig();
                 LeonGunWar.getPlugin().getItemsConfig().loadConfig();
-            } catch (IOException | InvalidConfigurationException exception) {
+                LeonGunWar.getPlugin().getHijackController().getConfig().reload();
+                LeonGunWar.getPlugin().getHijackController().applySettings();
+                LeonGunWar.getPlugin().getHijackController().refreshCurrentAreas();
+            } catch (IOException | InvalidConfigurationException | IllegalArgumentException exception) {
                 exception.printStackTrace();
+                sender.sendMessage(Chat.f("{0}&c設定の再読み込みに失敗しました。ログを確認してください。", LeonGunWar.GAME_PREFIX));
+                return true;
             }
 
             sender.sendMessage(Chat.f("{0}&a設定とマップのリロードが完了しました。", LeonGunWar.GAME_PREFIX));
+            sender.sendMessage(Chat.f("&7HIJACK設定・同じマップ/ワールドの占領範囲は、試合中なら現在の試合へ適用します。"));
             return true;
         }
 
@@ -230,6 +237,7 @@ public class LgwAdminCommand implements CommandExecutor, TabCompleter {
         }
         if (Args.check(args, 0, "hijack")) {
             var plugin = LeonGunWar.getPlugin();
+            if (Args.check(args, 1, "area")) return plugin.getHijackAreaEditor().complete(sender, args);
             return new net.azisaba.lgw.core.hijack.HijackCommand(plugin.getHijackController(), plugin.getHijackAreaDisplay(), plugin.getLogger()).complete(sender, args);
         }
 
