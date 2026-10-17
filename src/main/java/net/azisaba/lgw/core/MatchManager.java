@@ -160,16 +160,20 @@ public class MatchManager {
         // すでにマッチ中の場合はIllegalStateException
         Preconditions.checkState(!isMatching, "A match is already started.");
 
-        // timeLeftをdurationに変更
-        timeLeft.set((int) matchMode.getDuration().getSeconds());
-
-        // ボスバー作成
-        bossBar = createEmptyBossBar();
-
         // マップが決まっていない場合マップを抽選 (ありえないはず)
         if (currentGameMap == null) {
             currentGameMap = LeonGunWar.getPlugin().getMapsConfig().getRandomMap();
         }
+
+        // timeLeftをdurationに変更
+        if (matchMode == MatchMode.HIJACK) {
+            LeonGunWar.getPlugin().getHijackController().begin(currentGameMap);
+        }
+        timeLeft.set(getMatchDurationSeconds());
+
+        // ボスバー作成
+        bossBar = createEmptyBossBar();
+
 
         // 投票をリセット
         LeonGunWar.getPlugin().getMapSelectCountdown().resetAllVotes();
@@ -204,6 +208,18 @@ public class MatchManager {
                 setUpPlayer(player, team);
             }
         }
+
+        if (matchMode == MatchMode.HIJACK) {
+            int startingPlayers = (int) getAllTeamPlayers().stream().filter(player -> player.isOnline()
+                    && player.getGameMode() != org.bukkit.GameMode.SPECTATOR).map(Player::getUniqueId).distinct().count();
+            LeonGunWar.getPlugin().getHijackController().freezeStartingPlayers(startingPlayers);
+        }
+
+        // 試合開始時にマップ名とゲームモードを約2秒間表示する
+        String mapTitle = Chat.f("&b&l{0}", currentGameMap.getMapName());
+        String modeSubtitle = matchMode.getModeName();
+        getAllTeamPlayers().forEach(player ->
+                player.sendTitle(mapTitle, modeSubtitle, 10, 10, 20));
 
         // LDM/CDMのリーダーマッチならリーダーを抽選
         switch (matchMode) {
@@ -242,10 +258,14 @@ public class MatchManager {
         BroadcastUtils.broadcast(
                 Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         BroadcastUtils.broadcast(Chat.f("{0}&7制限時間 &c{1}", LeonGunWar.GAME_PREFIX,
-                SecondOfDay.f(matchMode.getDuration().getSeconds())));
+                getMatchDurationSeconds() < 0 ? "なし" : SecondOfDay.f(getMatchDurationSeconds())));
         // 勝利条件を発表z
         BroadcastUtils.broadcast(
-                Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
+                Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, (matchMode == MatchMode.HIJACK ? LeonGunWar.getPlugin().getHijackController().getActive().description() : matchMode.getDescription())));
+        if (matchMode == MatchMode.HIJACK) {
+            BroadcastUtils.broadcast(Chat.f("{0}&7勝利アイテム条件: {1}", LeonGunWar.GAME_PREFIX,
+                    LeonGunWar.getPlugin().getHijackController().getActive().victoryItemRequirement()));
+        }
         BroadcastUtils.broadcast(
                 Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
@@ -272,6 +292,15 @@ public class MatchManager {
         //LeonGunWar.getQuickBar().send(BroadcastUtils.getOnlinePlayers().toArray(new Player[0]));
     }
 
+    /** -1 represents a points-only HIJACK match with no timer. */
+    public int getMatchDurationSeconds() {
+        if (matchMode == MatchMode.HIJACK) {
+            var rules = LeonGunWar.getPlugin().getHijackController().getActive();
+            return rules.hasTimeLimit() ? rules.seconds() : -1;
+        }
+        return (int) matchMode.getDuration().getSeconds();
+    }
+
     public List<Player> getEntryPlayers() {
         return entryPlayers;
     }
@@ -280,6 +309,7 @@ public class MatchManager {
      * ゲーム終了時に行う処理を書きます
      */
     public void finalizeMatch() {
+        if (LeonGunWar.getPlugin().getHijackController() != null) LeonGunWar.getPlugin().getHijackController().clear();
         // タスクの終了
         if (matchTask != null) {
             matchTask.cancel();
@@ -331,6 +361,8 @@ public class MatchManager {
         ldmLeaderMap.clear();
         // モードをnullに設定
         matchMode = null;
+
+        LeonGunWar.matchJoin.clear();
 
         // ゲーム終了
         isMatching = false;
@@ -655,7 +687,11 @@ public class MatchManager {
         // 開始メッセージ
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
         // 勝利条件を発表
-        p.sendMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, matchMode.getDescription()));
+        p.sendMessage(Chat.f("{0}&7勝利条件 {1}", LeonGunWar.GAME_PREFIX, (matchMode == MatchMode.HIJACK ? LeonGunWar.getPlugin().getHijackController().getActive().description() : matchMode.getDescription())));
+        if (matchMode == MatchMode.HIJACK) {
+            p.sendMessage(Chat.f("{0}&7勝利アイテム条件: {1}", LeonGunWar.GAME_PREFIX,
+                    LeonGunWar.getPlugin().getHijackController().getActive().victoryItemRequirement()));
+        }
         p.sendMessage(Chat.f("{0}&7{1}", LeonGunWar.GAME_PREFIX, Strings.repeat("=", 40)));
 
         BroadcastUtils.broadcast(
@@ -730,6 +766,11 @@ public class MatchManager {
      */
     public void setLeaderAtRandom(BattleTeam team) {
         List<Player> plist = getTeamPlayers(team);
+
+        // ソロデバッグなどで空チームになっている場合はリーダーを選出できないためスキップ
+        if (plist.isEmpty()) {
+            return;
+        }
 
         BukkitTask existingTask = LeonGunWar.leaderSelectionTaskMap.get(team);
         if (existingTask != null) {

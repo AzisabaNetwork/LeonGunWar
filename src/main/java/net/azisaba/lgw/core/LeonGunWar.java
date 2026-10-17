@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core;
 
 import lombok.Getter;
+import net.azisaba.lgw.core.hijack.*;
 import me.rayzr522.jsonmessage.JSONMessage;
 import net.azisaba.lgw.core.commands.*;
 import net.azisaba.lgw.core.configs.*;
@@ -70,6 +71,9 @@ public class LeonGunWar extends JavaPlugin {
     private final KillStreaks killStreaks = new KillStreaks();
     private final TradeBoardManager tradeBoardManager = new TradeBoardManager();
     private MainConfig mainConfig;
+    private HijackController hijackController;
+    private HijackWeaponGuard hijackWeaponGuard;
+    private HijackAreaDisplay hijackAreaDisplay;
     private KillStreaksConfig killStreaksConfig;
     private AssistStreaksConfig assistStreaksConfig;
     private SpawnsConfig spawnsConfig;
@@ -110,6 +114,15 @@ public class LeonGunWar extends JavaPlugin {
         // 設定ファイルを読み込むクラスの初期化
         saveDefaultConfig();
         mainConfig = new MainConfig(this);
+        HijackConfig hijackConfig = new HijackConfig(getDataFolder().toPath().resolve("hijack.yml"));
+        try {
+            hijackConfig.reload();
+        } catch (IOException | InvalidConfigurationException | IllegalArgumentException exception) {
+            plLogger.error("HIJACK設定が不正です。修正して再起動してください。", exception);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        hijackController = new HijackController(this, hijackConfig);
         killStreaksConfig = new KillStreaksConfig(this);
         assistStreaksConfig = new AssistStreaksConfig(this);
         spawnsConfig = new SpawnsConfig(this);
@@ -144,7 +157,8 @@ public class LeonGunWar extends JavaPlugin {
         LimitActionListener preventItemDropListener = new LimitActionListener();
 
         // コマンドの登録
-        registerCommand("leongunwaradmin", new LgwAdminCommand());
+        var adminCommand = registerCommand("leongunwaradmin", new LgwAdminCommand());
+        if (adminCommand != null) adminCommand.setTabCompleter((LgwAdminCommand) adminCommand.getExecutor());
         registerCommand("uav", new UAVCommand());
         //registerCommand("match", new MatchCommand());
         registerCommand("kiai", new KIAICommand());
@@ -183,7 +197,8 @@ public class LeonGunWar extends JavaPlugin {
         // リスナーの登録 (modes)
         registerEvents(
                 new TeamDeathMatchListener(),
-                new HijackListener(),
+                new HijackListener(this),
+                new HijackCombatListener(hijackController),
                 new TDMNoLimitListener(),
                 new LeaderDeathMatchListener(),
                 new CustomTDMListener()
@@ -223,6 +238,12 @@ public class LeonGunWar extends JavaPlugin {
                 new PreventEscapeListener(),
                 new RemoveKillStreakScoreListener());
 
+        var crackShotUtility = new com.shampaggon.crackshot.CSUtility();
+        var crackShot = (com.shampaggon.crackshot.CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+        hijackWeaponGuard = new HijackWeaponGuard(hijackController, crackShotUtility::getWeaponTitle, path -> path.endsWith(".Enable") ? Boolean.toString(crackShot.getBoolean(path)) : crackShot.getString(path));
+        hijackWeaponGuard.install();
+        registerEvents(hijackWeaponGuard);
+
         // 武器コントロールリスナーの登録 (weaponcontrols)
         registerEvents(new DisableToysDuringMatchListener(),
                 new DisablePvEsDuringMatchListener(),
@@ -236,6 +257,8 @@ public class LeonGunWar extends JavaPlugin {
         // SignRemoveTask (60秒後に最初の実行、それからは10分周期で実行)
         new SignRemoveTask().runTaskTimer(this, 20 * 60, 20 * 60 * 10);
         new CrackShotLagFixTask().runTaskTimer(this, 0, 20 * 60);
+        hijackAreaDisplay = new HijackAreaDisplay(this, hijackController);
+        hijackAreaDisplay.start();
         doubleRewardEnable = getConfig().getBoolean("DoubleRewardTaskEnable", false) && ClockMachine.isWithinRewardTime();
         if (getConfig().getBoolean("DoubleRewardTaskEnable", false)) {
             new ClockMachine().doubleRewardTaskStarter();
@@ -273,6 +296,9 @@ public class LeonGunWar extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (hijackAreaDisplay != null) hijackAreaDisplay.close();
+        if (hijackWeaponGuard != null) hijackWeaponGuard.close();
+        if (sqlConnection == null) return;
         // Plugin終了時の処理を呼び出す
         manager.onDisablePlugin();
 

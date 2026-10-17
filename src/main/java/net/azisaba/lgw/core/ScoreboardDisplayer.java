@@ -72,12 +72,14 @@ public class ScoreboardDisplayer {
             // 表示するメッセージリストを作成
             List<String> messageList = new ArrayList<>();
             messageList.add("");
-            messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
+            messageList.add(Chat.f("&b残り時間&a: &c{0}", (timeLeft < 0 ? "制限なし" : SecondOfDay.f(timeLeft))));
             messageList.add("");
 
             for (BattleTeam team : BattleTeam.values()) {
                 int point = LeonGunWar.getPlugin().getManager().getCurrentTeamPoint(team);
-                messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getTeamName(), point));
+                var hijackRules = mode == MatchMode.HIJACK ? LeonGunWar.getPlugin().getHijackController().getActive() : null;
+                String score = hijackRules != null && hijackRules.hasPointLimit() ? point + "/" + hijackRules.points() : Integer.toString(point);
+                messageList.add(Chat.f("{0}&a: &e{1} Point(s)", team.getTeamName(), score));
             }
 
             if (mode == MatchMode.LEADER_DEATH_MATCH_POINT) {
@@ -125,7 +127,7 @@ public class ScoreboardDisplayer {
             List<String> messageList = new ArrayList<>();
             messageList.add("");
             messageList.add(Chat.f("&7マップ投票中"));
-            messageList.add(Chat.f("&b残り時間&a: &c{0}", SecondOfDay.f(timeLeft)));
+            messageList.add(Chat.f("&b残り時間&a: &c{0}", (timeLeft < 0 ? "制限なし" : SecondOfDay.f(timeLeft))));
             messageList.add("");
 
             for (int i = 0, size = maps.size(); i < size; i++) {

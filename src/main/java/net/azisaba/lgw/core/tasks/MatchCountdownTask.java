@@ -10,7 +10,8 @@ public class MatchCountdownTask extends BukkitRunnable {
     @Override
     public void run() {
         // 1秒減らす
-        int timeLeft = LeonGunWar.getPlugin().getManager().getTimeLeft().decrementAndGet();
+        var remaining = LeonGunWar.getPlugin().getManager().getTimeLeft();
+        int timeLeft = remaining.get() < 0 ? -1 : remaining.decrementAndGet();
 
         // イベントを呼び出す
         MatchTimeChangedEvent event = new MatchTimeChangedEvent(timeLeft);

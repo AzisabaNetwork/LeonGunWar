@@ -39,6 +39,7 @@ public class MatchControlListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void matchFinishDetector(MatchTimeChangedEvent e) {
+        if (!LeonGunWar.getPlugin().getManager().isMatching() || LeonGunWar.getPlugin().getManager().getMatchMode() == net.azisaba.lgw.core.util.MatchMode.HIJACK) return;
         // 時間を取得して0じゃなかったらreturn
         if (e.getTimeLeft() > 0) {
             return;
@@ -75,6 +76,11 @@ public class MatchControlListener implements Listener {
      */
     @EventHandler
     public void onMatchFinished(MatchFinishedEvent e) {
+        long finishedAt = System.currentTimeMillis();
+        var manager = LeonGunWar.getPlugin().getManager();
+        var hijackRules = manager.getMatchMode() == net.azisaba.lgw.core.util.MatchMode.HIJACK
+                ? LeonGunWar.getPlugin().getHijackController().getActive() : null;
+
 
         // 試合に参加した全プレイヤーを取得
         List<Player> allPlayers = e.getAllTeamPlayers();
@@ -145,12 +151,15 @@ public class MatchControlListener implements Listener {
 
                 for (Player p : winnerPlayers) {
                     // 勝利アイテムを付与
-                    if (victoryItemCrackShotIds == null) {
+                    if (hijackRules != null && !hijackRules.qualifiesForVictoryItem(finishedAt,
+                            LeonGunWar.matchJoin.get(p.getUniqueId()), manager.getKillDeathCounter().getKills(p))) {
+                        p.sendMessage("§e勝利アイテムの条件を満たしていません: " + hijackRules.victoryItemRequirement());
+                    } else if (victoryItemCrackShotIds == null) {
                         // 勝者の証を付与
                         long now = System.currentTimeMillis();
-                        if (isOverSixMinutes(now, LeonGunWar.matchJoin.get(p.getUniqueId())) || LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20) {
+                        if (hijackRules != null || isOverSixMinutes(now, LeonGunWar.matchJoin.get(p.getUniqueId())) || manager.getKillDeathCounter().getKills(p) >= 20) {
                             p.getInventory().addItem(CustomItem.getWonItem());
-                            if (LeonGunWar.getPlugin().getManager().getKillDeathCounter().getKills(p) >= 20) {
+                            if (hijackRules == null && manager.getKillDeathCounter().getKills(p) >= 20) {
                                 p.sendMessage("試合参加時間が6分未満でしたが、20キルを超えているため勝利報酬が付与されました");
                             }
                         } else {
@@ -164,7 +173,6 @@ public class MatchControlListener implements Listener {
                             }
                         }
                     }
-                    LeonGunWar.matchJoin.clear();
                     // 勝利タイトルを表示
                     p.sendTitle(Chat.f("&6Victory!"), "", 0, 20 * 3, 10);
 
@@ -178,6 +186,10 @@ public class MatchControlListener implements Listener {
                                 wonTeam.getTeamName()));
             });
         }
+    }
+
+    public boolean isOverSixMinutes(long time1, Long time2) {
+        return time2 != null && isOverSixMinutes(time1, time2.longValue());
     }
 
     public boolean isOverSixMinutes(long time1, long time2) {
@@ -284,11 +296,12 @@ public class MatchControlListener implements Listener {
         }
 
         // 名前を変更
-        progressBar.setTitle(Chat.f("&7残り時間 &a» &f{0}", SecondOfDay.toString(e.getTimeLeft())));
+        progressBar.setTitle(e.getTimeLeft() < 0 ? Chat.f("&7時間制限なし")
+                : Chat.f("&7残り時間 &a» &f{0}", SecondOfDay.toString(e.getTimeLeft())));
         // 進行度を設定
         double left = e.getTimeLeft();
-        double duration = LeonGunWar.getPlugin().getManager().getMatchMode().getDuration().getSeconds();
-        progressBar.setProgress(left / duration);
+        double duration = LeonGunWar.getPlugin().getManager().getMatchDurationSeconds();
+        progressBar.setProgress(duration > 0 ? Math.max(0, Math.min(1, left / duration)) : 1);
 
         Bukkit.getOnlinePlayers().forEach(p -> {
 

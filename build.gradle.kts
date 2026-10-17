@@ -52,6 +52,9 @@ dependencies {
     implementation(libs.jspecify)
     testImplementation(platform(libs.junitBom))
     testImplementation(libs.junitJupiter)
+    testImplementation(libs.paperApi)
+    testImplementation(fileTree("libs/"))
+    testImplementation("org.mockito:mockito-core:5.14.2")
     testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
@@ -68,6 +71,7 @@ val libsDir = layout.projectDirectory.dir("libs")
 val crackShotJar = libsDir.file("Crackshot.jar")
 
 tasks {
+    test { useJUnitPlatform() }
     val downloadFile =
         register<Download>("downloadFile") {
             src("https://mediafilez.forgecdn.net/files/3151/915/CrackShot.jar")
@@ -103,7 +107,10 @@ tasks {
     }
 
     shadowJar {
-        minimize()
+        minimize {
+            // JDBC drivers are loaded reflectively through ServiceLoader.
+            exclude(dependency("com.mysql:mysql-connector-j:.*"))
+        }
         mergeServiceFiles()
         enableAutoRelocation = true
         relocationPrefix = "net.azisaba.rankingdisplayer.libs"
@@ -142,6 +149,10 @@ tasks {
     javadoc {
         options.encoding = "UTF-8"
     }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
 }
 
 publishing {

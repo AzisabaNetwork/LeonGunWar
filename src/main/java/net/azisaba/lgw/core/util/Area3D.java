@@ -24,4 +24,15 @@ public class Area3D {
             && point.getY() >= min.getY() && point.getY() <= max.getY()
             && point.getZ() >= min.getZ() && point.getZ() <= max.getZ();
     }
+
+    public Vector getMin() { return min.clone(); }
+    public Vector getMax() { return max.clone(); }
+
+    /** Horizontal distance to the rectangle, only inside its allowed vertical band. */
+    public double distanceWithinHeight(Vector point) {
+        if (point.getY() < min.getY() || point.getY() > max.getY()) return Double.POSITIVE_INFINITY;
+        double dx = Math.max(Math.max(min.getX() - point.getX(), point.getX() - max.getX()), 0);
+        double dz = Math.max(Math.max(min.getZ() - point.getZ(), point.getZ() - max.getZ()), 0);
+        return Math.hypot(dx, dz);
+    }
 }

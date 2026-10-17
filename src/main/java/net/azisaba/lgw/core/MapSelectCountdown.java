@@ -113,6 +113,7 @@ public class MapSelectCountdown {
      */
     public void stopCountdown() {
         Optional.ofNullable(task.getAndSet(null)).ifPresent(MapSelectCountdownTask::cancel);
+        resetAllVotes();
     }
 
     /**

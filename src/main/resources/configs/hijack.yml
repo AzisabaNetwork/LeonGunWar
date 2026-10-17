@@ -1,0 +1,51 @@
+# HIJACK専用設定。変更は /lgwadmin hijack reload 後、次の試合から適用。
+# コマンド: /lgwadmin hijack show | set <設定名> <値> | reload | preview [active|next <マップ名>|stop]
+# この鯖のみ反映。両バージョンで同じキーを使用します。
+victory:
+  # points_or_time / points（時間無制限） / time（点数上限なし）
+  mode: points_or_time
+  target-points: 200
+  time-limit-seconds: 600
+  # draw（引き分け） / shared_win（両軍勝利）
+  tie: draw
+  player-count:
+    # 試合開始時の実参加人数で目標点を固定。途中参加・退出では変更しない。
+    enabled: false
+    # "下限人数:目標点"。該当する下限の最大値を使い、該当なしはtarget-points。
+    targets: ["1:100", "6:150", "12:200"]
+victory-item:
+  # HIJACKの勝者の証と指定CrackShot勝利アイテムに適用。MSR報酬は対象外。
+  # none / time / kills / time_or_kills / time_and_kills
+  mode: time_or_kills
+  minimum-participation-seconds: 360
+  minimum-kills: 20
+# 占領範囲はmaps.yml/areasのmin/maxだけで決定します。
+resistance:
+  enabled: true
+  # 対人攻撃・銃・爆発のダメージ軽減。落下・奈落・管理用ダメージには適用しない。
+  percent: 15.0
+  # all（両軍） / controller（最後に加点した側） / capturing（現在単独占領中の側）
+  target: all
+explosion-resistance:
+  enabled: false
+  percent: 50.0
+  # エリアの外周からの水平距離。0でエリア内だけ。高さは占領範囲と同じ。
+  radius: 0.0
+  # capturingは両軍競合中・無人なら対象なし。周辺にいる同チームの参加者も対象。
+  target: all
+# 爆発時はresistanceとexplosion-resistanceの高い方だけを適用（加算・乗算しない）。
+weapons:
+  # CrackShotのProjectile_Type=grenade、Device_Type=itembombを禁止。
+  block-grenades: true
+  # CrackShotのDevice_Type=remoteを禁止。
+  block-c4: true
+  # 特殊な派生武器を追加禁止するIDリスト。コマンドではID1,ID2または[]を指定。
+  blocked-ids: []
+rewards:
+  # 将来用の予約設定。今回の実装では報酬を変更しません。trueへの変更は拒否します。
+  area-kill:
+    enabled: false
+    multiplier: 2.0
+  victory:
+    enabled: false
+    multiplier: 1.1

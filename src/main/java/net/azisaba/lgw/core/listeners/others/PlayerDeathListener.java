@@ -4,6 +4,10 @@ import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 import net.azisaba.lgw.core.LeonGunWar;
 import net.azisaba.lgw.core.util.Chat;
+import net.azisaba.lgw.core.util.KillLogUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -29,7 +33,7 @@ public class PlayerDeathListener implements Listener {
             }
             Player p = e.getEntity().getPlayer();
             e.deathMessage(null);
-            String msg;
+            Component msg;
             ItemStack item = p.getKiller().getInventory().getItemInMainHand();
             String itemName;
             if (item == null || item.getType() == Material.AIR) { // null または Air なら素手
@@ -50,7 +54,10 @@ public class PlayerDeathListener implements Listener {
             } else { // それ以外
                 itemName = Chat.f("&6{0}", item.getType().name());
             }
-            msg = Chat.f("&7&l[&c&lFFA&7&l]&f{0}&7---[&6{1}&7]-->&f{2}", p.getKiller().getName(), itemName, p.getName());
+            msg = LegacyComponentSerializer.legacySection()
+                    .deserialize(Chat.f("&7&l[&c&lFFA&7&l]&f{0}&7---[&6{1}&7]-->&f{2}",
+                            p.getKiller().getName(), itemName, p.getName()))
+                    .hoverEvent(HoverEvent.showText(KillLogUtils.createDistanceText(p.getKiller(), p)));
             // メッセージ送信
             p.getWorld().getPlayers().forEach(player -> player.sendMessage(msg));
 

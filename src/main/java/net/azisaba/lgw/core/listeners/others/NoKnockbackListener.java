@@ -1,6 +1,7 @@
 package net.azisaba.lgw.core.listeners.others;
 
 import com.shampaggon.crackshot.CSDirector;
+import net.azisaba.lgw.core.LeonGunWar;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -137,7 +138,8 @@ public class NoKnockbackListener implements Listener {
 
                 // 作成者の攻撃としてダメージを与える
                 // 作成者が自分の場合や、作成者がいない場合は強制的にダメージを与える
-                target.damage(damage);
+                final double appliedDamage = damage;
+                LeonGunWar.getPlugin().getHijackController().withExplosion(target, () -> target.damage(appliedDamage));
 
                 @SuppressWarnings("deprecation")
                 EntityDamageByEntityEvent cause = new EntityDamageByEntityEvent(shooter, target, DamageCause.ENTITY_EXPLOSION, damage);
