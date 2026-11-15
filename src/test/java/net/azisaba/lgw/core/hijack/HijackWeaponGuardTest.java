@@ -9,7 +9,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -142,6 +144,44 @@ class HijackWeaponGuardTest {
         var guard = new HijackWeaponGuard(controller, ignored -> { calls.incrementAndGet(); return "GRE"; }, key -> null);
         assertFalse(guard.deny(interactFor(player)));
         assertEquals(0, calls.get());
+    }
+
+    @Test void crackShotConfigReloadClearsTitleCacheFromPlayerCommand() {
+        HijackController controller = mock(HijackController.class);
+        when(controller.isRunning()).thenReturn(true); when(controller.getActive()).thenReturn(HijackRules.defaults());
+        ItemStack item = namedItem(Material.IRON_INGOT, (short) 0, "Grenade");
+        Player player = participantWithItem(item); when(controller.isParticipant(player)).thenReturn(true);
+        AtomicInteger calls = new AtomicInteger();
+        var guard = new HijackWeaponGuard(controller, ignored -> { calls.incrementAndGet(); return "GRE"; },
+                key -> key.endsWith("Projectile_Type") ? "grenade" : "false");
+        PlayerInteractEvent event = interactFor(player);
+        assertTrue(guard.deny(event));
+        assertTrue(guard.deny(event));
+        assertEquals(1, calls.get());
+        PlayerCommandPreprocessEvent reload = mock(PlayerCommandPreprocessEvent.class);
+        when(reload.getMessage()).thenReturn("/crackshot config reload");
+        guard.onPlayerCommand(reload);
+        assertTrue(guard.deny(event));
+        assertEquals(2, calls.get());
+    }
+
+    @Test void crackShotConfigReloadClearsTitleCacheFromServerCommand() {
+        HijackController controller = mock(HijackController.class);
+        when(controller.isRunning()).thenReturn(true); when(controller.getActive()).thenReturn(HijackRules.defaults());
+        ItemStack item = namedItem(Material.IRON_INGOT, (short) 0, "Grenade");
+        Player player = participantWithItem(item); when(controller.isParticipant(player)).thenReturn(true);
+        AtomicInteger calls = new AtomicInteger();
+        var guard = new HijackWeaponGuard(controller, ignored -> { calls.incrementAndGet(); return "GRE"; },
+                key -> key.endsWith("Projectile_Type") ? "grenade" : "false");
+        PlayerInteractEvent event = interactFor(player);
+        assertTrue(guard.deny(event));
+        assertTrue(guard.deny(event));
+        assertEquals(1, calls.get());
+        ServerCommandEvent reload = mock(ServerCommandEvent.class);
+        when(reload.getCommand()).thenReturn("shot config reload");
+        guard.onServerCommand(reload);
+        assertTrue(guard.deny(event));
+        assertEquals(2, calls.get());
     }
 
     private ItemStack namedItem(Material material, short durability, String displayName) {

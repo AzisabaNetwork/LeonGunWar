@@ -11,8 +11,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -43,8 +45,9 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
     // CrackShot's getWeaponTitle clones the item meta and, for named items, allocates a
     // scratch ItemStack just to normalize the display name. Memoize the title by the fields
     // CrackShot itself uses to identify a weapon so repeated events on the same item stay cheap.
-    // CrackShot 0.98.11 builds parentlist/convIDs on enable and has no runtime reload command
-    // or event, so the mapping is stable for the JVM lifetime and this cache cannot go stale.
+    // CrackShot's /crackshot config reload rebuilds parentlist/convIDs in place, so the
+    // command handlers below invalidate this cache. A full plugin re-enable (e.g. PlugMan)
+    // replaces the whole guard instance from LeonGunWar.
     private final Map<ItemKey, String> titleCache = new LinkedHashMap<>(16, 0.75f, true) {
         @Override protected boolean removeEldestEntry(Map.Entry<ItemKey, String> eldest) {
             return size() > TITLE_CACHE_SIZE;
@@ -176,6 +179,28 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPreShoot(WeaponPreShootEvent event) {
         if (controller.isParticipant(event.getPlayer()) && blocked(event.getWeaponTitle())) event.setCancelled(true);
+    }
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (isCrackShotConfigReload(event.getMessage())) titleCache.clear();
+    }
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onServerCommand(ServerCommandEvent event) {
+        if (isCrackShotConfigReload(event.getCommand())) titleCache.clear();
+    }
+    private static boolean isCrackShotConfigReload(String command) {
+        if (command == null) return false;
+        String[] parts = command.trim().split("\\s+");
+        if (parts.length == 0) return false;
+        if (parts[0].startsWith("/")) parts[0] = parts[0].substring(1);
+        return parts.length == 3
+                && isCrackShotCommand(parts[0])
+                && "config".equalsIgnoreCase(parts[1])
+                && "reload".equalsIgnoreCase(parts[2]);
+    }
+    private static boolean isCrackShotCommand(String name) {
+        return "crackshot".equalsIgnoreCase(name) || "shot".equalsIgnoreCase(name)
+                || "cra".equalsIgnoreCase(name) || "cs".equalsIgnoreCase(name);
     }
     @Override public void close() {
         for (Wrapped entry : wrapped) {
