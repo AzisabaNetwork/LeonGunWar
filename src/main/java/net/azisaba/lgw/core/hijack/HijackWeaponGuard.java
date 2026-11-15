@@ -2,6 +2,7 @@ package net.azisaba.lgw.core.hijack;
 
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
+import org.bukkit.Material;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -14,10 +15,16 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -27,10 +34,30 @@ import java.util.function.Function;
  */
 public final class HijackWeaponGuard implements Listener, AutoCloseable {
     private record Wrapped(HandlerList list, RegisteredListener original, RegisteredListener wrapper) { }
+    private record ItemKey(Material material, short durability, String displayName) { }
+
+    private static final int TITLE_CACHE_SIZE = 256;
+
     private final List<Wrapped> wrapped = new ArrayList<>();
     private final HijackController controller;
     private final Function<ItemStack, String> identify;
     private final Function<String, String> setting;
+
+    // CrackShot's getWeaponTitle clones the item meta and, for named items, allocates a
+    // scratch ItemStack just to normalize the display name. Memoize the title by the fields
+    // CrackShot itself uses to identify a weapon so repeated events on the same item stay cheap.
+    private final Map<ItemKey, String> titleCache = new LinkedHashMap<>(16, 0.75f, true) {
+        @Override protected boolean removeEldestEntry(Map.Entry<ItemKey, String> eldest) {
+            return size() > TITLE_CACHE_SIZE;
+        }
+    };
+
+    // Rules are immutable snapshots; refresh the derived flags/set only when the active snapshot
+    // changes (begin/applySettings). The weapon-title cache stays valid because the item signature
+    // already captures what CrackShot maps to a title.
+    private HijackRules cachedRules;
+    private boolean cachedRestrictsWeapons;
+    private Set<String> cachedBlockedIds = Set.of();
 
     public HijackWeaponGuard(HijackController controller, Function<ItemStack, String> identify,
                              Function<String, String> setting) {
@@ -76,15 +103,65 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
             // CrackShot can call its interact handler directly from its melee handler.
             player = attacker; item = player.getInventory().getItemInMainHand();
         } else return false;
-        if (!controller.isParticipant(player) || !blocked(identify.apply(item))) return false;
+        if (!controller.isParticipant(player) || !restrictsWeapons()) return false;
+        String id = weaponTitle(item);
+        if (id == null || !blocked(id)) return false;
         player.sendMessage("§cHIJACKではこの武器の投擲・設置・起爆はできません。");
         return true;
     }
 
+    /** {@code identify.apply} is the hot path; bypass it entirely when the current rules block nothing. */
+    private boolean restrictsWeapons() {
+        refreshRules();
+        return cachedRestrictsWeapons;
+    }
+
+    private void refreshRules() {
+        HijackRules rules = controller.getActive();
+        if (rules == cachedRules) return;
+        cachedRules = rules;
+        if (rules == null) {
+            cachedRestrictsWeapons = false;
+            cachedBlockedIds = Set.of();
+            return;
+        }
+        cachedRestrictsWeapons = rules.flag("weapons.block-grenades")
+                || rules.flag("weapons.block-c4")
+                || !rules.blockedIds().isEmpty();
+        if (rules.blockedIds().isEmpty()) {
+            cachedBlockedIds = Set.of();
+        } else {
+            Set<String> ids = new HashSet<>();
+            for (String blocked : rules.blockedIds()) ids.add(blocked.toLowerCase(Locale.ROOT));
+            cachedBlockedIds = Set.copyOf(ids);
+        }
+    }
+
+    private String weaponTitle(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) return identify.apply(item);
+        ItemMeta meta = item.getItemMeta();
+        // CrackShot's getWeaponTitle requires a display name (itemIsSafe); no name means no weapon.
+        if (meta == null || !meta.hasDisplayName()) return null;
+        String displayName = meta.getDisplayName();
+        // Attachment names dispatch through a CrackShot event, so keep the original live lookup.
+        if (displayName.indexOf('◊') >= 0) return identify.apply(item);
+        ItemKey key = new ItemKey(item.getType(), item.getDurability(), displayName);
+        String title = titleCache.get(key);
+        if (title != null || titleCache.containsKey(key)) return title;
+        title = identify.apply(item);
+        titleCache.put(key, title);
+        return title;
+    }
+
     public boolean blocked(String id) {
         if (id == null || !controller.isRunning()) return false;
-        HijackRules rules = controller.getActive();
-        if (rules.blockedIds().stream().anyMatch(id::equalsIgnoreCase)) return true;
+        refreshRules();
+        if (!cachedRestrictsWeapons) return false;
+        return computeBlocked(cachedRules, id);
+    }
+
+    private boolean computeBlocked(HijackRules rules, String id) {
+        if (cachedBlockedIds.contains(id.toLowerCase(Locale.ROOT))) return true;
         String projectile = setting.apply(id + ".Shooting.Projectile_Type");
         String device = setting.apply(id + ".Explosive_Devices.Device_Type");
         boolean deviceEnabled = Boolean.parseBoolean(setting.apply(id + ".Explosive_Devices.Enable"));
