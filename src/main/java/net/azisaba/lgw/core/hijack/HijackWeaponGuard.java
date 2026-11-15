@@ -19,12 +19,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredListener;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -46,6 +43,8 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
     // CrackShot's getWeaponTitle clones the item meta and, for named items, allocates a
     // scratch ItemStack just to normalize the display name. Memoize the title by the fields
     // CrackShot itself uses to identify a weapon so repeated events on the same item stay cheap.
+    // CrackShot 0.98.11 builds parentlist/convIDs on enable and has no runtime reload command
+    // or event, so the mapping is stable for the JVM lifetime and this cache cannot go stale.
     private final Map<ItemKey, String> titleCache = new LinkedHashMap<>(16, 0.75f, true) {
         @Override protected boolean removeEldestEntry(Map.Entry<ItemKey, String> eldest) {
             return size() > TITLE_CACHE_SIZE;
@@ -57,7 +56,7 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
     // already captures what CrackShot maps to a title.
     private HijackRules cachedRules;
     private boolean cachedRestrictsWeapons;
-    private Set<String> cachedBlockedIds = Set.of();
+    private List<String> cachedBlockedIds = List.of();
 
     public HijackWeaponGuard(HijackController controller, Function<ItemStack, String> identify,
                              Function<String, String> setting) {
@@ -122,22 +121,21 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
         cachedRules = rules;
         if (rules == null) {
             cachedRestrictsWeapons = false;
-            cachedBlockedIds = Set.of();
+            cachedBlockedIds = List.of();
             return;
         }
         cachedRestrictsWeapons = rules.flag("weapons.block-grenades")
                 || rules.flag("weapons.block-c4")
                 || !rules.blockedIds().isEmpty();
-        if (rules.blockedIds().isEmpty()) {
-            cachedBlockedIds = Set.of();
-        } else {
-            Set<String> ids = new HashSet<>();
-            for (String blocked : rules.blockedIds()) ids.add(blocked.toLowerCase(Locale.ROOT));
-            cachedBlockedIds = Set.copyOf(ids);
-        }
+        // blockedIds() is already an immutable copy; cache the list as-is and keep
+        // equalsIgnoreCase matching so lookup semantics are identical to the old stream.
+        cachedBlockedIds = rules.blockedIds();
     }
 
     private String weaponTitle(ItemStack item) {
+        // Null/no-meta items are delegated to identify: the production identify returns null here,
+        // but an injected title function may still resolve one, and this keeps the fallback
+        // equivalent to the original unconditional identify.apply call.
         if (item == null || !item.hasItemMeta()) return identify.apply(item);
         ItemMeta meta = item.getItemMeta();
         // CrackShot's getWeaponTitle requires a display name (itemIsSafe); no name means no weapon.
@@ -161,7 +159,9 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
     }
 
     private boolean computeBlocked(HijackRules rules, String id) {
-        if (cachedBlockedIds.contains(id.toLowerCase(Locale.ROOT))) return true;
+        for (String blocked : cachedBlockedIds) {
+            if (blocked.equalsIgnoreCase(id)) return true;
+        }
         String projectile = setting.apply(id + ".Shooting.Projectile_Type");
         String device = setting.apply(id + ".Explosive_Devices.Device_Type");
         boolean deviceEnabled = Boolean.parseBoolean(setting.apply(id + ".Explosive_Devices.Enable"));
@@ -183,5 +183,6 @@ public final class HijackWeaponGuard implements Listener, AutoCloseable {
             if (entry.original().getPlugin().isEnabled()) entry.list().register(entry.original());
         }
         wrapped.clear();
+        titleCache.clear();
     }
 }
