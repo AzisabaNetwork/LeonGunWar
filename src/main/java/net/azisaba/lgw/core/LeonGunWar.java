@@ -35,7 +35,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -238,12 +242,11 @@ public class LeonGunWar extends JavaPlugin {
                 new PreventEscapeListener(),
                 new RemoveKillStreakScoreListener());
 
-        var crackShotUtility = new com.shampaggon.crackshot.CSUtility();
-        var crackShot = (com.shampaggon.crackshot.CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
-        hijackWeaponGuard = new HijackWeaponGuard(hijackController, crackShotUtility::getWeaponTitle, path -> path.endsWith(".Enable") ? Boolean.toString(crackShot.getBoolean(path)) : crackShot.getString(path));
-        hijackWeaponGuard.install();
+        hijackWeaponGuard = createHijackWeaponGuard();
         // The guard re-registers CrackShot's HIGHEST damage handler. Apply resistance after it.
-        registerEvents(hijackWeaponGuard, new HijackCombatListener(hijackController));
+        registerEvents(hijackWeaponGuard);
+        registerEvents(new HijackCombatListener(hijackController));
+        registerCrackShotReloadListener();
 
         // 武器コントロールリスナーの登録 (weaponcontrols)
         registerEvents(new DisableToysDuringMatchListener(),
@@ -276,6 +279,45 @@ public class LeonGunWar extends JavaPlugin {
         for (Listener listener : listeners) {
             pm.registerEvents(listener, this);
         }
+    }
+
+    private HijackWeaponGuard createHijackWeaponGuard() {
+        var crackShotUtility = new com.shampaggon.crackshot.CSUtility();
+        var crackShot = (com.shampaggon.crackshot.CSDirector) Bukkit.getPluginManager().getPlugin("CrackShot");
+        HijackWeaponGuard guard = new HijackWeaponGuard(hijackController, crackShotUtility::getWeaponTitle,
+                path -> path.endsWith(".Enable") ? Boolean.toString(crackShot.getBoolean(path)) : crackShot.getString(path));
+        guard.install();
+        return guard;
+    }
+
+    /**
+     * A runtime re-enable (e.g. PlugMan) recreates CrackShot's listeners and CSUtility target,
+     * so the whole guard must be rebuilt to keep wrapping the current listeners.
+     */
+    private void reinstallHijackWeaponGuard() {
+        HijackWeaponGuard previous = hijackWeaponGuard;
+        HijackWeaponGuard next;
+        try {
+            next = createHijackWeaponGuard();
+        } catch (RuntimeException exception) {
+            plLogger.error("CrackShot再読込後の武器制限リスナーの再設定に失敗しました。", exception);
+            return;
+        }
+        if (previous != null) {
+            HandlerList.unregisterAll(previous);
+            previous.close();
+        }
+        hijackWeaponGuard = next;
+        registerEvents(next);
+    }
+
+    private void registerCrackShotReloadListener() {
+        registerEvents(new Listener() {
+            @EventHandler(priority = EventPriority.MONITOR)
+            public void onEnable(PluginEnableEvent event) {
+                if (event.getPlugin().getName().equals("CrackShot")) reinstallHijackWeaponGuard();
+            }
+        });
     }
 
     /**
